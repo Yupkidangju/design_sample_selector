@@ -1,6 +1,6 @@
 # Build & Runtime Execution Guide (`BUILD_GUIDE.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.0.0  
+**Version:** 2.2.2  
 **Document Status:** Execution Protocol  
 
 ---
@@ -8,7 +8,7 @@
 ## 1. Environment & Prerequisites
 
 - **Node.js Environment (Optional for local dev server):** Node.js >= 16.x or Python 3.x (for static HTTP server).
-- **Supported Browsers:** Chrome/Edge >= 90, Firefox >= 88, Safari >= 14.5 (Web Audio API & WebAssembly required).
+- **Supported Browsers:** Chrome/Edge >= 90, Firefox >= 88, Safari >= 14.5 (Web Audio API & Canvas 2D required).
 - **No external npm build dependencies required** at runtime!
 
 ---
@@ -36,7 +36,15 @@
 │   │   ├── header.js
 │   │   ├── mainView.js
 │   │   ├── detailView.js
+│   │   ├── archetypeTemplates.js
+│   │   ├── mockupTemplates.js
+│   │   ├── mockupRuntime.js
+│   │   ├── selectionDock.js
+│   │   ├── peekPreview.js
 │   │   └── audioWidget.js
+│   ├── styles/
+│   │   ├── themeTokens.css
+│   │   └── interactive.css
 │   └── utils/
 │       └── clipboard.js
 ├── spec.md
@@ -74,7 +82,7 @@ Open browser at: `http://localhost:8080`
 
 ## 4. Verification & Testing Protocol
 
-1. **WASM & Canvas Test:** Check browser console for `[WASM Engine] Initialized successfully. Particles: 120`.
+1. **Canvas 2D Test:** Check browser console for `[Canvas VisualEngine] 2D renderer ready. Particles:` and confirm the header chip reads `CANVAS 2D`.
 2. **Audio Synth Test:** Click anywhere on the screen to initialize Web Audio API context. Click Play on the Audio Widget. Confirm BGM synth plays and track title changes.
 3. **Category Hover Test:** Hover mouse over `스위스 스타일` card. Confirm subcategory badges expand with sound effect `SFX_HOVER`.
 4. **Detail View Test:** Click `격자 중심 모더니즘` badge. Confirm modal opens with live grid mockup, copyable color hex buttons, and pros/cons hover cards.

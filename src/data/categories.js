@@ -800,28 +800,43 @@ export function getAllSubDesigns() {
 }
 
 export function findSubById(subId) {
-  return getAllSubDesigns().find((s) => s.id === subId) || null;
+  const id = canonicalizeSubId(subId);
+  if (!id) return null;
+  return getAllSubDesigns().find((s) => s.id === id) || null;
 }
 
-export function findCategoryById(catId) {
-  return MAIN_CATEGORIES.find((c) => c.id === catId) || null;
-}
+/** spec §8 별칭 → categories.js 정규 ID. 정규 ID는 그대로 통과. */
+export const SUB_ID_ALIASES = {
+  'minimalism-clean': 'high-contrast-mono',
+  'acid-techno-brutal': 'cyber-brutalism',
+  'glassmorphism-luxe': 'glassmorphism',
+  'neumorphism-soft': 'neumorphism',
+  'skeuomorphism-classic': 'skeuomorphism',
+  'memphis-pattern': 'memphis',
+  'synthwave-neon': 'synthwave',
+  'vaporwave-80s': 'vaporwave',
+  'editorial-serif': 'high-fashion',
+  'bauhaus-geometric': 'fluid-organic',
+  'organic-nature': 'fluid-organic',
+  'darkmode-highcontrast': 'dark-minimal-glass',
+  'y2k-chrome-hologram': 'y2k-chrome',
+  'frutiger-aero-aqua': 'frutiger-aero',
+  'pixel-arcade-8bit': 'pixel-arcade',
+  'kinetic-type-motion': 'kinetic-type',
+  'bento-ui-precision': 'bento-grid',
+  'cyberpunk-hud': 'acid-techno',
+  'claymorphism-bubble': 'claymorphism',
+  'indie-craft': 'handcrafted-indie',
+  'solarpunk-green': 'solarpunk-eco'
+};
 
-export function findCategoryBySubId(subId) {
-  for (const cat of MAIN_CATEGORIES) {
-    if (cat.subCategories.some((s) => s.id === subId)) return cat;
-  }
-  return null;
-}
+const CANONICAL_SUB_IDS = new Set(
+  MAIN_CATEGORIES.flatMap((cat) => cat.subCategories.map((sub) => sub.id))
+);
 
-/** dir: +1 next, -1 prev. sameCategory면 해당 대분류 안에서만 순환. */
-export function getAdjacentSub(subId, dir = 1, { sameCategory = true } = {}) {
-  const current = findSubById(subId);
-  if (!current) return getAllSubDesigns()[0] || null;
-  const list = sameCategory
-    ? getAllSubDesigns().filter((s) => s.categoryId === current.categoryId)
-    : getAllSubDesigns();
-  const i = list.findIndex((s) => s.id === subId);
-  if (i < 0) return list[0] || current;
-  return list[(i + dir + list.length) % list.length];
+export function canonicalizeSubId(id) {
+  if (typeof id !== 'string' || !id) return null;
+  if (CANONICAL_SUB_IDS.has(id)) return id;
+  const mapped = SUB_ID_ALIASES[id];
+  return mapped && CANONICAL_SUB_IDS.has(mapped) ? mapped : null;
 }

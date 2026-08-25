@@ -1,11 +1,10 @@
 /**
  * Web Design Sample Selector - Main Entry Coordinator
- * Initializes WASM visual engine, Web Audio synth, Header, Main View, Detail View, and Audio Widget.
+ * Initializes Canvas 2D visual engine, Web Audio synth, Header, Main View, Detail View, and Audio Widget.
  */
 
-import './styles/interactive.css';
 import { appState } from './state/appState.js';
-import { wasmVisualEngine } from './wasm/visualEngine.js';
+import { canvasVisualEngine } from './wasm/visualEngine.js';
 import { renderHeader } from './components/header.js';
 import { renderMainView } from './components/mainView.js';
 import { renderDetailView } from './components/detailView.js';
@@ -13,7 +12,7 @@ import { renderAudioWidget } from './components/audioWidget.js';
 import { renderSelectionDock } from './components/selectionDock.js';
 import { renderPeekPreview } from './components/peekPreview.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function initApp() {
   console.log('[DesignSpectrum] Initializing Web Showcase Application...');
 
   // Target DOM Containers
@@ -25,18 +24,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   const peekContainer = document.getElementById('peek-root');
   const bgCanvas = document.getElementById('bg-canvas');
 
-  // Initialize WASM Visual Background Canvas Engine
+  // Initialize Canvas 2D visual background engine
   if (bgCanvas) {
-    await wasmVisualEngine.init(bgCanvas);
+    await canvasVisualEngine.init(bgCanvas);
   }
 
   // Render App Components
-  renderHeader(headerContainer);
-  renderMainView(mainContainer);
-  renderDetailView(detailContainer);
-  renderSelectionDock(dockContainer);
-  renderPeekPreview(peekContainer);
-  renderAudioWidget(audioContainer);
+  if (headerContainer) renderHeader(headerContainer);
+  if (mainContainer) renderMainView(mainContainer);
+  if (detailContainer) renderDetailView(detailContainer);
+  if (dockContainer) renderSelectionDock(dockContainer);
+  if (peekContainer) renderPeekPreview(peekContainer);
+  if (audioContainer) renderAudioWidget(audioContainer);
 
   console.log('[DesignSpectrum] Application Ready! 🚀');
-});
+}
+
+// Support both direct execution and delayed DOMContentLoaded across different static servers
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

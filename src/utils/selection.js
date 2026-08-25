@@ -83,13 +83,25 @@ export function toggleCompareSlot(subId) {
 }
 
 export function openSplitCompare(subId = null) {
-  if (subId) addToCompare(subId, 'A');
+  const state = appState.getState();
+  if (subId) {
+    const found = findSubById(subId);
+    if (found) {
+      const [a, b] = state.compareSubIds;
+      const other = a === subId ? b : a;
+      const otherOk = other && other !== subId ? other : null;
+      const fallback = otherOk || (subId === 'swiss-grid' ? 'neo-brutalism' : 'swiss-grid');
+      appState.setCompareSubIds(subId, fallback);
+    }
+  }
+  const origin = state.currentView;
+  const returnView = origin === 'DETAIL' ? 'DETAIL' : origin === 'MAIN' ? 'MAIN' : (state.compareReturnView || 'MAIN');
   synthAudio.playSfx('COMPARE');
   appState.setState({
     currentView: 'SPLIT_COMPARE',
+    compareReturnView: returnView,
     peekSubId: null,
-    confirmSheetOpen: false,
-    comparePickerOpen: false
+    confirmSheetOpen: false
   });
 }
 

@@ -74,7 +74,7 @@ body {
   position: relative;
 }
 
-/* WASM Canvas Background */
+/* Canvas 2D background */
 #bg-canvas {
   position: fixed;
   top: 0;

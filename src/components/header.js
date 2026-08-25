@@ -7,13 +7,13 @@
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { MAIN_CATEGORIES, findSubById } from '../data/categories.js';
-import { openDetailFor } from '../utils/selection.js';
+import { openDetailFor, openSplitCompare } from '../utils/selection.js';
 
 export function renderHeader(container) {
   if (!container) return;
 
   function update() {
-    const { activeFilter, searchQuery, viewMode, bookmarks, bookmarkFilterActive, confirmedStyleId } = appState.getState();
+    const { activeFilter, searchQuery, viewMode, bookmarks, bookmarkFilterActive, confirmedStyleId, canvasReady } = appState.getState();
     const bookmarkCount = bookmarks.length;
     const confirmed = confirmedStyleId ? findSubById(confirmedStyleId) : null;
 
@@ -29,9 +29,9 @@ export function renderHeader(container) {
             <div class="brand-titles">
               <div class="brand-title-line">
                 <h1 class="brand-title">DESIGN SPECTRUM</h1>
-                <span class="brand-badge-v2">v2.1 LIVE</span>
+                <span class="brand-badge-v2">v2.2 LIVE</span>
               </div>
-              <p class="brand-subtitle">8대 대분류 · 24종 라이브 시안 · 선택 도크 · 동적 샌드박스</p>
+              <p class="brand-subtitle">8대 대분류 · 24종 라이브 시안 · 8대 아키타입 · 동적 샌드박스</p>
             </div>
           </div>
 
@@ -102,9 +102,9 @@ export function renderHeader(container) {
 
           <!-- Status Indicator Chips -->
           <div class="header-status-bar">
-            <div class="status-chip chip-wasm" id="badge-wasm-status">
+            <div class="status-chip chip-wasm" id="badge-canvas-status">
               <span class="chip-dot"></span>
-              <span id="txt-wasm-status">WASM: 60FPS</span>
+              <span id="txt-canvas-status">${canvasReady ? 'CANVAS 2D: ACTIVE (60FPS)' : 'CANVAS 2D: 60FPS'}</span>
             </div>
             <div class="status-chip chip-audio" id="badge-audio-status">
               <span class="chip-dot audio-pulse"></span>
@@ -118,7 +118,7 @@ export function renderHeader(container) {
     // Event Bindings
     const brandHome = container.querySelector('#brand-home-btn');
     if (brandHome) {
-      brandHome.addEventListener('click', () => {
+      const handleHome = () => {
         synthAudio.playSfx('CLICK');
         appState.setState({
           currentView: 'MAIN',
@@ -126,25 +126,17 @@ export function renderHeader(container) {
           searchQuery: '',
           bookmarkFilterActive: false
         });
+      };
+      brandHome.addEventListener('click', handleHome);
+      brandHome.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleHome();
+        }
       });
     }
 
-    // Search Input
-    const searchInput = container.querySelector('#search-input');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        const query = e.target.value;
-        appState.setState({ searchQuery: query });
-      });
-    }
-
-    const searchClear = container.querySelector('#btn-search-clear');
-    if (searchClear) {
-      searchClear.addEventListener('click', () => {
-        synthAudio.playSfx('CLICK');
-        appState.setState({ searchQuery: '' });
-      });
-    }
+    bindSearchControls();
 
     // View Mode Buttons
     const viewModeBtns = container.querySelectorAll('.view-mode-btn');
@@ -190,8 +182,7 @@ export function renderHeader(container) {
     const compareBtn = container.querySelector('#btn-open-compare-modal');
     if (compareBtn) {
       compareBtn.addEventListener('click', () => {
-        synthAudio.playSfx('COMPARE');
-        appState.setState({ currentView: 'SPLIT_COMPARE' });
+        openSplitCompare();
       });
     }
 
@@ -209,6 +200,67 @@ export function renderHeader(container) {
     });
   }
 
+  function bindSearchControls() {
+    const searchInput = container.querySelector('#search-input');
+    if (searchInput && !searchInput.dataset.bound) {
+      searchInput.dataset.bound = '1';
+      searchInput.addEventListener('input', (e) => {
+        appState.setState({ searchQuery: e.target.value });
+      });
+    }
+    bindSearchClear();
+  }
+
+  function bindSearchClear() {
+    const searchClear = container.querySelector('#btn-search-clear');
+    if (searchClear && !searchClear.dataset.bound) {
+      searchClear.dataset.bound = '1';
+      searchClear.addEventListener('click', () => {
+        synthAudio.playSfx('CLICK');
+        appState.setState({ searchQuery: '' });
+      });
+    }
+  }
+
+  function patchSearchField(query) {
+    const searchInput = container.querySelector('#search-input');
+    if (searchInput && searchInput.value !== query) {
+      const start = searchInput.selectionStart;
+      const end = searchInput.selectionEnd;
+      const hadFocus = document.activeElement === searchInput;
+      searchInput.value = query;
+      if (hadFocus) {
+        try { searchInput.setSelectionRange(start, end); } catch { /* ignore */ }
+      }
+    }
+
+    const box = container.querySelector('.search-box');
+    if (!box) return;
+    let clearBtn = box.querySelector('#btn-search-clear');
+    if (query && !clearBtn) {
+      clearBtn = document.createElement('button');
+      clearBtn.className = 'search-clear-btn';
+      clearBtn.id = 'btn-search-clear';
+      clearBtn.title = '검색어 지우기';
+      clearBtn.textContent = '✕';
+      box.appendChild(clearBtn);
+      bindSearchClear();
+    } else if (!query && clearBtn) {
+      clearBtn.remove();
+    }
+  }
+
+  function headerChromeChanged(state, prevState) {
+    if (!prevState) return true;
+    return (
+      state.activeFilter !== prevState.activeFilter ||
+      state.viewMode !== prevState.viewMode ||
+      state.bookmarks?.length !== prevState.bookmarks?.length ||
+      state.bookmarkFilterActive !== prevState.bookmarkFilterActive ||
+      state.confirmedStyleId !== prevState.confirmedStyleId
+    );
+  }
+
   // Helper escape
   function escapeHtml(str) {
     if (!str) return '';
@@ -216,23 +268,16 @@ export function renderHeader(container) {
   }
 
   appState.subscribe((state, prevState) => {
-    // Re-render header if filter, search, viewMode, or bookmarks change
-    if (
-      state.activeFilter !== prevState?.activeFilter ||
-      state.searchQuery !== prevState?.searchQuery ||
-      state.viewMode !== prevState?.viewMode ||
-      state.bookmarks?.length !== prevState?.bookmarks?.length ||
-      state.bookmarkFilterActive !== prevState?.bookmarkFilterActive ||
-      state.confirmedStyleId !== prevState?.confirmedStyleId
-    ) {
+    if (headerChromeChanged(state, prevState)) {
       update();
+    } else if (state.searchQuery !== prevState?.searchQuery) {
+      patchSearchField(state.searchQuery);
     }
 
-    // Real-time status update for Audio / WASM
-    const wasmTxt = container.querySelector('#txt-wasm-status');
+    const canvasTxt = container.querySelector('#txt-canvas-status');
     const audioTxt = container.querySelector('#txt-audio-status');
-    if (wasmTxt && state.wasmReady) {
-      wasmTxt.textContent = 'WASM: ACTIVE (60FPS)';
+    if (canvasTxt && state.canvasReady) {
+      canvasTxt.textContent = 'CANVAS 2D: ACTIVE (60FPS)';
     }
     if (audioTxt) {
       audioTxt.textContent = state.audio.isPlaying ? state.audio.trackTitle : 'BGM: 16 TRACKS (PAUSED)';

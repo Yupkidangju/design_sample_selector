@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "turn": 2,
+  "project_root": "/home/eunho1/Projects/web/design_sample_selector",
+  "directory": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/2",
+  "source_reports": [
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/2/sub_audit_01_contract.md",
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/2/sub_audit_02_engineering.md",
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/2/sub_audit_03_security.md"
+  ],
+  "final_report": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/2/final_audit_report_2.md",
+  "created_at_utc": "2026-08-25T13:34:40.055170+00:00"
+}

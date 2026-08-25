@@ -5,14 +5,13 @@
 
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
-import { findSubById, getAllSubDesigns } from '../data/categories.js';
+import { findSubById } from '../data/categories.js';
 import { getMockupHTML } from './mockupTemplates.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { copyToClipboard } from '../utils/clipboard.js';
 import {
   openDetailFor,
   confirmStyle,
-  addToCompare,
   openSplitCompare,
   selectDraft
 } from '../utils/selection.js';
@@ -35,8 +34,8 @@ export function renderSelectionDock(container) {
     const visible = currentView === 'MAIN' && (draftSubId || confirmedStyleId);
     document.body.classList.toggle('dock-open', Boolean(visible));
     container.style.display = visible ? 'block' : 'none';
+    teardownMockup(container.querySelector('#confirm-preview'));
     if (!visible) {
-      teardownMockup(container);
       container.innerHTML = '';
       return;
     }
@@ -146,8 +145,7 @@ backdrop-filter: blur(${tweaks.backdropBlur}px);
     });
     root.querySelector('#dock-compare')?.addEventListener('click', () => {
       if (!draft) return;
-      addToCompare(draft.id, 'A');
-      openSplitCompare();
+      openSplitCompare(draft.id);
     });
     root.querySelector('#dock-bookmark')?.addEventListener('click', () => {
       if (!draft) return;
@@ -174,10 +172,7 @@ backdrop-filter: blur(${tweaks.backdropBlur}px);
       if (confirmed) openDetailFor(confirmed.categoryId, confirmed.id);
     });
     root.querySelector('#confirm-to-compare')?.addEventListener('click', () => {
-      if (confirmed) {
-        addToCompare(confirmed.id, 'A');
-        openSplitCompare();
-      }
+      if (confirmed) openSplitCompare(confirmed.id);
     });
     root.querySelector('#confirm-browse')?.addEventListener('click', () => {
       appState.setState({ confirmSheetOpen: false });
@@ -208,8 +203,4 @@ backdrop-filter: blur(${tweaks.backdropBlur}px);
   });
 
   paint();
-}
-
-export function getStyleCountLabel() {
-  return `${getAllSubDesigns().length}종`;
 }

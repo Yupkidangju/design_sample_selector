@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "run_directory": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/1",
+  "reports": [
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/1/sub_audit_01_contract.md",
+      "sha256": "9d3bd0570e822fa3e1aa3fedd292bf39e5115357e1b0296365e8928c15fda39c",
+      "size": 28978,
+      "sealed_at_utc": "2026-08-25T13:21:52.464440+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/1/sub_audit_02_engineering.md",
+      "sha256": "3595988d3d2312c73487c88f0542bbda46728f48ca0642ab2b7632ecf0d47e8a",
+      "size": 28014,
+      "sealed_at_utc": "2026-08-25T13:23:59.229764+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/1/sub_audit_03_security.md",
+      "sha256": "61b7429a6dd345f55b6e61c83964b597edee248ff4c317e0fab3e6d56aa6737e",
+      "size": 25578,
+      "sealed_at_utc": "2026-08-25T13:23:59.230300+00:00"
+    }
+  ],
+  "missing_source_reports": [],
+  "finalized_at_utc": "2026-08-25T13:24:02.350171+00:00"
+}

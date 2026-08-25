@@ -1,6 +1,6 @@
 # Design Decisions Record (`DESIGN_DECISIONS.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.1.0  
+**Version:** 2.2.2  
 **Document Status:** Architecture Rationale & Decision History  
 
 ---
@@ -13,11 +13,11 @@
 
 ---
 
-## 2. Decision 002: WebAssembly (WASM) Canvas Render Engine with JS Canvas Fallback
+## 2. Decision 002: Canvas 2D Particle Engine (no WebAssembly)
 
-- **Context:** High-frequency particle rendering for canvas visual background effects during card hovering and mouse movement.
-- **Decision:** Lightweight WebAssembly Byte Engine + Optimized Canvas 2D Pipeline.
-- **Outcome:** Fast particle math execution in WebAssembly, smooth 60fps canvas animation, low memory footprint.
+- **Context:** High-frequency particle rendering for canvas visual background effects during card hovering and mouse movement. A WASM module was considered and is **not** shipped.
+- **Decision:** JavaScript Canvas 2D particle engine in `src/wasm/visualEngine.js` (historical path name only).
+- **Outcome:** Smooth ~60fps canvas animation, audio-reactive spectrum, `pauseLoop`/`resumeLoop` on modal overlay, `prefers-reduced-motion` physics skip. No `.wasm` binary and no `WebAssembly` API.
 
 ---
 
@@ -57,3 +57,26 @@
 - **Decision:** Keep the 24-style catalog. Differentiate with unique thumbs, category motifs, and motion profiles. Click selects a draft into a bottom dock; double-click/Enter opens detail; confirm persists locally. Hydrate mockups instead of inline alerts.
 - **Rejected:** Expanding to 32 styles before the existing 24 felt distinct.
 - **Outcome:** Gallery, peek, dock, and sandbox share one `getMockupHTML` + `hydrateMockup` path. Looping motion pauses off-screen and honors `prefers-reduced-motion`.
+
+---
+
+## 7. Decision 007: 8 Core Archetypes & Zero-Rebuild Dynamic Theme Injection (v2.2)
+
+- **Context:** Users requested diverse page archetypes (Game, Web, Mobile, E-commerce, Blog, Dashboard, Media, Chat) that can dynamically switch all 24 design styles across shared page templates without losing runtime state (e.g. cart contents, game scores).
+- **Decision:** 
+  - Define unified semantic HTML templates for 8 core page archetypes (`src/components/archetypeTemplates.js`).
+  - Standardize 24 design styles into atomic CSS Custom Properties and `[data-theme]` attributes (`src/styles/themeTokens.css`).
+  - Theme switching only updates container attributes and variables (`viewport.setAttribute('data-theme', ...)`), preserving DOM elements and listener bindings.
+- **Outcome:** Zero DOM tearing on style switch, instant < 16ms theme transition, zero state loss, and fully functional multi-genre interaction simulators.
+
+---
+
+## 8. Decision 008: Universal Top Design Selector Bar (v2.2)
+
+- **Context:** Previous modal navigation was restricted to cycling within the current category's 3 sub-styles, breaking user flow when comparing cross-category aesthetics on the same page archetype.
+- **Decision:**
+  - Build an integrated top selector bar featuring 8 major category tabs and 24 sub-style visual thumbnail chips.
+  - Implement full keyboard shortcuts (`[` / `]` for styles, `Shift + Left/Right` for categories, `Esc` to close).
+  - Sync style switches with procedural audio SFX (`THEME_SWAP`) and `appState`.
+- **Outcome:** Seamless cross-category design exploration and instant comparative evaluation.
+

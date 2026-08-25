@@ -6,7 +6,7 @@
 import { MAIN_CATEGORIES } from '../data/categories.js';
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
-import { wasmVisualEngine } from '../wasm/visualEngine.js';
+import { canvasVisualEngine } from '../wasm/visualEngine.js';
 import { getMockupHTML } from './mockupTemplates.js';
 import { observeThumbMotion } from './mockupRuntime.js';
 import {
@@ -293,7 +293,7 @@ export function renderMainView(container) {
 
       item.addEventListener('mouseenter', () => {
         const cat = MAIN_CATEGORIES.find((c) => c.id === catId);
-        if (cat) wasmVisualEngine.setAccentColor(cat.accentColor);
+        if (cat) canvasVisualEngine.setAccentColor(cat.accentColor);
         synthAudio.playSfx('HOVER');
         schedulePeek(subId);
       });
@@ -335,7 +335,7 @@ export function renderMainView(container) {
       const catId = card.getAttribute('data-cat-id');
       const catData = MAIN_CATEGORIES.find((c) => c.id === catId);
       card.addEventListener('mouseenter', () => {
-        if (catData) wasmVisualEngine.setAccentColor(catData.accentColor);
+        if (catData) canvasVisualEngine.setAccentColor(catData.accentColor);
       });
     });
   }

@@ -21,7 +21,8 @@ export function renderPeekPreview(container) {
     const { currentView, peekSubId, viewport } = appState.getState();
     const show = currentView === 'MAIN' && peekSubId;
     if (!show) {
-      teardownMockup(container);
+      const vp = container.querySelector('#peek-viewport');
+      teardownMockup(vp);
       container.innerHTML = '';
       container.style.display = 'none';
       lastId = null;
@@ -36,7 +37,7 @@ export function renderPeekPreview(container) {
 
     container.style.display = 'block';
     if (lastId !== sub.id) {
-      teardownMockup(container);
+      teardownMockup(container.querySelector('#peek-viewport'));
       container.innerHTML = `
         <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="dialog" aria-label="${escapeHtml(sub.name)} 미리보기">
           <div class="peek-meta">

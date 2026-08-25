@@ -46,7 +46,17 @@ export function showToast(message) {
 
   const toast = document.createElement('div');
   toast.className = 'toast-message';
-  toast.innerHTML = `<span>✨</span> <span>${message}</span>`;
+
+  const iconSpan = document.createElement('span');
+  iconSpan.textContent = '✨';
+  iconSpan.setAttribute('aria-hidden', 'true');
+
+  const textSpan = document.createElement('span');
+  textSpan.textContent = String(message);
+
+  toast.appendChild(iconSpan);
+  toast.appendChild(document.createTextNode(' '));
+  toast.appendChild(textSpan);
   toastContainer.appendChild(toast);
 
   setTimeout(() => {
@@ -54,3 +64,4 @@ export function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 2200);
 }
+

@@ -378,8 +378,6 @@ class SynthAudioEngine {
 
   tickStep() {
     if (!this.ctx || !this.bgmGain) return;
-    const { audio } = appState.getState();
-    if (!audio.bgmEnabled) return;
 
     const track = BGM_TRACKS[this.currentTrackIndex];
     const currentChord = track.chords[this.chordIndex % track.chords.length];
@@ -438,6 +436,14 @@ class SynthAudioEngine {
       padFilter.connect(gain);
       gain.connect(this.bgmGain);
 
+      osc.onended = () => {
+        try {
+          osc.disconnect();
+          padFilter.disconnect();
+          gain.disconnect();
+        } catch { /* ignore */ }
+      };
+
       osc.start(startTime);
       osc.stop(startTime + duration + 0.1);
     });
@@ -465,6 +471,14 @@ class SynthAudioEngine {
     osc.connect(bassFilter);
     bassFilter.connect(gain);
     gain.connect(this.bgmGain);
+
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        bassFilter.disconnect();
+        gain.disconnect();
+      } catch { /* ignore */ }
+    };
 
     osc.start(startTime);
     osc.stop(startTime + duration + 0.1);
@@ -494,6 +508,14 @@ class SynthAudioEngine {
     arpFilter.connect(gain);
     gain.connect(this.bgmGain);
 
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        arpFilter.disconnect();
+        gain.disconnect();
+      } catch { /* ignore */ }
+    };
+
     osc.start(startTime);
     osc.stop(startTime + 0.5);
   }
@@ -503,37 +525,24 @@ class SynthAudioEngine {
   playSfx(type) {
     const { audio } = appState.getState();
     if (!audio.sfxEnabled) return;
-    this.ensureAudioContext();
+    
+    // For hover sound, only play if audio context is already running (prevent autoplay console warning)
+    if (type === 'HOVER' && (!this.ctx || this.ctx.state !== 'running')) {
+      return;
+    }
 
+    this.ensureAudioContext();
     if (!this.ctx || !this.sfxGain) return;
 
     const now = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
 
     switch (type) {
       case 'HOVER':
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(580, now);
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.035);
-        gain.gain.setValueAtTime(0.02, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
-        osc.connect(gain);
-        gain.connect(this.sfxGain);
-        osc.start(now);
-        osc.stop(now + 0.04);
+        this.playOscSweep('sine', 580, 880, 0.035, 0.02, 0.04);
         break;
 
       case 'CLICK':
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(220, now + 0.03);
-        gain.gain.setValueAtTime(0.05, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
-        osc.connect(gain);
-        gain.connect(this.sfxGain);
-        osc.start(now);
-        osc.stop(now + 0.035);
+        this.playOscSweep('triangle', 440, 220, 0.03, 0.05, 0.035);
         break;
 
       case 'REVEAL':
@@ -564,21 +573,102 @@ class SynthAudioEngine {
         break;
 
       case 'CLOSE':
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(220, now + 0.06);
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
-        osc.connect(gain);
-        gain.connect(this.sfxGain);
-        osc.start(now);
-        osc.stop(now + 0.065);
+        this.playOscSweep('sine', 440, 220, 0.06, 0.04, 0.065);
+        break;
+
+      case 'THEME_SWAP':
+        this.playChimeNote(587.33, now, 0.04); // D5
+        this.playChimeNote(880.00, now + 0.025, 0.06); // A5
+        this.playChimeNote(1174.66, now + 0.05, 0.09); // D6
+        break;
+
+      case 'COIN':
+        this.playChimeNote(987.77, now, 0.04); // B5
+        this.playChimeNote(1318.51, now + 0.035, 0.08); // E6
+        break;
+
+      case 'CART_ADD':
+        this.playChimeNote(783.99, now, 0.04); // G5
+        this.playChimeNote(1046.50, now + 0.035, 0.08); // C6
+        break;
+
+      case 'SUCCESS':
+        this.playChimeNote(523.25, now, 0.05); // C5
+        this.playChimeNote(659.25, now + 0.04, 0.06); // E5
+        this.playChimeNote(783.99, now + 0.08, 0.08); // G5
+        this.playChimeNote(1046.50, now + 0.12, 0.14); // C6
+        break;
+
+      case 'LIKE':
+        this.playOscSweep('sine', 440, 880, 0.05, 0.04, 0.055);
+        break;
+
+      case 'SWIPE':
+        this.playNoiseSweep(300, 1200, 0.06, 0.03);
         break;
     }
   }
 
+  playOscSweep(oscType, freqStart, freqEnd, rampDur, gainStart, stopDur) {
+    if (!this.ctx || !this.sfxGain) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = oscType;
+    osc.frequency.setValueAtTime(freqStart, now);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(1, freqEnd), now + rampDur);
+    gain.gain.setValueAtTime(gainStart, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + rampDur);
+
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        gain.disconnect();
+      } catch { /* ignore */ }
+    };
+    osc.start(now);
+    osc.stop(now + stopDur);
+  }
+
+  playNoiseSweep(freqStart, freqEnd, duration, gainStart) {
+    if (!this.ctx || !this.sfxGain) return;
+    const now = this.ctx.currentTime;
+    const sampleRate = this.ctx.sampleRate;
+    const frameCount = Math.max(1, Math.floor(sampleRate * duration));
+    const buffer = this.ctx.createBuffer(1, frameCount, sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < frameCount; i++) data[i] = Math.random() * 2 - 1;
+
+    const src = this.ctx.createBufferSource();
+    src.buffer = buffer;
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.Q.setValueAtTime(1.2, now);
+    filter.frequency.setValueAtTime(freqStart, now);
+    filter.frequency.exponentialRampToValueAtTime(freqEnd, now + duration);
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(gainStart, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.sfxGain);
+    src.onended = () => {
+      try {
+        src.disconnect();
+        filter.disconnect();
+        gain.disconnect();
+      } catch { /* ignore */ }
+    };
+    src.start(now);
+    src.stop(now + duration + 0.01);
+  }
+
   playChimeNote(freq, startTime, duration) {
-    if (!this.ctx) return;
+    if (!this.ctx || !this.sfxGain) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
@@ -589,6 +679,12 @@ class SynthAudioEngine {
 
     osc.connect(gain);
     gain.connect(this.sfxGain);
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        gain.disconnect();
+      } catch { /* ignore */ }
+    };
     osc.start(startTime);
     osc.stop(startTime + duration + 0.01);
   }
@@ -601,3 +697,4 @@ class SynthAudioEngine {
 }
 
 export const synthAudio = new SynthAudioEngine();
+

@@ -1,6 +1,6 @@
 # UI/UX Design Specification (`designs.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.1.0  
+**Version:** 2.2.2  
 **Document Status:** Frozen UX Architecture / Implementation Target  
 
 ---
@@ -67,7 +67,10 @@
 +-------------------------------------------------------------------+
 | LAYER 6: Toast Notifications & Copy Feedback (z-index: 1100)      |
 +-------------------------------------------------------------------+
-| LAYER 5: Detail Showcase & Sandbox Modal View (z-index: 800)      |
+| LAYER 5: Detail Showcase & Archetype Modal View (z-index: 800)    |
+|          - Universal Top Design Selector Bar (24 Styles)          |
+|          - 8 Page Archetype Viewport + Live Kinetic Simulator     |
+|          - Live CSS Parameter Sliders & Inspector                 |
 +-------------------------------------------------------------------+
 | LAYER 4.5: Selection Dock + Confirm Sheet (z-index: 550)          |
 +-------------------------------------------------------------------+
@@ -80,7 +83,7 @@
 +-------------------------------------------------------------------+
 | LAYER 2: Gallery Main Grid / Bento / Spectrum Stream (z-index: 100|
 +-------------------------------------------------------------------+
-| LAYER 1: WASM Canvas Animation Background Renderer (z-index: 0)   |
+| LAYER 1: Canvas 2D Particle Background Renderer (z-index: 0)      |
 +-------------------------------------------------------------------+
 ```
 
@@ -90,7 +93,7 @@
 
 ### 3.1 Top Navigation & Search/Filter Controls
 - **Global Header:**
-  - Dynamic Animated Brand Logo + Version 2.0 Badge.
+  - Dynamic Animated Brand Logo + Version 2.2 LIVE badge. Canvas 2D status chip (not WASM).
   - Real-time Instant Search Input Field with clear button.
   - Category / Mood Filter Tags (All, Swiss, Brutalism, Depth, Retro, Editorial, Y2K, Kinetic, 3D Clay, etc.).
   - View Mode Toggle Switch (`Grid`, `Bento`, `Spectrum`).
@@ -107,41 +110,44 @@
 
 ---
 
-## 4. Detail View & Interactive Live Sandbox Specification
+## 4. Detail View & 8 Core Page Archetypes Specification
 
-### 4.1 2-Column Responsive Layout
-- **Left Column: Live Sandbox & 4 Component Preview Tabs**
-  - **Component Tabs:**
-    - `[ 🎯 Hero Landing ]`: Full-impact headline, hero visuals, CTA buttons.
-    - `[ 📊 Dashboard & Widget ]`: Metric cards, status badges, micro-visual graphs.
-    - `[ ⚡ Form & Controls ]`: Interactive inputs, switch toggles, checkbox groups.
-    - `[ 🏷️ Pricing & Features ]`: Tier cards, highlight badges, conversion CTA.
-  - **Device Switcher:** Desktop (100% fluid) vs. Mobile (380px device frame simulation).
-  - **Full Preview Trigger:** Expands sandbox to fullscreen preview.
+### 4.1 Universal Top Design Selector Bar
+Located at the topmost header of the detail modal:
+1. **Category Tabs Row (8 Genres):** Swiss, Brutalism, Depth, Retro, Editorial, Y2K, Hypertech, Soft 3D.
+2. **Sub-Style Chips Strip (24 Presets):** Horizontal scrolling chip ribbon containing miniature geometric icons and style names.
+3. **Instant Action Buttons:** Bookmark (★), Confirm Style (✓), Split Compare (⚖️), and Close (✕).
+4. **Keyboard Shortcuts:** `[` / `]` for previous/next style, `Shift + Left/Right` for category jump, `Esc` to close.
 
-- **Right Column: Tweak Controls, Inspector & Style Specs**
-  - **Interactive Palette Cards:** HEX click-to-copy with dual audio ping and toast notice.
-  - **Live Parameter Tweak Sliders (Live CSS Variables Binding):**
-    - Border Radius slider (`0px` ~ `48px`)
-    - Border Width slider (`0px` ~ `8px`)
-    - Shadow Depth slider (`0px` ~ `30px`)
-    - Backdrop Blur slider (`0px` ~ `32px`)
-    - Glow Intensity slider (`0.0` ~ `2.0`)
-  - **Live CSS & HTML Inspector:**
-    - Displays active CSS rules with live-tweaked values.
-    - Click-to-copy complete CSS or HTML snippet.
-  - **Characteristics & Pros/Cons Hover Cards:**
-    - Positive bullet points (Green glow).
-    - Potential caveats and considerations (Coral/Amber glow).
-  - **Action Footer:**
-    - `[ ⭐️ Bookmark Style ]` toggle.
-    - `[ ⚖️ Add to Split Compare ]` button.
+### 4.2 8 Core Page Archetype Tabs & Viewport
+- **Archetype Navigation Bar (`role="tablist"`):**
+  - `[ 🎮 Game HUD ]`: Target reflex clicker game, HP/MP bars, skill cooldown, combo multiplier.
+  - `[ 🌐 Web SaaS ]`: Modern SaaS landing with Hero, Widget, Form, and Pricing sub-tabs.
+  - `[ 📱 Mobile App ]`: Native mobile frame with status bar, feed cards, notification swipe, bottom 4-tab bar.
+  - `[ 🛍️ E-Commerce ]`: Product showcase, color/size chips, quantity stepper, cart drawer, checkout modal.
+  - `[ 📰 Blog & Post ]`: Article reader, scroll progress bar, like particle counter, live comment authoring.
+  - `[ 📊 Dashboard ]`: KPI analytics cards, 1D/1W/1M time range filters, responsive data table with sort.
+  - `[ 🎵 Media Player ]`: Track vinyl/cassette artwork, play/pause controls, interactive scrub bar, visualizer.
+  - `[ 💬 Chat & DM ]`: Multi-channel sidebar, chat bubble stream, emoji reactions, message composer.
+
+### 4.3 Right Column: Live Parameter Tweak Sliders & Code Inspector
+- **Interactive Palette Cards:** HEX click-to-copy with audio ping and toast notice.
+- **Live Parameter Tweak Sliders (Live CSS Variables Binding):**
+  - Border Radius slider (`0px` ~ `64px`)
+  - Border Width slider (`0px` ~ `12px`)
+  - Shadow Depth slider (`0px` ~ `30px`)
+  - Backdrop Blur slider (`0px` ~ `32px`)
+  - Glow Intensity slider (`0.0` ~ `2.0`)
+- **Live CSS & HTML Inspector:** Displays active CSS variables and current sandbox HTML, with one-click CSS copy and HTML copy.
+- **Characteristics & Pros/Cons Hover Cards.**
 
 ---
 
 ## 5. Side-by-Side Dual Split Comparison View
 
-- Allows selecting any two sub-styles (e.g. `Grid-Driven Modernism` vs `Trendy Neo-Brutalism`).
-- Displays 2 side-by-side synchronized viewports.
-- Switches component tabs (`Hero`, `Widget`, `Form`, `Pricing`) synchronously across both styles.
-- Provides immediate visual contrast between color philosophy, typography scale, borders, and tactile affordances.
+- Selects any two sub-styles (e.g. `Grid-Driven Modernism` vs `Trendy Neo-Brutalism`).
+- Synchronized Archetype selection across Left (Style A) and Right (Style B).
+- Full visual thumbnail picker for instant slot assignment.
+- All 8 archetype tabs (including Media and Chat), synchronized across A/B.
+- Keyboard `Escape` / close returns to the originating view (`MAIN` gallery or `DETAIL` modal).
+

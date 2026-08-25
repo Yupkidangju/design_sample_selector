@@ -1,6 +1,6 @@
 /**
  * Floating Audio Player & BGM Synthesizer Widget v3.0
- * Controls 16 ambient procedural tracks, UI sound effects, master volume, and renders mini WASM frequency visualizer.
+ * Controls 16 ambient procedural tracks, UI sound effects, master volume, and renders a mini Canvas 2D frequency visualizer.
  */
 
 import { appState } from '../state/appState.js';

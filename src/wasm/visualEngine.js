@@ -1,12 +1,13 @@
 /**
- * WebAssembly (WASM) & HTML5 Canvas Background Particle Render Engine v2.0
- * Features high-efficiency reactive particle physics, mesh lines, and audio-reactive spectrum pulsation.
+ * HTML5 Canvas 2D background particle render engine.
+ * Particle physics, mesh lines, and audio-reactive spectrum pulsation — no WebAssembly.
  */
 
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
+import { prefersReducedMotion } from '../utils/selection.js';
 
-class WASMVisualEngine {
+class CanvasVisualEngine {
   constructor() {
     this.canvas = null;
     this.ctx = null;
@@ -18,9 +19,10 @@ class WASMVisualEngine {
     this.targetMouseY = 0;
     this.activeAccentColor = '#00F0FF';
     this.animFrameId = null;
-    this.wasmLoaded = false;
+    this.motionQuery = null;
     this.freqData = new Uint8Array(32);
     this.audioEnergy = 0;
+    this.isPaused = false;
   }
 
   async init(canvasElement) {
@@ -33,10 +35,25 @@ class WASMVisualEngine {
     window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
 
     this.initParticles();
+
+    if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+      this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.onMotionPrefChange = () => {
+        if (this.isPaused) {
+          this.draw();
+          return;
+        }
+        this.startLoop();
+      };
+      if (this.motionQuery.addEventListener) {
+        this.motionQuery.addEventListener('change', this.onMotionPrefChange);
+      } else if (this.motionQuery.addListener) {
+        this.motionQuery.addListener(this.onMotionPrefChange);
+      }
+    }
     
-    this.wasmLoaded = true;
-    appState.setState({ wasmReady: true });
-    console.log(`[WASM VisualEngine] Byte renderer ready. Particles: ${this.particleCount}`);
+    appState.setState({ canvasReady: true });
+    console.log(`[Canvas VisualEngine] 2D renderer ready. Particles: ${this.particleCount}`);
 
     this.startLoop();
   }
@@ -52,6 +69,7 @@ class WASMVisualEngine {
     else this.particleCount = 120;
 
     this.initParticles();
+    if (prefersReducedMotion()) this.draw();
   }
 
   initParticles() {
@@ -81,10 +99,38 @@ class WASMVisualEngine {
     if (hexColor) this.activeAccentColor = hexColor;
   }
 
+  pauseLoop() {
+    this.isPaused = true;
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = null;
+    }
+  }
+
+  resumeLoop() {
+    if (!this.isPaused) return;
+    this.isPaused = false;
+    this.startLoop();
+  }
+
   startLoop() {
-    if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = null;
+    }
+
+    if (prefersReducedMotion()) {
+      this.draw();
+      return;
+    }
     
     const render = () => {
+      if (this.isPaused) return;
+      if (prefersReducedMotion()) {
+        this.draw();
+        this.animFrameId = null;
+        return;
+      }
       this.update();
       this.draw();
       this.animFrameId = requestAnimationFrame(render);
@@ -94,6 +140,8 @@ class WASMVisualEngine {
   }
 
   update() {
+    if (prefersReducedMotion()) return;
+
     this.mouseX += (this.targetMouseX - this.mouseX) * 0.06;
     this.mouseY += (this.targetMouseY - this.mouseY) * 0.06;
 
@@ -191,4 +239,4 @@ class WASMVisualEngine {
   }
 }
 
-export const wasmVisualEngine = new WASMVisualEngine();
+export const canvasVisualEngine = new CanvasVisualEngine();

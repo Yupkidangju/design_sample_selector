@@ -3,6 +3,8 @@
  * Observer pattern, LocalStorage persistence for bookmarks / confirmed style / recents.
  */
 
+import { canonicalizeSubId } from '../data/categories.js';
+
 function loadJSON(key, fallback) {
   try {
     if (typeof localStorage === 'undefined') return fallback;
@@ -26,9 +28,47 @@ function saveJSON(key, value) {
   }
 }
 
+function canonicalizeStoredId(id) {
+  return canonicalizeSubId(id);
+}
+
+function canonicalizeStoredList(ids, maxLen = Infinity) {
+  if (!Array.isArray(ids)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const raw of ids) {
+    const id = canonicalizeStoredId(raw);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+    if (out.length >= maxLen) break;
+  }
+  return out;
+}
+
 function loadStoredBookmarks() {
   const parsed = loadJSON('dss_bookmarks_v2', []);
-  return Array.isArray(parsed) ? parsed : [];
+  const next = canonicalizeStoredList(parsed);
+  if (Array.isArray(parsed) && JSON.stringify(parsed) !== JSON.stringify(next)) {
+    saveJSON('dss_bookmarks_v2', next);
+  }
+  return next;
+}
+
+function loadStoredConfirmed() {
+  const raw = loadJSON('dss_confirmed_v21', null);
+  const id = canonicalizeStoredId(raw);
+  if (raw && raw !== id) saveJSON('dss_confirmed_v21', id);
+  return id;
+}
+
+function loadStoredRecents() {
+  const parsed = loadJSON('dss_recent_v21', []);
+  const next = canonicalizeStoredList(parsed, 6);
+  if (Array.isArray(parsed) && JSON.stringify(parsed) !== JSON.stringify(next)) {
+    saveJSON('dss_recent_v21', next);
+  }
+  return next;
 }
 
 const DEFAULT_STATE = {
@@ -38,22 +78,19 @@ const DEFAULT_STATE = {
   selectedSubCategory: null,
   activeFilter: 'ALL',
   searchQuery: '',
-  activeComponentTab: 'hero', // 'hero' | 'widget' | 'form' | 'pricing'
+  activeArchetype: 'game', // 'game' | 'web' | 'mobile' | 'ecommerce' | 'blog' | 'dashboard' | 'media' | 'chat'
+  activeComponentTab: 'hero', // 'hero' | 'widget' | 'form' | 'pricing' (sub-tab for web archetype)
   sandboxDevice: 'desktop', // 'desktop' | 'mobile'
   compareSubIds: ['swiss-grid', 'neo-brutalism'],
+  compareReturnView: 'MAIN', // 'MAIN' | 'DETAIL' — view that opened split compare
   bookmarks: loadStoredBookmarks(),
   bookmarkFilterActive: false,
   galleryFocusId: null,
   draftSubId: null,
-  confirmedStyleId: loadJSON('dss_confirmed_v21', null),
+  confirmedStyleId: loadStoredConfirmed(),
   peekSubId: null,
   confirmSheetOpen: false,
-  comparePickerOpen: false,
-  comparePickingSlot: null, // 'A' | 'B' | null
-  recentlyViewed: (() => {
-    const recents = loadJSON('dss_recent_v21', []);
-    return Array.isArray(recents) ? recents : [];
-  })(),
+  recentlyViewed: loadStoredRecents(),
   liveTweaks: {
     borderRadius: 16,
     borderWidth: 1,
@@ -62,16 +99,16 @@ const DEFAULT_STATE = {
     glowIntensity: 1.0
   },
   audio: {
-    bgmEnabled: true,
     sfxEnabled: true,
     isPlaying: false,
     currentTrackIndex: 0,
     volume: 0.5,
     trackTitle: '♪ 01. Ethereal Drift (Lo-Fi Chill Chords)'
   },
-  wasmReady: false,
+  canvasReady: false,
   viewport: 'DESKTOP'
 };
+
 
 class AppStateManager {
   constructor() {
@@ -128,36 +165,49 @@ class AppStateManager {
   }
 
   toggleBookmark(subId) {
+    const id = canonicalizeStoredId(subId);
+    if (!id) return false;
     const current = [...this.state.bookmarks];
-    const index = current.indexOf(subId);
+    const index = current.indexOf(id);
     if (index >= 0) {
       current.splice(index, 1);
     } else {
-      current.push(subId);
+      current.push(id);
     }
     this.setState({ bookmarks: current });
     return index < 0;
   }
 
   isBookmarked(subId) {
-    return this.state.bookmarks.includes(subId);
+    const id = canonicalizeStoredId(subId);
+    return Boolean(id && this.state.bookmarks.includes(id));
   }
 
   setCompareSubIds(id1, id2) {
-    this.setState({ compareSubIds: [id1, id2] });
+    const a = canonicalizeStoredId(id1) || id1;
+    const b = canonicalizeStoredId(id2) || id2;
+    this.setState({ compareSubIds: [a, b] });
   }
 
   pushRecentlyViewed(subId) {
-    if (!subId) return;
-    const next = [subId, ...this.state.recentlyViewed.filter((id) => id !== subId)].slice(0, 6);
+    const id = canonicalizeStoredId(subId);
+    if (!id) return;
+    const next = [id, ...this.state.recentlyViewed.filter((x) => x !== id)].slice(0, 6);
     this.setState({ recentlyViewed: next });
   }
 
+  setActiveArchetype(archetype) {
+    if (!archetype) return;
+    this.setState({ activeArchetype: archetype });
+  }
+
   setConfirmedStyle(subId) {
+    const id = canonicalizeStoredId(subId);
+    if (!id) return;
     this.setState({
-      confirmedStyleId: subId,
+      confirmedStyleId: id,
       confirmSheetOpen: true,
-      draftSubId: subId
+      draftSubId: id
     });
   }
 
