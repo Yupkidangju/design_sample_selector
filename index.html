@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DESIGN SPECTRUM v2.1 | 24종 라이브 시안 · 선택 도크 · 동적 샌드박스</title>
+  <meta name="description" content="8대 대분류 24종 웹 디자인 사조를 라이브 미리보기, 선택 도크, 모션 샌드박스로 비교하는 클라이언트 전용 갤러리">
+  <meta name="keywords" content="웹디자인, 스위스스타일, 브루탈리즘, 글래스모피즘, 뉴모피즘, Y2K, FrutigerAero, BentoUI, 키네틱타이포, 클레이모피즘, 솔라펑크, WASM, WebAudio">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <!-- WASM Canvas Background Renderer -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- App Main Root Container -->
+  <div class="app-container">
+    <!-- Header Component Root -->
+    <div id="header-root"></div>
+
+    <!-- Main View Component Root (Category Nodes Grid) -->
+    <main id="main-root"></main>
+
+    <!-- Detail Showcase Modal Component Root -->
+    <div id="detail-root"></div>
+  </div>
+
+  <div id="peek-root"></div>
+  <div id="selection-dock-root"></div>
+
+  <!-- Floating Audio Player & BGM Synthesizer Widget Root -->
+  <div id="audio-widget-root"></div>
+
+  <!-- ES Module Application Bootstrap Entry -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
