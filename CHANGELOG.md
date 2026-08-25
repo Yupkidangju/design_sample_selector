@@ -3,6 +3,22 @@
 All notable changes to the `design_sample_selector` project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+
+## [2.3.0] - 2026-08-26
+
+### Added
+- **실시간 4대 탭 동적 인스펙터 (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens]`):**
+  - **Live CSS 인스펙터:** 상단 셀렉터, 8대 아키타입, 슬라이더 조작에 100% 매칭되는 순수 CSS 실시간 생성. 서브 토글(`전체 번들`, `테마 토큰만`, `아키타입 CSS`) 지원.
+  - **Live designs.md 마크다운 사양서 뷰어:** 현재 선택된 사조 및 실시간 슬라이더 수치, 폰트 스택, 아키타입 ASCII 다이어그램, 키네틱 인터랙션 규칙, 가이드라인이 포함된 D3D 표준 Markdown을 실시간 빌드.
+  - **Live Design Tokens (JSON):** W3C DTCG 규격 준수 토큰 JSON 실시간 생성.
+  - **원클릭 복사 & 파일 내보내기 툴바:** 개별 파일 다운로드(`.css`, `.html`, `.md`, `.json`), 전체 패키지 일괄 내보내기, 클립보드 복사(SFX + 토스트 알림 연동) 지원.
+- **60fps `requestAnimationFrame` 실시간 렌더링 파이프라인:** 슬라이더 연속 드래그 시 UI 프레임 드랍 없이 텍스트/코드 인스펙터 뷰를 무지연 실시간 동기화.
+- **순수 데이터 생성기 모듈 (`src/utils/designSpecGenerator.js`):** 24개 테마의 모든 CSS 커스텀 프로퍼티 및 아키타입 룰셋을 관리하는 순수 함수 아키텍처 구축.
+
+### Fixed
+- **상태 관리자 매개변수 불변성 보장 (FIN-F001):** `AppStateManager.setState` 내부에서 `partialState`의 `audio` 및 `liveTweaks` 키를 `delete` 연산자로 직접 변이하던 코드를 순수 불변 객체 병합 패턴으로 리팩토링.
+- **갤러리 북마크 분리 노드 변이 제거 (FIN-F002):** `src/components/mainView.js`의 북마크 클릭 이벤트 리스너에서 상태 갱신 및 재렌더링 후 분리된(detached) 버튼 노드에 클래스/텍스트를 변경하던 잔여 코드를 정리하고 반응형 구독자로 일원화.
+
 ## [2.2.2] - 2026-08-25
 
 ### Fixed & Enhanced

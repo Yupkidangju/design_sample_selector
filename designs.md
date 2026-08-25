@@ -1,6 +1,6 @@
 # UI/UX Design Specification (`designs.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.2.2  
+**Version:** 2.3.0  
 **Document Status:** Frozen UX Architecture / Implementation Target  
 
 ---
@@ -130,7 +130,7 @@ Located at the topmost header of the detail modal:
   - `[ 🎵 Media Player ]`: Track vinyl/cassette artwork, play/pause controls, interactive scrub bar, visualizer.
   - `[ 💬 Chat & DM ]`: Multi-channel sidebar, chat bubble stream, emoji reactions, message composer.
 
-### 4.3 Right Column: Live Parameter Tweak Sliders & Code Inspector
+### 4.3 Right Column: Live Parameter Tweak Sliders & Reactive Design Spec Inspector
 - **Interactive Palette Cards:** HEX click-to-copy with audio ping and toast notice.
 - **Live Parameter Tweak Sliders (Live CSS Variables Binding):**
   - Border Radius slider (`0px` ~ `64px`)
@@ -138,7 +138,13 @@ Located at the topmost header of the detail modal:
   - Shadow Depth slider (`0px` ~ `30px`)
   - Backdrop Blur slider (`0px` ~ `32px`)
   - Glow Intensity slider (`0.0` ~ `2.0`)
-- **Live CSS & HTML Inspector:** Displays active CSS variables and current sandbox HTML, with one-click CSS copy and HTML copy.
+- **Dynamic 4-Tab Reactive Inspector & Spec Generator:**
+  - `role="tablist"` navigation: `[ 💻 Live CSS ]`, `[ 📄 Live HTML ]`, `[ 📋 Live designs.md ]`, `[ 🏷️ Design Tokens ]`.
+  - **Live CSS Sub-Toggles:** `전체 번들 (Full)` / `테마 토큰만 (Tokens Only)` / `아키타입 CSS (Component)`.
+  - **Live designs.md Viewer:** Real-time rendered Markdown document containing complete D3D specifications, ASCII archetype layout, color tables, and kinetic interaction guides.
+  - **Design Tokens Viewer:** DTCG-compliant structured JSON.
+  - **Action Toolbar:** `📋 클립보드 복사`, `💾 .css / .html / .md / .json 다운로드`, `📦 전체 패키지 내보내기`.
+  - **60fps rAF Engine:** Continuous parameter dragging updates text display without UI frame drops.
 - **Characteristics & Pros/Cons Hover Cards.**
 
 ---

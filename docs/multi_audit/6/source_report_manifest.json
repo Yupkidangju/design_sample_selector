@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "run_directory": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/6",
+  "reports": [
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/6/sub_audit_01_state_integration.md",
+      "sha256": "c26f1e82dc0d4d57f6d7946c4669e5f618306f4abcd463cd399f61a3cbfcce6d",
+      "size": 17101,
+      "sealed_at_utc": "2026-08-25T15:41:33.788026+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/6/sub_audit_02_realtime_reactivity.md",
+      "sha256": "ba27331224fbb63429d395246b03005cc6cdb7325ff922cc0a1c0adf4c266210",
+      "size": 14912,
+      "sealed_at_utc": "2026-08-25T15:40:46.797904+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/6/sub_audit_03_resilience_consistency.md",
+      "sha256": "7a6fb52f5a9c823a462d3ccc3673cb70b1c012489bc5cd931fdf3611b9ba4ce3",
+      "size": 19185,
+      "sealed_at_utc": "2026-08-25T15:41:35.801414+00:00"
+    }
+  ],
+  "missing_source_reports": [],
+  "finalized_at_utc": "2026-08-25T15:41:38.758077+00:00"
+}

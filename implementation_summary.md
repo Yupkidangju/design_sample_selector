@@ -1,6 +1,6 @@
 # Implementation Summary (`implementation_summary.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.2.2  
+**Version:** 2.3.0  
 **Document Status:** Complete System Blueprint / File & Task Map  
 
 ---
@@ -26,7 +26,7 @@ The application is structured into zero-dependency, native ES modules that commu
 │   ├── components/
 │   │   ├── header.js           # Navigation bar, search input, 3-mode view switcher, bookmark filter, compare launcher
 │   │   ├── mainView.js         # 3 gallery modes, live thumbs, draft selection, keyboard nav
-│   │   ├── detailView.js       # Universal top design selector bar, 8 core archetypes, zero-rebuild theme swap & split compare
+│   │   ├── detailView.js       # 4-Tab Dynamic Reactive Inspector, Universal Top Bar, 8 archetypes, zero-rebuild theme swap & split compare
 │   │   ├── archetypeTemplates.js# Standard semantic HTML templates for 8 core page archetypes
 │   │   ├── mockupTemplates.js  # 24-styles mockups + thumb signatures (legacy/web sub-view)
 │   │   ├── mockupRuntime.js    # Multi-archetype kinetic interaction simulators & WeakMap cleanup registry
@@ -35,12 +35,13 @@ The application is structured into zero-dependency, native ES modules that commu
 │   │   └── audioWidget.js      # Floating BGM player control panel & mini spectrum visualizer
 │   ├── styles/
 │   │   ├── themeTokens.css     # 24-styles CSS custom properties token dictionary
-│   │   └── interactive.css     # Universal top bar, 8 archetypes styles, dock, peek, thumbs, mockup FX
+│   │   └── interactive.css     # Universal top bar, 4-tab inspector, 8 archetypes styles, dock, peek, thumbs, mockup FX
 │   └── utils/
+│       ├── designSpecGenerator.js # Pure engine for Live CSS, Live designs.md (D3D Markdown), JSON Tokens & Downloaders (v2.3.0)
 │       ├── clipboard.js        # Safe DOM textContent copy-to-clipboard utility & toast renderer (XSS-safe)
 │       └── selection.js        # Draft / detail / confirm / peek / reduced motion helpers
-├── spec.md                     # Master Technical Specification (v2.2.2)
-├── designs.md                  # UI/UX & Design Token Specification (v2.2.2)
+├── spec.md                     # Master Technical Specification (v2.3.0)
+├── designs.md                  # UI/UX & Design Token Specification (v2.3.0)
 ├── DESIGN_DECISIONS.md         # Architecture Decisions & Rationale
 ├── BUILD_GUIDE.md              # Scaffolding, execution & deployment guide
 ├── audit_roadmap.md            # Quality & Phase Verification Checklist

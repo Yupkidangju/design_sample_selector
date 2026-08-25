@@ -139,17 +139,20 @@ class AppStateManager {
   setState(partialState) {
     const prevState = { ...this.state };
 
-    if (partialState.audio) {
-      this.state.audio = { ...this.state.audio, ...partialState.audio };
-      delete partialState.audio;
-    }
+    const nextAudio = partialState.audio
+      ? { ...this.state.audio, ...partialState.audio }
+      : this.state.audio;
 
-    if (partialState.liveTweaks) {
-      this.state.liveTweaks = { ...this.state.liveTweaks, ...partialState.liveTweaks };
-      delete partialState.liveTweaks;
-    }
+    const nextTweaks = partialState.liveTweaks
+      ? { ...this.state.liveTweaks, ...partialState.liveTweaks }
+      : this.state.liveTweaks;
 
-    this.state = { ...this.state, ...partialState };
+    this.state = {
+      ...this.state,
+      ...partialState,
+      audio: nextAudio,
+      liveTweaks: nextTweaks
+    };
 
     if (partialState.bookmarks) {
       saveJSON('dss_bookmarks_v2', this.state.bookmarks);

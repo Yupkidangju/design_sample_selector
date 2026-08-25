@@ -19,6 +19,12 @@ import { getArchetypeHTML } from './archetypeTemplates.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { confirmStyle, openSplitCompare } from '../utils/selection.js';
 import { canvasVisualEngine } from '../wasm/visualEngine.js';
+import { 
+  generateLiveCSSSnippet, 
+  generateLiveDesignSpecMarkdown, 
+  generateLiveTokensJSON, 
+  downloadFile 
+} from '../utils/designSpecGenerator.js';
 
 const ALL_SUB_DESIGNS = getAllSubDesigns();
 let detailKeyHandler = null;
@@ -35,6 +41,9 @@ export function renderDetailView(container) {
   let currentRenderedTab = null;
   let currentRenderedDevice = null;
   let currentRenderedCompareIds = [null, null];
+  let activeInspectorTab = 'css'; // 'css' | 'html' | 'md' | 'json'
+  let activeCssSubMode = 'full'; // 'full' | 'tokens' | 'component'
+  let rafInspectorUpdateId = null;
 
   function update() {
     const state = appState.getState();
@@ -152,12 +161,40 @@ export function renderDetailView(container) {
     });
   }
 
-  function refreshLiveHtmlInspector(root) {
-    const viewport = root.querySelector('#mockup-viewport');
-    const code = root.querySelector('#live-html-code');
-    if (viewport && code) {
-      code.textContent = viewport.innerHTML.trim();
+  function refreshAllInspectorPanes(root, subDesign, state) {
+    if (!root || !subDesign) return;
+    const { activeArchetype = 'game', activeComponentTab = 'hero', sandboxDevice = 'desktop', liveTweaks } = state || appState.getState();
+
+    if (rafInspectorUpdateId) {
+      cancelAnimationFrame(rafInspectorUpdateId);
     }
+
+    rafInspectorUpdateId = requestAnimationFrame(() => {
+      // 1. CSS Pane
+      const cssElem = root.querySelector('#live-css-code');
+      if (cssElem) {
+        cssElem.textContent = generateLiveCSSSnippet(subDesign, liveTweaks, activeArchetype, activeCssSubMode);
+      }
+
+      // 2. HTML Pane
+      const htmlElem = root.querySelector('#live-html-code');
+      const viewport = root.querySelector('#mockup-viewport');
+      if (htmlElem && viewport) {
+        htmlElem.textContent = viewport.innerHTML.trim();
+      }
+
+      // 3. Markdown Pane
+      const mdElem = root.querySelector('#live-md-code');
+      if (mdElem) {
+        mdElem.textContent = generateLiveDesignSpecMarkdown(subDesign, liveTweaks, activeArchetype, sandboxDevice);
+      }
+
+      // 4. JSON Tokens Pane
+      const jsonElem = root.querySelector('#live-json-code');
+      if (jsonElem) {
+        jsonElem.textContent = generateLiveTokensJSON(subDesign, liveTweaks);
+      }
+    });
   }
 
   function renderFullDetailModal(root, subDesign, mainCat, state) {
@@ -393,18 +430,63 @@ export function renderDetailView(container) {
               </div>
             </div>
 
-            <!-- Code Inspector -->
-            <div class="sidebar-block">
+            <!-- Reactive Design Spec & Code Inspector (v2.3.0) -->
+            <div class="sidebar-block" id="detail-inspector-block">
               <div class="block-title-row">
-                <h3 class="block-title">💻 라이브 CSS 인스펙터</h3>
-                <button class="copy-code-btn" id="btn-copy-css">📋 CSS 복사</button>
+                <h3 class="block-title">🛠️ 실시간 디자인 사양 및 인스펙터</h3>
               </div>
-              <pre class="code-inspector-box"><code id="live-css-code">${generateLiveCSSSnippet(subDesign, liveTweaks)}</code></pre>
-              <div class="block-title-row" style="margin-top:12px">
-                <h3 class="block-title">📄 라이브 HTML 인스펙터</h3>
-                <button class="copy-code-btn" id="btn-copy-html">📋 HTML 복사</button>
+
+              <!-- 4-Tab Navigation Bar -->
+              <nav class="inspector-tab-nav" role="tablist" aria-label="디자인 인스펙터 탭">
+                <button class="inspector-tab-btn active" data-insp-tab="css" role="tab" aria-selected="true" id="tab-insp-css">
+                  <span>💻 Live CSS</span>
+                </button>
+                <button class="inspector-tab-btn" data-insp-tab="html" role="tab" aria-selected="false" id="tab-insp-html">
+                  <span>📄 Live HTML</span>
+                </button>
+                <button class="inspector-tab-btn" data-insp-tab="md" role="tab" aria-selected="false" id="tab-insp-md">
+                  <span>📋 Live designs.md</span>
+                </button>
+                <button class="inspector-tab-btn" data-insp-tab="json" role="tab" aria-selected="false" id="tab-insp-json">
+                  <span>🏷️ Design Tokens</span>
+                </button>
+              </nav>
+
+              <!-- Live CSS Sub-Toggles -->
+              <div class="css-submode-nav" id="css-submode-nav">
+                <button class="css-submode-btn active" data-css-sub="full">전체 번들</button>
+                <button class="css-submode-btn" data-css-sub="tokens">테마 토큰만</button>
+                <button class="css-submode-btn" data-css-sub="component">아키타입 CSS</button>
               </div>
-              <pre class="code-inspector-box"><code id="live-html-code">${generateLiveHTMLSnippet(subDesign, activeArchetype)}</code></pre>
+
+              <!-- Inspector Content Panes -->
+              <div class="inspector-viewer-container">
+                <div class="inspector-pane active" id="pane-css">
+                  <pre class="code-inspector-box"><code id="live-css-code">${generateLiveCSSSnippet(subDesign, liveTweaks, activeArchetype, activeCssSubMode)}</code></pre>
+                </div>
+                <div class="inspector-pane" id="pane-html">
+                  <pre class="code-inspector-box"><code id="live-html-code"></code></pre>
+                </div>
+                <div class="inspector-pane" id="pane-md">
+                  <pre class="code-inspector-box markdown-inspector-box"><code id="live-md-code">${generateLiveDesignSpecMarkdown(subDesign, liveTweaks, activeArchetype, sandboxDevice)}</code></pre>
+                </div>
+                <div class="inspector-pane" id="pane-json">
+                  <pre class="code-inspector-box"><code id="live-json-code">${generateLiveTokensJSON(subDesign, liveTweaks)}</code></pre>
+                </div>
+              </div>
+
+              <!-- Action Toolbar -->
+              <div class="inspector-action-bar">
+                <button class="inspector-action-btn" id="btn-inspector-copy" title="현재 탭 내용 복사">
+                  <span>📋 클립보드 복사</span>
+                </button>
+                <button class="inspector-action-btn" id="btn-inspector-download" title="현재 탭 파일 다운로드">
+                  <span id="btn-inspector-download-label">💾 .css 다운로드</span>
+                </button>
+                <button class="inspector-action-btn primary-export" id="btn-inspector-bundle" title="전체 테마 번들 패키지 내보내기">
+                  <span>📦 전체 패키지</span>
+                </button>
+              </div>
             </div>
 
             <!-- Characteristics / Pros & Cons -->
@@ -435,7 +517,7 @@ export function renderDetailView(container) {
     if (viewport) {
       hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
     }
-    refreshLiveHtmlInspector(root);
+    refreshAllInspectorPanes(root, subDesign, state);
   }
 
   // Rebuild viewport when Archetype changes
@@ -449,7 +531,7 @@ export function renderDetailView(container) {
     viewport.setAttribute('data-theme', subDesign.id);
     viewport.setAttribute('data-archetype', activeArchetype);
     hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
-    refreshLiveHtmlInspector(root);
+    refreshAllInspectorPanes(root, subDesign, appState.getState());
 
     // Update Archetype Tab Buttons
     root.querySelectorAll('.archetype-tab-btn').forEach(btn => {
@@ -559,6 +641,8 @@ export function renderDetailView(container) {
       confirmBtn.classList.toggle('active', isConfirmed);
       confirmBtn.querySelector('span').textContent = isConfirmed ? '✓ 확정됨' : '이 스타일 확정';
     }
+
+    refreshAllInspectorPanes(root, subDesign, state);
   }
 
   // Granular update for tweaks / sliders
@@ -619,10 +703,7 @@ export function renderDetailView(container) {
     if (sliderBlur && sliderBlur.value !== String(tweaks.backdropBlur)) sliderBlur.value = tweaks.backdropBlur;
     if (sliderGlow && sliderGlow.value !== String(tweaks.glowIntensity)) sliderGlow.value = tweaks.glowIntensity ?? 1;
 
-    const cssCodeElem = root.querySelector('#live-css-code');
-    if (cssCodeElem && subDesign) {
-      cssCodeElem.textContent = generateLiveCSSSnippet(subDesign, tweaks);
-    }
+    refreshAllInspectorPanes(root, subDesign, appState.getState());
   }
 
   // --- Attach Event Listeners ---
@@ -767,20 +848,152 @@ export function renderDetailView(container) {
       });
     }
 
-    // 10. Copy CSS / HTML Code Buttons
-    const copyCssBtn = root.querySelector('#btn-copy-css');
-    if (copyCssBtn) {
-      copyCssBtn.addEventListener('click', () => {
-        const cssCode = root.querySelector('#live-css-code')?.textContent || '';
-        copyToClipboard(cssCode, 'CSS 스타일 코드');
+    // 10. Dynamic 4-Tab Inspector & Action Toolbar Listeners
+    // 10.1 Inspector Tab Switching
+    root.querySelectorAll('.inspector-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-insp-tab');
+        if (!tab || tab === activeInspectorTab) return;
+        synthAudio.playSfx('CLICK');
+        activeInspectorTab = tab;
+
+        root.querySelectorAll('.inspector-tab-btn').forEach(b => {
+          const isActive = b.getAttribute('data-insp-tab') === tab;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', String(isActive));
+        });
+
+        root.querySelectorAll('.inspector-pane').forEach(pane => {
+          pane.classList.toggle('active', pane.id === `pane-${tab}`);
+        });
+
+        const subModeNav = root.querySelector('#css-submode-nav');
+        if (subModeNav) {
+          subModeNav.style.display = tab === 'css' ? 'flex' : 'none';
+        }
+
+        const downloadLabel = root.querySelector('#btn-inspector-download-label');
+        if (downloadLabel) {
+          const labels = {
+            css: '💾 .css 다운로드',
+            html: '💾 .html 다운로드',
+            md: '💾 .md 다운로드',
+            json: '💾 .json 다운로드'
+          };
+          downloadLabel.textContent = labels[tab] || '💾 파일 다운로드';
+        }
+
+        refreshAllInspectorPanes(root, subDesign, appState.getState());
+      });
+    });
+
+    // 10.2 CSS Sub-Mode Switching (Full Bundle, Tokens Only, Component CSS)
+    root.querySelectorAll('.css-submode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-css-sub');
+        if (!mode || mode === activeCssSubMode) return;
+        synthAudio.playSfx('CLICK');
+        activeCssSubMode = mode;
+
+        root.querySelectorAll('.css-submode-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-css-sub') === mode);
+        });
+
+        refreshAllInspectorPanes(root, subDesign, appState.getState());
+      });
+    });
+
+    // 10.3 Inspector Action: Clipboard Copy
+    const inspCopyBtn = root.querySelector('#btn-inspector-copy');
+    if (inspCopyBtn) {
+      inspCopyBtn.addEventListener('click', () => {
+        const paneMap = {
+          css: { selector: '#live-css-code', label: 'CSS 스타일 코드' },
+          html: { selector: '#live-html-code', label: 'HTML 마크업' },
+          md: { selector: '#live-md-code', label: 'designs.md 사양서' },
+          json: { selector: '#live-json-code', label: '디자인 토큰 JSON' }
+        };
+        const activeMeta = paneMap[activeInspectorTab] || paneMap.css;
+        const code = root.querySelector(activeMeta.selector)?.textContent || '';
+        copyToClipboard(code, activeMeta.label);
       });
     }
-    const copyHtmlBtn = root.querySelector('#btn-copy-html');
-    if (copyHtmlBtn) {
-      copyHtmlBtn.addEventListener('click', () => {
-        refreshLiveHtmlInspector(root);
-        const htmlCode = root.querySelector('#live-html-code')?.textContent || '';
-        copyToClipboard(htmlCode, 'HTML 마크업');
+
+    // 10.4 Inspector Action: File Download
+    const inspDownloadBtn = root.querySelector('#btn-inspector-download');
+    if (inspDownloadBtn) {
+      inspDownloadBtn.addEventListener('click', () => {
+        const state = appState.getState();
+        const arch = state.activeArchetype || 'game';
+        const fileMap = {
+          css: {
+            filename: `${subDesign.id}-${arch}.css`,
+            mime: 'text/css;charset=utf-8',
+            content: () => generateLiveCSSSnippet(subDesign, state.liveTweaks, arch, activeCssSubMode)
+          },
+          html: {
+            filename: `${subDesign.id}-${arch}.html`,
+            mime: 'text/html;charset=utf-8',
+            content: () => root.querySelector('#mockup-viewport')?.innerHTML.trim() || ''
+          },
+          md: {
+            filename: `${subDesign.id}-designs.md`,
+            mime: 'text/markdown;charset=utf-8',
+            content: () => generateLiveDesignSpecMarkdown(subDesign, state.liveTweaks, arch, state.sandboxDevice)
+          },
+          json: {
+            filename: `${subDesign.id}-tokens.json`,
+            mime: 'application/json;charset=utf-8',
+            content: () => generateLiveTokensJSON(subDesign, state.liveTweaks)
+          }
+        };
+
+        const target = fileMap[activeInspectorTab] || fileMap.css;
+        const contentStr = target.content();
+        downloadFile(target.filename, contentStr, target.mime);
+        synthAudio.playSfx('SUCCESS');
+      });
+    }
+
+    // 10.5 Inspector Action: Full Bundle Package Export
+    const inspBundleBtn = root.querySelector('#btn-inspector-bundle');
+    if (inspBundleBtn) {
+      inspBundleBtn.addEventListener('click', () => {
+        const state = appState.getState();
+        const arch = state.activeArchetype || 'game';
+        const cssContent = generateLiveCSSSnippet(subDesign, state.liveTweaks, arch, 'full');
+        const htmlContent = root.querySelector('#mockup-viewport')?.innerHTML.trim() || '';
+        const mdContent = generateLiveDesignSpecMarkdown(subDesign, state.liveTweaks, arch, state.sandboxDevice);
+        const jsonContent = generateLiveTokensJSON(subDesign, state.liveTweaks);
+
+        const packageText = `/* ==========================================================================
+   DESIGN SPECTRUM EXPORT PACKAGE v2.3.0
+   Design Style: ${subDesign.name} (${subDesign.nameEn}) [${subDesign.id}]
+   Archetype: ${arch.toUpperCase()} | Device: ${state.sandboxDevice}
+   Generated: ${new Date().toISOString()}
+   ========================================================================== */
+
+/* --- FILE 1/4: tokens.json (W3C DTCG Format) --- */
+/*
+${jsonContent}
+*/
+
+/* --- FILE 2/4: designs.md (Design Specification) --- */
+/*
+${mdContent}
+*/
+
+/* --- FILE 3/4: style.css (Complete CSS Tokens & Archetype Styles) --- */
+${cssContent}
+
+/* --- FILE 4/4: index.html (Component Markup) --- */
+<!--
+${htmlContent}
+-->
+`;
+
+        downloadFile(`${subDesign.id}-full-bundle.txt`, packageText, 'text/plain;charset=utf-8');
+        synthAudio.playSfx('CONFIRM');
       });
     }
 
@@ -1119,32 +1332,6 @@ export function renderDetailView(container) {
     window.addEventListener('keydown', splitKeyHandler);
   }
 
-  function generateLiveHTMLSnippet(sub, archetype) {
-    return `<!-- [${sub.nameEn}] ${archetype} archetype -->
-<div class="archetype-unit" data-theme="${sub.id}" data-archetype="${archetype}">
-  <!-- Live sandbox markup is rendered into #mockup-viewport -->
-</div>`;
-  }
-
-  function generateLiveCSSSnippet(sub, tweaks) {
-    const paletteRules = sub.palette.map(p => `  --color-${slugify(p.name)}: ${p.hex};`).join('\n');
-    return `/* === [${sub.nameEn}] Design Tokens & Live Tweaks === */
-[data-theme="${sub.id}"] {
-  /* Color Palette */
-${paletteRules}
-
-  /* Live Tweaked Metrics */
-  --tweak-radius: ${tweaks.borderRadius}px;
-  --tweak-border-width: ${tweaks.borderWidth}px;
-  --tweak-shadow-depth: ${tweaks.shadowDepth}px;
-  --tweak-backdrop-blur: ${tweaks.backdropBlur}px;
-  --tweak-glow-intensity: ${tweaks.glowIntensity};
-}`;
-  }
-
-  function slugify(text) {
-    return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-  }
-
   appState.subscribe(() => update());
 }
+

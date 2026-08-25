@@ -1,6 +1,6 @@
 # Master Specification (`spec.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.2.2  
+**Version:** 2.3.0  
 **Environment:** Client-side Pure Web (HTML5 / CSS3 / JavaScript ES2022 / Canvas 2D / Web Audio API)  
 **Document Status:** Frozen Decision / Implementation Ready  
 
@@ -8,7 +8,7 @@
 
 ## 1. Document Control & Operating Rules
 
-1. This specification is the authoritative master contract for the `design_sample_selector` web application v2.2.2.
+1. This specification is the authoritative master contract for the `design_sample_selector` web application v2.3.0.
 2. All data types, audio parameters, category definitions, visual layout rules, and component state trees specified herein are frozen for implementation.
 3. No speculative or open-ended placeholder terms ("later", "optional", "as needed") are permitted; all interfaces and values are explicitly defined.
 4. Any architectural change requested by the user must update this specification first or within the same work unit.
@@ -19,7 +19,7 @@
 
 `design_sample_selector` is an ultra-modern, high-performance web-native interactive gallery and design system playground. Built purely with standard HTML5, modern CSS3, ES2022 JavaScript, HTML5 Canvas 2D, and the Web Audio API, it serves as a comprehensive educational and inspirational hub for visual designers and web developers worldwide.
 
-In v2.2.2, the application introduces a unified **8 Core Page Archetypes Engine** with **Zero-Rebuild Dynamic Theme Injection**, a modal-integrated **Universal Top Design Selector Bar** covering all 24 design styles, fully functional **Kinetic Interaction Simulators**, and hardened security/accessibility boundaries.
+In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactive Inspector & Design Spec Generator (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens JSON]`)** with zero-latency 60fps `requestAnimationFrame` synchronization, 3-level CSS granularity toggles (Full Bundle / Tokens Only / Component Only), and client-side instant file/package export (`.css`, `.html`, `.md`, `.json`).
 
 ---
 
@@ -36,6 +36,13 @@ In v2.2.2, the application introduces a unified **8 Core Page Archetypes Engine*
   6. `Analytics Dashboard (`dashboard`)`: Period filter tabs (1D/1W/1M/1Y), animated metric cards, interactive sortable/filterable data table.
   7. `Media Player (`media`)`: Track playback controls, progress scrub bar, playlist queue, volume slider, spectrum visualizer.
   8. `Messenger & Chat (`chat`)`: Channel switcher, real-time message bubble stream, emoji reactions, message input simulation.
+- **Dynamic 4-Tab Reactive Inspector & Design Spec Engine:**
+  - `[ 💻 Live CSS ]`: 100% matched CSS generation reflecting current `--theme-*` tokens, `--tweak-*` live slider variables, color palette, and active archetype CSS rules. Sub-mode switchable: `Full Bundle`, `Tokens Only`, `Component CSS`.
+  - `[ 📄 Live HTML ]`: Real-time rendered DOM markup of the active archetype sandbox viewport.
+  - `[ 📋 Live designs.md ]`: Real-time generated Markdown design specification according to D3D standard (Metadata, Palette Table, Live Tweaks, Font Stack, Archetype ASCII Diagram, Kinetic Rules, Characteristics, Pros/Cons, Integration Guide).
+  - `[ 🏷️ Design Tokens (JSON) ]`: W3C Design Tokens Community Group (DTCG) specification compliant JSON export.
+  - **Export & Action Toolbar:** One-click Copy (with SFX + Toast), individual file download (`.css`, `.html`, `.md`, `.json`), and full bundle package export.
+  - **60fps rAF Pipeline:** Zero lag DOM parameter injection with frame-synchronized inspector text updates.
 - **Universal Top Design Selector Bar:**
   - Pinned modal top bar with 8 major category tabs and 24 sub-style visual thumbnail chips.
   - Real-time zero-rebuild theme switching without destroying interactive state (e.g. cart items, game scores preserved).
@@ -50,7 +57,6 @@ In v2.2.2, the application introduces a unified **8 Core Page Archetypes Engine*
   - Instant style reset button (`↺ 기본값 리셋`) with audio feedback.
   - Multi-scale Viewport Zoom Switcher (80%, 100%, 120%) with centered transformation.
   - Dual independent scrolling layout: Left sandbox viewport and right parameter inspector scroll separately without modal overflow clipping.
-  - Dynamic live code viewer with one-click CSS/HTML snippet copying.
 - **Web Audio Procedural Synthesizer & Sound FX (16 Tracks + 14 SFX):**
   - 16 custom atmospheric procedural BGM tracks tailored to each design mood.
   - 14 synthesized UI Sound FX: `HOVER`, `CLICK`, `REVEAL`, `COPY`, `BOOKMARK`, `COMPARE`, `CONFIRM`, `CLOSE`, `THEME_SWAP`, `COIN`, `CART_ADD`, `SUCCESS`, `LIKE`, `SWIPE`.

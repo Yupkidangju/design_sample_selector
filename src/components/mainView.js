@@ -322,11 +322,8 @@ export function renderMainView(container) {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const subId = btn.getAttribute('data-sub-id');
-        const isNowBookmarked = appState.toggleBookmark(subId);
+        appState.toggleBookmark(subId);
         synthAudio.playSfx('BOOKMARK');
-        btn.classList.toggle('bookmarked', isNowBookmarked);
-        btn.textContent = isNowBookmarked ? '★' : '☆';
-        btn.title = isNowBookmarked ? '북마크 해제' : '즐겨찾기 저장';
       });
     });
 
