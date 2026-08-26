@@ -19,7 +19,7 @@
 
 `design_sample_selector` is an ultra-modern, high-performance web-native interactive gallery and design system playground. Built purely with standard HTML5, modern CSS3, ES2022 JavaScript, HTML5 Canvas 2D, and the Web Audio API, it serves as a comprehensive educational and inspirational hub for visual designers and web developers worldwide.
 
-In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactive Inspector & Design Spec Generator (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens JSON]`)** with zero-latency 60fps `requestAnimationFrame` synchronization, 3-level CSS granularity toggles (Full Bundle / Tokens Only / Component Only), and client-side instant file/package export (`.css`, `.html`, `.md`, `.json`).
+In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactive Inspector & Design Spec Generator (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens JSON]`)** with frame-coalesced `requestAnimationFrame` synchronization, 3-level CSS granularity toggles (Full Bundle / Tokens Only / Component Only), individual client-side file export (`.css`, `.html`, `.md`, `.json`), and an integrated text snapshot export.
 
 ---
 
@@ -40,9 +40,9 @@ In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactiv
   - `[ 💻 Live CSS ]`: 100% matched CSS generation reflecting current `--theme-*` tokens, `--tweak-*` live slider variables, color palette, and active archetype CSS rules. Sub-mode switchable: `Full Bundle`, `Tokens Only`, `Component CSS`.
   - `[ 📄 Live HTML ]`: Real-time rendered DOM markup of the active archetype sandbox viewport.
   - `[ 📋 Live designs.md ]`: Real-time generated Markdown design specification according to D3D standard (Metadata, Palette Table, Live Tweaks, Font Stack, Archetype ASCII Diagram, Kinetic Rules, Characteristics, Pros/Cons, Integration Guide).
-  - `[ 🏷️ Design Tokens (JSON) ]`: W3C Design Tokens Community Group (DTCG) specification compliant JSON export.
-  - **Export & Action Toolbar:** One-click Copy (with SFX + Toast), individual file download (`.css`, `.html`, `.md`, `.json`), and full bundle package export.
-  - **60fps rAF Pipeline:** Zero lag DOM parameter injection with frame-synchronized inspector text updates.
+  - `[ 🏷️ Design Tokens (JSON) ]`: DTCG Format/Color Module 2025.10 형식의 JSON export. Colors and gradients, dimensions, shadows, and font families use the structured value shapes defined by that report; product metadata uses `$extensions`. 해당 보고서는 JSON Schema를 제공하지 않으므로 존재하지 않는 `$schema` 속성을 출력하지 않는다.
+  - **Export & Action Toolbar:** One-click Copy (with SFX + Toast), individual file download (`.css`, `.html`, `.md`, `.json`), and a `*-integrated-snapshot.txt` review artifact containing four clearly delimited sections. The text snapshot is not a ZIP or directly extractable multi-file package.
+  - **rAF Update Pipeline:** Continuous slider input is coalesced to animation frames. All inspector, copy, and download paths resolve the current `selectedSubCategory`, archetype, device, and live tweaks at event time; no fixed frame-rate or zero-latency guarantee is made.
 - **Universal Top Design Selector Bar:**
   - Pinned modal top bar with 8 major category tabs and 24 sub-style visual thumbnail chips.
   - Real-time zero-rebuild theme switching without destroying interactive state (e.g. cart items, game scores preserved).
@@ -176,6 +176,13 @@ export interface MainCategory {
 }
 ```
 
+### 5.2 Inspector State and Export Invariants
+
+1. `appState.selectedSubCategory` is the single source of truth for the current design. Event listeners MUST resolve the selected design when the event occurs and MUST NOT retain a mutable `SubCategoryDesign` in a long-lived closure.
+2. Every DETAIL modal entry initializes the inspector to `Live CSS` and CSS mode `Full Bundle`; rendered active classes, `aria-selected`, visible pane, submode navigation, and download label MUST describe that same state.
+3. Generated component CSS selectors MUST exist in the corresponding output of `getArchetypeHTML()`. The 8-archetype selector contract is enforced by `tests/designSpecGenerator.test.js`.
+4. DTCG output targets the final Community Group Report `2025.10`. CSS `linear-gradient(...)` values become DTCG gradient stop arrays; `transparent` and `rgba(...)` become structured sRGB values with alpha; multi-layer CSS shadows become DTCG shadow arrays.
+
 ---
 
 ## 6. Procedural Audio Engine Contract
@@ -246,4 +253,3 @@ Runtime `data-theme` and gallery IDs are the 24 canonical IDs in `src/data/categ
    - `claymorphism` (`claymorphism-bubble`): 클레이모피즘 3D 버블 (Claymorphism 3D Bubble)
    - `handcrafted-indie` (`indie-craft`): 핸드크래프트 콜라주 인디 (Handcrafted & Collage Indie)
    - `solarpunk-eco` (`solarpunk-green`): 솔라펑크 에코 퓨처리즘 (Solarpunk Eco-Futurism)
-

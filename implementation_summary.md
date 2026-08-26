@@ -28,6 +28,7 @@ The application is structured into zero-dependency, native ES modules that commu
 │   │   ├── mainView.js         # 3 gallery modes, live thumbs, draft selection, keyboard nav
 │   │   ├── detailView.js       # 4-Tab Dynamic Reactive Inspector, Universal Top Bar, 8 archetypes, zero-rebuild theme swap & split compare
 │   │   ├── archetypeTemplates.js# Standard semantic HTML templates for 8 core page archetypes
+│   │   ├── splitCompareTabs.js # Split ARIA tab state and keyboard navigation contract
 │   │   ├── mockupTemplates.js  # 24-styles mockups + thumb signatures (legacy/web sub-view)
 │   │   ├── mockupRuntime.js    # Multi-archetype kinetic interaction simulators & WeakMap cleanup registry
 │   │   ├── selectionDock.js    # Bottom dock + confirm sheet
@@ -37,9 +38,11 @@ The application is structured into zero-dependency, native ES modules that commu
 │   │   ├── themeTokens.css     # 24-styles CSS custom properties token dictionary
 │   │   └── interactive.css     # Universal top bar, 4-tab inspector, 8 archetypes styles, dock, peek, thumbs, mockup FX
 │   └── utils/
-│       ├── designSpecGenerator.js # Pure engine for Live CSS, Live designs.md (D3D Markdown), JSON Tokens & Downloaders (v2.3.0)
+│       ├── designSpecGenerator.js # Live CSS, Markdown, DTCG 2025.10 JSON, and download engine
+│       ├── inspectorState.js   # Event-time selected design resolution and inspector defaults
 │       ├── clipboard.js        # Safe DOM textContent copy-to-clipboard utility & toast renderer (XSS-safe)
 │       └── selection.js        # Draft / detail / confirm / peek / reduced motion helpers
+├── tests/                      # Generator, DTCG, inspector state, and split tab regression contracts
 ├── spec.md                     # Master Technical Specification (v2.3.0)
 ├── designs.md                  # UI/UX & Design Token Specification (v2.3.0)
 ├── DESIGN_DECISIONS.md         # Architecture Decisions & Rationale
@@ -65,11 +68,10 @@ The application is structured into zero-dependency, native ES modules that commu
 - **Responsibility:** Implements real-time kinetic interaction simulators across all archetypes (mini battle game, cart checkout, blog clap/comments, notification swipe, dashboard filters) and owns WeakMap-based event listener/timer cleanups.
 
 ### 2.5 `src/components/detailView.js`
-- **Responsibility:** Renders the Universal Top Design Selector Bar (8 categories + 24 sub-styles chips), 8 Archetype viewport, live parameter sliders, real-time CSS code inspector, and WAI-ARIA Focus Trap.
+- **Responsibility:** Renders the Universal Top Design Selector Bar (8 categories + 24 sub-styles chips), 8 Archetype viewport, live parameter sliders, 4-tab inspector, DTCG/individual file exports, integrated TXT snapshot, and WAI-ARIA Focus Trap. Every generation action resolves the current theme from `appState` at event time.
 
 ### 2.6 `src/audio/synthAudio.js`
 - **Responsibility:** Generates 16 procedural ambient background synthesizer tracks and 14 dynamic UI sound effects with automated `onended` node disconnection.
 
 ### 2.7 `src/wasm/visualEngine.js`
 - **Responsibility:** Runs Canvas 2D particle physics with audio-reactive spectrum pulsation, `prefers-reduced-motion` compliance, and modal pause/resume lifecycle controls. No WebAssembly module.
-

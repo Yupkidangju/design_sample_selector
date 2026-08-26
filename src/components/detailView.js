@@ -1,5 +1,5 @@
 /**
- * Detail View & Split Comparison Modal Component v2.2
+ * Detail View & Split Comparison Modal Component v2.3
  * Features:
  * - Universal Top Design Selector Bar (8 Major Categories & 24 Sub-Styles Instant Switching)
  * - 8 Core Page Archetypes (Game, Web SaaS, Mobile, E-Commerce, Blog, Dashboard, Media, Chat)
@@ -16,8 +16,14 @@ import { synthAudio } from '../audio/synthAudio.js';
 import { copyToClipboard } from '../utils/clipboard.js';
 import { getMockupHTML } from './mockupTemplates.js';
 import { getArchetypeHTML } from './archetypeTemplates.js';
+import { getNextSplitArchetype, getSplitArchetypeTabs } from './splitCompareTabs.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { confirmStyle, openSplitCompare } from '../utils/selection.js';
+import {
+  createDefaultInspectorUiState,
+  createInspectorArtifacts,
+  resolveInspectorContext
+} from '../utils/inspectorState.js';
 import { canvasVisualEngine } from '../wasm/visualEngine.js';
 import { 
   generateLiveCSSSnippet, 
@@ -41,9 +47,14 @@ export function renderDetailView(container) {
   let currentRenderedTab = null;
   let currentRenderedDevice = null;
   let currentRenderedCompareIds = [null, null];
-  let activeInspectorTab = 'css'; // 'css' | 'html' | 'md' | 'json'
-  let activeCssSubMode = 'full'; // 'full' | 'tokens' | 'component'
+  let { activeTab: activeInspectorTab, activeCssMode: activeCssSubMode } = createDefaultInspectorUiState();
   let rafInspectorUpdateId = null;
+
+  function resetInspectorUiState() {
+    const defaultState = createDefaultInspectorUiState();
+    activeInspectorTab = defaultState.activeTab;
+    activeCssSubMode = defaultState.activeCssMode;
+  }
 
   function update() {
     const state = appState.getState();
@@ -121,6 +132,7 @@ export function renderDetailView(container) {
     const needThemeSwapOnly = !needArchetypeRebuild && currentRenderedSubId !== selectedSubCategory;
 
     if (isInitialOpen) {
+      resetInspectorUiState();
       // SPLIT→DETAIL 재진입은 스플릿 컨트롤로 opener를 덮어쓰지 않는다 (SEC-F003)
       if (currentRenderedView !== 'SPLIT_COMPARE') {
         lastFocusedElement = document.activeElement;
@@ -161,38 +173,54 @@ export function renderDetailView(container) {
     });
   }
 
-  function refreshAllInspectorPanes(root, subDesign, state) {
-    if (!root || !subDesign) return;
-    const { activeArchetype = 'game', activeComponentTab = 'hero', sandboxDevice = 'desktop', liveTweaks } = state || appState.getState();
+  function getCurrentInspectorArtifacts(root) {
+    const html = root.querySelector('#mockup-viewport')?.innerHTML.trim() || '';
+    return createInspectorArtifacts(appState.getState(), ALL_SUB_DESIGNS, html);
+  }
+
+  function getCurrentInspectorContent(root, tab = activeInspectorTab, cssMode = activeCssSubMode) {
+    const artifacts = getCurrentInspectorArtifacts(root);
+    if (!artifacts) return '';
+    if (tab === 'html') return artifacts.html;
+    if (tab === 'md') return artifacts.markdown;
+    if (tab === 'json') return artifacts.json;
+    return artifacts.css[cssMode] || artifacts.css.full;
+  }
+
+  function refreshAllInspectorPanes(root) {
+    if (!root) return;
 
     if (rafInspectorUpdateId) {
       cancelAnimationFrame(rafInspectorUpdateId);
     }
 
     rafInspectorUpdateId = requestAnimationFrame(() => {
+      rafInspectorUpdateId = null;
+      const artifacts = getCurrentInspectorArtifacts(root);
+      if (!artifacts) return;
+
       // 1. CSS Pane
       const cssElem = root.querySelector('#live-css-code');
       if (cssElem) {
-        cssElem.textContent = generateLiveCSSSnippet(subDesign, liveTweaks, activeArchetype, activeCssSubMode);
+        cssElem.textContent = artifacts.css[activeCssSubMode] || artifacts.css.full;
       }
 
       // 2. HTML Pane
       const htmlElem = root.querySelector('#live-html-code');
-      const viewport = root.querySelector('#mockup-viewport');
-      if (htmlElem && viewport) {
-        htmlElem.textContent = viewport.innerHTML.trim();
+      if (htmlElem) {
+        htmlElem.textContent = artifacts.html;
       }
 
       // 3. Markdown Pane
       const mdElem = root.querySelector('#live-md-code');
       if (mdElem) {
-        mdElem.textContent = generateLiveDesignSpecMarkdown(subDesign, liveTweaks, activeArchetype, sandboxDevice);
+        mdElem.textContent = artifacts.markdown;
       }
 
       // 4. JSON Tokens Pane
       const jsonElem = root.querySelector('#live-json-code');
       if (jsonElem) {
-        jsonElem.textContent = generateLiveTokensJSON(subDesign, liveTweaks);
+        jsonElem.textContent = artifacts.json;
       }
     });
   }
@@ -483,8 +511,8 @@ export function renderDetailView(container) {
                 <button class="inspector-action-btn" id="btn-inspector-download" title="현재 탭 파일 다운로드">
                   <span id="btn-inspector-download-label">💾 .css 다운로드</span>
                 </button>
-                <button class="inspector-action-btn primary-export" id="btn-inspector-bundle" title="전체 테마 번들 패키지 내보내기">
-                  <span>📦 전체 패키지</span>
+                <button class="inspector-action-btn primary-export" id="btn-inspector-bundle" title="네 가지 산출물을 한 TXT로 합친 통합 스냅샷 내보내기">
+                  <span>📦 통합 TXT 스냅샷</span>
                 </button>
               </div>
             </div>
@@ -512,12 +540,12 @@ export function renderDetailView(container) {
       </div>
     `;
 
-    attachDetailEventListeners(root, subDesign, mainCat);
+    attachDetailEventListeners(root);
     const viewport = root.querySelector('#mockup-viewport');
     if (viewport) {
       hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
     }
-    refreshAllInspectorPanes(root, subDesign, state);
+    refreshAllInspectorPanes(root);
   }
 
   // Rebuild viewport when Archetype changes
@@ -531,7 +559,7 @@ export function renderDetailView(container) {
     viewport.setAttribute('data-theme', subDesign.id);
     viewport.setAttribute('data-archetype', activeArchetype);
     hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
-    refreshAllInspectorPanes(root, subDesign, appState.getState());
+    refreshAllInspectorPanes(root);
 
     // Update Archetype Tab Buttons
     root.querySelectorAll('.archetype-tab-btn').forEach(btn => {
@@ -642,7 +670,7 @@ export function renderDetailView(container) {
       confirmBtn.querySelector('span').textContent = isConfirmed ? '✓ 확정됨' : '이 스타일 확정';
     }
 
-    refreshAllInspectorPanes(root, subDesign, state);
+    refreshAllInspectorPanes(root);
   }
 
   // Granular update for tweaks / sliders
@@ -703,11 +731,11 @@ export function renderDetailView(container) {
     if (sliderBlur && sliderBlur.value !== String(tweaks.backdropBlur)) sliderBlur.value = tweaks.backdropBlur;
     if (sliderGlow && sliderGlow.value !== String(tweaks.glowIntensity)) sliderGlow.value = tweaks.glowIntensity ?? 1;
 
-    refreshAllInspectorPanes(root, subDesign, appState.getState());
+    refreshAllInspectorPanes(root);
   }
 
   // --- Attach Event Listeners ---
-  function attachDetailEventListeners(root, subDesign, mainCat) {
+  function attachDetailEventListeners(root) {
     const closeModal = () => {
       synthAudio.playSfx('CLOSE');
       appState.setState({ currentView: 'MAIN' });
@@ -883,7 +911,7 @@ export function renderDetailView(container) {
           downloadLabel.textContent = labels[tab] || '💾 파일 다운로드';
         }
 
-        refreshAllInspectorPanes(root, subDesign, appState.getState());
+        refreshAllInspectorPanes(root);
       });
     });
 
@@ -899,7 +927,7 @@ export function renderDetailView(container) {
           b.classList.toggle('active', b.getAttribute('data-css-sub') === mode);
         });
 
-        refreshAllInspectorPanes(root, subDesign, appState.getState());
+        refreshAllInspectorPanes(root);
       });
     });
 
@@ -908,13 +936,13 @@ export function renderDetailView(container) {
     if (inspCopyBtn) {
       inspCopyBtn.addEventListener('click', () => {
         const paneMap = {
-          css: { selector: '#live-css-code', label: 'CSS 스타일 코드' },
-          html: { selector: '#live-html-code', label: 'HTML 마크업' },
-          md: { selector: '#live-md-code', label: 'designs.md 사양서' },
-          json: { selector: '#live-json-code', label: '디자인 토큰 JSON' }
+          css: { label: 'CSS 스타일 코드' },
+          html: { label: 'HTML 마크업' },
+          md: { label: 'designs.md 사양서' },
+          json: { label: '디자인 토큰 JSON' }
         };
         const activeMeta = paneMap[activeInspectorTab] || paneMap.css;
-        const code = root.querySelector(activeMeta.selector)?.textContent || '';
+        const code = getCurrentInspectorContent(root, activeInspectorTab, activeCssSubMode);
         copyToClipboard(code, activeMeta.label);
       });
     }
@@ -923,28 +951,29 @@ export function renderDetailView(container) {
     const inspDownloadBtn = root.querySelector('#btn-inspector-download');
     if (inspDownloadBtn) {
       inspDownloadBtn.addEventListener('click', () => {
-        const state = appState.getState();
-        const arch = state.activeArchetype || 'game';
+        const context = resolveInspectorContext(appState.getState(), ALL_SUB_DESIGNS);
+        if (!context) return;
+        const { subDesign: currentSubDesign, archetype } = context;
         const fileMap = {
           css: {
-            filename: `${subDesign.id}-${arch}.css`,
+            filename: `${currentSubDesign.id}-${archetype}.css`,
             mime: 'text/css;charset=utf-8',
-            content: () => generateLiveCSSSnippet(subDesign, state.liveTweaks, arch, activeCssSubMode)
+            content: () => getCurrentInspectorContent(root, 'css', activeCssSubMode)
           },
           html: {
-            filename: `${subDesign.id}-${arch}.html`,
+            filename: `${currentSubDesign.id}-${archetype}.html`,
             mime: 'text/html;charset=utf-8',
-            content: () => root.querySelector('#mockup-viewport')?.innerHTML.trim() || ''
+            content: () => getCurrentInspectorContent(root, 'html')
           },
           md: {
-            filename: `${subDesign.id}-designs.md`,
+            filename: `${currentSubDesign.id}-designs.md`,
             mime: 'text/markdown;charset=utf-8',
-            content: () => generateLiveDesignSpecMarkdown(subDesign, state.liveTweaks, arch, state.sandboxDevice)
+            content: () => getCurrentInspectorContent(root, 'md')
           },
           json: {
-            filename: `${subDesign.id}-tokens.json`,
+            filename: `${currentSubDesign.id}-tokens.json`,
             mime: 'application/json;charset=utf-8',
-            content: () => generateLiveTokensJSON(subDesign, state.liveTweaks)
+            content: () => getCurrentInspectorContent(root, 'json')
           }
         };
 
@@ -959,21 +988,22 @@ export function renderDetailView(container) {
     const inspBundleBtn = root.querySelector('#btn-inspector-bundle');
     if (inspBundleBtn) {
       inspBundleBtn.addEventListener('click', () => {
-        const state = appState.getState();
-        const arch = state.activeArchetype || 'game';
-        const cssContent = generateLiveCSSSnippet(subDesign, state.liveTweaks, arch, 'full');
-        const htmlContent = root.querySelector('#mockup-viewport')?.innerHTML.trim() || '';
-        const mdContent = generateLiveDesignSpecMarkdown(subDesign, state.liveTweaks, arch, state.sandboxDevice);
-        const jsonContent = generateLiveTokensJSON(subDesign, state.liveTweaks);
+        const context = resolveInspectorContext(appState.getState(), ALL_SUB_DESIGNS);
+        if (!context) return;
+        const { subDesign: currentSubDesign, archetype, device } = context;
+        const cssContent = getCurrentInspectorContent(root, 'css', 'full');
+        const htmlContent = getCurrentInspectorContent(root, 'html');
+        const mdContent = getCurrentInspectorContent(root, 'md');
+        const jsonContent = getCurrentInspectorContent(root, 'json');
 
         const packageText = `/* ==========================================================================
-   DESIGN SPECTRUM EXPORT PACKAGE v2.3.0
-   Design Style: ${subDesign.name} (${subDesign.nameEn}) [${subDesign.id}]
-   Archetype: ${arch.toUpperCase()} | Device: ${state.sandboxDevice}
+   DESIGN SPECTRUM INTEGRATED TEXT SNAPSHOT v2.3.0
+   Design Style: ${currentSubDesign.name} (${currentSubDesign.nameEn}) [${currentSubDesign.id}]
+   Archetype: ${archetype.toUpperCase()} | Device: ${device}
    Generated: ${new Date().toISOString()}
    ========================================================================== */
 
-/* --- FILE 1/4: tokens.json (W3C DTCG Format) --- */
+/* --- FILE 1/4: tokens.json (DTCG 2025.10 Format) --- */
 /*
 ${jsonContent}
 */
@@ -992,7 +1022,7 @@ ${htmlContent}
 -->
 `;
 
-        downloadFile(`${subDesign.id}-full-bundle.txt`, packageText, 'text/plain;charset=utf-8');
+        downloadFile(`${currentSubDesign.id}-integrated-snapshot.txt`, packageText, 'text/plain;charset=utf-8');
         synthAudio.playSfx('CONFIRM');
       });
     }
@@ -1151,14 +1181,15 @@ ${htmlContent}
 
           <!-- Synchronized Archetype Tab Controls -->
           <div class="archetype-tabs-nav" role="tablist" aria-label="비교 아키타입">
-            <button class="split-tab-btn ${activeArchetype === 'game' ? 'active' : ''}" data-archetype="game" role="tab">🎮 게임</button>
-            <button class="split-tab-btn ${activeArchetype === 'web' ? 'active' : ''}" data-archetype="web" role="tab">🌐 웹</button>
-            <button class="split-tab-btn ${activeArchetype === 'mobile' ? 'active' : ''}" data-archetype="mobile" role="tab">📱 모바일</button>
-            <button class="split-tab-btn ${activeArchetype === 'ecommerce' ? 'active' : ''}" data-archetype="ecommerce" role="tab">🛍️ 쇼핑몰</button>
-            <button class="split-tab-btn ${activeArchetype === 'blog' ? 'active' : ''}" data-archetype="blog" role="tab">📰 블로그</button>
-            <button class="split-tab-btn ${activeArchetype === 'dashboard' ? 'active' : ''}" data-archetype="dashboard" role="tab">📊 대시보드</button>
-            <button class="split-tab-btn ${activeArchetype === 'media' ? 'active' : ''}" data-archetype="media" role="tab">🎵 미디어</button>
-            <button class="split-tab-btn ${activeArchetype === 'chat' ? 'active' : ''}" data-archetype="chat" role="tab">💬 채팅</button>
+            ${getSplitArchetypeTabs(activeArchetype).map(tab => `
+              <button class="split-tab-btn ${tab.ariaSelected === 'true' ? 'active' : ''}"
+                      id="split-tab-${tab.id}"
+                      data-archetype="${tab.id}"
+                      role="tab"
+                      aria-selected="${tab.ariaSelected}"
+                      aria-controls="split-viewport-a split-viewport-b"
+                      tabindex="${tab.tabIndex}">${tab.label}</button>
+            `).join('')}
           </div>
 
           <button class="modal-close-btn" id="btn-compare-close" aria-label="닫기">
@@ -1194,7 +1225,7 @@ ${htmlContent}
                 </button>
               `).join('')}
             </div>
-            <div class="split-viewport" id="split-viewport-a" data-theme="${sub1.id}" data-archetype="${activeArchetype}">
+            <div class="split-viewport" id="split-viewport-a" data-theme="${sub1.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
               ${getArchetypeHTML(activeArchetype, sub1, { tab: currentTab })}
             </div>
           </div>
@@ -1225,7 +1256,7 @@ ${htmlContent}
                 </button>
               `).join('')}
             </div>
-            <div class="split-viewport" id="split-viewport-b" data-theme="${sub2.id}" data-archetype="${activeArchetype}">
+            <div class="split-viewport" id="split-viewport-b" data-theme="${sub2.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
               ${getArchetypeHTML(activeArchetype, sub2, { tab: currentTab })}
             </div>
           </div>
@@ -1246,7 +1277,10 @@ ${htmlContent}
     const sub2 = ALL_SUB_DESIGNS.find(s => s.id === compareIds[1]) || ALL_SUB_DESIGNS[4];
 
     root.querySelectorAll('.split-tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-archetype') === activeArchetype);
+      const isActive = btn.getAttribute('data-archetype') === activeArchetype;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
     });
 
     const viewA = root.querySelector('#split-viewport-a');
@@ -1257,6 +1291,7 @@ ${htmlContent}
       viewA.innerHTML = getArchetypeHTML(activeArchetype, sub1, { tab: currentTab });
       viewA.setAttribute('data-theme', sub1.id);
       viewA.setAttribute('data-archetype', activeArchetype);
+      viewA.setAttribute('aria-labelledby', `split-tab-${activeArchetype}`);
       hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab });
     }
     if (viewB) {
@@ -1264,6 +1299,7 @@ ${htmlContent}
       viewB.innerHTML = getArchetypeHTML(activeArchetype, sub2, { tab: currentTab });
       viewB.setAttribute('data-theme', sub2.id);
       viewB.setAttribute('data-archetype', activeArchetype);
+      viewB.setAttribute('aria-labelledby', `split-tab-${activeArchetype}`);
       hydrateMockup(viewB, sub2, { archetype: activeArchetype, tab: currentTab });
     }
   }
@@ -1305,6 +1341,14 @@ ${htmlContent}
         synthAudio.playSfx('CLICK');
         appState.setActiveArchetype(arch);
       });
+      btn.addEventListener('keydown', event => {
+        const nextArchetype = getNextSplitArchetype(btn.getAttribute('data-archetype'), event.key);
+        if (!nextArchetype) return;
+        event.preventDefault();
+        const nextTab = root.querySelector(`#split-tab-${nextArchetype}`);
+        nextTab?.focus();
+        nextTab?.click();
+      });
     });
 
     root.querySelectorAll('.split-pick-thumb').forEach((btn) => {
@@ -1334,4 +1378,3 @@ ${htmlContent}
 
   appState.subscribe(() => update());
 }
-

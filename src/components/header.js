@@ -29,7 +29,7 @@ export function renderHeader(container) {
             <div class="brand-titles">
               <div class="brand-title-line">
                 <h1 class="brand-title">DESIGN SPECTRUM</h1>
-                <span class="brand-badge-v2">v2.2 LIVE</span>
+                <span class="brand-badge-v2">v2.3 LIVE</span>
               </div>
               <p class="brand-subtitle">8대 대분류 · 24종 라이브 시안 · 8대 아키타입 · 동적 샌드박스</p>
             </div>
@@ -104,7 +104,7 @@ export function renderHeader(container) {
           <div class="header-status-bar">
             <div class="status-chip chip-wasm" id="badge-canvas-status">
               <span class="chip-dot"></span>
-              <span id="txt-canvas-status">${canvasReady ? 'CANVAS 2D: ACTIVE (60FPS)' : 'CANVAS 2D: 60FPS'}</span>
+              <span id="txt-canvas-status">${canvasReady ? 'CANVAS 2D: ACTIVE (rAF)' : 'CANVAS 2D: READY'}</span>
             </div>
             <div class="status-chip chip-audio" id="badge-audio-status">
               <span class="chip-dot audio-pulse"></span>
@@ -277,7 +277,7 @@ export function renderHeader(container) {
     const canvasTxt = container.querySelector('#txt-canvas-status');
     const audioTxt = container.querySelector('#txt-audio-status');
     if (canvasTxt && state.canvasReady) {
-      canvasTxt.textContent = 'CANVAS 2D: ACTIVE (60FPS)';
+      canvasTxt.textContent = 'CANVAS 2D: ACTIVE (rAF)';
     }
     if (audioTxt) {
       audioTxt.textContent = state.audio.isPlaying ? state.audio.trackTitle : 'BGM: 16 TRACKS (PAUSED)';

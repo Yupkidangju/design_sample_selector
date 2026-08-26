@@ -1,7 +1,7 @@
 @import './themeTokens.css';
 
 /* ==========================================================================
-   DESIGN SPECTRUM v2.2 — Archetypes, Top Selector Bar, Theme Tokens & Motion
+   DESIGN SPECTRUM v2.3 — Archetypes, Top Selector Bar, Theme Tokens & Motion
    ========================================================================== */
 
 .gallery-hint {
@@ -2732,6 +2732,5 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
   background: rgba(0, 230, 153, 0.25);
   box-shadow: 0 0 12px rgba(0, 230, 153, 0.3);
 }
-
 
 

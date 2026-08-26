@@ -10,12 +10,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **실시간 4대 탭 동적 인스펙터 (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens]`):**
   - **Live CSS 인스펙터:** 상단 셀렉터, 8대 아키타입, 슬라이더 조작에 100% 매칭되는 순수 CSS 실시간 생성. 서브 토글(`전체 번들`, `테마 토큰만`, `아키타입 CSS`) 지원.
   - **Live designs.md 마크다운 사양서 뷰어:** 현재 선택된 사조 및 실시간 슬라이더 수치, 폰트 스택, 아키타입 ASCII 다이어그램, 키네틱 인터랙션 규칙, 가이드라인이 포함된 D3D 표준 Markdown을 실시간 빌드.
-  - **Live Design Tokens (JSON):** W3C DTCG 규격 준수 토큰 JSON 실시간 생성.
-  - **원클릭 복사 & 파일 내보내기 툴바:** 개별 파일 다운로드(`.css`, `.html`, `.md`, `.json`), 전체 패키지 일괄 내보내기, 클립보드 복사(SFX + 토스트 알림 연동) 지원.
-- **60fps `requestAnimationFrame` 실시간 렌더링 파이프라인:** 슬라이더 연속 드래그 시 UI 프레임 드랍 없이 텍스트/코드 인스펙터 뷰를 무지연 실시간 동기화.
+  - **Live Design Tokens (JSON):** DTCG Format/Color Module 2025.10 구조의 토큰 JSON 실시간 생성.
+  - **원클릭 복사 & 파일 내보내기 툴바:** 개별 파일 다운로드(`.css`, `.html`, `.md`, `.json`), 통합 TXT 스냅샷 내보내기, 클립보드 복사(SFX + 토스트 알림 연동) 지원.
+- **`requestAnimationFrame` 실시간 렌더링 파이프라인:** 슬라이더 연속 입력을 프레임 단위로 병합해 텍스트/코드 인스펙터 뷰를 현재 상태와 동기화.
 - **순수 데이터 생성기 모듈 (`src/utils/designSpecGenerator.js`):** 24개 테마의 모든 CSS 커스텀 프로퍼티 및 아키타입 룰셋을 관리하는 순수 함수 아키텍처 구축.
 
 ### Fixed
+- **Run 7 내보내기 계약 복구 (IMP-F001/002):** 8개 생성 CSS가 실제 아키타입 HTML 선택자를 사용하도록 정렬하고, 24개 테마 토큰을 구조화된 DTCG 2025.10 color/gradient/dimension/shadow/fontFamily 값과 `$extensions` 메타데이터로 직렬화.
+- **인스펙터 최신 상태 단일화 (DBG-F001/002):** 탭·CSS 모드·복사·개별 다운로드·통합 스냅샷이 이벤트 시점의 `selectedSubCategory`를 해석하도록 stale closure를 제거하고, 상세 모달 진입 시 CSS/전체 번들 UI 상태를 일관되게 초기화.
+- **자동 회귀 게이트 추가 (DBG-F003):** Node 내장 테스트 러너 기반 `npm test`와 테스트+빌드 통합 명령 `npm run check`를 추가해 아키타입 선택자, DTCG 24테마, 인스펙터 상태, 스플릿 ARIA 탭 계약을 검증.
+- **스플릿 탭 접근성 보완 (A11Y-F001):** 8개 탭의 `aria-selected`, roving `tabindex`, `aria-controls`/`tabpanel` 연결과 Arrow/Home/End 키보드 이동을 구현.
+- **릴리스·환경 문서 동기화 (IMP-F003/BUILD-F001):** 사용자 버전 표시와 권위 문서를 v2.3.0으로 맞추고 Node.js 지원 범위를 20.x 또는 22+로 명시.
 - **상태 관리자 매개변수 불변성 보장 (FIN-F001):** `AppStateManager.setState` 내부에서 `partialState`의 `audio` 및 `liveTweaks` 키를 `delete` 연산자로 직접 변이하던 코드를 순수 불변 객체 병합 패턴으로 리팩토링.
 - **갤러리 북마크 분리 노드 변이 제거 (FIN-F002):** `src/components/mainView.js`의 북마크 클릭 이벤트 리스너에서 상태 갱신 및 재렌더링 후 분리된(detached) 버튼 노드에 클래스/텍스트를 변경하던 잔여 코드를 정리하고 반응형 구독자로 일원화.
 

@@ -93,7 +93,7 @@
 
 ### 3.1 Top Navigation & Search/Filter Controls
 - **Global Header:**
-  - Dynamic Animated Brand Logo + Version 2.2 LIVE badge. Canvas 2D status chip (not WASM).
+  - Dynamic Animated Brand Logo + Version 2.3 LIVE badge. Canvas 2D status chip (not WASM).
   - Real-time Instant Search Input Field with clear button.
   - Category / Mood Filter Tags (All, Swiss, Brutalism, Depth, Retro, Editorial, Y2K, Kinetic, 3D Clay, etc.).
   - View Mode Toggle Switch (`Grid`, `Bento`, `Spectrum`).
@@ -142,9 +142,10 @@ Located at the topmost header of the detail modal:
   - `role="tablist"` navigation: `[ 💻 Live CSS ]`, `[ 📄 Live HTML ]`, `[ 📋 Live designs.md ]`, `[ 🏷️ Design Tokens ]`.
   - **Live CSS Sub-Toggles:** `전체 번들 (Full)` / `테마 토큰만 (Tokens Only)` / `아키타입 CSS (Component)`.
   - **Live designs.md Viewer:** Real-time rendered Markdown document containing complete D3D specifications, ASCII archetype layout, color tables, and kinetic interaction guides.
-  - **Design Tokens Viewer:** DTCG-compliant structured JSON.
-  - **Action Toolbar:** `📋 클립보드 복사`, `💾 .css / .html / .md / .json 다운로드`, `📦 전체 패키지 내보내기`.
-  - **60fps rAF Engine:** Continuous parameter dragging updates text display without UI frame drops.
+  - **Design Tokens Viewer:** DTCG 2025.10 structured JSON. CSS color/gradient/transparent values, dimensions, font stacks, and layered shadows have explicit conversion policies.
+  - **Action Toolbar:** `📋 클립보드 복사`, `💾 .css / .html / .md / .json 다운로드`, `📦 통합 TXT 스냅샷`. 스냅샷은 네 산출물을 한 `.txt`에 구획화한 검토용 문서이며 ZIP 패키지가 아니다.
+  - **rAF Update Engine:** Continuous parameter input is frame-coalesced; user actions always resolve the latest application state before generation or export.
+  - **Re-entry State:** 상세 모달을 열 때 인스펙터는 CSS/전체 번들로 초기화되며 active class, `aria-selected`, pane, CSS submode, 다운로드 라벨이 일치한다.
 - **Characteristics & Pros/Cons Hover Cards.**
 
 ---
@@ -155,5 +156,5 @@ Located at the topmost header of the detail modal:
 - Synchronized Archetype selection across Left (Style A) and Right (Style B).
 - Full visual thumbnail picker for instant slot assignment.
 - All 8 archetype tabs (including Media and Chat), synchronized across A/B.
+- The active archetype tab exposes `aria-selected="true"` and `tabindex="0"`; the other tabs use `aria-selected="false"` and `tabindex="-1"`. ArrowLeft/ArrowRight/Home/End move and activate tabs, and both comparison viewports are linked as tabpanels.
 - Keyboard `Escape` / close returns to the originating view (`MAIN` gallery or `DETAIL` modal).
-

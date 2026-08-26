@@ -1,9 +1,9 @@
 # Implementation Audit Roadmap (`audit_roadmap.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.2.2  
+**Version:** 2.3.0
 **Document Status:** Verification & Quality Audit Criteria  
 
-살아 있는 계약은 `spec.md` v2.2.2다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)는 폐기한다.
+살아 있는 계약은 `spec.md` v2.3.0이다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)와 v2.2 인스펙터 기준은 폐기한다.
 
 ---
 
@@ -11,12 +11,12 @@
 
 | Phase | Milestone | Audit Focus | Verification Criteria | Status |
 | --- | --- | --- | --- | --- |
-| **Phase 1** | Scaffolding & Standard Documentation | D3D & Standard Compliance | 핵심 문서(`spec.md`, `README.md`, `designs.md`, `CHANGELOG.md`)가 제품 버전 2.2.2와 동기 | **READY** |
+| **Phase 1** | Scaffolding & Standard Documentation | D3D & Standard Compliance | 핵심 문서와 사용자 버전 표시가 제품 버전 2.3.0과 동기 | **READY** |
 | **Phase 2** | Design Tokens & Global CSS | Responsive Layout & Token Integrity | 24 ID 듀얼/트리플 셀렉터, 슬라이더 0–64 / 0–12 / 0–30 / 0–32 / 0–2.0 | **READY** |
 | **Phase 3** | Audio Synth & Canvas 2D Visual Engine | Audio & Canvas Performance | 16 BGM 트랙, 14 SFX, Canvas 2D 파티클(`pauseLoop`/`resumeLoop`). `.wasm` 없음 | **READY** |
 | **Phase 4** | Taxonomy & Gallery | Search / Filter / Views | 8대분류 × 24 서브스타일, 실시간 검색(헤더 풀 리렌더 금지), 3 갤러리 모드 | **READY** |
-| **Phase 5** | Detail / Split / Kinetic Simulators | Live Sandbox | 8 아키타입 시뮬레이터, 스플릿 8탭, HTML/CSS 복사, 스플릿 닫기 시 원 뷰 복귀 | **READY** |
-| **Phase 6** | Quality Verification & Launch Gate | Final End-to-End Audit | teardown 동일 루트, SFX 미사용 노드 0, XSS `textContent`, 포커스 트랩 | **READY** |
+| **Phase 5** | Detail / Split / Inspector | Live Sandbox & Export Contract | 최신 테마 기준 4탭/3 CSS 모드/복사/다운로드, 8 아키타입 HTML-CSS 선택자 계약, DTCG 2025.10, 스플릿 ARIA 탭 | **READY** |
+| **Phase 6** | Quality Verification & Launch Gate | Automated + Browser Audit | `npm run check`, teardown 동일 루트, XSS `textContent`, 포커스 트랩, 복합 상태 전이 브라우저 검사 | **READY** |
 
 ---
 
@@ -29,6 +29,11 @@
 - [ ] Kinetic simulators match spec §3.1 bullets 1:1 (`data-action`).
 - [ ] Split compare includes all 8 archetypes; close restores `compareReturnView`.
 - [ ] CSS and HTML snippet copy buttons exist.
+- [ ] Theme A→B switch keeps CSS Full/Tokens/Component, HTML, Markdown, JSON, copy, and downloads on theme B.
+- [ ] Reopening DETAIL initializes CSS/Full with matching active class, `aria-selected`, pane, submode, and label.
+- [ ] All 8 generated component CSS selectors exist in the corresponding exported archetype HTML.
+- [ ] All 24 token documents use DTCG 2025.10 structured values; gradient, transparent, rgba, layered shadow, and font family policies are covered.
+- [ ] Integrated export is named `*-integrated-snapshot.txt` and described as a single review document, not a ZIP package.
 - [ ] Backdrop blur slider applies to `.archetype-unit`.
 - [ ] Slider ranges: Radius 0–64, Border 0–12, Shadow 0–30, Blur 0–32, Glow 0–2.0.
 - [ ] Responsive breakpoints (<768px, 768px–1199px, >=1200px).
@@ -43,6 +48,8 @@
 - [ ] Search `input` does not rebuild the entire header DOM.
 - [ ] Asynchronous audio context resume handling for browser autoplay policies.
 - [ ] Accessible HTML5 markup with aria attributes, focus trap, Esc.
+- [ ] Split archetype tabs expose one `aria-selected="true"`, roving `tabindex`, linked tabpanels, and Arrow/Home/End navigation.
+- [ ] `npm test` and `npm run build` pass through `npm run check`.
 
 ---
 

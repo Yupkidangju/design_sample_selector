@@ -1,6 +1,6 @@
 # Design Decisions Record (`DESIGN_DECISIONS.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.2.2  
+**Version:** 2.3.0
 **Document Status:** Architecture Rationale & Decision History  
 
 ---
@@ -17,7 +17,7 @@
 
 - **Context:** High-frequency particle rendering for canvas visual background effects during card hovering and mouse movement. A WASM module was considered and is **not** shipped.
 - **Decision:** JavaScript Canvas 2D particle engine in `src/wasm/visualEngine.js` (historical path name only).
-- **Outcome:** Smooth ~60fps canvas animation, audio-reactive spectrum, `pauseLoop`/`resumeLoop` on modal overlay, `prefers-reduced-motion` physics skip. No `.wasm` binary and no `WebAssembly` API.
+- **Outcome:** `requestAnimationFrame` 기반 canvas animation, audio-reactive spectrum, `pauseLoop`/`resumeLoop` on modal overlay, `prefers-reduced-motion` physics skip. No `.wasm` binary and no `WebAssembly` API. 프레임률은 기기와 부하에 따라 달라지므로 고정 수치로 보장하지 않는다.
 
 ---
 
@@ -67,7 +67,7 @@
   - Define unified semantic HTML templates for 8 core page archetypes (`src/components/archetypeTemplates.js`).
   - Standardize 24 design styles into atomic CSS Custom Properties and `[data-theme]` attributes (`src/styles/themeTokens.css`).
   - Theme switching only updates container attributes and variables (`viewport.setAttribute('data-theme', ...)`), preserving DOM elements and listener bindings.
-- **Outcome:** Zero DOM tearing on style switch, instant < 16ms theme transition, zero state loss, and fully functional multi-genre interaction simulators.
+- **Outcome:** 테마 전환 시 DOM을 재구축하지 않고 실행 중 상호작용 상태를 보존한다. 전환 성능은 실제 브라우저 프로파일로 평가하며 고정 지연 시간을 보장하지 않는다.
 
 ---
 
@@ -80,3 +80,15 @@
   - Sync style switches with procedural audio SFX (`THEME_SWAP`) and `appState`.
 - **Outcome:** Seamless cross-category design exploration and instant comparative evaluation.
 
+---
+
+## 9. Decision 009: Reactive Inspector Export Contract (v2.3)
+
+- **Context:** Run 7 감사에서 테마 교체 후 탭/다운로드가 이전 테마를 참조하는 stale closure, 실제 아키타입 DOM과 생성 CSS 선택자 불일치, DTCG 타입 값 오류, “전체 패키지” 형식의 모호성이 확인되었다.
+- **Decision:**
+  - 인스펙터·복사·다운로드는 이벤트 발생 시 `appState.selectedSubCategory`를 다시 해석하고, 장기 이벤트 클로저에 변경 가능한 디자인 객체를 보관하지 않는다.
+  - 생성 CSS와 `getArchetypeHTML()`의 선택자 계약을 자동 테스트로 교차 검증한다.
+  - 토큰 출력은 DTCG Final Community Group Report 2025.10으로 고정하고 color/gradient/dimension/shadow/fontFamily를 구조화하며 제품 메타데이터는 `$extensions`에 둔다.
+  - 기존 단일 `.txt` 출력은 ZIP 패키지가 아니라 “통합 TXT 스냅샷”으로 명명하고 파일명과 UI 설명을 일치시킨다.
+- **Alternatives Rejected:** ZIP 의존성 추가는 현재 검토용 단일 문서 사용 사례보다 비용이 크고, 기존 수동 CSS 선택자 목록을 테스트 없이 유지하는 방식은 동일 회귀를 차단하지 못한다.
+- **Outcome:** 24개 테마와 8개 아키타입의 생성 계약이 `npm test`로 검증되며, 모달 재진입 상태와 스플릿 ARIA 탭 상태도 결정론적으로 관리된다.

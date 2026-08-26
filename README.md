@@ -6,6 +6,8 @@
 
 ## 🚀 빠른 시작 (Local Development)
 
+Node.js 20.x 또는 22 이상이 필요합니다. 현재 Vite 6 도구체인의 지원 범위와 `package.json#engines`를 기준으로 합니다.
+
 ### 1. 개발 서버 실행 (Vite)
 ```bash
 # 의존성 설치 (최초 1회)
@@ -24,6 +26,9 @@ npm run build
 
 # 빌드 결과물 미리보기
 npm run preview
+
+# 자동 회귀 테스트 + 프로덕션 빌드 게이트
+npm run check
 ```
 
 ---
@@ -50,9 +55,9 @@ npm run preview
    - 💻 **Live CSS**: 테마 토큰, 실시간 슬라이더 트윅, 활성 아키타입 CSS 100% 실시간 연동 (서브모드: 전체 번들 / 토큰만 / 아키타입 CSS)
    - 📄 **Live HTML**: 현재 렌더링된 샌드박스 뷰포트의 실시간 DOM 마크업
    - 📋 **Live designs.md**: 메타데이터, 색상표, 슬라이더 수치, 폰트 스택, 아키타입 ASCII 구조도, 키네틱 가이드라인이 포함된 D3D 표준 마크다운 사양서 자동 빌드
-   - 🏷️ **Design Tokens (JSON)**: W3C DTCG 표준 규격 호환 디자인 토큰 JSON 생성
-   - 💾 **원클릭 복사 & 파일 내보내기**: `.css`, `.html`, `.md`, `.json` 파일 다운로드 및 전체 번들 일괄 내보내기 지원 (SFX + 토스트 피드백)
-   - ⚡ **60fps rAF 파이프라인**: 무지연 실시간 텍스트 및 토큰 동기화
+   - 🏷️ **Design Tokens (JSON)**: DTCG Format/Color Module 2025.10의 구조화된 color, gradient, dimension, shadow, fontFamily 값으로 생성
+   - 💾 **원클릭 복사 & 파일 내보내기**: `.css`, `.html`, `.md`, `.json` 개별 다운로드와 네 산출물을 주석 구획으로 합친 `*-integrated-snapshot.txt` 내보내기 (SFX + 토스트 피드백)
+   - ⚡ **rAF 기반 동기화**: 연속 슬라이더 입력을 프레임 단위로 병합해 현재 선택·조정 상태에서 인스펙터 내용을 다시 생성
 5. **선택 도크 · 호버 피크 · 확정**
    - 클릭으로 담고, 더블클릭/Enter로 자세히 보기, “이 스타일 확정”은 브라우저에 저장
    - 키보드: `/` 검색, 화살표 이동, Space 비교 슬롯
@@ -64,9 +69,9 @@ npm run preview
    - 실시간 CSS 파라미터 슬라이더 (`Radius` 0–64, `Border` 0–12, `Shadow` 0–30, `Blur` 0–32, `Glow` 0–2.0)
 8. **듀얼 스플릿 비교 모드**
    - 서로 다른 두 디자인 사조를 나란히 비교 분석 (동기화된 아키타입 전환 및 ESC 지원)
-8. **16트랙 Web Audio API 절차적 BGM & 14종 사운드 FX**
+9. **16트랙 Web Audio API 절차적 BGM & 14종 사운드 FX**
    - 무손실 웹 오디오 신시사이저를 통한 배경음악 및 `THEME_SWAP`, `COIN`, `CART_ADD`, `SUCCESS`, `LIKE`, `SWIPE` 등 효과음 실시간 합성 (노드 자동 연결 해제)
-9. **Canvas 2D 반응형 파티클 비주얼라이저**
+10. **Canvas 2D 반응형 파티클 비주얼라이저**
    - JavaScript Canvas 2D 파티클(WebAssembly 모듈 없음). 모션 감축(`prefers-reduced-motion`) 및 모달 오픈 시 렌더링 일시정지
 
 
@@ -86,7 +91,8 @@ npm run preview
 │   ├── audio/synthAudio.js     # Web Audio 16트랙 절차적 신시사이저
 │   ├── wasm/visualEngine.js    # Canvas 2D 파티클 배경 엔진 (경로명 유지, WASM 아님)
 │   ├── components/             # UI 컴포넌트
-│   └── utils/                  # 클립보드 등 유틸리티
+│   └── utils/                  # 생성기, 인스펙터 상태, 클립보드 유틸리티
+├── tests/                      # 생성기·DTCG·인스펙터·ARIA 탭 회귀 테스트
 ├── spec.md                     # 시스템 마스터 사양서
 ├── designs.md                  # 아키텍처 및 디자인 명세
 ├── BUILD_GUIDE.md              # 빌드 및 실행 가이드
