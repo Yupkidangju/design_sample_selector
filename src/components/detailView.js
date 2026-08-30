@@ -1,7 +1,7 @@
 /**
  * Detail View & Split Comparison Modal Component v2.3
  * Features:
- * - Universal Top Design Selector Bar (8 Major Categories & 24 Sub-Styles Instant Switching)
+ * - Universal Top Design Selector Bar (8 Major Categories & Dynamic Sub-Style Switching)
  * - 8 Core Page Archetypes (Game, Web SaaS, Mobile, E-Commerce, Blog, Dashboard, Media, Chat)
  * - Zero-Rebuild Dynamic Theme Injection (DOM Preservation on Style Switch)
  * - WAI-ARIA Compliant Modal Focus Trap & Keyboard Navigation
@@ -14,9 +14,15 @@ import { MAIN_CATEGORIES, getAllSubDesigns } from '../data/categories.js';
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { copyToClipboard } from '../utils/clipboard.js';
-import { getMockupHTML } from './mockupTemplates.js';
+import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
 import { getArchetypeHTML } from './archetypeTemplates.js';
 import { getNextSplitArchetype, getSplitArchetypeTabs } from './splitCompareTabs.js';
+import {
+  renderDetailStyleChips,
+  renderDetailStyleSelector,
+  renderSplitStyleChips,
+  renderSplitStylePicker
+} from './stylePickerMarkup.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { confirmStyle, openSplitCompare } from '../utils/selection.js';
 import {
@@ -47,6 +53,7 @@ export function renderDetailView(container) {
   let currentRenderedTab = null;
   let currentRenderedDevice = null;
   let currentRenderedCompareIds = [null, null];
+  let splitPickerQueries = { A: '', B: '' };
   let { activeTab: activeInspectorTab, activeCssMode: activeCssSubMode } = createDefaultInspectorUiState();
   let rafInspectorUpdateId = null;
 
@@ -74,6 +81,10 @@ export function renderDetailView(container) {
     if (currentView === 'SPLIT_COMPARE') {
       container.style.display = 'block';
       canvasVisualEngine.pauseLoop();
+
+      if (currentRenderedView !== 'SPLIT_COMPARE') {
+        splitPickerQueries = { A: '', B: '' };
+      }
 
       const needFullSplitRender = (
         currentRenderedView !== 'SPLIT_COMPARE' ||
@@ -278,20 +289,13 @@ export function renderDetailView(container) {
             </div>
           </div>
 
-          <!-- 24 Sub-Styles Thumbnail Chips Scroller -->
-          <div class="top-style-chips-scroller" id="top-style-chips-scroller" role="tablist" aria-label="24개 세부 스타일">
-            ${ALL_SUB_DESIGNS.map(s => `
-              <button class="top-style-chip ${s.id === subDesign.id ? 'active' : ''}" 
-                      data-sub-id="${s.id}" 
-                      data-cat-id="${s.categoryId}"
-                      title="[${s.categoryTitle}] ${s.name}"
-                      role="tab"
-                      aria-selected="${s.id === subDesign.id}">
-                <span class="chip-thumb-mini">${getMockupHTML(s.previewType, 'thumb', s)}</span>
-                <span>${s.name}</span>
-              </button>
-            `).join('')}
-          </div>
+          <!-- 현재 대분류의 제한된 세부 스타일 선택기 -->
+          ${renderDetailStyleSelector(mainCat.subCategories, {
+            categoryId: mainCat.id,
+            categoryTitle: mainCat.title,
+            selectedId: subDesign.id,
+            renderThumbnail: renderPreviewThumbnail
+          })}
         </header>
 
         <!-- Main 2-Column Content Grid -->
@@ -568,6 +572,12 @@ export function renderDetailView(container) {
       btn.setAttribute('aria-selected', String(match));
     });
 
+    root.querySelectorAll('.comp-tab-btn').forEach(btn => {
+      const match = btn.getAttribute('data-tab') === activeComponentTab;
+      btn.classList.toggle('active', match);
+      btn.setAttribute('aria-selected', String(match));
+    });
+
     const webSubTabs = root.querySelector('#web-sub-tabs');
     if (webSubTabs) {
       webSubTabs.style.display = activeArchetype === 'web' ? 'flex' : 'none';
@@ -598,6 +608,25 @@ export function renderDetailView(container) {
       btn.classList.toggle('active', match);
       btn.setAttribute('aria-selected', String(match));
     });
+
+    const currentSelector = root.querySelector('#top-style-selector');
+    const currentQuery = currentSelector?.getAttribute('data-category-id') === mainCat.id
+      ? currentSelector.querySelector('#detail-style-search')?.value || ''
+      : '';
+    const selectedIsVisible = Array.from(root.querySelectorAll('.top-style-chip'))
+      .some(chip => chip.getAttribute('data-sub-id') === newSubDesign.id);
+    if (
+      currentSelector &&
+      (currentSelector.getAttribute('data-category-id') !== mainCat.id || !selectedIsVisible)
+    ) {
+      currentSelector.outerHTML = renderDetailStyleSelector(mainCat.subCategories, {
+        categoryId: mainCat.id,
+        categoryTitle: mainCat.title,
+        selectedId: newSubDesign.id,
+        query: currentQuery,
+        renderThumbnail: renderPreviewThumbnail
+      });
+    }
 
     root.querySelectorAll('.top-style-chip').forEach(chip => {
       const match = chip.getAttribute('data-sub-id') === newSubDesign.id;
@@ -769,9 +798,12 @@ export function renderDetailView(container) {
       });
     });
 
-    // 2. Top Sub-Style Chips Switching (Zero-Rebuild Theme Swap)
-    root.querySelectorAll('.top-style-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
+    // 2. Top Sub-Style Chips Switching (교체되는 선택기에 대한 event delegation)
+    const topBar = root.querySelector('#universal-top-bar');
+    if (topBar) {
+      topBar.addEventListener('click', event => {
+        const chip = event.target.closest('.top-style-chip');
+        if (!chip || !topBar.contains(chip)) return;
         const subId = chip.getAttribute('data-sub-id');
         const targetSub = ALL_SUB_DESIGNS.find(s => s.id === subId);
         if (!targetSub || targetSub.id === appState.getState().selectedSubCategory) return;
@@ -786,7 +818,26 @@ export function renderDetailView(container) {
           recentlyViewed: recents
         });
       });
-    });
+
+      topBar.addEventListener('input', event => {
+        if (event.target.id !== 'detail-style-search') return;
+        const category = MAIN_CATEGORIES.find(
+          item => item.id === appState.getState().selectedMainCategory
+        );
+        if (!category) return;
+        const chips = renderDetailStyleChips(category.subCategories, {
+          query: event.target.value,
+          selectedId: appState.getState().selectedSubCategory,
+          renderThumbnail: renderPreviewThumbnail
+        });
+        const scroller = topBar.querySelector('#top-style-chips-scroller');
+        const status = topBar.querySelector('#detail-style-picker-status');
+        if (scroller) scroller.innerHTML = chips.markup;
+        if (status) {
+          status.textContent = `${chips.matchCount}개 세부 스타일${chips.selectedPinned ? ' · 현재 선택 고정' : ''}`;
+        }
+      });
+    }
 
     // 3. Archetype Tabs Navigation
     root.querySelectorAll('.archetype-tab-btn').forEach(btn => {
@@ -1218,13 +1269,12 @@ ${htmlContent}
               </div>
             </div>
 
-            <div class="split-picker" data-slot="A" role="tablist">
-              ${ALL_SUB_DESIGNS.map((s) => `
-                <button class="split-pick-thumb ${s.id === sub1.id ? 'active' : ''}" data-slot="A" data-sub-id="${s.id}" title="${s.name}" role="tab" aria-selected="${s.id === sub1.id}">
-                  ${getMockupHTML(s.previewType, 'thumb', s)}
-                </button>
-              `).join('')}
-            </div>
+            ${renderSplitStylePicker(ALL_SUB_DESIGNS, {
+              slot: 'A',
+              query: splitPickerQueries.A,
+              selectedId: sub1.id,
+              renderThumbnail: renderPreviewThumbnail
+            })}
             <div class="split-viewport" id="split-viewport-a" data-theme="${sub1.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
               ${getArchetypeHTML(activeArchetype, sub1, { tab: currentTab })}
             </div>
@@ -1249,13 +1299,12 @@ ${htmlContent}
               </div>
             </div>
 
-            <div class="split-picker" data-slot="B" role="tablist">
-              ${ALL_SUB_DESIGNS.map((s) => `
-                <button class="split-pick-thumb ${s.id === sub2.id ? 'active' : ''}" data-slot="B" data-sub-id="${s.id}" title="${s.name}" role="tab" aria-selected="${s.id === sub2.id}">
-                  ${getMockupHTML(s.previewType, 'thumb', s)}
-                </button>
-              `).join('')}
-            </div>
+            ${renderSplitStylePicker(ALL_SUB_DESIGNS, {
+              slot: 'B',
+              query: splitPickerQueries.B,
+              selectedId: sub2.id,
+              renderThumbnail: renderPreviewThumbnail
+            })}
             <div class="split-viewport" id="split-viewport-b" data-theme="${sub2.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
               ${getArchetypeHTML(activeArchetype, sub2, { tab: currentTab })}
             </div>
@@ -1325,12 +1374,14 @@ ${htmlContent}
       selectA.addEventListener('change', (e) => {
         synthAudio.playSfx('THEME_SWAP');
         appState.setCompareSubIds(e.target.value, compareIds[1]);
+        root.querySelector('#select-style-a')?.focus({ preventScroll: true });
       });
     }
     if (selectB) {
       selectB.addEventListener('change', (e) => {
         synthAudio.playSfx('THEME_SWAP');
         appState.setCompareSubIds(compareIds[0], e.target.value);
+        root.querySelector('#select-style-b')?.focus({ preventScroll: true });
       });
     }
 
@@ -1351,15 +1402,40 @@ ${htmlContent}
       });
     });
 
-    root.querySelectorAll('.split-pick-thumb').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const slot = btn.getAttribute('data-slot');
-        const id = btn.getAttribute('data-sub-id');
+    const splitModal = root.querySelector('.split-compare-modal-container');
+    if (splitModal) {
+      splitModal.addEventListener('click', event => {
+        const button = event.target.closest('.split-pick-thumb');
+        if (!button || !splitModal.contains(button)) return;
+        const slot = button.getAttribute('data-slot');
+        const id = button.getAttribute('data-sub-id');
         synthAudio.playSfx('THEME_SWAP');
         if (slot === 'A') appState.setCompareSubIds(id, compareIds[1]);
         else appState.setCompareSubIds(compareIds[0], id);
+        root.querySelector(`#split-style-search-${slot.toLocaleLowerCase('en')}`)
+          ?.focus({ preventScroll: true });
       });
-    });
+
+      splitModal.addEventListener('input', event => {
+        const slot = event.target.getAttribute('data-split-search');
+        if (slot !== 'A' && slot !== 'B') return;
+        splitPickerQueries[slot] = event.target.value;
+        const selectedId = slot === 'A' ? compareIds[0] : compareIds[1];
+        const chips = renderSplitStyleChips(ALL_SUB_DESIGNS, {
+          slot,
+          query: splitPickerQueries[slot],
+          selectedId,
+          renderThumbnail: renderPreviewThumbnail
+        });
+        const slotLower = slot.toLocaleLowerCase('en');
+        const picker = splitModal.querySelector(`#split-picker-${slotLower}`);
+        const status = splitModal.querySelector(`#split-picker-status-${slotLower}`);
+        if (picker) picker.innerHTML = chips.markup;
+        if (status) {
+          status.textContent = `${chips.matchCount}개 일치${chips.selectedPinned ? ' · 현재 선택 고정' : ''}`;
+        }
+      });
+    }
 
     // ESC Key for Split Compare View (FIN-F006)
     if (splitKeyHandler) window.removeEventListener('keydown', splitKeyHandler);

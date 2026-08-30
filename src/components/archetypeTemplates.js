@@ -4,10 +4,9 @@
  * Works seamlessly with Zero-Rebuild Dynamic Theme Injection (`[data-theme]`).
  */
 
-import { getMockupHTML } from './mockupTemplates.js';
+import { renderPreviewComponent } from '../preview/componentEntry.js';
 
 export function getArchetypeHTML(archetypeId, subDesign, options = {}) {
-  const previewType = subDesign?.previewType || 'swiss';
   const tab = options.tab || 'hero';
 
   switch (archetypeId) {
@@ -125,7 +124,11 @@ function renderGameArchetype(subDesign) {
 // 2. WEB SAAS & LANDING ARCHETYPE (Integrates 4 Component Tabs)
 function renderWebArchetype(subDesign, activeTab = 'hero') {
   const name = subDesign?.name || 'Web SaaS';
-  const componentHTML = getMockupHTML(subDesign.previewType, activeTab, subDesign);
+  const componentHTML = renderPreviewComponent({
+    rendererId: subDesign.previewType,
+    tab: activeTab,
+    design: subDesign
+  });
 
   return `
     <div class="archetype-unit archetype-web" data-archetype="web">

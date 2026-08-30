@@ -1,11 +1,10 @@
 /**
- * Master Theme Tokens & Dynamic CSS Custom Properties Preset v2.2.1
- * Maps all 24 sub-styles (with full alias & dual selector compatibility)
- * to standard CSS custom properties for Zero-Rebuild Theme Injection.
+ * 자동 생성 파일: 직접 수정하지 마세요.
+ * 원천: src/catalog/packs/의 StyleRecord.tokens, src/theme/contract.js
+ * 갱신: npm run generate:themes
  */
 
 :root {
-  /* Default Global Fallbacks */
   --theme-bg: #0B0F19;
   --theme-surface: rgba(18, 25, 38, 0.85);
   --theme-surface-subtle: rgba(255, 255, 255, 0.04);
@@ -21,11 +20,6 @@
   --theme-glow: 0 0 20px rgba(0, 240, 255, 0.35);
 }
 
-/* =========================================================
-   1. SWISS STYLE GENRE (스위스 스타일)
-   ========================================================= */
-
-/* 1.1 Swiss Grid (격자 중심 모더니즘) */
 [data-theme="swiss-grid"] {
   --theme-bg: #F4F4F0;
   --theme-surface: #FFFFFF;
@@ -42,7 +36,6 @@
   --theme-glow: none;
 }
 
-/* 1.2 Corporate Minimal (기업형 미니멀리즘) */
 [data-theme="corporate-minimal"] {
   --theme-bg: #F8FAFC;
   --theme-surface: #FFFFFF;
@@ -59,7 +52,6 @@
   --theme-glow: 0 0 15px rgba(37, 99, 235, 0.2);
 }
 
-/* 1.3 High-Contrast Mono (고대비 모노스페이스 / 클린 미니멀) */
 [data-theme="high-contrast-mono"],
 [data-theme="minimalism-clean"] {
   --theme-bg: #050505;
@@ -77,11 +69,6 @@
   --theme-glow: 0 0 12px rgba(0, 255, 102, 0.4);
 }
 
-/* =========================================================
-   2. BRUTALISM & NEO-BRUTALISM GENRE (브루탈리즘)
-   ========================================================= */
-
-/* 2.1 Raw Brutalism (날것의 디지털 브루탈리즘) */
 [data-theme="raw-brutalism"] {
   --theme-bg: #0D0D0D;
   --theme-surface: #171717;
@@ -98,7 +85,6 @@
   --theme-glow: none;
 }
 
-/* 2.2 Neo-Brutalism (트렌디 네오 브루탈리즘) */
 [data-theme="neo-brutalism"] {
   --theme-bg: #FFFDF5;
   --theme-surface: #FFE600;
@@ -115,7 +101,6 @@
   --theme-glow: none;
 }
 
-/* 2.3 Cyber Brutalism (사이버 브루탈리즘) */
 [data-theme="cyber-brutalism"],
 [data-theme="acid-techno-brutal"] {
   --theme-bg: #0A0A0C;
@@ -133,11 +118,6 @@
   --theme-glow: 0 0 20px rgba(0, 255, 204, 0.4);
 }
 
-/* =========================================================
-   3. DEPTH & MATERIALITY GENRE (뎁스 & 머티리얼리티)
-   ========================================================= */
-
-/* 3.1 Glassmorphism (글래스모피즘 럭스) */
 [data-theme="glassmorphism"],
 [data-theme="glassmorphism-luxe"] {
   --theme-bg: #0B0E17;
@@ -157,7 +137,6 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* 3.2 Neumorphism (소프트 뉴모피즘) */
 [data-theme="neumorphism"],
 [data-theme="neumorphism-soft"] {
   --theme-bg: #E0E5EC;
@@ -175,7 +154,6 @@
   --theme-glow: none;
 }
 
-/* 3.3 Skeuomorphism (클래식 스큐어모피즘) */
 [data-theme="skeuomorphism"],
 [data-theme="skeuomorphism-classic"] {
   --theme-bg: #2B2520;
@@ -193,11 +171,6 @@
   --theme-glow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-/* =========================================================
-   4. RETRO & POP ARCHITECTURE GENRE (레트로 & 팝 아키텍처)
-   ========================================================= */
-
-/* 4.1 Memphis (80s 멤피스 패턴) */
 [data-theme="memphis"],
 [data-theme="memphis-pattern"] {
   --theme-bg: #FFFDF0;
@@ -215,7 +188,6 @@
   --theme-glow: none;
 }
 
-/* 4.2 Synthwave (신스웨이브 네온 나이트) */
 [data-theme="synthwave"],
 [data-theme="synthwave-neon"] {
   --theme-bg: #0D0221;
@@ -233,7 +205,6 @@
   --theme-glow: 0 0 20px #FF007F;
 }
 
-/* 4.3 Vaporwave (베이퍼웨이브 80s/90s 노스탤지어) */
 [data-theme="vaporwave"],
 [data-theme="vaporwave-80s"] {
   --theme-bg: #1A0B2E;
@@ -251,11 +222,6 @@
   --theme-glow: 0 0 20px #FF71CE;
 }
 
-/* =========================================================
-   5. EDITORIAL & ORGANIC GENRE (에디토리얼 & 오가닉)
-   ========================================================= */
-
-/* 5.1 High Fashion (하이패션 에디토리얼 세리프) */
 [data-theme="high-fashion"],
 [data-theme="editorial-serif"] {
   --theme-bg: #F7F5F0;
@@ -273,7 +239,6 @@
   --theme-glow: none;
 }
 
-/* 5.2 Fluid Organic (플루이드 오가닉 / 바우하우스) */
 [data-theme="fluid-organic"],
 [data-theme="bauhaus-geometric"],
 [data-theme="organic-nature"] {
@@ -292,7 +257,6 @@
   --theme-glow: 0 0 15px rgba(62, 136, 91, 0.2);
 }
 
-/* 5.3 Dark Minimal Glass (다크 미니멀 글래스) */
 [data-theme="dark-minimal-glass"],
 [data-theme="darkmode-highcontrast"] {
   --theme-bg: #090A0F;
@@ -310,11 +274,6 @@
   --theme-glow: 0 0 20px rgba(56, 189, 248, 0.3);
 }
 
-/* =========================================================
-   6. Y2K & 2000s GLOSSY WEB GENRE (Y2K & 글로시 웹)
-   ========================================================= */
-
-/* 6.1 Y2K Chrome (Y2K 크롬 & 홀로그램) */
 [data-theme="y2k-chrome"],
 [data-theme="y2k-chrome-hologram"] {
   --theme-bg: #0D0A1A;
@@ -332,7 +291,6 @@
   --theme-glow: 0 0 25px rgba(236, 72, 153, 0.5);
 }
 
-/* 6.2 Frutiger Aero (Frutiger Aero 아쿠아 글로스) */
 [data-theme="frutiger-aero"],
 [data-theme="frutiger-aero-aqua"] {
   --theme-bg: linear-gradient(135deg, #0A4368 0%, #05263B 100%);
@@ -352,7 +310,6 @@
   -webkit-backdrop-filter: blur(14px);
 }
 
-/* 6.3 Pixel Arcade (8-Bit 픽셀 아케이드) */
 [data-theme="pixel-arcade"],
 [data-theme="pixel-arcade-8bit"] {
   --theme-bg: #100C2A;
@@ -370,11 +327,6 @@
   --theme-glow: 0 0 15px #00FF66;
 }
 
-/* =========================================================
-   7. HYPER-TECH & KINETIC MOTION GENRE (하이퍼테크 & 키네틱)
-   ========================================================= */
-
-/* 7.1 Kinetic Typography (키네틱 타이포그래피) */
 [data-theme="kinetic-type"],
 [data-theme="kinetic-type-motion"] {
   --theme-bg: #000000;
@@ -392,7 +344,6 @@
   --theme-glow: 0 0 20px #CCFF00;
 }
 
-/* 7.2 Bento Grid (Bento UI 2.0 정밀 그리드) */
 [data-theme="bento-grid"],
 [data-theme="bento-ui-precision"] {
   --theme-bg: #0B0E14;
@@ -412,7 +363,6 @@
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* 7.3 Acid Techno / Cyberpunk HUD (애시드 테크노 & 사이버펑크) */
 [data-theme="acid-techno"],
 [data-theme="cyberpunk-hud"] {
   --theme-bg: #050608;
@@ -430,11 +380,6 @@
   --theme-glow: 0 0 20px #00F0FF;
 }
 
-/* =========================================================
-   8. SOFT 3D & SOLARPUNK GENRE (소프트 3D & 솔라펑크)
-   ========================================================= */
-
-/* 8.1 Claymorphism (버블 클레이모피즘 3D) */
 [data-theme="claymorphism"],
 [data-theme="claymorphism-bubble"] {
   --theme-bg: #F0F4FD;
@@ -452,7 +397,6 @@
   --theme-glow: 0 10px 20px rgba(255, 107, 74, 0.25);
 }
 
-/* 8.2 Handcrafted Indie (핸드크래프트 인디 & 텍스처) */
 [data-theme="handcrafted-indie"],
 [data-theme="indie-craft"] {
   --theme-bg: #F5EFEB;
@@ -470,7 +414,6 @@
   --theme-glow: none;
 }
 
-/* 8.3 Solarpunk Eco (솔라펑크 에코-퓨처리즘) */
 [data-theme="solarpunk-eco"],
 [data-theme="solarpunk-green"] {
   --theme-bg: #0A1C14;
@@ -486,4 +429,196 @@
   --theme-shadow: 0 0 30px rgba(0, 230, 153, 0.3);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: 0 0 25px #00E699;
+}
+
+[data-theme="bauhaus-geometry"] {
+  --theme-bg: #F4EBD0;
+  --theme-surface: #FFF9E8;
+  --theme-surface-subtle: #E7D9B5;
+  --theme-border: #171717;
+  --theme-text: #171717;
+  --theme-text-muted: #4A4338;
+  --theme-accent: #C9232C;
+  --theme-accent-secondary: #174EA6;
+  --theme-radius: 0px;
+  --theme-border-width: 2px;
+  --theme-shadow: 6px 6px 0 #171717;
+  --theme-font-family: 'Arial Black', 'Helvetica Neue', sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="de-stijl"] {
+  --theme-bg: #F7F5ED;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #E9E6DA;
+  --theme-border: #111111;
+  --theme-text: #111111;
+  --theme-text-muted: #4B4B47;
+  --theme-accent: #D0021B;
+  --theme-accent-secondary: #0057A8;
+  --theme-radius: 0px;
+  --theme-border-width: 4px;
+  --theme-shadow: none;
+  --theme-font-family: 'Helvetica Neue', Arial, sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="flat-design"] {
+  --theme-bg: #F5F8FC;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #E7EEF7;
+  --theme-border: #8AA0B8;
+  --theme-text: #102A43;
+  --theme-text-muted: #486581;
+  --theme-accent: #006BB6;
+  --theme-accent-secondary: #C53D00;
+  --theme-radius: 6px;
+  --theme-border-width: 2px;
+  --theme-shadow: none;
+  --theme-font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="constructivist"] {
+  --theme-bg: #F2E5C8;
+  --theme-surface: #FFF5DC;
+  --theme-surface-subtle: #D9C8A4;
+  --theme-border: #1A120E;
+  --theme-text: #1A120E;
+  --theme-text-muted: #59483C;
+  --theme-accent: #B9141A;
+  --theme-accent-secondary: #5C0B0F;
+  --theme-radius: 0px;
+  --theme-border-width: 3px;
+  --theme-shadow: 7px 7px 0 #1A120E;
+  --theme-font-family: Impact, 'Arial Narrow', sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="punk-zine"] {
+  --theme-bg: #F3F0E8;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #D7D2C7;
+  --theme-border: #111111;
+  --theme-text: #111111;
+  --theme-text-muted: #4D4D49;
+  --theme-accent: #A90F32;
+  --theme-accent-secondary: #532B78;
+  --theme-radius: 0px;
+  --theme-border-width: 2px;
+  --theme-shadow: 5px 5px 0 #111111;
+  --theme-font-family: 'Arial Black', Impact, sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="material-design"] {
+  --theme-bg: #F4F6FA;
+  --theme-surface: #FFFFFF;
+  --theme-surface-subtle: #E8EEF6;
+  --theme-border: #AEB9C7;
+  --theme-text: #17212B;
+  --theme-text-muted: #4B5D70;
+  --theme-accent: #005BBB;
+  --theme-accent-secondary: #8A3FFC;
+  --theme-radius: 12px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 10px 28px rgba(23, 33, 43, 0.18);
+  --theme-font-family: Roboto, 'Helvetica Neue', sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="liquid-glass"] {
+  --theme-bg: #081A2C;
+  --theme-surface: #102D46;
+  --theme-surface-subtle: #183C58;
+  --theme-border: #70879A;
+  --theme-text: #F8FBFF;
+  --theme-text-muted: #C1D0DB;
+  --theme-accent: #70D7FF;
+  --theme-accent-secondary: #A5FFDF;
+  --theme-radius: 20px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 18px 44px rgba(0, 8, 20, 0.38);
+  --theme-font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  --theme-glow: 0 0 24px rgba(112, 215, 255, 0.24);
+}
+
+[data-theme="art-deco"] {
+  --theme-bg: #15120E;
+  --theme-surface: #231D16;
+  --theme-surface-subtle: #33281C;
+  --theme-border: #D6B55C;
+  --theme-text: #FFF4D6;
+  --theme-text-muted: #D5C49B;
+  --theme-accent: #E1C36B;
+  --theme-accent-secondary: #C96D2D;
+  --theme-radius: 0px;
+  --theme-border-width: 2px;
+  --theme-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
+  --theme-font-family: 'Cinzel', Georgia, serif;
+  --theme-glow: 0 0 18px rgba(225, 195, 107, 0.18);
+}
+
+[data-theme="psychedelic-poster"] {
+  --theme-bg: #241044;
+  --theme-surface: #34165A;
+  --theme-surface-subtle: #492271;
+  --theme-border: #F7C948;
+  --theme-text: #FFF5D6;
+  --theme-text-muted: #D7C5E8;
+  --theme-accent: #FF6A00;
+  --theme-accent-secondary: #63E6BE;
+  --theme-radius: 26px;
+  --theme-border-width: 3px;
+  --theme-shadow: 8px 10px 0 #0E8F80;
+  --theme-font-family: Georgia, 'Arial Black', serif;
+  --theme-glow: 0 0 20px rgba(255, 106, 0, 0.28);
+}
+
+[data-theme="art-nouveau"] {
+  --theme-bg: #F3E7D5;
+  --theme-surface: #FFF8EA;
+  --theme-surface-subtle: #DDE4CF;
+  --theme-border: #376147;
+  --theme-text: #203A2D;
+  --theme-text-muted: #52665A;
+  --theme-accent: #356B4B;
+  --theme-accent-secondary: #9A3F58;
+  --theme-radius: 18px;
+  --theme-border-width: 2px;
+  --theme-shadow: 0 12px 28px rgba(32, 58, 45, 0.16);
+  --theme-font-family: Georgia, 'Times New Roman', serif;
+  --theme-glow: none;
+}
+
+[data-theme="risograph"] {
+  --theme-bg: #F4EAD4;
+  --theme-surface: #FFF8E8;
+  --theme-surface-subtle: #E5D6B8;
+  --theme-border: #334759;
+  --theme-text: #172B40;
+  --theme-text-muted: #526273;
+  --theme-accent: #D92E5B;
+  --theme-accent-secondary: #00788A;
+  --theme-radius: 2px;
+  --theme-border-width: 2px;
+  --theme-shadow: 5px 5px 0 rgba(0, 120, 138, 0.42);
+  --theme-font-family: 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --theme-glow: none;
+}
+
+[data-theme="metro-interface"] {
+  --theme-bg: #101820;
+  --theme-surface: #1D2933;
+  --theme-surface-subtle: #263746;
+  --theme-border: #72808C;
+  --theme-text: #FFFFFF;
+  --theme-text-muted: #BBC5CC;
+  --theme-accent: #0078D4;
+  --theme-accent-secondary: #C43E00;
+  --theme-radius: 0px;
+  --theme-border-width: 1px;
+  --theme-shadow: none;
+  --theme-font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --theme-glow: none;
 }

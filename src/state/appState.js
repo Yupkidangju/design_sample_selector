@@ -78,6 +78,8 @@ const DEFAULT_STATE = {
   selectedSubCategory: null,
   activeFilter: 'ALL',
   searchQuery: '',
+  activeFacets: {},
+  sortMode: 'catalog',
   activeArchetype: 'game', // 'game' | 'web' | 'mobile' | 'ecommerce' | 'blog' | 'dashboard' | 'media' | 'chat'
   activeComponentTab: 'hero', // 'hero' | 'widget' | 'form' | 'pricing' (sub-tab for web archetype)
   sandboxDevice: 'desktop', // 'desktop' | 'mobile'

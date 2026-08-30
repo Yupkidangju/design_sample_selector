@@ -144,8 +144,8 @@ test('generated component CSS selectors exist in every archetype HTML template',
   });
 });
 
-test('all 24 token documents follow the DTCG 2025.10 reserved properties and value shapes', () => {
-  assert.equal(ALL_SUB_DESIGNS.length, 24);
+test('all 120 token documents follow the DTCG 2025.10 reserved properties and value shapes', () => {
+  assert.equal(ALL_SUB_DESIGNS.length, 120);
   const observedTypes = new Set();
 
   ALL_SUB_DESIGNS.forEach(subDesign => {
@@ -158,6 +158,27 @@ test('all 24 token documents follow the DTCG 2025.10 reserved properties and val
   });
 
   ['color', 'gradient', 'dimension', 'fontFamily', 'number', 'shadow'].forEach(type => {
-    assert.ok(observedTypes.has(type), `24-theme fixtures must exercise the ${type} conversion policy`);
+    assert.ok(observedTypes.has(type), `120-theme fixtures must exercise the ${type} conversion policy`);
+  });
+});
+
+test('CSS shadow none is exported as a valid transparent zero DTCG shadow', () => {
+  const design = ALL_SUB_DESIGNS.find(subDesign => subDesign.id === 'de-stijl');
+
+  assert.ok(design);
+  const document = JSON.parse(generateLiveTokensJSON(design, design.defaultTweaks));
+
+  assert.equal(document.effect.shadow.$type, 'shadow');
+  assert.deepEqual(document.effect.shadow.$value, {
+    color: {
+      colorSpace: 'srgb',
+      components: [0, 0, 0],
+      alpha: 0,
+      hex: '#000000'
+    },
+    offsetX: { value: 0, unit: 'px' },
+    offsetY: { value: 0, unit: 'px' },
+    blur: { value: 0, unit: 'px' },
+    spread: { value: 0, unit: 'px' }
   });
 });

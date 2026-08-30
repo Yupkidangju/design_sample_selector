@@ -4,8 +4,8 @@
 
 import { appState } from '../state/appState.js';
 import { findSubById } from '../data/categories.js';
-import { getMockupHTML } from './mockupTemplates.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
+import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
 import { selectDraft, holdPeek, cancelPeek } from '../utils/selection.js';
 
 function escapeHtml(str) {
@@ -16,6 +16,52 @@ function escapeHtml(str) {
 export function renderPeekPreview(container) {
   if (!container) return;
   let lastId = null;
+  let paintVersion = 0;
+
+  function isCurrentPeek(sub, requestId) {
+    const state = appState.getState();
+    return requestId === paintVersion
+      && state.currentView === 'MAIN'
+      && state.peekSubId === sub.id;
+  }
+
+  async function loadPeekPreview(sub) {
+    const requestId = ++paintVersion;
+    const viewport = container.querySelector('#peek-viewport');
+    if (!viewport) return;
+    viewport.setAttribute('aria-busy', 'true');
+    viewport.innerHTML = '<p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>';
+
+    try {
+      const { renderPreviewComponent } = await loadComponentPreviewModule();
+      if (!isCurrentPeek(sub, requestId)) return;
+      const currentViewport = container.querySelector('#peek-viewport');
+      if (!currentViewport) return;
+      currentViewport.innerHTML = renderPreviewComponent({
+        rendererId: sub.previewType,
+        tab: 'hero',
+        design: sub
+      });
+      currentViewport.removeAttribute('aria-busy');
+      hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true });
+    } catch {
+      if (!isCurrentPeek(sub, requestId)) return;
+      const currentViewport = container.querySelector('#peek-viewport');
+      if (!currentViewport) return;
+      currentViewport.removeAttribute('aria-busy');
+      currentViewport.innerHTML = `
+        <div class="inline-preview-state" role="alert">
+          <p>미리보기를 불러오지 못했습니다.</p>
+          <button type="button" data-peek-preview-retry>다시 시도</button>
+        </div>
+      `;
+      currentViewport.querySelector('[data-peek-preview-retry]')
+        ?.addEventListener('click', event => {
+          event.stopPropagation();
+          loadPeekPreview(sub);
+        });
+    }
+  }
 
   function paint() {
     const { currentView, peekSubId, viewport } = appState.getState();
@@ -23,6 +69,7 @@ export function renderPeekPreview(container) {
     if (!show) {
       const vp = container.querySelector('#peek-viewport');
       teardownMockup(vp);
+      paintVersion += 1;
       container.innerHTML = '';
       container.style.display = 'none';
       lastId = null;
@@ -31,6 +78,7 @@ export function renderPeekPreview(container) {
 
     const sub = findSubById(peekSubId);
     if (!sub) {
+      paintVersion += 1;
       container.style.display = 'none';
       return;
     }
@@ -45,14 +93,13 @@ export function renderPeekPreview(container) {
             <strong>${escapeHtml(sub.name)}</strong>
             <span class="peek-en">${escapeHtml(sub.nameEn)}</span>
           </div>
-          <div class="peek-viewport" id="peek-viewport">
-            ${getMockupHTML(sub.previewType, 'hero', sub)}
+          <div class="peek-viewport" id="peek-viewport" aria-busy="true">
+            <p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>
           </div>
           <p class="peek-hint">클릭으로 담기 · 더블클릭으로 자세히 · Enter 열기 · Esc 닫기</p>
         </div>
       `;
-      const vp = container.querySelector('#peek-viewport');
-      if (vp) hydrateMockup(vp, sub, { tab: 'hero', compact: true });
+      loadPeekPreview(sub);
 
       const card = container.querySelector('.peek-card');
       positionPeek(card, sub.id);
@@ -64,7 +111,9 @@ export function renderPeekPreview(container) {
       });
       lastId = sub.id;
     } else {
-      positionPeek(container.querySelector('.peek-card'), sub.id);
+      const card = container.querySelector('.peek-card');
+      card?.classList.toggle('is-mobile', viewport === 'MOBILE');
+      positionPeek(card, sub.id);
     }
   }
 

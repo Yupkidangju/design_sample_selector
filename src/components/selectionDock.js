@@ -6,8 +6,9 @@
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { findSubById } from '../data/categories.js';
-import { getMockupHTML } from './mockupTemplates.js';
+import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
+import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
 import { copyToClipboard } from '../utils/clipboard.js';
 import {
   openDetailFor,
@@ -23,8 +24,10 @@ function escapeHtml(str) {
 
 export function renderSelectionDock(container) {
   if (!container) return;
+  let paintVersion = 0;
 
   function paint() {
+    const renderVersion = ++paintVersion;
     const state = appState.getState();
     const {
       currentView, draftSubId, confirmedStyleId, confirmSheetOpen,
@@ -60,7 +63,7 @@ export function renderSelectionDock(container) {
 
           ${draft ? `
             <div class="dock-draft">
-              <div class="dock-thumb">${getMockupHTML(draft.previewType, 'thumb', draft)}</div>
+              <div class="dock-thumb">${renderPreviewThumbnail({ thumbnailId: draft.thumbMotif, design: draft })}</div>
               <div class="dock-draft-meta">
                 <span class="dock-kicker">${escapeHtml(draft.categoryTitle)}</span>
                 <strong class="dock-title">${escapeHtml(draft.name)}</strong>
@@ -82,7 +85,7 @@ export function renderSelectionDock(container) {
             <div class="dock-recents" aria-label="최근 본 스타일">
               ${recents.map((s) => `
                 <button class="dock-recent-btn ${s.id === draft?.id ? 'active' : ''}" data-recent-id="${s.id}" title="${escapeHtml(s.name)}">
-                  ${getMockupHTML(s.previewType, 'thumb', s)}
+                  ${renderPreviewThumbnail({ thumbnailId: s.thumbMotif, design: s })}
                 </button>
               `).join('')}
             </div>
@@ -92,6 +95,51 @@ export function renderSelectionDock(container) {
     `;
 
     bind(container, draft, confirmed);
+    if (confirmSheetOpen && confirmed) {
+      loadConfirmPreview(confirmed, renderVersion);
+    }
+  }
+
+  function isCurrentConfirmPreview(sub, renderVersion) {
+    const state = appState.getState();
+    return renderVersion === paintVersion
+      && state.currentView === 'MAIN'
+      && state.confirmSheetOpen
+      && state.confirmedStyleId === sub.id;
+  }
+
+  async function loadConfirmPreview(sub, renderVersion) {
+    const preview = container.querySelector('#confirm-preview');
+    if (!preview || !isCurrentConfirmPreview(sub, renderVersion)) return;
+    preview.setAttribute('aria-busy', 'true');
+    preview.innerHTML = '<p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>';
+
+    try {
+      const { renderPreviewComponent } = await loadComponentPreviewModule();
+      if (!isCurrentConfirmPreview(sub, renderVersion)) return;
+      const currentPreview = container.querySelector('#confirm-preview');
+      if (!currentPreview) return;
+      currentPreview.innerHTML = renderPreviewComponent({
+        rendererId: sub.previewType,
+        tab: 'hero',
+        design: sub
+      });
+      currentPreview.removeAttribute('aria-busy');
+      hydrateMockup(currentPreview, sub, { tab: 'hero' });
+    } catch {
+      if (!isCurrentConfirmPreview(sub, renderVersion)) return;
+      const currentPreview = container.querySelector('#confirm-preview');
+      if (!currentPreview) return;
+      currentPreview.removeAttribute('aria-busy');
+      currentPreview.innerHTML = `
+        <div class="inline-preview-state" role="alert">
+          <p>확정 시안을 불러오지 못했습니다.</p>
+          <button class="dock-btn" type="button" data-confirm-preview-retry>다시 시도</button>
+        </div>
+      `;
+      currentPreview.querySelector('[data-confirm-preview-retry]')
+        ?.addEventListener('click', () => loadConfirmPreview(sub, renderVersion));
+    }
   }
 
   function renderConfirmSheet(sub, state) {
@@ -103,8 +151,8 @@ export function renderSelectionDock(container) {
           <button class="dock-btn ghost" id="confirm-sheet-close">접기</button>
         </div>
         <div class="confirm-sheet-body">
-          <div class="confirm-preview" id="confirm-preview">
-            ${getMockupHTML(sub.previewType, 'hero', sub)}
+          <div class="confirm-preview" id="confirm-preview" aria-busy="true">
+            <p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>
           </div>
           <div class="confirm-facts">
             <p class="confirm-desc">${escapeHtml(sub.shortDesc)}</p>
@@ -134,9 +182,6 @@ backdrop-filter: blur(${tweaks.backdropBlur}px);
   }
 
   function bind(root, draft, confirmed) {
-    const preview = root.querySelector('#confirm-preview');
-    if (preview && confirmed) hydrateMockup(preview, confirmed, { tab: 'hero' });
-
     root.querySelector('#dock-open-detail')?.addEventListener('click', () => {
       if (draft) openDetailFor(draft.categoryId, draft.id);
     });

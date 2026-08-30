@@ -3,372 +3,9 @@
  * 100% reactive to subcategory selection, live tweak sliders, and active archetype.
  */
 
-// Authoritative Theme Token Presets matching themeTokens.css
-export const THEME_TOKENS_MAP = {
-  'swiss-grid': {
-    '--theme-bg': '#F4F4F0',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#EAEAE6',
-    '--theme-border': '#111111',
-    '--theme-text': '#111111',
-    '--theme-text-muted': '#555555',
-    '--theme-accent': '#FF3300',
-    '--theme-accent-secondary': '#000000',
-    '--theme-radius': '0px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '4px 4px 0px #111111',
-    '--theme-font-family': "'Space Grotesk', 'Helvetica Neue', sans-serif",
-    '--theme-glow': 'none'
-  },
-  'corporate-minimal': {
-    '--theme-bg': '#F8FAFC',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#F1F5F9',
-    '--theme-border': '#E2E8F0',
-    '--theme-text': '#0F172A',
-    '--theme-text-muted': '#64748B',
-    '--theme-accent': '#2563EB',
-    '--theme-accent-secondary': '#0EA5E9',
-    '--theme-radius': '12px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 10px 25px -5px rgba(15, 23, 42, 0.08)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 15px rgba(37, 99, 235, 0.2)'
-  },
-  'high-contrast-mono': {
-    '--theme-bg': '#050505',
-    '--theme-surface': '#121212',
-    '--theme-surface-subtle': '#1E1E1E',
-    '--theme-border': '#333333',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#888888',
-    '--theme-accent': '#00FF66',
-    '--theme-accent-secondary': '#00CC55',
-    '--theme-radius': '4px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 0 15px rgba(0, 255, 102, 0.15)',
-    '--theme-font-family': "'Fira Code', monospace",
-    '--theme-glow': '0 0 12px rgba(0, 255, 102, 0.4)'
-  },
-  'raw-brutalism': {
-    '--theme-bg': '#0D0D0D',
-    '--theme-surface': '#171717',
-    '--theme-surface-subtle': '#262626',
-    '--theme-border': '#FFFFFF',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#A3A3A3',
-    '--theme-accent': '#FFFF00',
-    '--theme-accent-secondary': '#FF0055',
-    '--theme-radius': '0px',
-    '--theme-border-width': '3px',
-    '--theme-shadow': '6px 6px 0px #FFFFFF',
-    '--theme-font-family': "'Fira Code', 'Courier New', monospace",
-    '--theme-glow': 'none'
-  },
-  'neo-brutalism': {
-    '--theme-bg': '#FFFDF5',
-    '--theme-surface': '#FFE600',
-    '--theme-surface-subtle': '#FF80BF',
-    '--theme-border': '#000000',
-    '--theme-text': '#000000',
-    '--theme-text-muted': '#222222',
-    '--theme-accent': '#FF0055',
-    '--theme-accent-secondary': '#00D4FF',
-    '--theme-radius': '12px',
-    '--theme-border-width': '3px',
-    '--theme-shadow': '5px 5px 0px #000000',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': 'none'
-  },
-  'cyber-brutalism': {
-    '--theme-bg': '#0A0A0C',
-    '--theme-surface': '#141419',
-    '--theme-surface-subtle': '#1F1F27',
-    '--theme-border': '#00FFCC',
-    '--theme-text': '#F4F4F5',
-    '--theme-text-muted': '#A1A1AA',
-    '--theme-accent': '#FF0055',
-    '--theme-accent-secondary': '#00FFCC',
-    '--theme-radius': '2px',
-    '--theme-border-width': '3px',
-    '--theme-shadow': '6px 6px 0px #00FFCC',
-    '--theme-font-family': "'Fira Code', monospace",
-    '--theme-glow': '0 0 20px rgba(0, 255, 204, 0.4)'
-  },
-  'glassmorphism': {
-    '--theme-bg': '#0B0E17',
-    '--theme-surface': 'rgba(255, 255, 255, 0.08)',
-    '--theme-surface-subtle': 'rgba(255, 255, 255, 0.04)',
-    '--theme-border': 'rgba(255, 255, 255, 0.22)',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': 'rgba(255, 255, 255, 0.7)',
-    '--theme-accent': '#00F0FF',
-    '--theme-accent-secondary': '#A855F7',
-    '--theme-radius': '20px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 30px rgba(0, 240, 255, 0.3)',
-    'backdrop-filter': 'blur(20px)'
-  },
-  'neumorphism': {
-    '--theme-bg': '#E0E5EC',
-    '--theme-surface': '#E0E5EC',
-    '--theme-surface-subtle': '#D1D9E6',
-    '--theme-border': 'transparent',
-    '--theme-text': '#31344B',
-    '--theme-text-muted': '#7E8BA3',
-    '--theme-accent': '#4D7CFE',
-    '--theme-accent-secondary': '#6C5CE7',
-    '--theme-radius': '20px',
-    '--theme-border-width': '0px',
-    '--theme-shadow': '9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': 'none'
-  },
-  'skeuomorphism': {
-    '--theme-bg': '#2B2520',
-    '--theme-surface': 'linear-gradient(180deg, #5C5248 0%, #3D352E 100%)',
-    '--theme-surface-subtle': '#4A4038',
-    '--theme-border': '#7A6F62',
-    '--theme-text': '#F3EBDD',
-    '--theme-text-muted': '#BAAF9F',
-    '--theme-accent': '#D4AF37',
-    '--theme-accent-secondary': '#C07D3E',
-    '--theme-radius': '10px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25)',
-    '--theme-font-family': "'Cinzel', serif",
-    '--theme-glow': '0 0 15px rgba(212, 175, 55, 0.3)'
-  },
-  'memphis': {
-    '--theme-bg': '#FFFDF0',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#FFF3B0',
-    '--theme-border': '#111111',
-    '--theme-text': '#111111',
-    '--theme-text-muted': '#444444',
-    '--theme-accent': '#FF4081',
-    '--theme-accent-secondary': '#00E5FF',
-    '--theme-radius': '14px',
-    '--theme-border-width': '3px',
-    '--theme-shadow': '5px 5px 0px #111111',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': 'none'
-  },
-  'synthwave': {
-    '--theme-bg': '#0D0221',
-    '--theme-surface': '#1E0836',
-    '--theme-surface-subtle': '#300E54',
-    '--theme-border': '#FF007F',
-    '--theme-text': '#00F0FF',
-    '--theme-text-muted': '#D400FF',
-    '--theme-accent': '#FF007F',
-    '--theme-accent-secondary': '#00F0FF',
-    '--theme-radius': '8px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '0 0 25px rgba(255, 0, 127, 0.45)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 0 20px #FF007F'
-  },
-  'vaporwave': {
-    '--theme-bg': '#1A0B2E',
-    '--theme-surface': '#2D124D',
-    '--theme-surface-subtle': '#411B6D',
-    '--theme-border': '#FF71CE',
-    '--theme-text': '#01CDFE',
-    '--theme-text-muted': '#B967FF',
-    '--theme-accent': '#FF71CE',
-    '--theme-accent-secondary': '#05FFA1',
-    '--theme-radius': '12px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '0 0 25px rgba(255, 113, 206, 0.45)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 0 20px #FF71CE'
-  },
-  'high-fashion': {
-    '--theme-bg': '#F7F5F0',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#EFECE6',
-    '--theme-border': '#D8D2C6',
-    '--theme-text': '#1C1917',
-    '--theme-text-muted': '#78716C',
-    '--theme-accent': '#881337',
-    '--theme-accent-secondary': '#92400E',
-    '--theme-radius': '0px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 4px 20px rgba(0, 0, 0, 0.06)',
-    '--theme-font-family': "'Cinzel', 'Playfair Display', serif",
-    '--theme-glow': 'none'
-  },
-  'fluid-organic': {
-    '--theme-bg': '#F2EFE9',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#E5DFC5',
-    '--theme-border': '#D4C9A8',
-    '--theme-text': '#2C3E2D',
-    '--theme-text-muted': '#6B7C6C',
-    '--theme-accent': '#3E885B',
-    '--theme-accent-secondary': '#C07D3E',
-    '--theme-radius': '24px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 10px 25px rgba(44, 62, 45, 0.08)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 15px rgba(62, 136, 91, 0.2)'
-  },
-  'dark-minimal-glass': {
-    '--theme-bg': '#090A0F',
-    '--theme-surface': '#12151F',
-    '--theme-surface-subtle': '#1C2130',
-    '--theme-border': 'rgba(255, 255, 255, 0.16)',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#94A3B8',
-    '--theme-accent': '#38BDF8',
-    '--theme-accent-secondary': '#818CF8',
-    '--theme-radius': '12px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 12px 30px rgba(0, 0, 0, 0.6)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 20px rgba(56, 189, 248, 0.3)'
-  },
-  'y2k-chrome': {
-    '--theme-bg': '#0D0A1A',
-    '--theme-surface': 'rgba(30, 20, 55, 0.7)',
-    '--theme-surface-subtle': 'rgba(50, 35, 90, 0.5)',
-    '--theme-border': '#A855F7',
-    '--theme-text': '#F3E8FF',
-    '--theme-text-muted': '#C084FC',
-    '--theme-accent': '#EC4899',
-    '--theme-accent-secondary': '#06B6D4',
-    '--theme-radius': '16px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '0 0 30px rgba(168, 85, 247, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.4)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 0 25px rgba(236, 72, 153, 0.5)'
-  },
-  'frutiger-aero': {
-    '--theme-bg': 'linear-gradient(135deg, #0A4368 0%, #05263B 100%)',
-    '--theme-surface': 'rgba(255, 255, 255, 0.2)',
-    '--theme-surface-subtle': 'rgba(255, 255, 255, 0.1)',
-    '--theme-border': 'rgba(255, 255, 255, 0.5)',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#BEE3F8',
-    '--theme-accent': '#00E5FF',
-    '--theme-accent-secondary': '#76FF03',
-    '--theme-radius': '20px',
-    '--theme-border-width': '1.5px',
-    '--theme-shadow': '0 16px 36px rgba(0, 40, 80, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.6)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 25px rgba(0, 229, 255, 0.6)',
-    'backdrop-filter': 'blur(14px)'
-  },
-  'pixel-arcade': {
-    '--theme-bg': '#100C2A',
-    '--theme-surface': '#1E1646',
-    '--theme-surface-subtle': '#2C2266',
-    '--theme-border': '#FFCC00',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#A39BDE',
-    '--theme-accent': '#00FF66',
-    '--theme-accent-secondary': '#FF0055',
-    '--theme-radius': '0px',
-    '--theme-border-width': '4px',
-    '--theme-shadow': '6px 6px 0px #000000',
-    '--theme-font-family': "'Fira Code', 'Courier New', monospace",
-    '--theme-glow': '0 0 15px #00FF66'
-  },
-  'kinetic-type': {
-    '--theme-bg': '#000000',
-    '--theme-surface': '#111111',
-    '--theme-surface-subtle': '#222222',
-    '--theme-border': '#CCFF00',
-    '--theme-text': '#FFFFFF',
-    '--theme-text-muted': '#888888',
-    '--theme-accent': '#CCFF00',
-    '--theme-accent-secondary': '#FFFFFF',
-    '--theme-radius': '0px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '0 0 30px rgba(204, 255, 0, 0.25)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 0 20px #CCFF00'
-  },
-  'bento-grid': {
-    '--theme-bg': '#0B0E14',
-    '--theme-surface': 'rgba(22, 28, 38, 0.7)',
-    '--theme-surface-subtle': 'rgba(255, 255, 255, 0.04)',
-    '--theme-border': 'rgba(255, 255, 255, 0.1)',
-    '--theme-text': '#F1F5F9',
-    '--theme-text-muted': '#94A3B8',
-    '--theme-accent': '#38BDF8',
-    '--theme-accent-secondary': '#A78BFA',
-    '--theme-radius': '18px',
-    '--theme-border-width': '1px',
-    '--theme-shadow': '0 16px 36px rgba(0, 0, 0, 0.45)',
-    '--theme-font-family': "'Inter', sans-serif",
-    '--theme-glow': '0 0 25px rgba(56, 189, 248, 0.25)',
-    'backdrop-filter': 'blur(16px)'
-  },
-  'acid-techno': {
-    '--theme-bg': '#050608',
-    '--theme-surface': 'rgba(15, 20, 28, 0.85)',
-    '--theme-surface-subtle': 'rgba(25, 35, 50, 0.6)',
-    '--theme-border': '#00F0FF',
-    '--theme-text': '#00F0FF',
-    '--theme-text-muted': '#008899',
-    '--theme-accent': '#CCFF00',
-    '--theme-accent-secondary': '#FF0055',
-    '--theme-radius': '4px',
-    '--theme-border-width': '1.5px',
-    '--theme-shadow': '0 0 25px rgba(0, 240, 255, 0.35)',
-    '--theme-font-family': "'Fira Code', monospace",
-    '--theme-glow': '0 0 20px #00F0FF'
-  },
-  'claymorphism': {
-    '--theme-bg': '#F0F4FD',
-    '--theme-surface': '#FFFFFF',
-    '--theme-surface-subtle': '#E2EAFC',
-    '--theme-border': 'transparent',
-    '--theme-text': '#2D3748',
-    '--theme-text-muted': '#718096',
-    '--theme-accent': '#FF6B4A',
-    '--theme-accent-secondary': '#6B46C1',
-    '--theme-radius': '28px',
-    '--theme-border-width': '0px',
-    '--theme-shadow': '12px 16px 28px rgba(140, 160, 210, 0.35), inset -8px -8px 12px rgba(0, 0, 0, 0.06), inset 8px 8px 12px rgba(255, 255, 255, 0.9)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 10px 20px rgba(255, 107, 74, 0.25)'
-  },
-  'handcrafted-indie': {
-    '--theme-bg': '#F5EFEB',
-    '--theme-surface': '#FFFDF9',
-    '--theme-surface-subtle': '#ECE1D8',
-    '--theme-border': '#4A3E3D',
-    '--theme-text': '#3D3231',
-    '--theme-text-muted': '#7C6C6A',
-    '--theme-accent': '#E05A47',
-    '--theme-accent-secondary': '#D49B35',
-    '--theme-radius': '4px',
-    '--theme-border-width': '2px',
-    '--theme-shadow': '3px 4px 0px #4A3E3D',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': 'none'
-  },
-  'solarpunk-eco': {
-    '--theme-bg': '#0A1C14',
-    '--theme-surface': '#132E22',
-    '--theme-surface-subtle': '#1C4030',
-    '--theme-border': '#00E699',
-    '--theme-text': '#E8F5E9',
-    '--theme-text-muted': '#A5D6A7',
-    '--theme-accent': '#00E699',
-    '--theme-accent-secondary': '#FFD54F',
-    '--theme-radius': '18px',
-    '--theme-border-width': '1.5px',
-    '--theme-shadow': '0 0 30px rgba(0, 230, 153, 0.3)',
-    '--theme-font-family': "'Space Grotesk', sans-serif",
-    '--theme-glow': '0 0 25px #00E699'
-  }
-};
+import { THEME_TOKENS_MAP, getThemeDefinitionById } from '../theme/index.js';
+
+export { THEME_TOKENS_MAP };
 
 // Archetype CSS Templates
 const ARCHETYPE_CSS_MAP = {
@@ -579,12 +216,16 @@ const ARCHETYPE_CSS_MAP = {
 }`
 };
 
+function getExportThemeTokens(subDesign) {
+  return getThemeDefinitionById(subDesign?.id)?.cssCustomProperties || null;
+}
+
 /**
  * 1. Live CSS Snippet Generator
  */
 export function generateLiveCSSSnippet(subDesign, tweaks = {}, archetype = 'game', mode = 'full') {
-  if (!subDesign) return '/* No design selected */';
-  const tokens = THEME_TOKENS_MAP[subDesign.id] || THEME_TOKENS_MAP['swiss-grid'];
+  const tokens = getExportThemeTokens(subDesign);
+  if (!tokens) return '/* No design selected */';
   const paletteRules = (subDesign.palette || []).map(p => `  --color-${slugify(p.name)}: ${p.hex};`).join('\n');
 
   const tokenBlock = `/* === [${subDesign.nameEn}] Theme Tokens & Live Tweaks === */
@@ -630,8 +271,8 @@ ${paletteRules}
  * 2. Live designs.md Markdown Spec Generator
  */
 export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype = 'game', device = 'desktop') {
-  if (!subDesign) return '# Design Specification (No Selection)';
-  const tokens = THEME_TOKENS_MAP[subDesign.id] || THEME_TOKENS_MAP['swiss-grid'];
+  const tokens = getExportThemeTokens(subDesign);
+  if (!tokens) return '# Design Specification (No Selection)';
 
   const paletteRows = (subDesign.palette || []).map(p => `| \`${p.name}\` | \`${p.hex}\` | <span style="display:inline-block;width:12px;height:12px;background:${p.hex};border-radius:2px;border:1px solid #666;"></span> | ${p.usage || '주요 테마 색상'} |`).join('\n');
 
@@ -882,6 +523,17 @@ function parseDimension(cssValue) {
 }
 
 function parseCssShadow(cssValue) {
+  if (String(cssValue).trim().toLowerCase() === 'none') {
+    const zero = { value: 0, unit: 'px' };
+    return {
+      color: parseCssColor('transparent'),
+      offsetX: { ...zero },
+      offsetY: { ...zero },
+      blur: { ...zero },
+      spread: { ...zero }
+    };
+  }
+
   const shadows = splitCssList(cssValue).map(part => {
     const inset = /(?:^|\s)inset(?:\s|$)/i.test(part);
     const withoutInset = part.replace(/(?:^|\s)inset(?:\s|$)/i, ' ').trim();
@@ -911,8 +563,8 @@ function parseFontFamily(cssValue) {
  * 3. Live Design Tokens JSON Generator (DTCG Format Module 2025.10)
  */
 export function generateLiveTokensJSON(subDesign, tweaks = {}) {
-  if (!subDesign) return '{}';
-  const tokens = THEME_TOKENS_MAP[subDesign.id] || THEME_TOKENS_MAP['swiss-grid'];
+  const tokens = getExportThemeTokens(subDesign);
+  if (!tokens) return '{}';
   const resolvedTweaks = { ...subDesign.defaultTweaks, ...tweaks };
 
   const colorTokens = {};

@@ -9,10 +9,27 @@
  */
 
 import { synthAudio } from '../audio/synthAudio.js';
+import {
+  getPreviewMotionDefinition,
+  PreviewRegistryError
+} from '../preview/motionEntry.js';
 import { prefersReducedMotion } from '../utils/selection.js';
 
 const runtimeMap = new WeakMap();
 const activeRoots = new Set();
+
+function resolveMotionDescriptor(subDesign) {
+  const motionId = subDesign?.preview?.motionId ?? subDesign?.motionProfile;
+  const descriptor = getPreviewMotionDefinition(motionId);
+  if (!descriptor) {
+    throw new PreviewRegistryError(
+      'PREVIEW_REFERENCE_UNKNOWN',
+      '등록되지 않은 motion입니다.',
+      { referenceKind: 'motion', referenceId: motionId }
+    );
+  }
+  return descriptor;
+}
 
 function runCleanups(rootEl) {
   const rt = runtimeMap.get(rootEl);
@@ -51,13 +68,12 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
 
   const cleanups = [];
   const reduce = prefersReducedMotion();
-  const previewType = subDesign?.previewType || options.previewType || 'swiss';
-  const motion = subDesign?.motionProfile || 'none';
+  const motion = resolveMotionDescriptor(subDesign);
   const archetype = options.archetype || rootEl.getAttribute('data-archetype') || 'game';
 
   const unit = rootEl.querySelector('.mockup-unit') || rootEl.querySelector('.archetype-unit') || rootEl;
 
-  unit.classList.add(`motion-${motion}`);
+  unit.classList.add(motion.unitClass);
   if (options.compact) unit.classList.add('is-compact');
   if (reduce) unit.classList.add('motion-reduced');
 
@@ -84,7 +100,7 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
     const action = trigger.getAttribute('data-action') || trigger.getAttribute('data-mock-action') || 'toast';
     const msg = trigger.getAttribute('data-mock-msg') || '';
 
-    routeArchetypeAction(unit, trigger, action, msg, previewType, stateStore, cleanups, e);
+    routeArchetypeAction(unit, trigger, action, msg, stateStore, cleanups, e);
   };
 
   const onKeydown = (e) => {
@@ -133,6 +149,11 @@ export function observeThumbMotion(root) {
   const thumbs = root.querySelectorAll('.style-thumb');
   if (!thumbs.length) return () => {};
 
+  if (prefersReducedMotion()) {
+    thumbs.forEach(thumb => thumb.classList.remove('in-view'));
+    return () => {};
+  }
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       entry.target.classList.toggle('in-view', entry.isIntersecting);
@@ -140,13 +161,22 @@ export function observeThumbMotion(root) {
   }, { threshold: 0.15, rootMargin: '40px' });
 
   thumbs.forEach((thumb) => io.observe(thumb));
-  return () => io.disconnect();
+  return () => {
+    io.disconnect();
+    thumbs.forEach(thumb => thumb.classList.remove('in-view'));
+  };
 }
 
 function ensureFxLayer(unit, motion) {
-  if (unit.querySelector(':scope > .fx-layer')) return;
+  if (!motion.effectLayer) return;
+  const existingLayer = unit.querySelector(':scope > .fx-layer');
+  if (existingLayer) {
+    existingLayer.className = `fx-layer ${motion.effectClass}`;
+    existingLayer.setAttribute('aria-hidden', 'true');
+    return;
+  }
   const layer = document.createElement('div');
-  layer.className = `fx-layer fx-${motion}`;
+  layer.className = `fx-layer ${motion.effectClass}`;
   layer.setAttribute('aria-hidden', 'true');
   unit.insertBefore(layer, unit.firstChild);
 }
@@ -178,7 +208,7 @@ function pulseClass(el, className, ms = 420) {
 }
 
 // Action Router
-function routeArchetypeAction(unit, trigger, action, msg, previewType, store, cleanups, evt) {
+function routeArchetypeAction(unit, trigger, action, msg, store, cleanups, evt) {
   // 1. GAME ACTIONS
   if (action === 'game-tap') {
     handleGameTap(unit, trigger, store, cleanups);
