@@ -307,7 +307,7 @@ async function captureScreenshot(name) {
   });
   const path = join(artifactDirectory, `${name}.png`);
   writeFileSync(path, Buffer.from(screenshot.data, 'base64'));
-  report.screenshots.push(path);
+  report.screenshots.push(`${name}.png`);
 }
 
 function bindRuntimeDiagnostics() {

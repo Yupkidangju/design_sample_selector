@@ -1,0 +1,556 @@
+{
+  "checkedAt": "2026-08-30T16:15:12.846Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "isolatedProfile": true,
+  "bundle": {
+    "checkedAt": "2026-08-30T16:15:12.857Z",
+    "distDirectory": "dist",
+    "indexPath": "dist/index.html",
+    "assets": [
+      {
+        "type": "javascript",
+        "relation": "module",
+        "source": "./assets/index-CUUvGGsm.js",
+        "path": "assets/index-CUUvGGsm.js",
+        "rawBytes": 263813,
+        "gzipBytes": 83460
+      },
+      {
+        "type": "css",
+        "relation": "stylesheet",
+        "source": "./assets/index-C_FQ7CmV.css",
+        "path": "assets/index-C_FQ7CmV.css",
+        "rawBytes": 171447,
+        "gzipBytes": 32856
+      }
+    ],
+    "javascript": {
+      "assetCount": 1,
+      "rawBytes": 263813,
+      "gzipBytes": 83460,
+      "budgetBytes": 88980,
+      "withinBudget": true
+    },
+    "css": {
+      "assetCount": 1,
+      "rawBytes": 171447,
+      "gzipBytes": 32856,
+      "budgetBytes": 33000,
+      "withinBudget": true
+    },
+    "issues": [],
+    "passed": true
+  },
+  "vitals": {
+    "domContentLoadedMs": 351.29999999701977,
+    "loadMs": 380.29999999701977,
+    "fcpMs": 380,
+    "lcpMs": 444,
+    "cls": 0,
+    "layoutShifts": []
+  },
+  "initialRequests": [
+    "http://127.0.0.1:42761/assets/index-CUUvGGsm.js",
+    "http://127.0.0.1:42761/assets/index-C_FQ7CmV.css"
+  ],
+  "core": {
+    "galleryModes": [
+      {
+        "mode": "GRID",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "BENTO",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "SPECTRUM",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      }
+    ],
+    "interactions": {
+      "viewChange": {
+        "samples": [
+          9.7,
+          6.3,
+          7.9,
+          9.6,
+          16.4
+        ],
+        "medianMs": 9.6,
+        "maximumMs": 16.4
+      },
+      "search": {
+        "samples": [
+          48.4,
+          30.8,
+          27.1,
+          27.6,
+          28.5
+        ],
+        "medianMs": 28.5,
+        "maximumMs": 48.4
+      },
+      "splitSearch": {
+        "samples": [
+          84.8,
+          8.2,
+          108.4,
+          109.6,
+          116.4
+        ],
+        "medianMs": 108.4,
+        "maximumMs": 116.4,
+        "synchronous": {
+          "samples": [
+            2,
+            0.8,
+            1,
+            0.7,
+            0.7
+          ],
+          "medianMs": 0.8,
+          "maximumMs": 2
+        }
+      }
+    },
+    "lazyLoading": {
+      "initialLazyRequests": [],
+      "loadingObserved": true,
+      "failureState": {
+        "busy": null,
+        "alert": "미리보기를 불러오지 못했습니다.\n          다시 시도",
+        "retryLabel": "다시 시도"
+      },
+      "interceptedComponentFailures": 1,
+      "retrySucceeded": true,
+      "resourcesAfterRetry": [
+        "http://127.0.0.1:42761/assets/componentLazyEntry-Bj0OJ3A5.js",
+        "http://127.0.0.1:42761/assets/componentEntry-CNdEzvMG.js"
+      ]
+    },
+    "detail": {
+      "categoryId": "swiss",
+      "chipCount": 15,
+      "thumbnailCount": 15,
+      "foreignCategoryCount": 0,
+      "selectedCount": 1,
+      "searchVisible": false,
+      "theme": "swiss-grid",
+      "deviceClass": "mockup-viewport desktop",
+      "zeroRebuild": {
+        "sameViewport": true,
+        "selectedId": "corporate-minimal",
+        "theme": "corporate-minimal"
+      },
+      "devices": [
+        {
+          "device": "mobile",
+          "viewportClass": "mockup-viewport mobile",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 761,
+          "unitWidth": 365
+        },
+        {
+          "device": "desktop",
+          "viewportClass": "mockup-viewport desktop",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 761,
+          "unitWidth": 715
+        }
+      ],
+      "coldEntryMs": 59.4,
+      "warmEntries": {
+        "samples": [
+          63.4,
+          64.3,
+          81.6,
+          19.4,
+          93.2
+        ],
+        "medianMs": 64.3,
+        "maximumMs": 93.2
+      }
+    },
+    "split": {
+      "visualA": 12,
+      "visualB": 12,
+      "thumbnailsA": 12,
+      "thumbnailsB": 12,
+      "optionsA": 120,
+      "optionsB": 120,
+      "selectedA": "swiss-grid",
+      "selectedB": "neo-brutalism",
+      "overflow": 0,
+      "afterSearch": {
+        "visualA": 12,
+        "selectedCount": 1,
+        "focusId": "split-style-search-a",
+        "statusRole": "status",
+        "live": "polite"
+      }
+    },
+    "selection": {
+      "dialog": "dialog",
+      "busy": null,
+      "previewCount": 1,
+      "componentResources": 1
+    },
+    "responsiveWidths": [
+      {
+        "width": 320,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 768,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1024,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1440,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      }
+    ],
+    "reducedMotion": {
+      "matches": true,
+      "thumbnails": 36,
+      "inView": 0,
+      "runningAnimations": 0
+    },
+    "initial": {
+      "resultCount": 36,
+      "uniqueCount": 36,
+      "totalCount": 120,
+      "thumbnails": 36,
+      "pagination": true,
+      "nodes": 494,
+      "overflow": 0
+    }
+  },
+  "synthetic": [
+    {
+      "count": 60,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 421,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 946,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 30,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 60,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 420,
+      "interactions": {
+        "viewChange": {
+          "samples": [
+            51.5,
+            34.8,
+            65.1,
+            34.9,
+            35.5
+          ],
+          "medianMs": 35.5,
+          "maximumMs": 65.1
+        },
+        "pageChange": {
+          "samples": [
+            34.4,
+            32.7,
+            32.2,
+            33.8,
+            33.1
+          ],
+          "medianMs": 33.1,
+          "maximumMs": 34.4
+        },
+        "search": {
+          "samples": [
+            33.3,
+            37.5,
+            29.5,
+            37.2,
+            29
+          ],
+          "medianMs": 33.3,
+          "maximumMs": 37.5
+        },
+        "pickerSearch": {
+          "samples": [
+            48.3,
+            32.6,
+            33.8,
+            33.7,
+            33.1
+          ],
+          "medianMs": 33.7,
+          "maximumMs": 48.3
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    },
+    {
+      "count": 120,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 421,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 946,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 30,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 120,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 420,
+      "interactions": {
+        "viewChange": {
+          "samples": [
+            40.5,
+            61,
+            51.1,
+            33,
+            30.4
+          ],
+          "medianMs": 40.5,
+          "maximumMs": 61
+        },
+        "pageChange": {
+          "samples": [
+            36.8,
+            46.1,
+            33.4,
+            34.2,
+            32.1
+          ],
+          "medianMs": 34.2,
+          "maximumMs": 46.1
+        },
+        "search": {
+          "samples": [
+            33.8,
+            33.3,
+            32.9,
+            33.9,
+            34.2
+          ],
+          "medianMs": 33.8,
+          "maximumMs": 34.2
+        },
+        "pickerSearch": {
+          "samples": [
+            30.2,
+            32.2,
+            34,
+            33.6,
+            33.1
+          ],
+          "medianMs": 33.1,
+          "maximumMs": 34
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    }
+  ],
+  "accessibilityIssues": [],
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "split-core-1440.png",
+    "core-mobile-320.png",
+    "core-desktop-1440.png",
+    "synthetic-120-grid.png"
+  ],
+  "issues": [],
+  "protocolBrowser": "Chrome/151.0.7922.173",
+  "summary": {
+    "coreGalleryModes": 3,
+    "responsiveWidths": 4,
+    "syntheticCounts": [
+      60,
+      120
+    ],
+    "screenshots": 4,
+    "diagnosticCount": 0,
+    "accessibilityIssueCount": 0,
+    "issueCount": 0,
+    "passed": true
+  }
+}

@@ -4,6 +4,62 @@ All notable changes to the `design_sample_selector` project will be documented i
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [Unreleased]
+
+### Added
+- **Actual 120 디자인 카탈로그:** 기존 Core 36의 ID·순서·저장·출력 지문을 보존하면서 7개 expansion pack × 12종, 21개 시각 문법의 신규 ready 84종을 추가해 8개 카테고리를 각각 15종으로 확장.
+- **신규 84종 독립 프리뷰:** 스타일별 고유 renderer·inline thumbnail·motion 참조와 Web 4탭, Desktop/Mobile 단일열 전환, reduced-motion을 제공하고 공개 inventory를 renderer/thumbnail/motion/asset `120/120/120/0`으로 확장.
+- **Actual 120 Crostini Chrome 게이트:** `qa:catalog120:chrome`으로 세 보기 4페이지의 120 ID, 신규 thumbnail 84개, 120×8×Desktop/Mobile 1,920상태, Web 480탭, Detail·Split·Peek·Dock·지연 CSS·성능·진단을 격리 Chrome 151에서 검증하고 보고서·대표 화면을 보존.
+- **Expansion 출처·저작 계약:** 신규 84종의 명시적 blueprint, 21개 문법별 기관·공식 출처, 접근성 메모와 공통 factory를 `src/catalog/packs/expansion/`에 추가하고 신규 ready 품질 오류·경고 0을 고정.
+- **120종 렌더 용량 계약:** 불변 gallery window와 bounded picker를 추가해 시각 DOM을 Gallery 36개, Detail 24개, Split 12개/slot로 제한하면서 페이지·검색·전체 native select로 모든 정규 ID에 도달하도록 구성.
+- **On-demand preview chunk와 복구 경계:** Detail/Split·Peek·확정 component renderer를 최초 사용 때 불러오고 loading/error/cancel/retry, stale request 차단과 브라우저 module-map 실패를 피하는 별도 retry facade를 추가. 기존 동기 preview API는 호환 유지.
+- **초기 bundle 및 Crostini scalability 게이트:** `analyze:bundle`, `qa:scalability:chrome` 명령을 추가해 초기 정적 JS/CSS gzip과 actual 120 + QA 전용 synthetic 60/120의 페이지 도달성, DOM·interaction·motion·observer·반응형·접근성·diagnostics를 검증하고 프로젝트 내부에 보고서·화면을 보존.
+- **정규 카탈로그 탐색 계층:** 한국어·영어·alias·category·facet metadata 검색, category+bookmark, 10개 facet의 AND/OR 규칙, 네 정렬과 시대 그룹을 `src/catalog/discovery.js`의 순수·불변 질의 계약으로 추가.
+- **접근 가능한 탐색 제어와 URL 복원:** 결과 live status, native radio/checkbox facet disclosure, 활성 조건 chip, 전체/빈 상태 초기화와 `q/category/f/sort/view/saved` canonical URL의 initial load·reload·`popstate` 복원을 추가.
+- **Catalog Discovery Crostini Chrome QA:** `qa:discovery:chrome` 명령으로 격리 Chrome 151에서 사용자 시나리오 9개, 320/375/414/768/1024/1440px, 세 보기, 88개 입력 이름·44px target, 키보드·reduced-motion·diagnostics를 검증하고 보고서와 대표 화면을 보존.
+- **Core 36 Catalog Expansion — Wave 1:** 기존 24종을 보존하면서 `bauhaus-geometry`, `de-stijl`, `flat-design`, `constructivist`, `punk-zine`, `material-design`, `liquid-glass`, `art-deco`, `psychedelic-poster`, `art-nouveau`, `risograph`, `metro-interface` 12종을 출처·접근성 메모가 완비된 `ready` 레코드로 추가.
+- **Wave 1 독립 시각 구현:** 신규 12종에 네 Web 탭 renderer, 독립 thumbnail, 실제 구현 channel을 가진 motion descriptor와 root-scoped 반응형·reduced-motion CSS를 추가. 외부 이미지·폰트·오디오 asset은 사용하지 않음.
+- **Crostini Chrome QA 하네스:** `scripts/verifyWave1Chrome.js`와 `qa:wave1:chrome` 명령을 추가해 격리 Google Chrome profile에서 세 갤러리 모드, 320/375/414/768/1024/1440px, Core 36 × 8 × Desktop/Mobile 576상태, 신규 12종 집중 Detail, Split, reduced-motion과 application diagnostics를 검증하고 프로젝트 내부에 보고서·대표 스크린샷을 보존.
+- **확장형 스타일 카탈로그 계약:** `src/catalog/`에 스키마 버전 1의 동결된 조회 API, 8개 카테고리, 10개 facet, core 팩 manifest와 기존 24종 `StyleRecord`를 추가. 각 레코드는 분류, 13개 의미 토큰, 3개 프리뷰 참조, 편집 정보와 출처 구조를 포함.
+- **카탈로그 계약 회귀 게이트:** 24개 정규 ID와 21개 alias, 레거시 필드·팔레트·트윅·모션·토큰 parity, 저장된 alias 복원, 결정론적 정렬, 출판 상태, 경계 입력과 재귀 불변성을 `tests/styleContract.test.js`에서 검증.
+- **구조화 카탈로그 검증 계층:** `src/catalog/validation/`에 결정론적 동결 보고서, 구조·ID·alias·팩·facet·프리뷰·에셋·토큰·팔레트·출처·접근성·대비 규칙과 현재 카탈로그 어댑터를 추가. `ready` 품질 공백은 오류, 기존 `legacy` 부채는 명시적 경고로 처리.
+- **CLI 및 prebuild 게이트:** `validate:catalog`의 compact/verbose/JSON/strict 출력과 종료 코드 0/1/2를 제공하고 모든 표준 Vite 빌드 전에 카탈로그 오류를 차단. 현재 기준선은 오류 0개·경고 56개이며 strict 모드는 의도적으로 실패.
+- **검증 회귀 매트릭스:** 손상 fixture, severity 전환, 4.5:1 대비, 불명 참조, 안전 경로, 보고서 불변성, CLI 수명주기를 포함한 `tests/catalogValidation.test.js` 추가.
+- **정규 테마 생성 계층:** `src/theme/`에 13개 의미 토큰↔CSS property 계약, 모든 출판 상태를 포함하는 재귀 동결 `ThemeDefinition` 투영, 호환 `THEME_TOKENS_MAP`과 결정론적 스타일시트 직렬화를 추가.
+- **테마 CSS 생성/검사 CLI:** `generate:themes`는 정규 `StyleRecord.tokens`와 선택적 `themeEffects`에서 추적 CSS를 갱신하고, `check:themes`는 파일을 쓰지 않은 채 stale·누락을 종료 코드 1로 차단. `prebuild`는 catalog 검증 뒤 theme 최신성을 검사.
+- **테마 호환 회귀 매트릭스:** 24종 map, 24 canonical/21 alias/3 effect 런타임 CSS, Live CSS 576개, Markdown 384개, DTCG 24개의 승인 해시와 CLI 수명주기를 `tests/themeGeneration.test.js`에서 검증.
+- **불변 preview registry:** 24개 Web renderer, 24개 `thumbnailId` recipe와 24개 motion descriptor를 `src/preview/`의 정적 definition으로 등록하고 조회·렌더·오류 API, 정렬·재귀 동결 inventory와 120-output 호환 해시 회귀를 추가.
+- **모션 hydration 회귀 게이트:** component root class, effect layer, reduced-motion, observer cleanup, unknown motion과 잘못된 renderer HTML 출력의 구조화 실패를 Node fixture에서 검증.
+
+### Changed
+- **Expansion CSS 지연 전달:** 기존 36종의 `themeTokens.css`는 initial에 유지하고 신규 84종의 생성 테마와 21개 문법 상세 CSS를 `themeTokensExpansion.css`·`expansion-preview.css`로 분리해 component entry에서만 불러오도록 변경. 최종 초기 JS/CSS는 `83.46/32.86kB` gzip으로 예산을 유지.
+- **현재 총량과 페이지 상한 분리:** Header·필터·탐색 상태·Split native select는 actual 120을 표시하고 Grid/Bento/Spectrum은 페이지당 최대 36개만 렌더하도록 기존 Chrome QA 기대값을 총량 120/DOM 상한 36으로 전환.
+- **대량 목록의 bounded UI:** Core 36의 외형을 유지하되 결과가 36개를 넘으면 접근 가능한 pager를 제공하고, Detail은 활성 category만, Split은 전체 native option + 제한 visual picker를 사용하도록 변경.
+- **프리뷰 종류별 진입점과 observer 수명:** thumbnail/motion/component entry를 분리하고 thumbnail observer를 render cleanup에 결합해 페이지 교체 뒤 detached target과 reduced-motion 실행 animation을 0으로 유지.
+- **세 갤러리 공통 결과와 시대 Spectrum:** Grid·Bento·Spectrum이 같은 canonical 검색 결과를 소비하도록 통합하고, Grid는 category grouping, Bento는 전역 정렬, Spectrum은 고정 문구 대신 실제 `classification.era.start` grouping과 category 맥락을 사용하도록 변경.
+- **탐색 제어 밀도와 수명주기 분리:** 10개 facet을 기본 접힘 compact row로 제공하고 열린 facet만 전체 폭을 사용하도록 구성했으며, header 검색 caret 갱신과 별도 root에서 열림·초점 상태를 유지하도록 분리.
+- **Core 36 파생 경계:** manifest, catalog, generated theme CSS와 preview registry를 36종으로 확장하고 UI의 스타일 개수 문구를 실제 카탈로그 값에서 파생하도록 변경. 기존 24종의 120-output·theme/export fixture는 subset 계약으로 유지하고 전체 36종의 180-output fixture를 별도로 추가.
+- **확장형 Wave 모듈 조립:** 기존 24종 파일을 재작성하지 않고 `styles-wave-1.js`, `renderers-wave-1.js`, `thumbnails-wave-1.js`, `motions-wave-1.js`, `wave1-styles.css`를 추가형 경계로 조립하도록 변경.
+- **카테고리 데이터 경계 개편:** `src/data/categories.js`를 정규 카탈로그의 얇은 호환 진입점으로 전환해 기존 `MAIN_CATEGORIES` 등 named export와 로컬 저장 ID를 유지하면서 향후 120종 팩 확장이 가능한 구조로 분리.
+- **테마 토큰 단일 원천화:** `designSpecGenerator.js`의 수동 24종 토큰 map을 제거하고 정규 카탈로그 투영을 소비하도록 전환. `themeTokens.css`는 생성·추적 파일이 되었고 기존 export 이름과 984개 정상 출력 조합은 유지.
+- **명시적 미선택 경계:** CSS/Markdown/DTCG 생성기가 알 수 없는 스타일 ID를 Swiss로 조용히 대체하지 않고 기존 미선택 결과를 반환하도록 통일.
+- **카탈로그 프리뷰 참조 단일 원천화:** `currentCatalog.js`가 preview registry-derived `ReferenceInventory`를 직접 사용하도록 전환하고 renderer·thumbnail·motion ID를 중복하던 임시 수동 목록을 제거. 오류 0·legacy 경고 56 기준선은 유지.
+- **프리뷰 소비 경계 통합과 24종 호환 보존:** Gallery·Detail·Peek·Dock·Web 아키타입이 `src/preview/index.js`의 명시적 옵션 API를 직접 사용하도록 전환하고 `getMockupHTML()`은 얇은 호환·parity 진입점으로 제한. 기존 120개 HTML 승인 hash, Web 96개 탭, 24종 × 8 아키타입 192개 Node 출력과 실제 Desktop/Mobile 384개 상태를 유지.
+- **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
+
+### Fixed
+- **초기 웹 폰트 layout shift:** UI를 정상 flow의 `visibility:hidden` 상태에서 구성하고 `document.fonts.ready` 뒤 노출해 Chrome CLS를 `0`으로 수정. 폰트 실패 시 시스템 폴백으로 계속 표시.
+- **Dynamic import 실제 재시도:** 같은 URL의 실패를 기억하는 브라우저 module map 때문에 Promise cache 초기화만으로 재시도되지 않던 경로를 primary/retry facade 전환으로 수정하고 강제 네트워크 실패 Chrome 회귀를 추가.
+- **Detail Desktop/Mobile 현재·레거시 root 폭:** Mobile 제약을 `.archetype-unit`과 `.mockup-unit` 모두에 명시해 외부 브라우저 폭과 무관하게 실제 preview unit이 phone width로 전환되도록 보강.
+- **Category와 북마크 조건 결합:** 북마크 보기를 category처럼 상호 배타적으로 취급하던 경계를 분리해 검색·category·bookmark·facet 조건을 동시에 적용할 수 있도록 수정.
+- **탐색 빈 상태 포커스와 disclosure 표식:** 전체 초기화 뒤 검색 입력으로 포커스를 복원하고, flex summary에서 사라지던 native marker를 명시적 펼침/접힘 표식으로 보완.
+- **DTCG `box-shadow: none` 구조화:** shadow 문자열 `none`을 잘못된 DTCG 값으로 내보내던 경로를 투명한 zero shadow 객체로 정규화하고 36종 JSON 생성 회귀를 추가.
+- **중첩 버튼으로 인한 Detail/Split DOM 손상:** Flat Design thumbnail의 장식 CTA를 `button`에서 `span`으로 바꾸고, 상위 버튼에 삽입되는 전체 36종 thumbnail이 interactive tag를 포함하지 않도록 회귀 계약을 추가.
+- **Wave 1 Desktop/Mobile 실제 전환 검증:** 신규 12종에서 활성 device 버튼, preview root 폭과 grid 구조가 함께 바뀌며 문서 overflow가 생기지 않음을 Chrome 151로 검증.
+- **상세 프리뷰 Desktop/Mobile 전환 복구:** Mobile 폭 제한을 현재 8대 아키타입 렌더 루트에도 적용하고 Web·쇼핑몰·대시보드·채팅을 모드 전용 반응형 레이아웃으로 보정해, 24개 디자인 모두 Desktop과 구분되는 `380px` 휴대폰 프레임으로 전환되도록 수정.
+- **Web 컴포넌트 탭 선택 상태 동기화:** Widget/Form/Pricing 전환 후에도 Hero 버튼에 남던 `active`와 `aria-selected` 상태를 실제 선택 탭과 동기화하고 24종 × 4탭 실브라우저 행렬로 검증.
+- **개발 서버 favicon 오류 제거:** 네트워크 요청이 없는 inline SVG favicon을 선언해 Chrome의 자동 `/favicon.ico` 404와 DevTools 오류를 제거.
+
 ## [2.3.0] - 2026-08-26
 
 ### Added

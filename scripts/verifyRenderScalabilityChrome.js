@@ -4,7 +4,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
-import { isAbsolute, join, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { analyzeInitialBundle } from './analyzeInitialBundle.js';
@@ -268,7 +268,7 @@ async function captureScreenshot(name) {
   });
   const path = join(artifactDirectory, `${name}.png`);
   writeFileSync(path, Buffer.from(screenshot.data, 'base64'));
-  report.screenshots.push(path);
+  report.screenshots.push(`${name}.png`);
 }
 
 function bindRuntimeDiagnostics() {
@@ -1154,9 +1154,14 @@ async function startViteServer(kind, port) {
 }
 
 async function main() {
-  report.bundle = analyzeInitialBundle({
+  const bundleReport = analyzeInitialBundle({
     distDirectory: join(PROJECT_ROOT, 'dist')
   });
+  report.bundle = {
+    ...bundleReport,
+    distDirectory: relative(PROJECT_ROOT, bundleReport.distDirectory),
+    indexPath: relative(PROJECT_ROOT, bundleReport.indexPath)
+  };
   check(report.bundle.passed, `초기 bundle gate 실패: ${report.bundle.issues.join(' / ')}`);
 
   const chromeVersion = spawnSync(CHROME_PATH, ['--version'], { encoding: 'utf8' });
