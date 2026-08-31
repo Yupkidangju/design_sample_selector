@@ -6,10 +6,15 @@
 import { appState } from '../state/appState.js';
 import { synthAudio, BGM_TRACKS } from '../audio/synthAudio.js';
 
+const widgetCleanups = new WeakMap();
+
 export function renderAudioWidget(container) {
   if (!container) return;
+  widgetCleanups.get(container)?.();
 
-  const currentTrack = BGM_TRACKS[0];
+  const currentAudio = appState.getState().audio;
+  const currentTrack = BGM_TRACKS[currentAudio.currentTrackIndex] || BGM_TRACKS[0];
+  const cleanups = [];
 
   container.innerHTML = `
     <div class="audio-widget-panel" id="audio-widget-panel">
@@ -44,8 +49,9 @@ export function renderAudioWidget(container) {
       <!-- Master Volume Slider -->
       <div class="volume-slider-group">
         <span class="vol-label">VOL</span>
-        <input type="range" class="vol-slider" id="input-audio-volume" min="0" max="1" step="0.05" value="0.5" title="마스터 볼륨 조절">
+        <input type="range" class="vol-slider" id="input-audio-volume" min="0" max="1" step="0.05" value="${currentAudio.volume}" title="마스터 볼륨 조절">
       </div>
+      <span class="audio-widget-status" id="audio-widget-status" role="status" aria-live="polite"></span>
     </div>
   `;
 
@@ -57,18 +63,32 @@ export function renderAudioWidget(container) {
   const playIcon = container.querySelector('#icon-play-state');
   const sfxIcon = container.querySelector('#icon-sfx-state');
   const specCanvas = container.querySelector('#audio-spec-canvas');
+  const status = container.querySelector('#audio-widget-status');
+  let disposed = false;
+
+  const listen = (target, type, listener, options) => {
+    if (!target) return;
+    target.addEventListener(type, listener, options);
+    cleanups.push(() => target.removeEventListener(type, listener, options));
+  };
 
   // Button Listeners
   if (playBtn) {
-    playBtn.addEventListener('click', (e) => {
+    listen(playBtn, 'click', async (e) => {
       e.stopPropagation();
-      const isNowPlaying = synthAudio.toggleBgm();
+      const wasPlaying = synthAudio.isPlaying;
+      const isNowPlaying = await synthAudio.toggleBgm();
+      if (!wasPlaying && !isNowPlaying) {
+        if (status) status.textContent = '오디오를 시작하지 못했습니다. 재생 버튼을 다시 눌러 주세요.';
+        return;
+      }
+      if (status) status.textContent = isNowPlaying ? '배경 음악을 재생합니다.' : '배경 음악을 일시정지했습니다.';
       synthAudio.playSfx('CLICK');
     });
   }
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', (e) => {
+    listen(nextBtn, 'click', (e) => {
       e.stopPropagation();
       synthAudio.playNextTrack();
       synthAudio.playSfx('CLICK');
@@ -76,7 +96,7 @@ export function renderAudioWidget(container) {
   }
 
   if (sfxBtn) {
-    sfxBtn.addEventListener('click', (e) => {
+    listen(sfxBtn, 'click', (e) => {
       e.stopPropagation();
       const { audio } = appState.getState();
       const newSfxState = !audio.sfxEnabled;
@@ -87,48 +107,105 @@ export function renderAudioWidget(container) {
   }
 
   if (volInput) {
-    volInput.addEventListener('input', (e) => {
+    listen(volInput, 'input', (e) => {
       const val = parseFloat(e.target.value);
       synthAudio.setVolume(val);
     });
   }
 
+  // Render Mini Spectrum Canvas Animation
+  const ctx = specCanvas?.getContext?.('2d');
+  const freqData = new Uint8Array(32);
+  const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  let visualizerRafId = null;
+
+  const cancelVisualizer = () => {
+    if (visualizerRafId === null) return;
+    cancelAnimationFrame(visualizerRafId);
+    visualizerRafId = null;
+  };
+
+  const canAnimateVisualizer = state => Boolean(
+    ctx
+      && !disposed
+      && container.isConnected
+      && document.visibilityState !== 'hidden'
+      && !reducedMotionQuery?.matches
+      && state.currentView === 'MAIN'
+      && state.audio.isPlaying
+  );
+
+  const drawVisualizerFrame = state => {
+    if (!ctx || !specCanvas) return;
+    ctx.clearRect(0, 0, specCanvas.width, specCanvas.height);
+
+    const { audio } = state;
+    if (audio.isPlaying) {
+      synthAudio.getByteFrequencyData(freqData);
+    } else {
+      freqData.fill(0);
+    }
+
+    const barWidth = (specCanvas.width / 16) - 2;
+    for (let i = 0; i < 16; i++) {
+      const value = freqData[i * 2] || (audio.isPlaying ? Math.random() * 8 + 4 : 2);
+      const percent = value / 255;
+      const height = Math.max(3, specCanvas.height * percent);
+      const x = i * (barWidth + 2);
+      const y = specCanvas.height - height;
+
+      ctx.fillStyle = audio.isPlaying ? '#00F0FF' : 'rgba(255, 255, 255, 0.2)';
+      ctx.fillRect(x, y, barWidth, height);
+    }
+  };
+
+  const drawVisualizer = () => {
+    visualizerRafId = null;
+    const state = appState.getState();
+    if (!canAnimateVisualizer(state)) return;
+    drawVisualizerFrame(state);
+    visualizerRafId = requestAnimationFrame(drawVisualizer);
+  };
+
+  const syncVisualizer = state => {
+    if (!ctx) return;
+    if (!canAnimateVisualizer(state)) {
+      cancelVisualizer();
+      drawVisualizerFrame(state);
+      return;
+    }
+    if (visualizerRafId === null) visualizerRafId = requestAnimationFrame(drawVisualizer);
+  };
+
   // Subscribe to State Updates
-  appState.subscribe((state) => {
+  const unsubscribe = appState.subscribe((state) => {
     if (trackTxt && state.audio.trackTitle) trackTxt.textContent = state.audio.trackTitle;
     if (playIcon) playIcon.textContent = state.audio.isPlaying ? '⏸' : '▶';
     if (playBtn) playBtn.classList.toggle('playing', state.audio.isPlaying);
+    if (volInput && Number(volInput.value) !== state.audio.volume) {
+      volInput.value = String(state.audio.volume);
+    }
+    syncVisualizer(state);
   });
 
-  // Render Mini Spectrum Canvas Animation
-  if (specCanvas) {
-    const ctx = specCanvas.getContext('2d');
-    const freqData = new Uint8Array(32);
-
-    const drawVisualizer = () => {
-      requestAnimationFrame(drawVisualizer);
-      ctx.clearRect(0, 0, specCanvas.width, specCanvas.height);
-
-      const { audio } = appState.getState();
-      if (audio.isPlaying) {
-        synthAudio.getByteFrequencyData(freqData);
-      } else {
-        freqData.fill(0);
-      }
-
-      const barWidth = (specCanvas.width / 16) - 2;
-      for (let i = 0; i < 16; i++) {
-        const value = freqData[i * 2] || (audio.isPlaying ? Math.random() * 8 + 4 : 2);
-        const percent = value / 255;
-        const height = Math.max(3, specCanvas.height * percent);
-        const x = i * (barWidth + 2);
-        const y = specCanvas.height - height;
-
-        ctx.fillStyle = audio.isPlaying ? '#00F0FF' : 'rgba(255, 255, 255, 0.2)';
-        ctx.fillRect(x, y, barWidth, height);
-      }
-    };
-
-    drawVisualizer();
+  const syncCurrentVisualizer = () => syncVisualizer(appState.getState());
+  listen(document, 'visibilitychange', syncCurrentVisualizer);
+  if (reducedMotionQuery?.addEventListener) {
+    listen(reducedMotionQuery, 'change', syncCurrentVisualizer);
+  } else if (reducedMotionQuery?.addListener) {
+    reducedMotionQuery.addListener(syncCurrentVisualizer);
+    cleanups.push(() => reducedMotionQuery.removeListener(syncCurrentVisualizer));
   }
+
+  const cleanup = () => {
+    if (disposed) return;
+    disposed = true;
+    cancelVisualizer();
+    unsubscribe();
+    cleanups.splice(0).forEach(dispose => dispose());
+    widgetCleanups.delete(container);
+  };
+  listen(window, 'pagehide', cleanup, { once: true });
+  widgetCleanups.set(container, cleanup);
+  return cleanup;
 }

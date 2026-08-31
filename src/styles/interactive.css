@@ -1003,7 +1003,7 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
 }
 
 /* ==========================================================================
-   8 CORE PAGE ARCHETYPES STYLING (Zero-Rebuild Dynamic Theming)
+   8 CORE PAGE ARCHETYPES STYLING (State-Preserving Renderer & Theme Switching)
    ========================================================================== */
 
 .archetype-unit {

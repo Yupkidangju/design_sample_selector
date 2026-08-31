@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- **Audit 9 stateful 재감사 게이트:** 스타일 A→B 전환, Peek/확정 테마, direct/cart checkout, Blog 읽기 모드·375/768/1024px 진행률, lazy focus, Game 키보드, Dashboard 상태 이관과 실패 경계를 Node 집중 회귀 및 actual-120 Chrome 시나리오에 추가. 1,920 device 상태·Web 480탭·diagnostics 0과 CDP 왕복을 제외한 browser-local interaction 직렬 3회를 통과했다.
 - **Actual 120 디자인 카탈로그:** 기존 Core 36의 ID·순서·저장·출력 지문을 보존하면서 7개 expansion pack × 12종, 21개 시각 문법의 신규 ready 84종을 추가해 8개 카테고리를 각각 15종으로 확장.
 - **신규 84종 독립 프리뷰:** 스타일별 고유 renderer·inline thumbnail·motion 참조와 Web 4탭, Desktop/Mobile 단일열 전환, reduced-motion을 제공하고 공개 inventory를 renderer/thumbnail/motion/asset `120/120/120/0`으로 확장.
 - **Actual 120 Crostini Chrome 게이트:** `qa:catalog120:chrome`으로 세 보기 4페이지의 120 ID, 신규 thumbnail 84개, 120×8×Desktop/Mobile 1,920상태, Web 480탭, Detail·Split·Peek·Dock·지연 CSS·성능·진단을 격리 Chrome 151에서 검증하고 보고서·대표 화면을 보존.
@@ -16,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **초기 bundle 및 Crostini scalability 게이트:** `analyze:bundle`, `qa:scalability:chrome` 명령을 추가해 초기 정적 JS/CSS gzip과 actual 120 + QA 전용 synthetic 60/120의 페이지 도달성, DOM·interaction·motion·observer·반응형·접근성·diagnostics를 검증하고 프로젝트 내부에 보고서·화면을 보존.
 - **정규 카탈로그 탐색 계층:** 한국어·영어·alias·category·facet metadata 검색, category+bookmark, 10개 facet의 AND/OR 규칙, 네 정렬과 시대 그룹을 `src/catalog/discovery.js`의 순수·불변 질의 계약으로 추가.
 - **접근 가능한 탐색 제어와 URL 복원:** 결과 live status, native radio/checkbox facet disclosure, 활성 조건 chip, 전체/빈 상태 초기화와 `q/category/f/sort/view/saved` canonical URL의 initial load·reload·`popstate` 복원을 추가.
-- **Catalog Discovery Crostini Chrome QA:** `qa:discovery:chrome` 명령으로 격리 Chrome 151에서 사용자 시나리오 9개, 320/375/414/768/1024/1440px, 세 보기, 88개 입력 이름·44px target, 키보드·reduced-motion·diagnostics를 검증하고 보고서와 대표 화면을 보존.
+- **Catalog Discovery Crostini Chrome QA:** `qa:discovery:chrome` 명령으로 격리 Chrome 151에서 사용자 시나리오 9개, 320/375/414/768/1024/1440px, 세 보기, 검색을 포함한 89개 입력 이름·44px target, 키보드·reduced-motion·diagnostics를 검증하고 보고서와 대표 화면을 보존.
 - **Core 36 Catalog Expansion — Wave 1:** 기존 24종을 보존하면서 `bauhaus-geometry`, `de-stijl`, `flat-design`, `constructivist`, `punk-zine`, `material-design`, `liquid-glass`, `art-deco`, `psychedelic-poster`, `art-nouveau`, `risograph`, `metro-interface` 12종을 출처·접근성 메모가 완비된 `ready` 레코드로 추가.
 - **Wave 1 독립 시각 구현:** 신규 12종에 네 Web 탭 renderer, 독립 thumbnail, 실제 구현 channel을 가진 motion descriptor와 root-scoped 반응형·reduced-motion CSS를 추가. 외부 이미지·폰트·오디오 asset은 사용하지 않음.
 - **Crostini Chrome QA 하네스:** `scripts/verifyWave1Chrome.js`와 `qa:wave1:chrome` 명령을 추가해 격리 Google Chrome profile에서 세 갤러리 모드, 320/375/414/768/1024/1440px, Core 36 × 8 × Desktop/Mobile 576상태, 신규 12종 집중 Detail, Split, reduced-motion과 application diagnostics를 검증하고 프로젝트 내부에 보고서·대표 스크린샷을 보존.
@@ -32,7 +33,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **모션 hydration 회귀 게이트:** component root class, effect layer, reduced-motion, observer cleanup, unknown motion과 잘못된 renderer HTML 출력의 구조화 실패를 Node fixture에서 검증.
 
 ### Changed
-- **Expansion CSS 지연 전달:** 기존 36종의 `themeTokens.css`는 initial에 유지하고 신규 84종의 생성 테마와 21개 문법 상세 CSS를 `themeTokensExpansion.css`·`expansion-preview.css`로 분리해 component entry에서만 불러오도록 변경. 최종 초기 JS/CSS는 `83.46/32.86kB` gzip으로 예산을 유지.
+- **FIN-F006 측정 계약 및 재검증:** interaction hard gate는 실제 상태 변화가 있는 operation만 페이지 안에서 input dispatch→요구 state/DOM 정착의 제품 처리시간을 측정하고, no-op·CDP 왕복·외부 polling·artifact I/O와 정착 후 scheduler 대기를 제외한다. 정착 뒤 2 animation frames와 Long Task는 별도 presentation 진단치로 보존한다. 최종 격리 Chrome 직렬 3회가 각각 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max)로 통과했다.
+- **상태 보존형 renderer 전환 계약:** 같은 아키타입의 스타일 전환을 literal inner-DOM 보존에서 바깥 viewport identity 보존 + 새 스타일 renderer 재생성 + 승인된 runtime snapshot 이관으로 변경. 이전 스타일의 HTML·카피·class·motion은 이관하지 않고 cart/game/chat/filter 등 사용자 상태만 복원하도록 `spec.md`·`designs.md`·Decision 019를 먼저 동기화.
+- **Audit 9 수명주기·오류 계약:** Peek/확정은 선택 테마를 쓰는 non-modal region, checkout은 focus-trapped modal, malformed app state는 거부, bootstrap은 visible retry boundary, Clipboard·Audio는 실제 성공 여부를 반환하도록 경계를 명시.
+- **Expansion CSS 지연 전달:** 기존 36종의 `themeTokens.css`는 initial에 유지하고 신규 84종의 생성 테마와 21개 문법 상세 CSS를 `themeTokensExpansion.css`·`expansion-preview.css`로 분리해 component entry에서만 불러오도록 변경. 확장 완료 시점 초기 JS/CSS는 `83.46/32.86kB` gzip으로 예산을 유지.
 - **현재 총량과 페이지 상한 분리:** Header·필터·탐색 상태·Split native select는 actual 120을 표시하고 Grid/Bento/Spectrum은 페이지당 최대 36개만 렌더하도록 기존 Chrome QA 기대값을 총량 120/DOM 상한 36으로 전환.
 - **대량 목록의 bounded UI:** Core 36의 외형을 유지하되 결과가 36개를 넘으면 접근 가능한 pager를 제공하고, Detail은 활성 category만, Split은 전체 native option + 제한 visual picker를 사용하도록 변경.
 - **프리뷰 종류별 진입점과 observer 수명:** thumbnail/motion/component entry를 분리하고 thumbnail observer를 render cleanup에 결합해 페이지 교체 뒤 detached target과 reduced-motion 실행 animation을 0으로 유지.
@@ -48,6 +52,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
 
 ### Fixed
+- **독립 재감사 공통 Detail/Audio/Zoom 회귀:** 120종 Detail 공통 사이드바의 누락 selector를 lazy CSS로 복구하고 flex 카드 축소로 제목·설명이 가려지지 않게 했으며, AudioContext 생성 전 volume을 최초 master gain에 반영하고 스타일·아키타입 renderer 재생성 뒤 선택 Zoom을 다시 적용한다.
+- **스타일·테마 정합성과 상호작용 복구:** 스타일 전환 뒤 남던 이전 renderer/텍스트와 Dashboard 행 markup을 제거하고 Inspector·motion을 선택 ID와 동기화. Peek/확정 `data-theme`, Game Enter/Space, form focus 중 Detail Escape, lazy loading/error focus trap·복원을 수정.
+- **Checkout·Blog 계약 구현:** 빈 장바구니 checkout을 비활성화하면서 direct/cart 주문을 구분하는 summary·confirm·cancel·Escape·focus-return dialog를 추가하고, Blog light reading mode의 실제 색상/ARIA와 반응형 scroll owner 기반 0–100 진행률을 연결.
+- **실패 진실성과 bounded lifecycle:** 잘못된 공개 state patch, Clipboard false/throw, AudioContext resume/SFX synthesis 실패를 성공으로 보고하지 않도록 수정. 댓글·채팅 500자/동적 history 50개 상한, checkout·chat timer ownership, audio visualizer rAF와 `popstate` cleanup을 추가.
+- **브라우저 메타데이터 정합성:** title/description의 36종 표기를 actual 120종으로 수정.
 - **초기 웹 폰트 layout shift:** UI를 정상 flow의 `visibility:hidden` 상태에서 구성하고 `document.fonts.ready` 뒤 노출해 Chrome CLS를 `0`으로 수정. 폰트 실패 시 시스템 폴백으로 계속 표시.
 - **Dynamic import 실제 재시도:** 같은 URL의 실패를 기억하는 브라우저 module map 때문에 Promise cache 초기화만으로 재시도되지 않던 경로를 primary/retry facade 전환으로 수정하고 강제 네트워크 실패 Chrome 회귀를 추가.
 - **Detail Desktop/Mobile 현재·레거시 root 폭:** Mobile 제약을 `.archetype-unit`과 `.mockup-unit` 모두에 명시해 외부 브라우저 폭과 무관하게 실제 preview unit이 phone width로 전환되도록 보강.

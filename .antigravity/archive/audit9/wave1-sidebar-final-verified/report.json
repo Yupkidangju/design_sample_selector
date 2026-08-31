@@ -1,0 +1,527 @@
+{
+  "checkedAt": "2026-08-31T01:10:47.841Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "isolatedProfile": true,
+  "galleryModes": [
+    {
+      "mode": "GRID",
+      "count": 36,
+      "unique": 36,
+      "visibleWave": 12,
+      "overflow": 0
+    },
+    {
+      "mode": "BENTO",
+      "count": 36,
+      "unique": 36,
+      "visibleWave": 12,
+      "overflow": 0
+    },
+    {
+      "mode": "SPECTRUM",
+      "count": 36,
+      "unique": 36,
+      "visibleWave": 12,
+      "overflow": 0
+    }
+  ],
+  "responsiveWidths": [
+    {
+      "width": 320,
+      "mode": "MOBILE",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 277
+    },
+    {
+      "width": 375,
+      "mode": "MOBILE",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 332
+    },
+    {
+      "width": 414,
+      "mode": "MOBILE",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 371
+    },
+    {
+      "width": 768,
+      "mode": "TABLET",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 689
+    },
+    {
+      "width": 1024,
+      "mode": "TABLET",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 945
+    },
+    {
+      "width": 1440,
+      "mode": "DESKTOP",
+      "tiles": 36,
+      "overflow": 0,
+      "headerWidth": 1361
+    }
+  ],
+  "details": [
+    {
+      "id": "bauhaus-geometry",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 396,
+        "grid": "361.5px 267.219px",
+        "tab": "hero",
+        "motion": "motion-shape-orbit",
+        "fx": true,
+        "actionHeight": 45,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 646,
+        "grid": "284px",
+        "tab": "hero",
+        "motion": "motion-shape-orbit",
+        "fx": true,
+        "actionHeight": 45,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "de-stijl",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 697,
+        "unitHeight": 340,
+        "grid": "394.859px 291.859px",
+        "tab": "hero",
+        "motion": "motion-plane-reveal",
+        "fx": true,
+        "actionHeight": 46,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 332,
+        "unitHeight": 624,
+        "grid": "322px",
+        "tab": "hero",
+        "motion": "motion-plane-reveal",
+        "fx": true,
+        "actionHeight": 46,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "flat-design",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 481,
+        "grid": "516.719px 112px",
+        "tab": "hero",
+        "motion": "motion-color-snap",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 555,
+        "grid": "284px",
+        "tab": "hero",
+        "motion": "motion-color-snap",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "constructivist",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 689,
+        "unitHeight": 578,
+        "grid": "220px 460px",
+        "tab": "hero",
+        "motion": "motion-diagonal-drive",
+        "fx": true,
+        "actionHeight": 45,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 334,
+        "unitHeight": 662,
+        "grid": "460px",
+        "tab": "hero",
+        "motion": "motion-diagonal-drive",
+        "fx": true,
+        "actionHeight": 45,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "punk-zine",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 340,
+        "grid": "317.359px 317.359px",
+        "tab": "hero",
+        "motion": "motion-xerox-jitter",
+        "fx": true,
+        "actionHeight": 47,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 520,
+        "grid": "284px",
+        "tab": "hero",
+        "motion": "motion-xerox-jitter",
+        "fx": true,
+        "actionHeight": 47,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "material-design",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 703,
+        "unitHeight": 373,
+        "grid": "652.719px",
+        "tab": "hero",
+        "motion": "motion-paper-lift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 338,
+        "unitHeight": 520,
+        "grid": "288px",
+        "tab": "hero",
+        "motion": "motion-paper-lift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "liquid-glass",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 703,
+        "unitHeight": 340,
+        "grid": "634.719px 0px",
+        "tab": "hero",
+        "motion": "motion-lens-shift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 338,
+        "unitHeight": 520,
+        "grid": "288px",
+        "tab": "hero",
+        "motion": "motion-lens-shift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "art-deco",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 418,
+        "grid": "646.719px",
+        "tab": "hero",
+        "motion": "motion-fan-reveal",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 520,
+        "grid": "282.656px",
+        "tab": "hero",
+        "motion": "motion-fan-reveal",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "psychedelic-poster",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 689,
+        "unitHeight": 572,
+        "grid": "365.125px 255.578px",
+        "tab": "hero",
+        "motion": "motion-poster-warp",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 334,
+        "unitHeight": 653,
+        "grid": "300px",
+        "tab": "hero",
+        "motion": "motion-poster-warp",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "art-nouveau",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 340,
+        "grid": "104.781px 419.141px 104.797px",
+        "tab": "hero",
+        "motion": "motion-vine-trace",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 520,
+        "grid": "22px 252px",
+        "tab": "hero",
+        "motion": "motion-vine-trace",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "risograph",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 701,
+        "unitHeight": 340,
+        "grid": "351.5px 281.219px",
+        "tab": "hero",
+        "motion": "motion-ink-drift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 336,
+        "unitHeight": 520,
+        "grid": "305.156px",
+        "tab": "hero",
+        "motion": "motion-ink-drift",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    },
+    {
+      "id": "metro-interface",
+      "desktop": {
+        "device": "desktop",
+        "viewportClass": "mockup-viewport desktop",
+        "unitWidth": 703,
+        "unitHeight": 438,
+        "grid": "652.719px",
+        "tab": "hero",
+        "motion": "motion-tile-panorama",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": true,
+        "mobileActive": false,
+        "overflow": 0
+      },
+      "mobile": {
+        "device": "mobile",
+        "viewportClass": "mockup-viewport mobile",
+        "unitWidth": 338,
+        "unitHeight": 520,
+        "grid": "366.25px",
+        "tab": "hero",
+        "motion": "motion-tile-panorama",
+        "fx": true,
+        "actionHeight": 44,
+        "clippedControls": [],
+        "desktopActive": false,
+        "mobileActive": true,
+        "overflow": 0
+      }
+    }
+  ],
+  "deviceMatrix": {
+    "styleCount": 36,
+    "archetypeCount": 8,
+    "stateCount": 576,
+    "desktopWidth": {
+      "min": 735,
+      "max": 745
+    },
+    "mobileWidth": {
+      "min": 380,
+      "max": 380
+    },
+    "failures": []
+  },
+  "splitCompare": {
+    "count": 2,
+    "themes": [
+      "bauhaus-geometry",
+      "swiss-grid"
+    ],
+    "roots": [
+      true,
+      true
+    ],
+    "overflow": 0
+  },
+  "reducedMotion": {
+    "matches": true,
+    "fxAnimation": "none",
+    "animatedDescendants": 0
+  },
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "gallery-spectrum-1440.png",
+    "gallery-bento-320.png",
+    "detail-liquid-glass-mobile.png",
+    "detail-metro-desktop.png",
+    "split-bauhaus-1440.png"
+  ],
+  "issues": [],
+  "protocolBrowser": "Chrome/151.0.7922.173",
+  "summary": {
+    "galleryModes": 3,
+    "responsiveWidths": 6,
+    "detailStyles": 12,
+    "deviceMatrixStates": 576,
+    "desktopMobilePasses": 12,
+    "screenshots": 5,
+    "diagnosticCount": 0,
+    "issueCount": 0
+  }
+}

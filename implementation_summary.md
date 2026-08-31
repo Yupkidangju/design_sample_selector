@@ -1,7 +1,7 @@
 # Implementation Summary (`implementation_summary.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
 **Version:** 2.3.0  
-**Document Status:** Current System Blueprint / Actual 120 Complete
+**Document Status:** Current System Blueprint / Audit 9 Repository & Local Crostini PASS
 
 ---
 
@@ -78,6 +78,7 @@ The application is structured into zero-dependency, native ES modules that commu
 │   ├── styles/
 │   │   ├── themeTokens.css     # Generated/tracked Core 36 initial CSS
 │   │   ├── themeTokensExpansion.css # Generated/tracked 84-style async CSS
+│   │   ├── audit9-detail.css   # Lazy Detail checkout·Blog state presentation
 │   │   ├── expansion-preview.css # 21 expansion grammar async presentation
 │   │   ├── interactive.css     # Universal top bar, 4-tab inspector, 8 archetypes styles, dock, peek, thumbs, mockup FX
 │   │   └── wave1-styles.css    # Wave 1 root-scoped visuals, responsive and reduced-motion rules
@@ -120,27 +121,27 @@ The application is structured into zero-dependency, native ES modules that commu
 - **순수 질의 경계:** `src/catalog/discovery.js`는 한국어·영어·alias·category·facet metadata 검색, category와 독립 bookmark, 10개 facet의 AND/OR 정규화, 네 안정 정렬과 시대 그룹을 canonical `StyleRecord`에서 계산한다. 입력과 공개 결과는 변경하지 않는다.
 - **상태 경계:** `discoveryUrl.js`는 `q/category/f/sort/view/saved`를 허용 목록과 120자 한계로 parse/serialize하고, `discoveryUrlState.js`는 initial URL·`popstate` 복원과 `history.replaceState` 갱신만 담당한다.
 - **UI 경계:** header는 검색/category/bookmark/view를, 독립 discovery root는 live status·10개 native facet·정렬·chip/reset을 담당한다. `galleryModel.js`는 한 canonical 결과 집합을 Grid category groups, Bento global order, Spectrum era groups로 투영한다.
-- **접근성·반응형:** 88개 native 입력 모두 이름을 가지며 compact facet disclosure, 포커스 복원, 44px target, 320~1440px overflow 0과 reduced-motion을 보장한다.
-- **검증:** 현재 전체 152/152 테스트·build가 통과한다. 격리 Chrome `151.0.7922.173`에서 9개 사용자 시나리오·6개 폭과 세 보기 각각 4페이지/120 ID 도달, console/network/application diagnostics/issue 0 증거를 보존한다.
+- **접근성·반응형:** 검색을 포함한 89개 native 입력 모두 이름을 가지며 compact facet disclosure, 포커스 복원, 44px target, 320~1440px overflow 0과 reduced-motion을 보장한다.
+- **검증:** 현재 전체 180/180 테스트·build가 통과한다. 격리 Chrome `151.0.7922.173`에서 9개 사용자 시나리오·6개 폭과 세 보기 각각 4페이지/120 ID 도달, console/network/application diagnostics/issue 0 증거를 보존한다.
 
 ### 2.2.2 Render window, bounded pickers and on-demand preview code
 - **순수 비용 경계:** `src/scalability/renderWindow.js`는 Gallery 36개, Detail 24개, Split 12개/slot, 초기 JS/CSS와 interaction 예산을 동결 상수로 제공한다. `createRenderWindow()`와 `createBoundedPicker()`는 DOM/app state를 import하지 않고 입력을 변경하지 않으며 전체 ID 순서와 selected pinning을 보존한다.
 - **UI 경계:** `mainView.js`는 canonical 결과를 36개 local page로 자르고 `galleryPagination.js`가 native 이전/다음과 polite 범위를 렌더한다. `stylePickerMarkup.js`는 Detail category 검색과 Split slot 검색의 제한 thumbnail markup을 공유하며 native Split select는 전체 정규 스타일을 유지한다.
 - **코드 전달 경계:** 초기 UI는 `thumbnailEntry.js`·`motionEntry.js`만 정적으로 소비한다. `lazyPreviewLoader.js`가 Detail/Split과 Peek/확정 component renderer를 literal dynamic import로 불러오고 Promise 공유, stale request 방지, loading/error/retry를 관리한다. 첫 URL 실패 후에는 별도 retry facade로 전환해 브라우저 module map 캐시를 피한다.
 - **표시·모션 수명:** 초기 UI는 normal flow의 hidden 상태에서 폰트와 레이아웃을 정착시킨 뒤 노출한다. gallery render cleanup이 shared `IntersectionObserver`를 해제하며 offscreen/reduced-motion animation을 중지한다.
-- **검증:** 전체 152/152가 통과한다. Chrome 151에서 actual 120 + synthetic 60/120, 320/768/1024/1440px, failure injection/retry, observer cleanup, reduced-motion과 diagnostics/issue 0을 확인했다. 초기 JS/CSS는 `83.46/32.86kB` gzip이고 actual LCP `732ms`, CLS `0`, interaction max `142.8ms`다.
+- **검증 상태:** 전체 180/180, actual 120 + synthetic 60/120 기능 행렬, 초기 JS/CSS `88.60/32.86kB` gzip을 통과했다. 독립 재감사의 공통 Detail CSS·pre-init volume·Zoom 회귀를 수정했고, CDP 왕복이 섞인 기존 interaction 표본은 무효화한 뒤 페이지 내부 처리시간 직렬 3회를 새로 기록했다.
 
 ### 2.3 `src/catalog/validation/` & `scripts/validateCatalog.js`
 - **Responsibility:** Validates frozen catalog snapshots without mutation and reports structural, ID, alias, relationship, preview/asset, token, provenance, accessibility, and calculable contrast findings through stable code/severity/path fields.
 - **Build boundary:** `validate:catalog` supports compact, verbose, JSON, and strict modes with exit codes 0/1/2. `prebuild` runs the default mode before every Vite production build; no validation module is imported by the browser graph.
 - **Current baseline:** 8 categories, 120 styles, 10 facets, eight packs; 0 errors and 56 visible warnings, all from the legacy 24 (`ACCESSIBILITY_NOTES_REQUIRED` 24, `SOURCE_REQUIRED` 24, `CONTRAST_LOW` 5, `CONTRAST_UNCHECKED` 3). The ready 96 subset is 0 errors/0 warnings. Strict mode intentionally exits 1 because it includes legacy warnings.
-- **Verification:** The current 152-test gate, catalog baseline of 0 errors/56 warnings, two-file theme freshness check and production build pass. Chrome 151 evidence covers Wave 1, discovery, actual 120 and synthetic scalability matrices without application-origin failures.
+- **Verification:** The current 175-test gate, catalog baseline of 0 errors/56 warnings, two-file theme freshness check and production build pass. Chrome 151 evidence covers Wave 1, discovery, actual 120 and synthetic scalability matrices without application-origin failures.
 
 ### 2.4 `src/theme/`, `scripts/generateThemeStyles.js` & generated theme CSS
 - **Canonical responsibility:** Projects all publication states from the public catalog into recursively frozen `ThemeDefinition` records. The explicit 13-key mapping produces both CSS custom properties and the compatible `THEME_TOKENS_MAP`; optional `themeEffects.backdropBlur` remains separate from tweak defaults.
 - **Generated artifact boundary:** The browser-safe pure serializer owns root fallback, 120 canonical selectors, aliases and registered effects. The Node-only CLI writes Core 36 initial CSS and expansion 84 async CSS only through `generate:themes`; `check:themes` checks both read-only in `prebuild`.
 - **Export boundary:** Live CSS, Markdown and DTCG generators resolve the canonical theme definition. The former hand-written 24-style map is gone, its export name remains a derived compatibility view, and unknown IDs return the existing no-selection artifact instead of Swiss values.
-- **Verification:** Existing 24·36 map/runtime/export SHA-256 baselines remain exact while actual 120 fixtures pass. DTCG `box-shadow: none` is a transparent zero shadow. Vite builds 75 modules; statically referenced initial JavaScript/CSS is `83.46/32.86kB` gzip and expansion presentation remains async.
+- **Verification:** Existing 24·36 map/runtime/export SHA-256 baselines remain exact while actual 120 fixtures pass. DTCG `box-shadow: none` is a transparent zero shadow. Vite builds 76 modules; statically referenced initial JavaScript/CSS is `88.60/32.86kB` gzip and expansion presentation remains async.
 
 ### 2.5 `src/preview/` & `src/components/mockupTemplates.js`
 - **정규 책임:** legacy, Wave 1, expansion renderer/thumbnail/motion definition을 `registry.js`가 한 번 검증·조립한다. inventory는 definition에서 사전순·재귀 동결 값으로 파생되며 catalog pack은 구현 함수가 아니라 세 참조 ID만 소유한다.
@@ -151,22 +152,23 @@ The application is structured into zero-dependency, native ES modules that commu
 - **검증:** inventory `120/120/120/0`, 기존 24·36 승인 지문과 actual 120 fixture, Web 480탭, 120종 × 8 아키타입 960개 Node 출력과 Chrome 1,920개 device 상태가 통과했다. 신규 thumbnail은 interactive tag를 포함할 수 없고 미등록 참조는 fallback 없이 실패한다.
 
 ### 2.6 `src/components/archetypeTemplates.js`
-- **Responsibility:** Defines standard semantic HTML templates for the 8 core page archetypes (`Game`, `Web SaaS`, `Mobile App`, `E-Commerce`, `Blog`, `Dashboard`, `Media Player`, `Chat`). The Web archetype obtains its four component-tab bodies from the public preview API; the other seven templates remain locally owned. Generated theme CSS supplies Zero-Rebuild custom properties through the static stylesheet import.
+- **Responsibility:** Defines standard semantic HTML templates for the 8 core page archetypes (`Game`, `Web SaaS`, `Mobile App`, `E-Commerce`, `Blog`, `Dashboard`, `Media Player`, `Chat`). The Web archetype obtains its four component-tab bodies from the public preview API; the other seven templates remain locally owned. E-commerce direct/cart checkout source, empty-cart disabled state, Blog progress/reading-mode ARIA and 500-character input bounds are part of this semantic contract.
 
 ### 2.7 `src/components/mockupRuntime.js`
-- **Responsibility:** Resolves registered motion descriptors, applies one unit class and optional `aria-hidden` effect layer, implements real-time interaction simulators across all archetypes, and owns WeakMap-based listener/timer cleanup. Thumbnail visibility uses a cleanup-returning shared observer policy; rerender/unmount disconnects old targets. Under `prefers-reduced-motion`, it skips the observer, clears `in-view`, marks component units `motion-reduced`, and suppresses repeating work/animations.
+- **Responsibility:** Resolves registered motion descriptors, applies one unit class and optional `aria-hidden` effect layer, implements real-time interaction simulators across all archetypes, and owns WeakMap-based listener/timer cleanup. It snapshots only approved form/archetype state for a renderer swap, excludes style-owned Dashboard row markup, restores filter/sort controls against the new renderer, and closes transient checkout dialogs. Checkout focus trap, Blog scroll-owner progress, Game keyboard activation, 500-character/50-item bounds and coalesced short timers share this lifecycle boundary.
 
 ### 2.8 `src/components/detailView.js`
-- **Responsibility:** Renders the Universal Top Design Selector Bar (8 categories + active-category chips capped at 24 with search), Split native selects and 12-thumbnail slot pickers, 8 Archetype viewport, distinct Desktop/Mobile width, live parameter sliders, 4-tab inspector, exports, and WAI-ARIA Focus Trap. Picker-only updates preserve focus/active state and zero-rebuild theme swap; every generation action resolves the current theme from `appState` at event time.
+- **Responsibility:** Renders the Universal Top Design Selector Bar (8 categories + active-category chips capped at 24 with search), Split native selects and 12-thumbnail slot pickers, 8 Archetype viewport, distinct Desktop/Mobile width, live parameter sliders, 4-tab inspector, exports, and WAI-ARIA Focus Trap. A style A→B transition preserves the outer viewport, rebuilds B's inner renderer/motion/Inspector and migrates only approved runtime state; every generation action resolves the current theme from `appState` at event time. Escape is handled before form-control shortcuts and focus is restored only to a connected opener.
 
 ### 2.9 Isolated Crostini Chrome QA evidence
 - **Responsibility:** 네 Chrome QA 스크립트가 격리 local Vite/Chrome 세션을 시작하고 CDP로 재현 가능한 증거를 수집한다. `verifyCatalog120Chrome.js`는 actual 120 전용 행렬을, `analyzeInitialBundle.js`는 production initial asset 예산을 담당한다.
-- **Wave 1 evidence:** `.antigravity/archive/wave1-chrome-qa/report.json` records issue count 0 across page console, exception, same-origin network and HTTP diagnostics. All visible controls remained inside the 12 new Desktop/Mobile roots.
-- **Discovery evidence:** `.antigravity/archive/catalog-discovery-chrome-qa/report.json` records 9 scenarios, 6 responsive widths, three gallery modes, 88/88 named inputs, 44px targets, reduced-motion and diagnostics/issue 0. Representative 320px and 1440px screenshots preserve the completed UI state.
-- **Scalability evidence:** `.antigravity/archive/render-scalability-chrome-qa/report.json`은 actual 120과 synthetic 60/120의 bounded DOM·failure/retry·observer를 기록한다. `.antigravity/archive/catalog120-chrome-qa/report.json`은 actual 120 전 페이지, 1,920 device 상태, Web 480탭, 신규 84/84 device 변화, 대표 상세 흐름과 diagnostics/issue 0을 기록한다.
+- **Wave 1 evidence:** `.antigravity/archive/audit9/wave1-sidebar-final-verified/report.json` records 576 device states and issue count 0 across page console, exception, same-origin network and HTTP diagnostics. All visible controls remained inside the 12 new Desktop/Mobile roots.
+- **Discovery evidence:** `.antigravity/archive/audit9/discovery-sidebar-final-verified/report.json` records 9 scenarios, 6 responsive widths, three gallery modes, 89/89 named inputs, 44px targets, reduced-motion and diagnostics/issue 0. Representative 320px and 1440px screenshots preserve the completed UI state.
+- **Scalability evidence:** `.antigravity/archive/audit9/scalability-sidebar-final-verified/report.json`은 actual 120과 synthetic 60/120의 bounded DOM·failure/retry·observer, 초기 `88.60/32.86kB` gzip, LCP `784ms`, CLS `0`, diagnostics/issue 0을 기록한다.
+- **Audit 9 actual evidence:** `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/report.json`은 매회 actual 1,920 device 상태, Web 480탭, 공통 Detail computed style와 제목·설명 가시영역, pre-init volume, Zoom, stateful transition, checkout, Blog, Dashboard·keyboard와 diagnostics/issue 0을 기록한다. hard metric은 no-op을 제외한 input→요구 state/DOM 정착의 제품 처리시간이며 세 회 median/max는 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`다. 정착 뒤 2-frame wall time과 Long Task는 별도 presentation diagnostic이다.
 
 ### 2.10 `src/audio/synthAudio.js`
-- **Responsibility:** Generates 16 procedural ambient background synthesizer tracks and 14 dynamic UI sound effects with automated `onended` node disconnection.
+- **Responsibility:** Generates 16 procedural ambient background synthesizer tracks and 14 dynamic UI sound effects with automated `onended` node disconnection. AudioContext 생성 전 volume도 app state에 저장해 최초 master gain에 적용한다. Initialization/resume and SFX synthesis failures resolve `false`, stop scheduler state and never report playback success; the widget visualizer owns rAF across view, visibility, reduced-motion and teardown transitions.
 
 ### 2.11 `src/wasm/visualEngine.js`
 - **Responsibility:** Runs Canvas 2D particle physics with audio-reactive spectrum pulsation, `prefers-reduced-motion` compliance, and modal pause/resume lifecycle controls. No WebAssembly module.

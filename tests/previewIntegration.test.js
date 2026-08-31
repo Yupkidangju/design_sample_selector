@@ -124,15 +124,15 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   assert.equal(outputCount, 960);
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), legacyStyles),
-    '8c48b6d14cf8b47732d315a0a5639d8ff8eea693db2fb8ac46edf145282fb83c'
+    '6f796c898974cd4a4d0ceba36e94ee6b1f4065ba965b7b5af9d2cfd7b00992d2'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), coreStyles),
-    'bcc99324558cc40b9a3452c0e503aa5128857166dd3fd19f88e265b0540dcb62'
+    '901ecc70ce28a9ab249698aa8486c42e0d9a0736ed7252430792b2fe7d8fd945'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    '6ee8b25900563af5a61dc4e538b943efda43153eb7d3105125715b557d8c929c'
+    '112307cf6534f64ea6555761ed54f60141529a2153a592fdad03c92ccb7ebb09'
   );
 });
 
@@ -181,15 +181,15 @@ test('non-Web archetypes remain byte-stable and ignore component-tab options', (
 
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, legacyStyles),
-    '15067f012e223859def9f56f4c5748bdefa3120a838d67852b6b86f1f55bb415'
+    '03637532f556e72f4d7d838b9f5416069766215f5af8b86c68b014098f512de7'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, coreStyles),
-    'd611a2957d34d2c4bed92857e83f18195f0ac8e49a3756a2749ce23b9e22541c'
+    'f9daab061de9065d7919440a2954a627504a08e9ec30c94aee21dd435ddd6abd'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, styles),
-    '511df8c5fb3966feec149bdfdbaa565cc988295f5f03fcf84645c39405bcf5b2'
+    '591dfa4ac6787c4d190f098efed7bc5fb577212a1e83833e6da864e192ce34cd'
   );
 });
 
@@ -206,13 +206,21 @@ test('Web archetype propagates unknown renderer errors instead of substituting S
   );
 });
 
+test('archetype dispatch rejects unknown IDs instead of substituting Game', () => {
+  assert.throws(
+    () => getArchetypeHTML('missing-archetype', getAllSubDesigns()[0]),
+    error => error instanceof RangeError
+      && error.message === '[PreviewState] Unknown archetype ID.'
+  );
+});
+
 test('Detail rebuild synchronizes the active and ARIA state of Web component tabs', () => {
   const source = readFileSync(
     new URL('../src/components/detailView.js', import.meta.url),
     'utf8'
   );
   const rebuildStart = source.indexOf('function rebuildArchetypeViewport');
-  const rebuildEnd = source.indexOf('// Zero-Rebuild Theme Swapping', rebuildStart);
+  const rebuildEnd = source.indexOf('// Viewport identity', rebuildStart);
   const rebuildSource = source.slice(rebuildStart, rebuildEnd);
 
   assert.ok(rebuildStart >= 0 && rebuildEnd > rebuildStart);

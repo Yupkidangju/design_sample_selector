@@ -15,8 +15,15 @@ import {
 } from '../preview/motionEntry.js';
 import { prefersReducedMotion } from '../utils/selection.js';
 
+export const MAX_RUNTIME_INPUT_LENGTH = 500;
+export const MAX_RUNTIME_HISTORY = 50;
+
 const runtimeMap = new WeakMap();
+const unitCleanupMap = new WeakMap();
+const checkoutCleanupMap = new WeakMap();
+const pendingChatReplyMap = new WeakMap();
 const activeRoots = new Set();
+let checkoutDialogSequence = 0;
 
 function resolveMotionDescriptor(subDesign) {
   const motionId = subDesign?.preview?.motionId ?? subDesign?.motionProfile;
@@ -34,6 +41,11 @@ function resolveMotionDescriptor(subDesign) {
 function runCleanups(rootEl) {
   const rt = runtimeMap.get(rootEl);
   if (!rt) return;
+  checkoutCleanupMap.get(rt.unit)?.();
+  const ownedTimers = unitCleanupMap.get(rt.unit);
+  ownedTimers?.forEach(timer => clearTimeout(timer));
+  unitCleanupMap.delete(rt.unit);
+  pendingChatReplyMap.delete(rt.unit);
   rt.cleanups.forEach((fn) => {
     try { fn(); } catch { /* ignore */ }
   });
@@ -43,15 +55,92 @@ function runCleanups(rootEl) {
 
 // In-Memory Local Simulator State Store (scoped per unit)
 class ArchetypeStateStore {
-  constructor(unit) {
+  constructor(unit, initialState = null) {
     this.unit = unit;
     this.game = { hp: 820, maxHp: 1000, mp: 650, coins: 1420, combo: 3.2, targetHp: 100, level: 42, kills: 0 };
     this.shop = { qty: 1, basePrice: 89000, selectedColor: '#FF3300', selectedSize: 'M', cart: [] };
     this.blog = { claps: 42, isLightMode: false, comments: [] };
     this.media = { isPlaying: true, progress: 45, volume: 0.7, trackIndex: 0 };
-    this.chat = { msgCount: 2, channel: 'general-chat' };
+    this.chat = { msgCount: 2, channel: 'general-chat', messages: [] };
     this.dash = { sortKey: null, sortDir: 1, filter: '', rows: null };
+
+    if (initialState) {
+      for (const key of ['game', 'shop', 'blog', 'media', 'chat', 'dash']) {
+        if (!initialState[key] || typeof initialState[key] !== 'object') continue;
+        this[key] = { ...this[key], ...cloneStateValue(initialState[key]) };
+      }
+    }
+
+    this.blog.comments = Array.isArray(this.blog.comments)
+      ? this.blog.comments
+        .filter(text => typeof text === 'string' && text.length <= MAX_RUNTIME_INPUT_LENGTH)
+        .slice(-MAX_RUNTIME_HISTORY)
+      : [];
+    this.chat.messages = Array.isArray(this.chat.messages)
+      ? this.chat.messages
+        .filter(message => (
+          message
+          && (message.role === 'user' || message.role === 'peer')
+          && typeof message.text === 'string'
+          && message.text.length <= MAX_RUNTIME_INPUT_LENGTH
+        ))
+        .slice(-MAX_RUNTIME_HISTORY)
+      : [];
   }
+}
+
+function cloneStateValue(value) {
+  if (value === null || value === undefined) return value;
+  if (Array.isArray(value)) return value.map(cloneStateValue);
+  if (typeof value !== 'object') return value;
+  return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, cloneStateValue(entry)]));
+}
+
+function captureControlState(unit) {
+  return Array.from(unit.querySelectorAll('input, select, textarea')).map((control, index) => ({
+    key: control.id || control.getAttribute('name') || `${control.tagName}:${control.getAttribute('data-action') || ''}:${index}`,
+    value: control.value,
+    checked: 'checked' in control ? Boolean(control.checked) : undefined,
+    selectedIndex: control.tagName === 'SELECT' ? control.selectedIndex : undefined
+  }));
+}
+
+function restoreControlState(unit, controls = []) {
+  if (!Array.isArray(controls) || !controls.length) return;
+  const current = Array.from(unit.querySelectorAll('input, select, textarea'));
+  const byKey = new Map(current.map((control, index) => [
+    control.id || control.getAttribute('name') || `${control.tagName}:${control.getAttribute('data-action') || ''}:${index}`,
+    control
+  ]));
+
+  controls.forEach((saved) => {
+    const control = byKey.get(saved?.key);
+    if (!control) return;
+    if (typeof saved.value === 'string') control.value = saved.value;
+    if (typeof saved.checked === 'boolean' && 'checked' in control) control.checked = saved.checked;
+    if (Number.isInteger(saved.selectedIndex) && control.tagName === 'SELECT') {
+      control.selectedIndex = saved.selectedIndex;
+    }
+  });
+}
+
+function snapshotStore(store) {
+  if (!store) return null;
+  const snapshot = Object.fromEntries(['game', 'shop', 'blog', 'media', 'chat', 'dash']
+    .map(key => [key, cloneStateValue(store[key])]));
+  // 행 markup은 style 고유 콘텐츠이므로 filter/sort 상태와 함께 이관하지 않는다.
+  delete snapshot.dash.rows;
+  return snapshot;
+}
+
+export function snapshotMockupState(rootEl) {
+  const runtime = rootEl ? runtimeMap.get(rootEl) : null;
+  if (!runtime) return null;
+  return Object.freeze({
+    archetype: runtime.archetype,
+    store: snapshotStore(runtime.stateStore),
+    controls: captureControlState(runtime.unit)
+  });
 }
 
 export function teardownMockup(rootEl) {
@@ -72,6 +161,7 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
   const archetype = options.archetype || rootEl.getAttribute('data-archetype') || 'game';
 
   const unit = rootEl.querySelector('.mockup-unit') || rootEl.querySelector('.archetype-unit') || rootEl;
+  unitCleanupMap.set(unit, new Set());
 
   unit.classList.add(motion.unitClass);
   if (options.compact) unit.classList.add('is-compact');
@@ -80,10 +170,10 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
   ensureFxLayer(unit, motion);
   ensureToastHost(unit);
 
-  const stateStore = new ArchetypeStateStore(unit);
+  const stateStore = new ArchetypeStateStore(unit, options.initialState?.store);
 
   if (!reduce) {
-    animateMeters(unit, cleanups);
+    animateMeters(unit);
   }
 
   // Universal Action Event Delegation
@@ -100,15 +190,25 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
     const action = trigger.getAttribute('data-action') || trigger.getAttribute('data-mock-action') || 'toast';
     const msg = trigger.getAttribute('data-mock-msg') || '';
 
-    routeArchetypeAction(unit, trigger, action, msg, stateStore, cleanups, e);
+    routeArchetypeAction(unit, trigger, action, msg, stateStore, e);
   };
 
   const onKeydown = (e) => {
+    const customButton = e.target.closest('[role="button"]');
+    if ((e.key === 'Enter' || e.key === ' ') && customButton && unit.contains(customButton)) {
+      const tag = customButton.tagName;
+      if (tag !== 'BUTTON' && tag !== 'A' && tag !== 'INPUT') {
+        e.preventDefault();
+        customButton.click();
+        return;
+      }
+    }
+
     if (e.key === 'Enter') {
       const chatInput = e.target.closest('#chat-msg-input');
       if (chatInput && unit.contains(chatInput)) {
         e.preventDefault();
-        submitChatMessage(unit, chatInput, stateStore, cleanups);
+        submitChatMessage(unit, chatInput, stateStore);
       }
       const blogInput = e.target.closest('#blog-comment-input');
       if (blogInput && unit.contains(blogInput)) {
@@ -136,11 +236,14 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
   cleanups.push(() => unit.removeEventListener('keydown', onKeydown));
   cleanups.push(() => unit.removeEventListener('input', onInput));
 
+  if (archetype === 'dashboard' && !stateStore.dash.rows) captureDashRows(unit, stateStore);
+  restoreArchetypeState(unit, stateStore, archetype);
+  restoreControlState(unit, options.initialState?.controls);
+
   if (archetype === 'blog') bindBlogProgress(rootEl, unit, cleanups);
   if (archetype === 'media' && !reduce) bindMediaSpectrum(unit, stateStore, cleanups);
-  if (archetype === 'dashboard') captureDashRows(unit, stateStore);
 
-  runtimeMap.set(rootEl, { cleanups, stateStore });
+  runtimeMap.set(rootEl, { cleanups, stateStore, unit, archetype });
   activeRoots.add(rootEl);
 }
 
@@ -194,8 +297,11 @@ function showMockToast(unit, msg) {
   if (!toast || !msg) return;
   toast.textContent = msg;
   toast.classList.add('show');
-  clearTimeout(toast._hide);
-  toast._hide = setTimeout(() => toast.classList.remove('show'), 1600);
+  clearOwnedTimeout(unit, toast._hide);
+  toast._hide = scheduleOwnedTimeout(unit, () => {
+    toast._hide = null;
+    toast.classList.remove('show');
+  }, 1600);
 }
 
 function pulseClass(el, className, ms = 420) {
@@ -203,19 +309,40 @@ function pulseClass(el, className, ms = 420) {
   el.classList.remove(className);
   void el.offsetWidth;
   el.classList.add(className);
-  clearTimeout(el._pulse);
-  el._pulse = setTimeout(() => el.classList.remove(className), ms);
+  const unit = el.closest?.('.archetype-unit, .mockup-unit') || el;
+  clearOwnedTimeout(unit, el._pulse);
+  el._pulse = scheduleOwnedTimeout(unit, () => {
+    el._pulse = null;
+    el.classList.remove(className);
+  }, ms);
+}
+
+function clearOwnedTimeout(unit, timer) {
+  if (timer === null || timer === undefined) return;
+  clearTimeout(timer);
+  unitCleanupMap.get(unit)?.delete(timer);
+}
+
+function scheduleOwnedTimeout(unit, callback, delay) {
+  const timers = unitCleanupMap.get(unit);
+  let timer = null;
+  timer = setTimeout(() => {
+    timers?.delete(timer);
+    if (unit.isConnected !== false) callback();
+  }, delay);
+  timers?.add(timer);
+  return timer;
 }
 
 // Action Router
-function routeArchetypeAction(unit, trigger, action, msg, store, cleanups, evt) {
+function routeArchetypeAction(unit, trigger, action, msg, store, evt) {
   // 1. GAME ACTIONS
   if (action === 'game-tap') {
-    handleGameTap(unit, trigger, store, cleanups);
+    handleGameTap(unit, trigger, store);
     return;
   }
   if (action === 'game-skill') {
-    handleGameSkill(unit, trigger, store, cleanups);
+    handleGameSkill(unit, trigger, store);
     return;
   }
   if (action === 'game-boost') {
@@ -255,7 +382,7 @@ function routeArchetypeAction(unit, trigger, action, msg, store, cleanups, evt) 
     return;
   }
   if (action === 'shop-checkout') {
-    handleShopCheckout(unit, store);
+    handleShopCheckout(unit, trigger, store);
     return;
   }
 
@@ -365,7 +492,7 @@ function routeArchetypeAction(unit, trigger, action, msg, store, cleanups, evt) 
   }
   if (action === 'chat-send') {
     const chatInput = unit.querySelector('#chat-msg-input');
-    if (chatInput) submitChatMessage(unit, chatInput, store, cleanups);
+    if (chatInput) submitChatMessage(unit, chatInput, store);
     return;
   }
   if (action === 'chat-channel') {
@@ -383,7 +510,7 @@ function routeArchetypeAction(unit, trigger, action, msg, store, cleanups, evt) 
 
 // --- Specific Simulators ---
 
-function handleGameTap(unit, target, store, cleanups) {
+function handleGameTap(unit, target, store) {
   store.game.coins += 50;
   store.game.combo = +(store.game.combo + 0.2).toFixed(1);
   store.game.targetHp -= 25;
@@ -397,8 +524,8 @@ function handleGameTap(unit, target, store, cleanups) {
     if (store.game.kills % 3 === 0) {
       store.game.level += 1;
       const lvl = unit.querySelector('.hud-player-level');
-      if (lvl) lvl.textContent = `LV. ${store.game.level}`;
-      spawnLevelUpParticles(unit, cleanups);
+      if (lvl) updateGameLevelLabel(lvl, store.game.level);
+      spawnLevelUpParticles(unit);
       showMockToast(unit, `✨ LEVEL UP! LV. ${store.game.level}`);
     }
   } else {
@@ -416,7 +543,7 @@ function handleGameTap(unit, target, store, cleanups) {
   pulseClass(target, 'fx-punch', 200);
 }
 
-function handleGameSkill(unit, btn, store, cleanups) {
+function handleGameSkill(unit, btn, store) {
   const skill = btn.getAttribute('data-skill');
   const cooldownOverlay = btn.querySelector('.skill-cooldown');
 
@@ -445,14 +572,13 @@ function handleGameSkill(unit, btn, store, cleanups) {
     showMockToast(unit, `⚡ SKILL [${skill.toUpperCase()}] EXECUTED`);
   }
 
-  const timer = setTimeout(() => {
+  scheduleOwnedTimeout(unit, () => {
     btn.classList.remove('in-cooldown');
     if (cooldownOverlay) {
       cooldownOverlay.style.transition = 'none';
       cooldownOverlay.style.height = '0%';
     }
   }, 1500);
-  cleanups.push(() => clearTimeout(timer));
 }
 
 function handleGameBoost(unit, btn, store) {
@@ -490,53 +616,151 @@ function handleShopQty(unit, delta, store) {
 
 function handleAddToCart(unit, store) {
   const currentQty = store.shop.qty;
-  store.shop.cart.push({ qty: currentQty, price: store.shop.basePrice * currentQty });
-
-  const totalItems = store.shop.cart.reduce((sum, item) => sum + item.qty, 0);
-  const totalPrice = store.shop.cart.reduce((sum, item) => sum + item.price, 0);
-
-  const badge = unit.querySelector('#shop-cart-badge');
-  const drawerCount = unit.querySelector('#cart-drawer-count');
-  const drawerTotal = unit.querySelector('#cart-drawer-total');
-  const cartList = unit.querySelector('#cart-items-list');
-
-  if (badge) badge.textContent = String(totalItems);
-  if (drawerCount) drawerCount.textContent = String(totalItems);
-  if (drawerTotal) drawerTotal.textContent = `₩${totalPrice.toLocaleString()}`;
-
-  if (cartList) {
-    cartList.innerHTML = store.shop.cart.map((item) => `
-      <div class="cart-item-row">
-        <span>에디션 디자인 상품 ${store.shop.selectedSize} (${item.qty}개)</span>
-        <strong>₩${item.price.toLocaleString()}</strong>
-      </div>
-    `).join('');
-  }
+  store.shop.cart.push({
+    qty: currentQty,
+    price: store.shop.basePrice * currentQty,
+    size: store.shop.selectedSize,
+    color: store.shop.selectedColor
+  });
+  renderShopState(unit, store);
 
   synthAudio.playSfx('CART_ADD');
   unit.querySelector('#shop-cart-drawer')?.classList.add('open');
 }
 
-function handleShopCheckout(unit, store) {
-  if (!store.shop.cart.length && store.shop.qty <= 0) {
-    showMockToast(unit, '장바구니가 비어 있습니다.');
-    return;
-  }
-  synthAudio.playSfx('SUCCESS');
-  showMockToast(unit, '💳 결제가 성공적으로 시뮬레이션되었습니다! 감사합니다.');
-  store.shop.cart = [];
-
+function renderShopState(unit, store) {
+  const totalItems = store.shop.cart.reduce((sum, item) => sum + item.qty, 0);
+  const totalPrice = store.shop.cart.reduce((sum, item) => sum + item.price, 0);
   const badge = unit.querySelector('#shop-cart-badge');
   const drawerCount = unit.querySelector('#cart-drawer-count');
   const drawerTotal = unit.querySelector('#cart-drawer-total');
   const cartList = unit.querySelector('#cart-items-list');
+  const qtyDisplay = unit.querySelector('#shop-qty-val');
+  const priceDisplay = unit.querySelector('#product-total-price');
+  const checkout = unit.querySelector('.cart-checkout-btn');
 
-  if (badge) badge.textContent = '0';
-  if (drawerCount) drawerCount.textContent = '0';
-  if (drawerTotal) drawerTotal.textContent = '₩0';
-  if (cartList) cartList.innerHTML = '<p class="cart-empty-msg">장바구니가 비어 있습니다.</p>';
+  if (badge) badge.textContent = String(totalItems);
+  if (drawerCount) drawerCount.textContent = String(totalItems);
+  if (drawerTotal) drawerTotal.textContent = `₩${totalPrice.toLocaleString()}`;
+  if (qtyDisplay) qtyDisplay.textContent = String(store.shop.qty);
+  if (priceDisplay) priceDisplay.textContent = (store.shop.basePrice * store.shop.qty).toLocaleString();
+  if (checkout) checkout.disabled = store.shop.cart.length === 0;
+  if (checkout) checkout.setAttribute('aria-disabled', String(store.shop.cart.length === 0));
 
-  unit.querySelector('#shop-cart-drawer')?.classList.remove('open');
+  unit.querySelectorAll('.size-chip-btn').forEach((button) => {
+    button.classList.toggle('active', button.getAttribute('data-size') === store.shop.selectedSize);
+  });
+  unit.querySelectorAll('.color-chip-btn').forEach((button) => {
+    button.classList.toggle('active', button.getAttribute('data-color') === store.shop.selectedColor);
+  });
+  const visual = unit.querySelector('#product-visual');
+  if (visual && store.shop.selectedColor) visual.style.borderColor = store.shop.selectedColor;
+
+  if (cartList) {
+    if (!store.shop.cart.length) {
+      cartList.innerHTML = '<p class="cart-empty-msg">장바구니가 비어 있습니다.</p>';
+    } else {
+      cartList.innerHTML = store.shop.cart.map((item) => `
+        <div class="cart-item-row">
+          <span>에디션 디자인 상품 ${item.size || store.shop.selectedSize} (${item.qty}개)</span>
+          <strong>₩${item.price.toLocaleString()}</strong>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function handleShopCheckout(unit, trigger, store) {
+  const source = trigger.getAttribute('data-checkout-source') === 'cart' ? 'cart' : 'direct';
+  if (source === 'cart' && store.shop.cart.length === 0) {
+    showMockToast(unit, '장바구니가 비어 있습니다.');
+    return;
+  }
+  openShopCheckoutDialog(unit, trigger, store, source);
+}
+
+function openShopCheckoutDialog(unit, opener, store, source) {
+  checkoutCleanupMap.get(unit)?.();
+  const items = source === 'cart'
+    ? store.shop.cart
+    : [{ qty: store.shop.qty, price: store.shop.basePrice * store.shop.qty }];
+  const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
+  const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+  const checkoutTitleId = `mock-checkout-title-${++checkoutDialogSequence}`;
+  const layer = document.createElement('div');
+  layer.className = 'mock-checkout-layer';
+  layer.innerHTML = `
+    <button type="button" class="mock-checkout-backdrop" data-checkout-cancel aria-label="결제 취소"></button>
+    <section class="mock-checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="${checkoutTitleId}">
+      <p class="mock-checkout-kicker">${source === 'cart' ? 'CART CHECKOUT' : 'DIRECT PURCHASE'}</p>
+      <h3 id="${checkoutTitleId}">주문 내용을 확인하세요</h3>
+      <dl class="mock-checkout-summary">
+        <div><dt>주문 방식</dt><dd>${source === 'cart' ? '장바구니 결제' : '바로 구매'}</dd></div>
+        <div><dt>수량</dt><dd>${totalItems}개</dd></div>
+        <div><dt>합계</dt><dd>₩${totalPrice.toLocaleString()}</dd></div>
+      </dl>
+      <p class="mock-checkout-note">실제 결제가 발생하지 않는 디자인 시뮬레이션입니다.</p>
+      <div class="mock-checkout-actions">
+        <button type="button" data-checkout-cancel>취소</button>
+        <button type="button" data-checkout-confirm>결제 확인</button>
+      </div>
+    </section>
+  `;
+  unit.appendChild(layer);
+
+  const dialog = layer.querySelector('.mock-checkout-dialog');
+  const focusables = () => Array.from(dialog.querySelectorAll('button:not(:disabled)'));
+  let closed = false;
+  let dispose = () => layer.remove();
+  const close = (confirmed = false) => {
+    if (closed) return;
+    closed = true;
+    if (confirmed) {
+      if (source === 'cart') store.shop.cart = [];
+      renderShopState(unit, store);
+      unit.querySelector('#shop-cart-drawer')?.classList.remove('open');
+      synthAudio.playSfx('SUCCESS');
+      showMockToast(unit, '💳 결제가 성공적으로 시뮬레이션되었습니다! 감사합니다.');
+    } else {
+      synthAudio.playSfx('CLOSE');
+    }
+    dispose();
+    if (opener?.isConnected) opener.focus();
+  };
+  const onKeydown = (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      close(false);
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const controls = focusables();
+    if (!controls.length) return;
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  dispose = () => {
+    layer.removeEventListener('keydown', onKeydown);
+    layer.remove();
+    if (checkoutCleanupMap.get(unit) === dispose) checkoutCleanupMap.delete(unit);
+  };
+
+  layer.addEventListener('keydown', onKeydown);
+  layer.querySelectorAll('[data-checkout-cancel]').forEach(button => {
+    button.addEventListener('click', () => close(false));
+  });
+  layer.querySelector('[data-checkout-confirm]')?.addEventListener('click', () => close(true));
+  checkoutCleanupMap.set(unit, dispose);
+  layer.querySelector('.mock-checkout-actions [data-checkout-cancel]')?.focus();
 }
 
 function handleBlogLike(unit, btn, store) {
@@ -549,108 +773,103 @@ function handleBlogLike(unit, btn, store) {
 
 function handleBlogReadingMode(unit, store) {
   store.blog.isLightMode = !store.blog.isLightMode;
-  unit.classList.toggle('blog-light-mode', store.blog.isLightMode);
+  applyBlogReadingMode(unit, store);
   synthAudio.playSfx('CLICK');
+}
+
+function applyBlogReadingMode(unit, store) {
+  unit.classList.toggle('blog-light-mode', store.blog.isLightMode);
+  const button = unit.querySelector('[data-action="blog-reading-mode"]');
+  if (button) {
+    button.setAttribute('aria-pressed', String(store.blog.isLightMode));
+    button.setAttribute('aria-label', store.blog.isLightMode ? '어두운 읽기 모드로 전환' : '밝은 읽기 모드로 전환');
+  }
 }
 
 function submitBlogComment(unit, input, store) {
   const text = (input.value || '').trim();
-  if (!text) return;
+  const status = unit.querySelector('#blog-comment-status');
+  if (!text) {
+    if (status) status.textContent = '댓글 내용을 입력해 주세요.';
+    return;
+  }
+  if (text.length > MAX_RUNTIME_INPUT_LENGTH) {
+    if (status) status.textContent = `댓글은 ${MAX_RUNTIME_INPUT_LENGTH}자 이하로 입력해 주세요.`;
+    input.focus();
+    return;
+  }
 
   const commentsList = unit.querySelector('#blog-comments-list');
   const countSpan = unit.querySelector('#blog-comment-count');
 
   if (commentsList) {
-    const item = document.createElement('div');
-    item.className = 'comment-item';
-    
-    const author = document.createElement('strong');
-    author.textContent = '방문자 (You)';
-    
-    const p = document.createElement('p');
-    p.textContent = text; // Safe textContent (FIN-F005)
-
-    item.appendChild(author);
-    item.appendChild(p);
+    const item = createTextEntry('comment-item is-runtime', '방문자 (You)', text);
     commentsList.insertBefore(item, commentsList.firstChild);
+    Array.from(commentsList.querySelectorAll('.comment-item.is-runtime'))
+      .slice(MAX_RUNTIME_HISTORY)
+      .forEach(comment => comment.remove());
   }
 
-  store.blog.comments.push(text);
+  store.blog.comments = [...store.blog.comments, text].slice(-MAX_RUNTIME_HISTORY);
   if (countSpan) countSpan.textContent = String(2 + store.blog.comments.length);
+  if (status) status.textContent = `댓글이 등록되었습니다. ${text.length}/${MAX_RUNTIME_INPUT_LENGTH}자`;
 
   input.value = '';
   synthAudio.playSfx('CONFIRM');
 }
 
-function submitChatMessage(unit, input, store, cleanups) {
+function submitChatMessage(unit, input, store) {
   const text = (input.value || '').trim();
-  if (!text) return;
+  const status = unit.querySelector('#chat-message-status');
+  if (!text) {
+    if (status) status.textContent = '메시지를 입력해 주세요.';
+    return;
+  }
+  if (text.length > MAX_RUNTIME_INPUT_LENGTH) {
+    if (status) status.textContent = `메시지는 ${MAX_RUNTIME_INPUT_LENGTH}자 이하로 입력해 주세요.`;
+    input.focus();
+    return;
+  }
 
   const container = unit.querySelector('#chat-messages-container');
+  const userMessage = { role: 'user', text };
+  store.chat.messages = [...store.chat.messages, userMessage].slice(-MAX_RUNTIME_HISTORY);
+  store.chat.msgCount = 2 + store.chat.messages.length;
   if (container) {
-    const userMsg = document.createElement('div');
-    userMsg.className = 'chat-bubble-msg user';
-
-    const avatar = document.createElement('div');
-    avatar.className = 'msg-avatar';
-    avatar.textContent = '🚀';
-
-    const content = document.createElement('div');
-    content.className = 'msg-content';
-
-    const sender = document.createElement('span');
-    sender.className = 'msg-sender';
-    sender.textContent = 'You';
-
-    const p = document.createElement('p');
-    p.textContent = text; // Safe textContent
-
-    content.appendChild(sender);
-    content.appendChild(p);
-    userMsg.appendChild(avatar);
-    userMsg.appendChild(content);
-
-    container.appendChild(userMsg);
+    container.appendChild(createChatEntry(userMessage));
+    trimChatHistory(container);
     container.scrollTop = container.scrollHeight;
   }
 
   input.value = '';
+  if (status) status.textContent = `메시지를 전송했습니다. ${text.length}/${MAX_RUNTIME_INPUT_LENGTH}자`;
   synthAudio.playSfx('CONFIRM');
 
-  // Simulated AI response after 500ms
-  const timer = setTimeout(() => {
+  // 빠른 연속 전송은 마지막 응답 하나로 합쳐 pending timer 수를 제한한다.
+  clearOwnedTimeout(unit, pendingChatReplyMap.get(unit));
+  const replyTimer = scheduleOwnedTimeout(unit, () => {
+    pendingChatReplyMap.delete(unit);
     if (!container || !unit.isConnected) return;
-    const botMsg = document.createElement('div');
-    botMsg.className = 'chat-bubble-msg peer';
-
-    const bAvatar = document.createElement('div');
-    bAvatar.className = 'msg-avatar';
-    bAvatar.textContent = '🤖';
-
-    const bContent = document.createElement('div');
-    bContent.className = 'msg-content';
-
-    const bSender = document.createElement('span');
-    bSender.className = 'msg-sender';
-    bSender.textContent = 'Design AI Bot';
-
-    const bP = document.createElement('p');
-    bP.textContent = `"${text}"에 대한 테마 프리뷰가 실시간으로 반영되었습니다! 🎨`;
-
-    bContent.appendChild(bSender);
-    bContent.appendChild(bP);
-    botMsg.appendChild(bAvatar);
-    botMsg.appendChild(bContent);
-
-    container.appendChild(botMsg);
+    const botMessage = {
+      role: 'peer',
+      text: '요청한 테마 프리뷰가 실시간으로 반영되었습니다! 🎨'
+    };
+    store.chat.messages = [...store.chat.messages, botMessage].slice(-MAX_RUNTIME_HISTORY);
+    store.chat.msgCount = 2 + store.chat.messages.length;
+    container.appendChild(createChatEntry(botMessage));
+    trimChatHistory(container);
     container.scrollTop = container.scrollHeight;
     synthAudio.playSfx('REVEAL');
   }, 500);
-
-  cleanups.push(() => clearTimeout(timer));
+  pendingChatReplyMap.set(unit, replyTimer);
 }
 
-function spawnLevelUpParticles(unit, cleanups) {
+function trimChatHistory(container) {
+  const dynamicMessages = Array.from(container.querySelectorAll('.chat-bubble-msg.is-runtime'));
+  dynamicMessages.slice(0, -MAX_RUNTIME_HISTORY).forEach(message => message.remove());
+}
+
+function spawnLevelUpParticles(unit) {
   const layer = document.createElement('div');
   layer.className = 'level-up-burst';
   layer.setAttribute('aria-hidden', 'true');
@@ -663,20 +882,159 @@ function spawnLevelUpParticles(unit, cleanups) {
     layer.appendChild(p);
   }
   unit.appendChild(layer);
-  const timer = setTimeout(() => layer.remove(), 900);
-  if (cleanups) cleanups.push(() => { clearTimeout(timer); layer.remove(); });
+  scheduleOwnedTimeout(unit, () => layer.remove(), 900);
+}
+
+function resolveBlogScrollOwner(scroller) {
+  const modalBody = scroller.closest('.modal-body-grid');
+  if (modalBody && window.matchMedia?.('(max-width: 1024px)').matches) return modalBody;
+  return scroller;
 }
 
 function bindBlogProgress(scroller, unit, cleanups) {
   const fill = unit.querySelector('#blog-progress-fill');
+  const progress = unit.querySelector('#blog-progress-track');
   const onScroll = () => {
-    const max = scroller.scrollHeight - scroller.clientHeight;
-    const pct = max <= 0 ? 100 : Math.min(100, Math.max(0, (scroller.scrollTop / max) * 100));
+    const owner = resolveBlogScrollOwner(scroller);
+    const max = owner.scrollHeight - owner.clientHeight;
+    const pct = max <= 0 ? 0 : Math.min(100, Math.max(0, (owner.scrollTop / max) * 100));
+    const rounded = Math.round(pct);
     if (fill) fill.style.width = `${pct}%`;
+    if (progress) {
+      progress.setAttribute('aria-valuenow', String(rounded));
+      progress.setAttribute('aria-valuetext', `${rounded}% 읽음`);
+    }
   };
-  scroller.addEventListener('scroll', onScroll, { passive: true });
+  const owners = new Set([scroller, scroller.closest('.modal-body-grid')].filter(Boolean));
+  owners.forEach(owner => owner.addEventListener('scroll', onScroll, { passive: true }));
+  window.addEventListener('resize', onScroll);
   onScroll();
-  cleanups.push(() => scroller.removeEventListener('scroll', onScroll));
+  cleanups.push(() => {
+    owners.forEach(owner => owner.removeEventListener('scroll', onScroll));
+    window.removeEventListener('resize', onScroll);
+  });
+}
+
+function restoreArchetypeState(unit, store, archetype) {
+  if (archetype === 'game') {
+    const hpFill = unit.querySelector('.hp-fill');
+    const hpValue = unit.querySelector('.hp-val');
+    const mpFill = unit.querySelector('.mp-fill');
+    const mpValue = unit.querySelector('.mp-val');
+    const targetHp = unit.querySelector('.target-hp-fill');
+    const coins = unit.querySelector('#game-coin-count');
+    const combo = unit.querySelector('#game-combo-mult');
+    const level = unit.querySelector('.hud-player-level');
+    if (hpFill) hpFill.style.width = `${(store.game.hp / Math.max(1, store.game.maxHp)) * 100}%`;
+    if (hpValue) hpValue.textContent = `${store.game.hp} / ${store.game.maxHp}`;
+    if (mpFill) mpFill.style.width = `${(store.game.mp / 1000) * 100}%`;
+    if (mpValue) mpValue.textContent = `${store.game.mp} / 1000`;
+    if (targetHp) targetHp.style.width = `${store.game.targetHp}%`;
+    if (coins) coins.textContent = store.game.coins.toLocaleString();
+    if (combo) combo.textContent = `x${store.game.combo}`;
+    if (level) updateGameLevelLabel(level, store.game.level);
+    return;
+  }
+
+  if (archetype === 'ecommerce') {
+    renderShopState(unit, store);
+    return;
+  }
+
+  if (archetype === 'blog') {
+    const clapCount = unit.querySelector('#blog-clap-count');
+    if (clapCount) clapCount.textContent = String(store.blog.claps);
+    applyBlogReadingMode(unit, store);
+    const commentsList = unit.querySelector('#blog-comments-list');
+    if (commentsList) {
+      store.blog.comments.forEach((text) => {
+        const item = createTextEntry('comment-item is-runtime', '방문자 (You)', text);
+        commentsList.insertBefore(item, commentsList.firstChild);
+      });
+    }
+    const count = unit.querySelector('#blog-comment-count');
+    if (count) count.textContent = String(2 + store.blog.comments.length);
+    return;
+  }
+
+  if (archetype === 'dashboard') {
+    const filter = unit.querySelector('.table-filter-input');
+    if (filter) filter.value = store.dash.filter || '';
+    unit.querySelectorAll('.dash-sort-btn').forEach((button) => {
+      const active = button.getAttribute('data-sort') === store.dash.sortKey;
+      button.classList.toggle('active', active);
+      button.setAttribute('data-dir', active ? String(store.dash.sortDir) : '');
+    });
+    if (store.dash.rows) renderDashRows(unit, store);
+    return;
+  }
+
+  if (archetype === 'media') {
+    const preservedProgress = store.media.progress;
+    applyMediaTrack(unit, store);
+    store.media.progress = preservedProgress;
+    const slider = unit.querySelector('.media-volume-slider');
+    if (slider) slider.value = String(store.media.volume);
+    handleMediaVolume(unit, slider || { value: store.media.volume }, store);
+    const track = unit.querySelector('.scrub-track');
+    const fill = track?.querySelector('.scrub-fill');
+    if (fill) fill.style.width = `${store.media.progress}%`;
+    const disc = unit.querySelector('#media-vinyl');
+    const playIcon = unit.querySelector('[data-action="media-play"] .play-icon');
+    if (disc) disc.classList.toggle('paused', !store.media.isPlaying);
+    if (playIcon) playIcon.textContent = store.media.isPlaying ? '❚❚' : '▶';
+    return;
+  }
+
+  if (archetype === 'chat') {
+    unit.querySelectorAll('.channel-item').forEach((button) => {
+      button.classList.toggle('active', button.getAttribute('data-channel') === store.chat.channel);
+    });
+    const topic = unit.querySelector('.chat-topic');
+    if (topic) topic.textContent = `# ${store.chat.channel}`;
+    const messages = unit.querySelector('#chat-messages-container');
+    if (messages) {
+      store.chat.messages.forEach((message) => messages.appendChild(createChatEntry(message)));
+      messages.scrollTop = messages.scrollHeight;
+    }
+  }
+}
+
+function updateGameLevelLabel(element, level) {
+  const styleName = element.textContent.replace(/^LV\.\s*\d+\s*/u, '').trim();
+  element.textContent = `LV. ${level}${styleName ? ` ${styleName}` : ''}`;
+}
+
+function createTextEntry(className, authorText, bodyText) {
+  const item = document.createElement('div');
+  item.className = className;
+  const author = document.createElement('strong');
+  author.textContent = authorText;
+  const body = document.createElement('p');
+  body.textContent = bodyText;
+  item.appendChild(author);
+  item.appendChild(body);
+  return item;
+}
+
+function createChatEntry(message) {
+  const item = document.createElement('div');
+  item.className = `chat-bubble-msg ${message.role === 'peer' ? 'peer' : 'user'} is-runtime`;
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = message.role === 'peer' ? '🤖' : '🚀';
+  const content = document.createElement('div');
+  content.className = 'msg-content';
+  const sender = document.createElement('span');
+  sender.className = 'msg-sender';
+  sender.textContent = message.role === 'peer' ? 'Design AI Bot' : 'You';
+  const body = document.createElement('p');
+  body.textContent = message.text;
+  content.appendChild(sender);
+  content.appendChild(body);
+  item.appendChild(avatar);
+  item.appendChild(content);
+  return item;
 }
 
 function captureDashRows(unit, store) {
@@ -808,15 +1166,14 @@ function randomizeDashboardMetrics(unit) {
   if (cr) cr.textContent = `${(Math.random() * 3 + 3).toFixed(2)}%`;
 }
 
-function animateMeters(unit, cleanups) {
+function animateMeters(unit) {
   const meters = unit.querySelectorAll('.meter-fill[data-meter-val]');
   meters.forEach((meter) => {
     const target = meter.getAttribute('data-meter-val') || '60%';
     meter.style.width = '0%';
-    const timer = setTimeout(() => {
+    scheduleOwnedTimeout(unit, () => {
       meter.style.transition = 'width .8s cubic-bezier(0.4, 0, 0.2, 1)';
       meter.style.width = target;
     }, 120);
-    cleanups.push(() => clearTimeout(timer));
   });
 }

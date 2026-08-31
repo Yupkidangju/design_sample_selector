@@ -7,3 +7,7 @@ dist/
 !.env.example
 *.pem
 *.key
+
+# 감사 실행 중간 산출물은 로컬에 유지한다. 최종 증거만 명시적으로 추적한다.
+.antigravity/archive/audit9/
+.antigravity/archive/re-audit-independent/

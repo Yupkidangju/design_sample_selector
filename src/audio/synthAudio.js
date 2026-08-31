@@ -219,7 +219,7 @@ export const BGM_TRACKS = [
   }
 ];
 
-class SynthAudioEngine {
+export class SynthAudioEngine {
   constructor() {
     this.ctx = null;
     this.masterGain = null;
@@ -239,19 +239,23 @@ class SynthAudioEngine {
   }
 
   async init() {
-    if (this.initialized) return;
+    if (this.initialized) return Boolean(this.ctx);
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) {
         console.warn('[AudioSynth] Web Audio API not supported in this browser.');
-        return;
+        return false;
       }
 
       this.ctx = new AudioCtx();
       
       // Master Gain
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+      const requestedVolume = Number(appState.getState().audio.volume);
+      const initialVolume = Number.isFinite(requestedVolume)
+        ? Math.max(0, Math.min(1, requestedVolume))
+        : 0.5;
+      this.masterGain.gain.setValueAtTime(initialVolume, this.ctx.currentTime);
 
       // Low-cut & High-cut Soft Filter (Removes harsh rumbling and piercing highs)
       this.mainFilter = this.ctx.createBiquadFilter();
@@ -290,34 +294,62 @@ class SynthAudioEngine {
 
       this.initialized = true;
       console.log('[AudioSynth] Polyphonic Lo-Fi Synth Audio Engine Ready! 🎵');
-    } catch (e) {
-      console.error('[AudioSynth] Failed to init AudioContext:', e);
+      return true;
+    } catch {
+      this.ctx = null;
+      this.masterGain = null;
+      this.bgmGain = null;
+      this.sfxGain = null;
+      this.analyser = null;
+      this.initialized = false;
+      console.error('[AudioSynth] Failed to initialize the audio engine.');
+      return false;
     }
   }
 
   async ensureAudioContext() {
-    await this.init();
-    if (this.ctx && this.ctx.state === 'suspended') {
-      await this.ctx.resume();
+    try {
+      const initialized = await this.init();
+      if (!initialized || !this.ctx) return false;
+      if (this.ctx.state !== 'running') await this.ctx.resume();
+      return this.ctx.state === 'running';
+    } catch {
+      if (this.timerId) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+      this.isPlaying = false;
+      if (appState.getState().audio.isPlaying) {
+        appState.setState({ audio: { isPlaying: false } });
+      }
+      console.warn('[AudioSynth] AudioContext could not be activated.');
+      return false;
     }
   }
 
   setVolume(volumeVal) {
-    if (!this.masterGain || !this.ctx) return;
-    const clamped = Math.max(0, Math.min(1, volumeVal));
-    this.masterGain.gain.setValueAtTime(clamped, this.ctx.currentTime);
+    const normalized = Number(volumeVal);
+    if (!Number.isFinite(normalized)) return false;
+    const clamped = Math.max(0, Math.min(1, normalized));
     appState.setState({ audio: { volume: clamped } });
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setValueAtTime(clamped, this.ctx.currentTime);
+    }
+    return true;
   }
 
-  playBgm() {
-    this.ensureAudioContext();
-    if (this.isPlaying) return;
+  async playBgm() {
+    if (this.isPlaying) return true;
+    const ready = await this.ensureAudioContext();
+    if (!ready) return false;
+    if (this.isPlaying) return true;
 
     this.isPlaying = true;
     appState.setState({ audio: { isPlaying: true } });
     this.stepIndex = 0;
     this.chordIndex = 0;
     this.startScheduler();
+    return true;
   }
 
   stopBgm() {
@@ -329,13 +361,13 @@ class SynthAudioEngine {
     appState.setState({ audio: { isPlaying: false } });
   }
 
-  toggleBgm() {
+  async toggleBgm() {
     if (this.isPlaying) {
       this.stopBgm();
+      return false;
     } else {
-      this.playBgm();
+      return this.playBgm();
     }
-    return this.isPlaying;
   }
 
   playNextTrack() {
@@ -522,21 +554,22 @@ class SynthAudioEngine {
 
   // --- UI Sound Effects (Crisp & Tactile) ---
 
-  playSfx(type) {
+  async playSfx(type) {
     const { audio } = appState.getState();
-    if (!audio.sfxEnabled) return;
+    if (!audio.sfxEnabled) return false;
     
     // For hover sound, only play if audio context is already running (prevent autoplay console warning)
     if (type === 'HOVER' && (!this.ctx || this.ctx.state !== 'running')) {
-      return;
+      return false;
     }
 
-    this.ensureAudioContext();
-    if (!this.ctx || !this.sfxGain) return;
+    const ready = await this.ensureAudioContext();
+    if (!ready || !this.ctx || !this.sfxGain) return false;
 
-    const now = this.ctx.currentTime;
+    try {
+      const now = this.ctx.currentTime;
 
-    switch (type) {
+      switch (type) {
       case 'HOVER':
         this.playOscSweep('sine', 580, 880, 0.035, 0.02, 0.04);
         break;
@@ -606,6 +639,11 @@ class SynthAudioEngine {
       case 'SWIPE':
         this.playNoiseSweep(300, 1200, 0.06, 0.03);
         break;
+      }
+      return true;
+    } catch {
+      console.warn('[AudioSynth] Sound effect synthesis failed.');
+      return false;
     }
   }
 
@@ -697,4 +735,3 @@ class SynthAudioEngine {
 }
 
 export const synthAudio = new SynthAudioEngine();
-

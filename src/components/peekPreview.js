@@ -87,13 +87,13 @@ export function renderPeekPreview(container) {
     if (lastId !== sub.id) {
       teardownMockup(container.querySelector('#peek-viewport'));
       container.innerHTML = `
-        <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="dialog" aria-label="${escapeHtml(sub.name)} 미리보기">
+        <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="region" aria-label="${escapeHtml(sub.name)} 미리보기">
           <div class="peek-meta">
             <span class="peek-cat">${escapeHtml(sub.icon)} ${escapeHtml(sub.categoryTitle)}</span>
             <strong>${escapeHtml(sub.name)}</strong>
             <span class="peek-en">${escapeHtml(sub.nameEn)}</span>
           </div>
-          <div class="peek-viewport" id="peek-viewport" aria-busy="true">
+          <div class="peek-viewport" id="peek-viewport" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
             <p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>
           </div>
           <p class="peek-hint">클릭으로 담기 · 더블클릭으로 자세히 · Enter 열기 · Esc 닫기</p>

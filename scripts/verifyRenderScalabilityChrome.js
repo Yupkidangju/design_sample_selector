@@ -33,6 +33,11 @@ const report = {
   checkedAt: new Date().toISOString(),
   chromeVersion: null,
   isolatedProfile: true,
+  timingMethod: {
+    metric: 'processingMs',
+    hardGateBoundary: 'input dispatch -> required state/DOM predicate settlement',
+    presentationBoundary: 'settlement -> requested animation frames'
+  },
   bundle: null,
   vitals: null,
   initialRequests: [],
@@ -86,6 +91,20 @@ function summarizeTimings(samples) {
     samples: rounded,
     medianMs: Number(percentileMedian(rounded).toFixed(2)),
     maximumMs: Number(Math.max(...rounded, 0).toFixed(2))
+  };
+}
+
+function summarizeMeasurements(samples) {
+  const normalized = samples.map(value => (
+    value && typeof value === 'object'
+      ? value
+      : { processingMs: value, endToEndMs: value, postSettleFramesMs: 0 }
+  ));
+  return {
+    metric: 'processingMs',
+    ...summarizeTimings(normalized.map(value => value.processingMs)),
+    presentation: summarizeTimings(normalized.map(value => value.postSettleFramesMs)),
+    endToEnd: summarizeTimings(normalized.map(value => value.endToEndMs))
   };
 }
 
@@ -330,8 +349,14 @@ async function measureViewChange(mode) {
       if (performance.now() > deadline) throw new Error('${mode} 보기 전환 시간 초과');
       await new Promise(requestAnimationFrame);
     }
+    const settledAt = performance.now();
     await new Promise(requestAnimationFrame);
-    return performance.now() - start;
+    const finished = performance.now();
+    return {
+      processingMs: settledAt - start,
+      postSettleFramesMs: finished - settledAt,
+      endToEndMs: finished - start
+    };
   })()`);
 }
 
@@ -339,13 +364,34 @@ async function setCoreSearch(query) {
   return evaluate(`(async () => {
     const input = document.querySelector('#search-input');
     if (!input) throw new Error('검색 input 누락');
+    const expected = ${JSON.stringify(query)};
+    const isSettled = () => {
+      const queryChip = document.querySelector('[data-clear-key="query"]');
+      const queryStateMatches = expected
+        ? queryChip?.textContent.includes(expected)
+        : !queryChip;
+      return input.value === expected
+        && queryStateMatches
+        && Boolean(document.querySelector('#main-root .gallery-wrapper, #main-root .empty-results-box'));
+    };
     const start = performance.now();
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-    setter.call(input, ${JSON.stringify(query)});
+    setter.call(input, expected);
     input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+    const deadline = start + 2_000;
+    while (!isSettled()) {
+      if (performance.now() > deadline) throw new Error('Core 검색 정착 시간 초과');
+      await new Promise(requestAnimationFrame);
+    }
+    const settledAt = performance.now();
     await new Promise(requestAnimationFrame);
     await new Promise(requestAnimationFrame);
-    return performance.now() - start;
+    const finished = performance.now();
+    return {
+      processingMs: settledAt - start,
+      postSettleFramesMs: finished - settledAt,
+      endToEndMs: finished - start
+    };
   })()`);
 }
 
@@ -411,7 +457,7 @@ async function verifyCoreGallery() {
   for (const mode of ['GRID', 'BENTO', 'GRID', 'SPECTRUM', 'GRID']) {
     viewSamples.push(await measureViewChange(mode));
   }
-  report.core.interactions.viewChange = summarizeTimings(viewSamples);
+  report.core.interactions.viewChange = summarizeMeasurements(viewSamples);
   checkTimingBudget('Core 보기 전환', report.core.interactions.viewChange);
 
   const searchSamples = [];
@@ -423,7 +469,7 @@ async function verifyCoreGallery() {
     `document.querySelectorAll('#main-root [data-result-id]').length === 36`,
     'Core 검색 초기화'
   );
-  report.core.interactions.search = summarizeTimings(searchSamples);
+  report.core.interactions.search = summarizeMeasurements(searchSamples);
   checkTimingBudget('Core 검색', report.core.interactions.search);
 }
 
@@ -535,8 +581,14 @@ async function openCoreDetailMeasured() {
       if (performance.now() > deadline) throw new Error('상세 진입 시간 초과');
       await new Promise(requestAnimationFrame);
     }
+    const settledAt = performance.now();
     await new Promise(requestAnimationFrame);
-    return performance.now() - start;
+    const finished = performance.now();
+    return {
+      processingMs: settledAt - start,
+      postSettleFramesMs: finished - settledAt,
+      endToEndMs: finished - start
+    };
   })()`);
 }
 
@@ -549,7 +601,7 @@ async function closeCoreDetail() {
 }
 
 async function verifyDetailAndDevice() {
-  const coldMs = await openCoreDetailMeasured();
+  const coldMeasurement = await openCoreDetailMeasured();
   const detail = await evaluate(`(() => {
     const selector = document.querySelector('#top-style-selector');
     const viewport = document.querySelector('#mockup-viewport');
@@ -571,8 +623,9 @@ async function verifyDetailAndDevice() {
   check(detail.foreignCategoryCount === 0, `Detail에 다른 category chip ${detail.foreignCategoryCount}개`);
   check(detail.selectedCount === 1, `Detail selected chip ${detail.selectedCount}/1`);
 
-  detail.zeroRebuild = await evaluate(`(async () => {
+  detail.statefulSwap = await evaluate(`(async () => {
     const viewport = document.querySelector('#mockup-viewport');
+    const renderer = viewport?.firstElementChild;
     const next = [...document.querySelectorAll('#top-style-selector .top-style-chip')]
       .find(chip => chip.getAttribute('aria-selected') !== 'true');
     if (!viewport || !next) return null;
@@ -580,12 +633,14 @@ async function verifyDetailAndDevice() {
     await new Promise(requestAnimationFrame);
     return {
       sameViewport: viewport === document.querySelector('#mockup-viewport'),
+      rendererRebuilt: renderer !== document.querySelector('#mockup-viewport')?.firstElementChild,
       selectedId: document.querySelector('#top-style-selector .top-style-chip[aria-selected="true"]')?.dataset.subId || null,
       theme: document.querySelector('#mockup-viewport')?.dataset.theme || null
     };
   })()`);
-  check(detail.zeroRebuild?.sameViewport === true, 'Detail style swap이 viewport root를 다시 만듦');
-  check(detail.zeroRebuild?.selectedId === detail.zeroRebuild?.theme, 'Detail style swap 선택/theme 불일치');
+  check(detail.statefulSwap?.sameViewport === true, 'Detail style swap이 viewport root를 다시 만듦');
+  check(detail.statefulSwap?.rendererRebuilt === true, 'Detail style swap이 내부 renderer를 교체하지 않음');
+  check(detail.statefulSwap?.selectedId === detail.statefulSwap?.theme, 'Detail style swap 선택/theme 불일치');
 
   detail.devices = [];
   for (const device of ['mobile', 'desktop']) {
@@ -618,8 +673,13 @@ async function verifyDetailAndDevice() {
     await closeCoreDetail();
   }
   await openCoreDetailMeasured();
-  detail.coldEntryMs = Number(coldMs.toFixed(2));
-  detail.warmEntries = summarizeTimings(warmSamples);
+  detail.coldEntryMs = Number(coldMeasurement.processingMs.toFixed(2));
+  detail.coldEntry = {
+    processingMs: Number(coldMeasurement.processingMs.toFixed(2)),
+    postSettleFramesMs: Number(coldMeasurement.postSettleFramesMs.toFixed(2)),
+    endToEndMs: Number(coldMeasurement.endToEndMs.toFixed(2))
+  };
+  detail.warmEntries = summarizeMeasurements(warmSamples);
   checkTimingBudget('Detail warm 진입', detail.warmEntries);
   report.core.detail = detail;
 }
@@ -634,9 +694,14 @@ async function setSplitSearch(slot, query) {
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
     setter.call(input, ${JSON.stringify(query)});
     input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
-    const synchronousMs = performance.now() - start;
+    const settledAt = performance.now();
     await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
-    return { totalMs: performance.now() - start, synchronousMs };
+    const finished = performance.now();
+    return {
+      processingMs: settledAt - start,
+      postSettleFramesMs: finished - settledAt,
+      endToEndMs: finished - start
+    };
   })()`);
 }
 
@@ -676,10 +741,7 @@ async function verifySplitPicker() {
   check(afterSearch.focusId === 'split-style-search-a', `Split 검색 focus 소실: ${afterSearch.focusId}`);
   check(afterSearch.statusRole === 'status' && afterSearch.live === 'polite', 'Split live status ARIA 실패');
 
-  report.core.interactions.splitSearch = {
-    ...summarizeTimings(timingResults.map(result => result.totalMs)),
-    synchronous: summarizeTimings(timingResults.map(result => result.synchronousMs))
-  };
+  report.core.interactions.splitSearch = summarizeMeasurements(timingResults);
   checkTimingBudget('Split picker 검색', report.core.interactions.splitSearch);
   report.core.split = { ...initial, afterSearch };
   await captureScreenshot('split-core-1440');
@@ -699,14 +761,15 @@ async function verifySelectionDock() {
     15_000
   );
   const selection = await evaluate(`(() => ({
-    dialog: document.querySelector('.confirm-sheet')?.getAttribute('role') || null,
+    role: document.querySelector('.confirm-sheet')?.getAttribute('role') || null,
+    theme: document.querySelector('#confirm-preview')?.dataset.theme || null,
     busy: document.querySelector('#confirm-preview')?.getAttribute('aria-busy') || null,
     previewCount: document.querySelectorAll('#confirm-preview .mockup-unit, #confirm-preview .archetype-unit').length,
     componentResources: performance.getEntriesByType('resource')
       .filter(entry => entry.name.includes('componentEntry')).length
   }))()`);
   report.core.selection = selection;
-  check(selection.dialog === 'dialog' && selection.busy === null, '확정 sheet dialog/loading 상태 실패');
+  check(selection.role === 'region' && selection.theme && selection.busy === null, '확정 sheet region/theme/loading 상태 실패');
   check(selection.previewCount === 1, `확정 sheet preview ${selection.previewCount}/1`);
   await evaluate(`document.querySelector('#confirm-sheet-close')?.click()`);
 }
@@ -898,8 +961,14 @@ async function runSyntheticLabInPage(count, budgets) {
   const measure = async action => {
     const start = performance.now();
     action();
+    const settledAt = performance.now();
     await settle();
-    return performance.now() - start;
+    const finished = performance.now();
+    return {
+      processingMs: settledAt - start,
+      postSettleFramesMs: finished - settledAt,
+      endToEndMs: finished - start
+    };
   };
   const structure = () => ({
     resultCount: container.querySelectorAll('[data-result-id]').length,
@@ -998,13 +1067,12 @@ async function runSyntheticLabInPage(count, budgets) {
   const pickerSamples = [];
   let pinnedResult = null;
   for (let index = 0; index < 5; index += 1) {
-    const started = performance.now();
-    pinnedResult = pickerModule.renderSplitStyleChips(styles, {
-      slot: 'A', query: 'no-synthetic-match-' + index, selectedId, renderThumbnail
-    });
-    pickerHost.querySelector('#split-picker-a').innerHTML = pinnedResult.markup;
-    await settle();
-    pickerSamples.push(performance.now() - started);
+    pickerSamples.push(await measure(() => {
+      pinnedResult = pickerModule.renderSplitStyleChips(styles, {
+        slot: 'A', query: 'no-synthetic-match-' + index, selectedId, renderThumbnail
+      });
+      pickerHost.querySelector('#split-picker-a').innerHTML = pinnedResult.markup;
+    }));
   }
   const picker = {
     detailChips: pickerHost.querySelectorAll('#top-style-selector .top-style-chip').length,
@@ -1060,7 +1128,7 @@ async function verifySyntheticCapacity(devUrl) {
       `(${runSyntheticLabInPage.toString()})(${count}, ${JSON.stringify(RENDER_SCALABILITY_BUDGETS)})`
     );
     for (const [name, samples] of Object.entries(result.interactions)) {
-      result.interactions[name] = summarizeTimings(samples);
+      result.interactions[name] = summarizeMeasurements(samples);
       checkTimingBudget(`synthetic ${count} ${name}`, result.interactions[name]);
     }
     report.synthetic.push(result);
@@ -1297,5 +1365,7 @@ try {
   await stopProcess(chromeProcess);
   await stopProcess(devProcess);
   await stopProcess(previewProcess);
-  if (profileDirectory) rmSync(profileDirectory, { recursive: true, force: true });
+  if (profileDirectory) {
+    rmSync(profileDirectory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
 }

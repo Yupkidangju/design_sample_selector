@@ -320,3 +320,29 @@
   - 초기 JS/CSS는 `83.46/32.86kB` gzip으로 `88.98/33.00kB` 예산 안에 남고 expansion CSS 두 파일은 component 경계 뒤에 요청된다.
   - Chrome 151에서 actual 120 전 페이지, 1,920 device 상태, Web 480탭, 신규 84/84 device grid 변화, Detail·Split·Peek·Dock·reduced-motion, LCP `732ms`·CLS `0`·interaction max `142.8ms`, diagnostics/issue 0을 통과했다.
   - 팩 factory는 반복 필드를 줄이지만 21개 문법을 공유하는 네 시안 간 구성적 유사성은 남는다. 후속 시각 개선은 canonical ID·출처·반응형·bundle 계약을 유지한 채 스타일별 markup/CSS를 점진적으로 특화한다.
+
+---
+
+## 19. Decision 019: Renderer-Coherent Style Switching and Audit 9 Recovery Boundaries
+
+- **Status:** Accepted; repository/local Crostini remediation verified (2026-08-31)
+- **Context:** 9차 최종 감사에서 같은 아키타입의 스타일 A→B 전환이 선택 ID와 theme metadata만 B로 바꾸고 A renderer HTML·motion·Inspector payload를 남기는 결함이 확인됐다. 기존 Decision 007의 “DOM 자체를 보존하는 zero-rebuild”와 actual 120의 “스타일별 distinct renderer”는 동시에 충족할 수 없다. 또한 checkout modal, Blog reading mode, lazy focus lifecycle, malformed state·Clipboard·AudioContext·timer/input 경계가 문서 또는 정상 상태와 어긋났다.
+- **Decision:**
+  - Decision 007의 literal inner-DOM preservation을 폐기하고 `#mockup-viewport` identity 보존 + 내부 renderer 재생성 + runtime snapshot migration으로 대체한다. 선택 ID, renderer root/text, motion descriptor/effect, 4×3 Inspector가 한 상태를 가리켜야 한다.
+  - snapshot은 아키타입별 승인 필드와 표준 form controls만 옮긴다. 이전 스타일의 HTML, 카피, class 또는 motion class는 이식하지 않는다. Checkout처럼 일시적인 modal은 전환 때 닫는다.
+  - E-commerce direct/cart checkout을 구분하는 실제 focus-trapped dialog를 구현하고, Blog light mode는 computed color와 `aria-pressed`, progress는 실제 responsive scroll owner를 사용한다.
+  - lazy Detail은 성공한 Detail과 같은 opener/focus/Escape 복구 계약을 사용한다. Peek와 Confirm Sheet는 modal이 아닌 preview region으로 명시하고 선택 theme만 투영한다.
+  - app state 공개 mutation은 enum·canonical ID·tuple shape를 검증한다. bootstrap은 visible fatal/retry boundary, Clipboard와 Audio는 결과 기반 상태를 제공한다.
+  - comment/chat 500자·동적 history 50개 상한과 timeout/rAF/popstate cleanup ownership을 적용한다. 성능 `median 120ms/max 200ms` 계약은 낮추지 않는다. hard metric은 실제 상태 변화가 있는 operation만 페이지 안에서 input dispatch→요구 state/DOM 정착까지 하나의 clock으로 재고 CDP 왕복과 외부 polling을 제외한다. 이미 활성인 control 재선택 같은 no-op은 집계하지 않는다. 정착 후 2개 animation frame wall time과 Long Task는 별도 presentation 진단치로 함께 보존해 제품 처리와 Crostini/headless frame scheduling을 혼합하지 않으며, 동일 조건 직렬 3회 모두 hard metric을 통과해야 한다.
+  - 운영 CSP/Google Fonts는 배포 플랫폼과 URL이 없으므로 저장소에서 임의 정책을 추가하지 않는다. 실제 배포 확인 전 `미확정` 위험으로 유지한다.
+- **Alternatives Considered:**
+  - `data-theme`만 교체하고 stale renderer를 허용하면 distinct renderer와 Inspector 진실성이 깨진다.
+  - 스타일 전환 때 모든 local state를 버리면 `spec.md`가 명시한 cart/game 보존 계약을 낮춘다.
+  - 이전 DOM 전체를 clone/patch하면 style-specific structure와 이벤트·timer ownership을 함께 복사해 ghost state를 만든다.
+  - 호스팅을 모른 채 meta CSP를 넣으면 inline style, dynamic CSS, Google Fonts 요구를 잘못 차단하거나 실제 response header와 이중 정책이 될 수 있다.
+  - 정착 후 2개 animation frame을 제품 처리 hard metric에 합치면 이미 완료된 DOM 작업과 headless compositor scheduling을 구분하지 못한다. 반대로 frame 구간을 버리지 않고 별도 진단치로 보존해야 paint 누락이나 host throttling을 숨기지 않는다.
+- **Consequences:**
+  - 전환 비용은 단순 attribute swap보다 크지만 bounded Detail viewport 한 개만 다시 만들며 성능 hard gate로 제한한다.
+  - runtime state의 직렬화/복원 계약과 브라우저 stateful transition 회귀 검사가 새 유지보수 표면이 된다.
+  - Decision 007의 “shared template + state preservation” 목표는 유지하지만 구현 수단인 literal zero-rebuild만 이 결정이 대체한다.
+  - 기존 Chrome interaction 수치는 driver 왕복이 섞인 wall-clock 표본이라 FIN-F006 종결 근거에서 제외한다. 독립 재감사 `250.1/133.7/96.4ms` 관측과 네 회귀 결함, 후속 sidebar flex 축소를 해소한 뒤 no-op을 제외한 browser-local hard metric 직렬 3회가 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max), diagnostics/issue 0으로 통과했다. 현재 Node는 180/180, build는 76 modules, 초기 JS/CSS는 `88.60/32.86kB` gzip이다.

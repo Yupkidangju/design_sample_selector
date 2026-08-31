@@ -1,6 +1,6 @@
 # DESIGN SPECTRUM (Web Design Sample Selector) v2.3.0
 
-> 120종 인터랙티브 웹 디자인 사조 아카이브, 8대 코어 화면 아키타입, Universal 상단 디자인 선택 바, Zero-Rebuild 동적 테마 주입, 4대 탭 동적 인스펙터 & 실시간 designs.md/토큰 내보내기 엔진, 키네틱 시뮬레이터, 실시간 파라미터 튜너 및 Web Audio 절차적 사운드 신시사이저 플레이그라운드
+> 120종 인터랙티브 웹 디자인 사조 아카이브, 8대 코어 화면 아키타입, Universal 상단 디자인 선택 바, 상태 보존형 renderer·테마 전환, 4대 탭 동적 인스펙터 & 실시간 designs.md/토큰 내보내기 엔진, 키네틱 시뮬레이터, 실시간 파라미터 튜너 및 Web Audio 절차적 사운드 신시사이저 플레이그라운드
 
 ---
 
@@ -115,6 +115,8 @@ Chrome 명령은 기본 profile과 분리된 임시 profile을 사용합니다. 
 - Detail은 활성 category 안에서 최대 24개 thumbnail chip을 표시하고 초과 시 category 내부 검색을 제공합니다.
 - Split은 슬롯마다 전체 스타일 native select와 검색 가능한 최대 12개 visual thumbnail을 함께 제공합니다.
 - Detail/Split과 Peek/확정 component renderer는 필요할 때 불러오며 로딩 실패 시 명시적 오류와 재시도를 제공합니다.
+- Detail에서 스타일 A→B로 전환하면 바깥 viewport는 유지하되 내부 renderer·motion·Inspector를 B 기준으로 다시 만들고, cart/game/chat 등 승인된 런타임 상태만 스냅샷으로 이관합니다. 이전 스타일의 HTML·카피·class는 이관하지 않습니다.
+- Peek와 확정 시트는 선택 테마를 투영하는 non-modal preview region입니다. Checkout은 direct/cart 주문을 구분하는 focus-trapped dialog이며 Blog 읽기 모드와 진행률은 실제 계산 스타일·반응형 scroll owner에 연결됩니다.
 
 ```bash
 # 현재 dist의 초기 정적 JS/CSS gzip 예산 확인
@@ -128,7 +130,7 @@ npm run qa:scalability:chrome
 npm run qa:catalog120:chrome
 ```
 
-최종 Chrome 151 기준 초기 JS/CSS는 `83.46/32.86kB` gzip으로 예산 `88.98/33.00kB`를 통과합니다. actual 120은 세 보기에서 4페이지 전체 ID와 신규 thumbnail 84종에 도달하고, 120×8×Desktop/Mobile `1,920`상태와 Web `480`탭을 통과했습니다. LCP `732ms`, CLS `0`, interaction max `142.8ms`, 진단/issue는 0입니다. actual 증거는 `.antigravity/archive/catalog120-chrome-qa/`, synthetic 용량·재시도 증거는 `.antigravity/archive/render-scalability-chrome-qa/`에 보존됩니다.
+Audit 9 독립 재감사에서 확인한 공통 Detail 사이드바, 최초 재생 전 볼륨, renderer 전환 후 Zoom 결함을 수정했습니다. 사이드바 카드가 flex 높이 안에서 축소돼 제목·설명이 가려지는 후속 회귀도 제거하고 실제 가시영역을 Chrome 게이트에 고정했습니다. 성능 hard gate는 실제 상태 변화가 있는 operation의 페이지 내부 input→요구 state/DOM 정착 처리시간만 측정하고 정착 후 2 animation frames와 Long Task는 별도 presentation 진단치로 기록합니다. 격리 Chrome 151 직렬 3회가 모두 통과해 현재 판정은 저장소·로컬 Crostini 범위 `PASS`이며, 초기 JS/CSS는 `88.60/32.86kB` gzip입니다. FIN-F016 운영 CSP·Google Fonts는 배포 증거가 없어 미확정입니다. 최종 증거는 `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/`와 `docs/multi_audit/9/re_audit_evidence_9.md`에 보존됩니다.
 
 ---
 
@@ -154,7 +156,7 @@ npm run qa:catalog120:chrome
    - 💬 **채팅 (Messenger & DM)**: 채널 사이드바, 실시간 메시지 버블 스트림, 이모지 리액션, AI 자동 응답 시뮬레이션
 3. **Universal 상단 디자인 선택 바 (Top Quick Style Selector)**
    - 상세 모달 상단에서 8대 대분류 탭과 활성 category의 최대 24개 서브스타일 칩을 제공하고, 초과 category는 검색으로 모든 디자인에 도달
-   - Zero-Rebuild 동적 테마 주입: DOM 파괴 없이 `[data-theme]` 토큰만 원자적으로 교체하여 장바구니/게임 스코어 등 상태 유지
+   - 상태 보존형 renderer 전환: 외부 viewport는 유지하고 스타일별 renderer·motion·`[data-theme]`을 함께 교체한 뒤 장바구니/게임 스코어/댓글/채팅 snapshot을 복원
    - 단축키: `[` / `]` (전체 120개 스타일 순환), `Shift + Left/Right` (8대 대분류 점프), `Esc` (닫기)
 4. **4대 탭 동적 인스펙터 & 실시간 디자인 사양서/토큰 내보내기 엔진 (v2.3.0)**
    - 💻 **Live CSS**: 테마 토큰, 실시간 슬라이더 트윅, 활성 아키타입 CSS 100% 실시간 연동 (서브모드: 전체 번들 / 토큰만 / 아키타입 CSS)

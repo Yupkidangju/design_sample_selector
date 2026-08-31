@@ -811,5 +811,7 @@ try {
   client?.close();
   await stopProcess(chromeProcess);
   await stopProcess(viteProcess);
-  if (profileDirectory) rmSync(profileDirectory, { recursive: true, force: true });
+  if (profileDirectory) {
+    rmSync(profileDirectory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
 }

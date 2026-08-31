@@ -5,37 +5,60 @@
 
 import { synthAudio } from '../audio/synthAudio.js';
 
-export function copyToClipboard(text, label = '색상 코드') {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(`Copied ${label} [ ${text} ] to Clipboard! 📋`);
-      synthAudio.playSfx('COPY');
-    }).catch(err => {
-      fallbackCopy(text, label);
-    });
-  } else {
-    fallbackCopy(text, label);
+export async function copyTextWithFallback(text, {
+  clipboard = typeof navigator !== 'undefined' ? navigator.clipboard : null,
+  documentRef = typeof document !== 'undefined' ? document : null
+} = {}) {
+  if (clipboard?.writeText) {
+    try {
+      await clipboard.writeText(String(text));
+      return true;
+    } catch {
+      // 권한 거부 시 동기 폴백을 한 번 시도한다.
+    }
   }
-}
 
-function fallbackCopy(text, label) {
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
+  if (!documentRef?.body || typeof documentRef.execCommand !== 'function') return false;
+
+  const activeElement = documentRef.activeElement;
+  const textArea = documentRef.createElement('textarea');
+  textArea.value = String(text);
   textArea.style.position = 'fixed';
   textArea.style.opacity = '0';
-  document.body.appendChild(textArea);
-  textArea.select();
+  documentRef.body.appendChild(textArea);
+
+  let copied = false;
   try {
-    document.execCommand('copy');
-    showToast(`Copied ${label} [ ${text} ]! 📋`);
-    synthAudio.playSfx('COPY');
-  } catch (err) {
-    console.error('Fallback copy failed:', err);
+    textArea.select();
+    textArea.setSelectionRange?.(0, textArea.value.length);
+    copied = documentRef.execCommand('copy') === true;
+  } catch {
+    copied = false;
+  } finally {
+    if (textArea.isConnected) {
+      if (typeof textArea.remove === 'function') textArea.remove();
+      else documentRef.body.removeChild(textArea);
+    }
+    if (activeElement?.isConnected !== false && typeof activeElement?.focus === 'function') {
+      try { activeElement.focus(); } catch { /* 기존 포커스 복구 실패는 복사 결과를 바꾸지 않는다. */ }
+    }
   }
-  document.body.removeChild(textArea);
+
+  return copied;
 }
 
-export function showToast(message) {
+export async function copyToClipboard(text, label = '색상 코드') {
+  const copied = await copyTextWithFallback(text);
+  if (copied) {
+    showToast(`Copied ${label} [ ${text} ] to Clipboard! 📋`);
+    synthAudio.playSfx('COPY');
+  } else {
+    showToast(`${label}을(를) 복사하지 못했습니다. 다시 시도해 주세요.`, 'error');
+  }
+  return copied;
+}
+
+export function showToast(message, tone = 'status') {
   let toastContainer = document.getElementById('toast-container');
   if (!toastContainer) {
     toastContainer = document.createElement('div');
@@ -46,6 +69,7 @@ export function showToast(message) {
 
   const toast = document.createElement('div');
   toast.className = 'toast-message';
+  toast.setAttribute('role', tone === 'error' ? 'alert' : 'status');
 
   const iconSpan = document.createElement('span');
   iconSpan.textContent = '✨';
@@ -64,4 +88,3 @@ export function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 2200);
 }
-

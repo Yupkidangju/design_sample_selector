@@ -1,7 +1,7 @@
 /**
  * 8 Core Page Archetypes Semantic HTML Template Engine v2.2
  * Standardized semantic templates for Game, Web SaaS, Mobile, E-Commerce, Blog, Dashboard, Media, Chat.
- * Works seamlessly with Zero-Rebuild Dynamic Theme Injection (`[data-theme]`).
+ * Works with state-preserving renderer and theme switching (`[data-theme]`).
  */
 
 import { renderPreviewComponent } from '../preview/componentEntry.js';
@@ -27,7 +27,7 @@ export function getArchetypeHTML(archetypeId, subDesign, options = {}) {
     case 'chat':
       return renderChatArchetype(subDesign);
     default:
-      return renderGameArchetype(subDesign);
+      throw new RangeError('[PreviewState] Unknown archetype ID.');
   }
 }
 
@@ -333,7 +333,7 @@ function renderEcommerceArchetype(subDesign) {
               <span>🛒 장바구니 담기</span>
             </button>
 
-            <button class="instant-buy-btn" data-action="shop-checkout">
+            <button class="instant-buy-btn" data-action="shop-checkout" data-checkout-source="direct">
               <span>바로 구매하기</span>
             </button>
           </div>
@@ -354,7 +354,7 @@ function renderEcommerceArchetype(subDesign) {
             <span>합계</span>
             <strong id="cart-drawer-total">₩0</strong>
           </div>
-          <button class="cart-checkout-btn" data-action="shop-checkout">결제 진행하기 →</button>
+          <button class="cart-checkout-btn" data-action="shop-checkout" data-checkout-source="cart" disabled aria-disabled="true">결제 진행하기 →</button>
         </div>
       </aside>
     </div>
@@ -367,7 +367,7 @@ function renderBlogArchetype(subDesign) {
   return `
     <div class="archetype-unit archetype-blog" data-archetype="blog">
       <!-- Reading Progress Indicator -->
-      <div class="blog-progress-track">
+      <div class="blog-progress-track" id="blog-progress-track" role="progressbar" aria-label="읽기 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div class="blog-progress-fill" id="blog-progress-fill" style="width: 0%;"></div>
       </div>
 
@@ -390,7 +390,7 @@ function renderBlogArchetype(subDesign) {
           </div>
 
           <div class="blog-actions-bar">
-            <button class="blog-action-btn" data-action="blog-reading-mode" title="읽기 모드 전환">
+            <button class="blog-action-btn" data-action="blog-reading-mode" aria-pressed="false" aria-label="밝은 읽기 모드로 전환" title="읽기 모드 전환">
               <span class="mode-icon">🌓</span>
               <span>모드</span>
             </button>
@@ -429,9 +429,10 @@ function renderBlogArchetype(subDesign) {
           <h3>독자 의견 및 코멘트 (<span id="blog-comment-count">2</span>)</h3>
           
           <div class="comment-input-box">
-            <input type="text" class="comment-input" id="blog-comment-input" placeholder="생각을 남겨보세요..." />
+            <input type="text" class="comment-input" id="blog-comment-input" maxlength="500" aria-describedby="blog-comment-status" placeholder="생각을 남겨보세요..." />
             <button class="comment-submit-btn" data-action="blog-comment-submit">등록</button>
           </div>
+          <span id="blog-comment-status" role="status" aria-live="polite"></span>
 
           <div class="comments-list" id="blog-comments-list">
             <div class="comment-item">
@@ -658,9 +659,10 @@ function renderChatArchetype(subDesign) {
 
         <!-- Chat Input Form -->
         <div class="chat-input-bar">
-          <input type="text" class="chat-input" id="chat-msg-input" placeholder="메시지를 입력하세요 (Enter 전송)..." />
+          <input type="text" class="chat-input" id="chat-msg-input" maxlength="500" aria-describedby="chat-message-status" placeholder="메시지를 입력하세요 (Enter 전송)..." />
           <button class="chat-send-btn" data-action="chat-send">전송</button>
         </div>
+        <span id="chat-message-status" role="status" aria-live="polite"></span>
       </section>
     </div>
   `;

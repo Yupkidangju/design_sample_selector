@@ -3,7 +3,7 @@
  * Features:
  * - Universal Top Design Selector Bar (8 Major Categories & Dynamic Sub-Style Switching)
  * - 8 Core Page Archetypes (Game, Web SaaS, Mobile, E-Commerce, Blog, Dashboard, Media, Chat)
- * - Zero-Rebuild Dynamic Theme Injection (DOM Preservation on Style Switch)
+ * - State-preserving renderer, motion, and theme switching
  * - WAI-ARIA Compliant Modal Focus Trap & Keyboard Navigation
  * - Live CSS Parameter Tuner Sliders & Real-time CSS/HTML Code Inspector
  * - Copyable Color Palette Cards & Pros/Cons Interactive Cards
@@ -23,7 +23,7 @@ import {
   renderSplitStyleChips,
   renderSplitStylePicker
 } from './stylePickerMarkup.js';
-import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
+import { hydrateMockup, snapshotMockupState, teardownMockup } from './mockupRuntime.js';
 import { confirmStyle, openSplitCompare } from '../utils/selection.js';
 import {
   createDefaultInspectorUiState,
@@ -42,7 +42,28 @@ const ALL_SUB_DESIGNS = getAllSubDesigns();
 let detailKeyHandler = null;
 let splitKeyHandler = null;
 let lastFocusedElement = null;
+let lastFocusedSubId = null;
 let activeFocusTrap = null;
+
+function requireSubDesign(id, context) {
+  const design = ALL_SUB_DESIGNS.find(subDesign => subDesign.id === id);
+  if (!design) {
+    throw new RangeError(`[PreviewState] Unknown ${context} style ID.`);
+  }
+  return design;
+}
+
+export function applySelectedZoom(root) {
+  const activeButton = root?.querySelector('.zoom-btn.active');
+  const requestedScale = Number.parseFloat(activeButton?.getAttribute('data-scale') || '1');
+  const scale = Number.isFinite(requestedScale) && requestedScale > 0 ? requestedScale : 1;
+  const viewport = root?.querySelector('#mockup-viewport');
+  const unit = viewport?.querySelector('.archetype-unit, .mockup-unit');
+  if (!unit) return false;
+  unit.style.transform = `scale(${scale})`;
+  unit.style.transformOrigin = 'center top';
+  return true;
+}
 
 export function renderDetailView(container) {
   if (!container) return;
@@ -113,10 +134,15 @@ export function renderDetailView(container) {
         teardownHydratedViewports(container);
         removeFocusTrap();
         canvasVisualEngine.resumeLoop();
-        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-          try { lastFocusedElement.focus(); } catch { /* ignore */ }
-          lastFocusedElement = null;
+        const focusTarget = lastFocusedElement?.isConnected
+          ? lastFocusedElement
+          : Array.from(document.querySelectorAll('#main-root [data-sub-id]'))
+            .find(element => element.dataset.subId === (lastFocusedSubId || state.galleryFocusId));
+        if (typeof focusTarget?.focus === 'function') {
+          try { focusTarget.focus(); } catch { /* 포커스 복구 실패는 닫기를 막지 않는다. */ }
         }
+        lastFocusedElement = null;
+        lastFocusedSubId = null;
       }
       container.style.display = 'none';
       container.innerHTML = '';
@@ -140,13 +166,16 @@ export function renderDetailView(container) {
 
     const isInitialOpen = currentRenderedView !== 'DETAIL';
     const needArchetypeRebuild = isInitialOpen || currentRenderedArchetype !== activeArchetype || (activeArchetype === 'web' && currentRenderedTab !== activeComponentTab);
-    const needThemeSwapOnly = !needArchetypeRebuild && currentRenderedSubId !== selectedSubCategory;
+    const needRendererSwap = !needArchetypeRebuild && currentRenderedSubId !== selectedSubCategory;
 
     if (isInitialOpen) {
       resetInspectorUiState();
       // SPLIT→DETAIL 재진입은 스플릿 컨트롤로 opener를 덮어쓰지 않는다 (SEC-F003)
       if (currentRenderedView !== 'SPLIT_COMPARE') {
         lastFocusedElement = document.activeElement;
+        lastFocusedSubId = lastFocusedElement?.closest?.('[data-sub-id]')?.dataset.subId
+          || state.galleryFocusId
+          || null;
       }
       renderFullDetailModal(container, subDesign, mainCat, state);
       currentRenderedView = 'DETAIL';
@@ -163,9 +192,8 @@ export function renderDetailView(container) {
       currentRenderedArchetype = activeArchetype;
       currentRenderedTab = activeComponentTab;
       currentRenderedDevice = sandboxDevice;
-    } else if (needThemeSwapOnly) {
-      // Zero-Rebuild Theme Swap: atomic token & variable swap, preserving DOM state!
-      applyZeroRebuildThemeSwap(container, subDesign, mainCat, state);
+    } else if (needRendererSwap) {
+      applyStatePreservingRendererSwap(container, subDesign, mainCat, state);
       updateDetailMetadataAndInspector(container, subDesign, mainCat, state);
       currentRenderedSubId = selectedSubCategory;
       currentRenderedDevice = sandboxDevice;
@@ -563,6 +591,7 @@ export function renderDetailView(container) {
     viewport.setAttribute('data-theme', subDesign.id);
     viewport.setAttribute('data-archetype', activeArchetype);
     hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
+    applySelectedZoom(root);
     refreshAllInspectorPanes(root);
 
     // Update Archetype Tab Buttons
@@ -584,11 +613,23 @@ export function renderDetailView(container) {
     }
   }
 
-  // Zero-Rebuild Theme Swapping (Preserves DOM & In-Memory Interaction State!)
-  function applyZeroRebuildThemeSwap(root, newSubDesign, mainCat, state) {
+  // Viewport identity는 유지하되 새 style renderer/motion으로 교체하고 승인된 local state를 복원한다.
+  function applyStatePreservingRendererSwap(root, newSubDesign, mainCat, state) {
     const viewport = root.querySelector('#mockup-viewport');
     if (viewport) {
+      const initialState = snapshotMockupState(viewport);
+      const { activeArchetype, activeComponentTab, sandboxDevice } = state;
+      teardownMockup(viewport);
+      viewport.innerHTML = getArchetypeHTML(activeArchetype, newSubDesign, { tab: activeComponentTab });
+      viewport.className = `mockup-viewport ${sandboxDevice}`;
       viewport.setAttribute('data-theme', newSubDesign.id);
+      viewport.setAttribute('data-archetype', activeArchetype);
+      hydrateMockup(viewport, newSubDesign, {
+        archetype: activeArchetype,
+        tab: activeComponentTab,
+        initialState
+      });
+      applySelectedZoom(root);
       applyTweaksToDOM(root, state.liveTweaks, newSubDesign);
     }
 
@@ -871,14 +912,8 @@ export function renderDetailView(container) {
 
     root.querySelectorAll('.zoom-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const scale = parseFloat(btn.getAttribute('data-scale') || '1.0');
         root.querySelectorAll('.zoom-btn').forEach(b => b.classList.toggle('active', b === btn));
-        const viewport = root.querySelector('#mockup-viewport');
-        const unit = viewport?.querySelector('.archetype-unit') || viewport?.querySelector('.mockup-unit');
-        if (unit) {
-          unit.style.transform = `scale(${scale})`;
-          unit.style.transformOrigin = 'center top';
-        }
+        applySelectedZoom(root);
         synthAudio.playSfx('CLICK');
       });
     });
@@ -1116,14 +1151,18 @@ ${htmlContent}
         detailKeyHandler = null;
         return;
       }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeModal();
+        return;
+      }
+
       const tag = document.activeElement?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
       const currentSubId = appState.getState().selectedSubCategory;
 
-      if (e.key === 'Escape') {
-        closeModal();
-      } else if (e.key === '[' || (e.key === 'ArrowLeft' && !e.shiftKey)) {
+      if (e.key === '[' || (e.key === 'ArrowLeft' && !e.shiftKey)) {
         e.preventDefault();
         cycleGlobalSub(currentSubId, -1);
       } else if (e.key === ']' || (e.key === 'ArrowRight' && !e.shiftKey)) {
@@ -1215,8 +1254,8 @@ ${htmlContent}
 
   // --- Render Split Dual Comparison View ---
   function renderSplitCompareView(root, compareIds, activeArchetype, currentTab) {
-    const sub1 = ALL_SUB_DESIGNS.find(s => s.id === compareIds[0]) || ALL_SUB_DESIGNS[0];
-    const sub2 = ALL_SUB_DESIGNS.find(s => s.id === compareIds[1]) || ALL_SUB_DESIGNS[4];
+    const sub1 = requireSubDesign(compareIds[0], 'comparison A');
+    const sub2 = requireSubDesign(compareIds[1], 'comparison B');
 
     teardownHydratedViewports(root);
     root.innerHTML = `
@@ -1322,8 +1361,8 @@ ${htmlContent}
   }
 
   function updateSplitTabsOnly(root, compareIds, activeArchetype, currentTab) {
-    const sub1 = ALL_SUB_DESIGNS.find(s => s.id === compareIds[0]) || ALL_SUB_DESIGNS[0];
-    const sub2 = ALL_SUB_DESIGNS.find(s => s.id === compareIds[1]) || ALL_SUB_DESIGNS[4];
+    const sub1 = requireSubDesign(compareIds[0], 'comparison A');
+    const sub2 = requireSubDesign(compareIds[1], 'comparison B');
 
     root.querySelectorAll('.split-tab-btn').forEach(btn => {
       const isActive = btn.getAttribute('data-archetype') === activeArchetype;

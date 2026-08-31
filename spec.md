@@ -51,7 +51,7 @@ In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactiv
   - **rAF Update Pipeline:** Continuous slider input is coalesced to animation frames. All inspector, copy, and download paths resolve the current `selectedSubCategory`, archetype, device, and live tweaks at event time; no fixed frame-rate or zero-latency guarantee is made.
 - **Universal Top Design Selector Bar:**
   - Pinned modal top bar with 8 major category tabs and up to 24 visual chips from the active category; categories above the limit expose local search while every style remains reachable.
-  - Real-time zero-rebuild theme switching without destroying interactive state (e.g. cart items, game scores preserved).
+  - Real-time state-preserving renderer switching: `#mockup-viewport`와 device/archetype/tab 선택은 유지하되, 스타일마다 고유한 renderer HTML과 motion을 다시 적용한다. 교체 전 runtime snapshot을 교체 후 DOM으로 복원해 cart items, game score, blog comments, chat messages 같은 승인된 local state를 보존한다.
   - Keyboard navigation (`[` / `]`, `Shift + Left/Right`, `ArrowLeft` / `ArrowRight`).
 - **Interactive Multi-Mode Main Gallery:** 
   - 3 View Modes: Standard Grid View, Dynamic Bento Grid View, Spectrum Stream View.
@@ -86,7 +86,7 @@ In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactiv
 | Decision Area | Selected Technology | Rationale & Constraint |
 | --- | --- | --- |
 | **UI Framework** | Vanilla HTML5 + CSS3 + Modular ES6 JS | Zero build tool requirement for runtime; lightweight, ultra-fast initial load (< 40ms) |
-| **Theme Injection** | Generated static CSS Custom Properties + `[data-theme]` | `StyleRecord.tokens`에서 결정론적으로 생성·추적하고 prebuild에서 stale을 검사한다. Zero-rebuild atomic swap으로 DOM과 런타임 상태를 보존한다. |
+| **Theme Injection** | Generated static CSS Custom Properties + `[data-theme]` | `StyleRecord.tokens`에서 결정론적으로 생성·추적하고 prebuild에서 stale을 검사한다. 같은 viewport 안에서 renderer·motion·theme를 함께 교체하고 runtime snapshot을 복원한다. |
 | **Style Catalog Contract** | Versioned frozen ES modules in `src/catalog/` | 8개 pack manifest의 actual 120 정규 ID·분류·13개 토큰·프리뷰 참조를 단일 조회 경계로 제공하고 기존 36종 UI·저장·출력 계약은 subset fixture로 보존 |
 | **Preview Dispatch** | Static immutable registry in `src/preview/` | renderer·thumbnail·motion definition에서 120/120/120/0 inventory를 파생하고 조회와 실제 렌더 실패를 분리하며 무음 스타일 fallback을 금지 |
 | **Render Scalability** | Bounded visual windows + literal dynamic imports | Gallery 36, Detail 24, Split 12/slot 상한과 전체 native option을 유지하고 expansion component/theme/CSS를 최초 사용 때 불러오며 actual 120 Chrome 게이트로 회귀를 차단 |
@@ -236,18 +236,29 @@ export interface MainCategory {
 1. `src/scalability/renderWindow.js`의 순수·불변 window와 bounded picker가 시각 결과 상한을 결정한다. Gallery는 최대 36개, 현재 Detail category는 최대 24개, Split은 슬롯당 최대 12개의 thumbnail DOM만 만든다.
 2. Gallery 페이지는 URL에 저장하지 않는 local 표현 상태다. 검색·필터·정렬·보기 결과가 바뀌면 첫 페이지로 돌아가며 actual 120의 기본 결과는 `36/36/36/12` 네 페이지로 제공한다. 한 페이지 이하 결과에서는 페이지 제어를 만들지 않는다.
 3. Detail category가 24개를 넘으면 category 내부 검색을 제공한다. Split의 native select는 전체 스타일을 계속 제공하고 각 visual picker의 검색·선택 고정·polite status는 URL과 전역 검색 상태를 변경하지 않는다.
-4. Detail/Split view와 Peek/확정 component renderer는 중앙 retryable loader를 사용한다. 로딩은 `aria-busy`, 실패는 설명·취소·재시도 동작을 제공하며 stale 요청은 현재 state와 request token을 다시 확인한다.
+4. Detail/Split view와 Peek/확정 component renderer는 중앙 retryable loader를 사용한다. 로딩은 `aria-busy`, 실패는 설명·취소·재시도 동작을 제공하며 stale 요청은 현재 state와 request token을 다시 확인한다. Detail의 loading/error dialog는 opener focus를 캡처하고 Tab/Shift+Tab을 내부에 가두며 Escape·취소 시 닫고 opener로 복원한다.
 5. 브라우저 module map은 같은 URL의 실패를 기억하므로 component loader는 동일 public renderer를 가리키는 primary/retry facade 두 개를 순서대로 사용한다. 성공한 Promise는 공유하고 reset은 첫 importer로 되돌린다.
 6. thumbnail motion observer는 render 교체와 unmount 때 정리한다. offscreen과 `prefers-reduced-motion: reduce`에서는 animation을 실행하지 않으며 detached observed node는 0이어야 한다.
-7. 초기 동기 번들 예산은 JS gzip 88.98kB 이하, CSS gzip 33.00kB 이하이고 local Chrome hard gate는 LCP 2,500ms 이하, CLS 0.1 이하, 5회 interaction 중앙값 120ms 이하·최댓값 200ms 이하다.
+7. 초기 동기 번들 예산은 JS gzip 88.98kB 이하, CSS gzip 33.00kB 이하이고 local Chrome hard gate는 LCP 2,500ms 이하, CLS 0.1 이하, 최소 5개 **실제 상태 변화가 있는** named interaction의 제품 처리시간 중앙값 120ms 이하·최댓값 200ms 이하다. 이미 활성인 control 재선택처럼 결과 상태가 바뀌지 않는 no-op은 기능 검증에는 사용할 수 있지만 timing 집계에는 넣지 않는다. 제품 처리시간은 페이지의 같은 실행 컨텍스트 안에서 입력 dispatch 직전부터 operation별 요구 state/DOM predicate가 정착할 때까지 측정하며, CDP 명령 왕복·driver polling·artifact I/O와 정착 후 compositor/frame scheduler 대기는 포함하지 않는다. 정착 후 2개 animation frame까지의 wall time과 Long Task는 같은 표본에 별도 `presentation` 진단치로 기록해 누락된 paint·host throttling을 드러내되 제품 처리 hard gate와 혼합하지 않는다. 격리 Chrome에서 직렬 3회 모두 hard gate를 통과해야 재현 가능한 PASS로 판정하고 한 번이라도 초과하면 해당 operation breakdown을 조사할 때까지 `Inconclusive`로 유지한다.
 8. 첫 UI는 정상 레이아웃에서 숨겨 구성하고 `document.fonts.ready` 뒤 노출해 원격 웹 폰트 교체의 layout shift를 방지한다. 폰트 요청이 실패하면 시스템 폴백으로 계속 표시한다.
+
+### 5.8 Runtime State, Preview Surface, and Recovery Contract
+
+1. Detail의 같은 아키타입 스타일 전환은 외부 `#mockup-viewport` node를 보존하지만 내부 renderer root는 새 `rendererId` 결과로 교체한다. 새 `data-theme`, motion class/effect layer, Live HTML/CSS/Markdown/JSON inspector는 한 전환 안에서 선택 ID와 일치해야 한다.
+2. runtime state migration은 다음 값을 보존한다: Game HP/coin/combo/target/level, E-commerce quantity/color/size/cart, Blog claps/reading mode/comments, Dashboard filter/sort, Media play/progress/volume/track, Chat channel/user·bot message history, 그리고 표준 form control 값. 스타일의 고유 카피·구조·motion은 이전 DOM에서 복사하지 않는다.
+3. E-commerce의 `바로 구매`는 현재 quantity의 direct order summary를, cart checkout은 cart item이 있을 때만 cart summary를 여는 modal dialog다. 확인 전에는 cart를 변경하지 않고 취소/Escape는 상태를 보존하며, 확인한 cart checkout만 cart를 비운다. dialog는 focus capture/trap/restore를 제공한다.
+4. Blog reading mode control은 `aria-pressed`와 계산된 background/text theme를 함께 바꾼다. progress는 현재 실제 수직 scroll owner를 관찰하고 `aria-valuenow` 0–100을 동기화한다.
+5. Peek와 Confirm Sheet는 배경을 비활성화하지 않는 non-modal preview region이다. modal focus trap을 요구하지 않지만 각 preview viewport는 선택한 canonical ID를 `data-theme`으로 가져야 한다.
+6. 공개 app state mutation은 `currentView`, `viewMode`, archetype, component tab, device, viewport, sort, compare tuple과 canonical style ID를 검증한다. 잘못된 값은 다른 시안으로 대체하지 않고 현재 정상 값을 유지하거나 명시적 `null`/오류 상태로 처리한다.
+7. 초기 bootstrap 실패는 안전한 텍스트 기반 fatal error와 재시도 control을 표시한다. 성공하지 못한 Clipboard와 AudioContext resume은 성공 상태를 표시하지 않으며 재시도 가능해야 한다.
+8. Blog comment와 Chat message는 각각 UTF-16 기준 500자 상한, runtime별 동적 history 50개 상한을 갖는다. 초과 입력은 잘라 저장하지 않고 제출을 거부해 사용자가 수정할 수 있게 한다. transient timeout/rAF/popstate callback은 생성한 runtime 또는 adapter cleanup이 소유한다.
 
 ---
 
 ## 6. Procedural Audio Engine Contract
 
 ### 6.1 BGM Tracks (16 Presets)
-16 Procedural Chillwave/Ambient progressions scheduled via Web Audio API lookahead scheduler.
+16 Procedural Chillwave/Ambient progressions scheduled via Web Audio API lookahead scheduler. BGM state와 scheduler는 `AudioContext` 초기화 및 `resume()`이 성공해 context가 `running`인 뒤에만 시작하고, 실패 시 `isPlaying=false`와 접근 가능한 오류 상태를 유지한다.
 
 ### 6.2 Synthesized UI SFX (14 Presets)
 - `HOVER`: Soft high-frequency sine pitch sweep (580Hz -> 880Hz, 35ms)
@@ -272,7 +283,9 @@ export interface MainCategory {
 1. **Safe DOM Injection:** All dynamic string outputs (toasts, comments, alerts) MUST use `textContent` or `document.createElement` node assembly. Direct `innerHTML` injection of unsanitized strings is strictly forbidden.
 2. **AudioNode Lifecycle:** Every `OscillatorNode`, `GainNode`, and `BiquadFilterNode` MUST attach an `onended` handler calling `.disconnect()` to prevent Web Audio thread memory leaks.
 3. **Modal Focus Trap:** Opening a modal dialog MUST capture keyboard focus, loop Tab navigation within the modal boundary, and restore previous focus upon closing.
-4. **Canvas & Motion Optimization:** Canvas 2D loop MUST pause when a modal is active and strictly respect `prefers-reduced-motion`.
+4. **Canvas & Motion Optimization:** Canvas 2D loop and audio spectrum rAF MUST pause when a modal is active, stop when their root is detached, and strictly respect `prefers-reduced-motion`.
+5. **Keyboard Parity:** Native-button-equivalent `role="button"` controls MUST activate on Enter and Space. Escape closes an active modal even when focus is in an input, textarea, or select; text-entry guards apply only to navigation shortcuts.
+6. **Clipboard Truthfulness:** Copy APIs MUST return an observable success/failure result. `execCommand('copy') === false`, permission rejection, and thrown errors use failure feedback and never play success SFX.
 
 ---
 
@@ -361,7 +374,7 @@ Runtime `data-theme` and gallery IDs are the 120 canonical IDs assembled from th
 
 Implementation follows the reviewed gates in `CAPABILITY_MAP.md`. 기반 모듈, Wave 1 24→36, discovery/scalability와 `SPEC-catalog-expansion-120.md`의 actual-120 확장은 모두 `COMPLETE`다. 현재 빌드는 카탈로그 오류를 차단하고 기존 24종의 56개 legacy 품질 경고를 공개하며 신규 ready 96종은 오류·경고 0이다. 정규 토큰 단일 원천, renderer·thumbnail·motion `120/120/120`과 asset 0, 독립 `thumbnailId`, 근거 기반 motion descriptor와 명시적 렌더 실패 경계가 고정됐다.
 
-최종 게이트는 Node 152/152, catalog 오류 0/legacy 경고 56, 75-module Vite build, 초기 JS/CSS `83.46/32.86kB` gzip을 통과했다. Crostini Chrome 151에서 세 보기의 actual 120 전체 도달, 120×8×Desktop/Mobile `1,920`상태, Web `480`탭, 신규 84종의 device grid 변화, Detail·Split·Peek·Dock·reduced-motion을 확인했다. 초기 LCP `732ms`, CLS `0`, interaction max `142.8ms`, application diagnostics/issue는 0이다. 다음 미구현 Wave 수치는 없으며 120종을 넘는 확장은 별도 사양으로 시작한다.
+Audit 9 독립 재감사에서 재현한 공통 Detail 사이드바 CSS, 최초 재생 전 볼륨, renderer 전환 후 Zoom 상태를 수정했다. FIN-F006은 no-op·CDP 왕복·frame scheduler 대기를 제품 처리시간에서 분리하는 위 계약으로 교체했고, Chrome 151 격리 직렬 3회가 1,920 device 상태·Web 480탭·diagnostics 0과 함께 각각 `16.95/111.4ms`, `18.05/131.9ms`, `22.0/108.6ms`(median/max)를 통과했다. 현재 판정은 저장소·로컬 Crostini 범위 `PASS`, FIN-F006은 `Resolved`다. 초기 JS/CSS는 `88.60/32.86kB` gzip으로 예산 안이며 FIN-F016 운영 CSP·Fonts만 실제 배포 증거가 없어 미확정이다. 다음 미구현 Wave 수치는 없으며 120종을 넘는 확장은 별도 사양으로 시작한다.
 
 ### 9.3 Quality invariant
 

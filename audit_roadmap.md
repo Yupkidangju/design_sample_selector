@@ -1,7 +1,7 @@
 # Implementation Audit Roadmap (`audit_roadmap.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
 **Version:** 2.3.0
-**Document Status:** Actual 120 Catalog Expansion Final Audit / Remaining Program Audit Criteria
+**Document Status:** Actual 120 / Audit 9 Remediation Re-audited / Remaining Program Audit Criteria
 
 살아 있는 계약은 `spec.md` v2.3.0이다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)와 v2.2 인스펙터 기준은 폐기한다.
 
@@ -23,6 +23,7 @@
 | **Phase 4F** | Catalog Discovery | Canonical Search / Facet / URL / Views | 검색·category+bookmark·10 facet·네 정렬·URL 복원·시대 Spectrum, Chrome 9시나리오/6폭 | **COMPLETE** |
 | **Phase 4G** | Render Scalability | Bounded DOM / Lazy Chunks / Chrome Budgets | Gallery 36·Detail 24·Split 12/slot, synthetic 60/120, 초기 JS/CSS·LCP·CLS·interaction·observer 예산 | **COMPLETE** |
 | **Phase 4H** | Actual 120 Catalog Expansion | 84 Ready Styles / Async Presentation / Real Chrome | 7팩·21문법, 120/120/120/0, actual 1,920 device·Web 480 상태, 반응형·진단·초기 번들 예산 | **COMPLETE** |
+| **Phase 4I** | Audit 9 Remediation | Stateful Transition / Resilience / Re-audit | 독립 재감사 4건 수정, FIN-F006 browser-local timing, FIN-F016 배포 위험 분리 | **COMPLETE** |
 | **Phase 5** | Detail / Split / Inspector | Live Sandbox & Export Contract | 최신 테마 기준 4탭/3 CSS 모드/복사/다운로드, 8 아키타입 HTML-CSS 선택자 계약, DTCG 2025.10, 스플릿 ARIA 탭 | **READY** |
 | **Phase 6** | Quality Verification & Launch Gate | Automated + Browser Audit | `npm run check`, teardown 동일 루트, XSS `textContent`, 포커스 트랩, 복합 상태 전이 브라우저 검사 | **READY** |
 
@@ -79,14 +80,14 @@
 - [ ] `hydrateMockup` / `teardownMockup` use the same root (plus descendant sweep).
 - [ ] Search `input` does not rebuild the entire header DOM.
 - [x] Discovery search/status output is escaped, unknown URL/facet input is allowlisted away, and the query is limited to 120 characters.
-- [x] Browser discovery QA verifies 320/375/414/768/1024/1440px overflow 0, 88/88 named inputs, keyboard flows and application diagnostics 0.
+- [x] Browser discovery QA verifies 320/375/414/768/1024/1440px overflow 0, 89/89 named inputs, keyboard flows and application diagnostics 0.
 - [ ] Asynchronous audio context resume handling for browser autoplay policies.
 - [ ] Accessible HTML5 markup with aria attributes, focus trap, Esc.
 - [ ] Split archetype tabs expose one `aria-selected="true"`, roving `tabindex`, linked tabpanels, and Arrow/Home/End navigation.
 - [x] `tests/styleContract.test.js` passes all canonical/legacy parity, ordering, publication, boundary, saved-ID restoration and immutability cases.
 - [x] Browser-safe theme modules contain no Node file-system imports; the Node CLI and its diagnostics are absent from production assets.
-- [x] Generated CSS is statically imported through `interactive.css`; runtime theme switching injects no `<style>` element and preserves active component state.
-- [x] `npm test` and `npm run build` pass through `npm run check` (152/152 current; 144/144 at scalability completion; 121/121 at discovery completion; 106/106 at Wave 1 completion).
+- [x] Generated CSS is statically imported through `interactive.css`; runtime theme switching injects no `<style>` element and preserves approved state while rebuilding the selected inner renderer.
+- [x] `npm test` and `npm run build` pass through `npm run check` (180/180 current; 152/152 at actual-120 completion; 144/144 at scalability completion; 121/121 at discovery completion; 106/106 at Wave 1 completion).
 
 ### Phase 4A Verification Record (2026-08-30)
 
@@ -133,7 +134,7 @@
 - `/usr/bin/google-chrome` reported 151.0.7922.173 and ran with an isolated temporary user-data directory against local Vite/CDP. The default Chrome profile was not used.
 - Grid, Bento and Spectrum each rendered 24 registered thumbnails. All 96 style/Web-tab states matched their registered component root and motion class with no empty output or Swiss substitution.
 - All 384 style/archetype/device states matched `data-theme`, archetype root, motion/effect layer and active device control. Desktop roots measured 705.33–714.93px and Mobile roots measured 364.8px, resolving the original same-looking device concern with runtime evidence.
-- Six registered motion channels and reduced-motion suppression passed. Main layout at 320/768/1024/1440px had no horizontal overflow; Split rendered two Web components and game interaction state survived Mobile↔Desktop and zero-rebuild theme swaps.
+- Six registered motion channels and reduced-motion suppression passed. Main layout at 320/768/1024/1440px had no horizontal overflow; Split rendered two Web components and game interaction state survived Mobile↔Desktop and the state-preserving theme swap used at that milestone.
 - The first run exposed 72 Web tab-button state mismatches: content changed but `active`/`aria-selected` stayed on Hero. A RED regression test and six-line state synchronization fixed all 96 combinations. An inline SVG favicon removed the browser-generated `/favicon.ico` 404.
 - Eight style families in Desktop/Mobile, Grid/Bento/Spectrum, Split and all four Web tabs were inspected across 24 screenshots. The final accessibility tree had no unnamed controls, and application console errors, exceptions, failed same-origin requests and error logs were all 0.
 - Chrome/Vite were stopped, ports 4173/9222 were released and the isolated profile/screenshots were deleted. Final `npm run check` passed 93/93 tests, catalog 0 errors/56 warnings, current theme CSS and a 40-module build. Bundle sizes were JavaScript `286.41 kB` (`78.45 kB` gzip) and CSS `115.43 kB` (`21.79 kB` gzip).
@@ -176,7 +177,7 @@
 - `/usr/bin/google-chrome` `151.0.7922.173` 격리 profile에서 DCL/load/FCP/LCP `390/423.5/432/516ms`, CLS `0`을 기록했다. Core 36 initial은 36 thumbnail/488 nodes이고 기존 UI에는 pager가 없다.
 - synthetic 60/120의 Grid/Bento/Spectrum은 페이지를 합쳐 각각 모든 ID에 정확히 도달했으며 visual card/thumbnail은 36개, Detail은 24개, Split은 12개/slot을 넘지 않았다. 120 interaction 최댓값은 `81.0ms`, detached observed node와 cleanup 후 observed node는 0이었다.
 - 첫 component chunk 요청을 CDP에서 한 번 실패시켜 loading→error→retry 성공을 검증했다. 같은 URL 실패를 기억하는 module map 문제는 primary/retry facade로 복구하고 stale request는 state/request token으로 차단했다.
-- Detail의 active category/zero-rebuild, Split native 36/60/120 option, selected pinning·focus·polite status, Desktop `721px`/Mobile `368px`, 320/768/1024/1440px overflow 0과 reduced-motion 실행 animation 0이 통과했다. application console/error/exception/network/HTTP/accessibility issue는 0이다.
+- Detail의 active category/state preservation, Split native 36/60/120 option, selected pinning·focus·polite status, Desktop `721px`/Mobile `368px`, 320/768/1024/1440px overflow 0과 reduced-motion 실행 animation 0이 통과했다. application console/error/exception/network/HTTP/accessibility issue는 0이다.
 - 초기 앱 삽입과 Google Font swap에서 발생한 CLS `≈0.49`는 normal flow에서 UI를 숨겨 layout/font를 정착시킨 뒤 노출하는 방식으로 해결했다. `display:none` 또는 detached insert는 빈 문서 뒤 전체 UI 출현을 이동으로 남겨 기각했다.
 - `.antigravity/archive/render-scalability-chrome-qa/report.json`과 화면 증거를 보존했고 기존 `qa:wave1:chrome` 576상태와 `qa:discovery:chrome` 9개 시나리오도 현재 코드에서 다시 통과했다.
 
@@ -189,13 +190,23 @@
 - `/usr/bin/google-chrome` `151.0.7922.173` 격리 profile에서 Grid/Bento/Spectrum 각 4페이지의 120 ID와 신규 thumbnail 84개에 도달했다. actual 120×8×Desktop/Mobile `1,920`상태, Web 480탭, 신규 84/84 device grid 변화, 대표 Spatial Glass UI의 Desktop 2열/Mobile 1열, category selector 15종, Split native 120·visual 12/slot, Peek·Dock·reduced-motion을 통과했다.
 - initial LCP `732ms`, CLS `0`, interaction max `142.8ms`, console warning/error, exception, network/HTTP failure와 issue는 모두 0이다. `.antigravity/archive/catalog120-chrome-qa/report.json`과 desktop/mobile/split 대표 화면을 보존했고 Wave 1·discovery·scalability 기존 Chrome 회귀도 모두 재통과했다.
 
+### Phase 4I Audit 9 Remediation and Re-audit Record (2026-08-31)
+
+- **판정:** 저장소·로컬 Crostini 범위 `APPROVE / COMPLETE`. 공통 Detail 사이드바 CSS, 최초 재생 전 볼륨, renderer 전환 후 Zoom 회귀를 수정했고 FIN-F006을 browser-local 제품 처리/presentation 분리 timing으로 직렬 3회 재검증했다. FIN-F016(CSP·외부 폰트 정책)은 기존처럼 `미확정/배포 증거 필요`다.
+- literal inner-DOM zero-rebuild와 distinct renderer의 충돌은 구현 전에 `spec.md`·`designs.md`·README·Decision 019에서 바깥 viewport identity + 새 inner renderer + 승인된 runtime snapshot migration으로 변경했다. 이전 스타일의 HTML·카피·class·motion과 Dashboard 행 markup은 이관하지 않는다.
+- `tests/auditRemediation9.test.js` 27개를 포함한 전체 Node 테스트 `180/180`, catalog 오류 0/legacy 경고 56, 두 theme CSS 최신성, 76-module Vite build, `npm audit --omit=dev --offline` 취약점 0, `git diff --check`가 통과했다. 초기 JS/CSS는 `88.60/32.86kB` gzip으로 `88.98/33.00kB` 예산 안이다.
+- 새 actual-120 Chrome 151 직렬 3회는 매회 1,920 device 상태·Web 480탭·Blog 3폭·공통 Detail 제목/설명 가시영역·diagnostics/issue 0을 통과했다. no-op을 제외한 input→요구 state/DOM 정착 hard metric은 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max)였고 정착 후 2-frame wall time·Long Task는 별도 presentation diagnostic으로 보존했다. FIN-F006은 `Resolved`다.
+- 최종 Wave 1은 576상태, Discovery는 9시나리오·6폭·89/89 named input, Scalability는 actual + synthetic 60/120, LCP `784ms`, CLS `0`, 초기 bundle 예산을 통과했고 세 게이트 모두 diagnostics/issue 0이다. artifact는 각각 `.antigravity/archive/audit9/{wave1,discovery,scalability}-sidebar-final-verified/`에 있다.
+- 원본 source report 3개와 manifest/sidecar는 크기·SHA-256이 모두 일치한다. 상세 finding 판정, RED→GREEN 기록, 명령과 artifact 경로는 `docs/multi_audit/9/re_audit_evidence_9.md`에 보존한다.
+
 ### Next Recommended Gate and Remaining Risks
 
-- **현재 승인 게이트:** actual 120 확장과 관련 기반·브라우저 게이트가 모두 완료됐다. 다음 고정 수량의 미구현 Wave는 없으며 후속은 사용자 피드백 기반 시안 특화, legacy 품질 정리 또는 120종 이후 새 사양으로 시작한다.
+- **현재 승인 게이트:** actual 120 확장과 Audit 9 저장소/로컬 런타임 재감사는 `APPROVE / COMPLETE`다. 다음 필수 게이트는 배포 후보가 생긴 뒤 FIN-F016의 CSP/security headers/Google Fonts response를 확인하는 것이다.
 - **남은 품질 부채:** 기존 24개 `legacy` 스타일의 출처·접근성·대비 경고 56개는 공개 기준선으로 남아 있다. 허위 메타데이터로 제거하지 않고 실제 조사·검토와 함께 해소해야 한다.
 - **남은 motion 품질 부채:** `sparkline`, `vhs-shift`, `ken-burns`, `tile-stagger` 4개는 의도적으로 `metadata-only`이며 ID 전용 시각 동작이 없다. `hard-punch`, `hard-press`, `inset-press` 3개는 초기 반복 모션이 아니라 상호작용 시에만 동작한다. 새 효과를 만들거나 motion 강도를 보정하는 작업은 호환 이전 범위에서 제외했으므로 style-pack 저작/시각 QA 사양에서 별도 승인한다.
-- **남은 확장 위험:** actual 120은 통과했지만 초기 CSS 예산 여유는 144 bytes, JS 예산 여유는 약 `5.52kB`뿐이다. 120종 이후에는 현재 async CSS·bounded DOM 경계를 유지하고 새 예산을 승인해야 한다.
+- **남은 확장 위험:** Audit 9 수정 후 초기 CSS 예산 여유는 144 bytes, JS 예산 여유는 384 bytes뿐이다. 120종 이후에는 현재 async CSS·bounded DOM 경계를 유지하고 새 예산을 승인해야 한다.
 - **남은 시각 품질 위험:** 신규 84종은 21개 문법을 네 변형씩 공유하므로 개별 시안의 고유 markup 특화 여지가 남는다. 색상만 바꾸는 회귀는 금지하며 실제 사용자 피드백이 있는 스타일부터 canonical ID와 반응형 계약을 유지한 채 심화한다.
+- **남은 배포 위험:** 운영 플랫폼·URL·response header가 없어 CSP, security headers와 Google Fonts allowlist/fallback의 운영 상태는 판정하지 않았다. 배포 후보 URL이 생기면 response header·DevTools Security/Network 증거로 FIN-F016을 별도 종결한다.
 - **해결된 브라우저 항목:** inline SVG favicon 선언으로 선택적 `/favicon.ico` 404와 DevTools network 오류를 제거했다.
 
 ---
@@ -203,7 +214,7 @@
 ## 4. Pass 3: Security & Performance Audit Checklist
 
 - [x] No unsafe `eval()` or dynamic script execution.
-- [ ] Comments / chat / toasts use `textContent` or `createElement`.
-- [ ] Clipboard API calls guarded with user gesture.
-- [ ] Canvas rAF pauses on modal overlay; respects `prefers-reduced-motion` physics skip.
-- [ ] Every started AudioNode has `onended` → `disconnect()`.
+- [x] Comments / chat / toasts use `textContent` or `createElement`; dynamic history is capped at 50.
+- [x] Clipboard calls originate from explicit controls and return truthful success/failure, including `execCommand(false)` and throw.
+- [x] Canvas/audio visualizer rAF pauses outside its owning view and on hidden/reduced-motion states; teardown cancels the owned frame.
+- [x] Every started AudioNode has `onended` → `disconnect()`; AudioContext/SFX rejection is caught and reflected as stopped/false state.

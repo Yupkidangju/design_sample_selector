@@ -145,7 +145,7 @@ flowchart LR
 
 - **생성 파일 소유권:** `themeTokens.css`와 `themeTokensExpansion.css`는 사람이 편집하지 않는다. 정규 레코드 변경 뒤 `npm run generate:themes`로 둘을 갱신하며 일반 빌드는 `npm run check:themes`로 읽기 전용 비교만 한다.
 - **효과와 튜너 분리:** `themeEffects.backdropBlur`는 테마 컨테이너의 기준 효과이고 `defaultTweaks.backdropBlur`는 아키타입 슬라이더 초기값이다. `bento-grid`의 기준 효과 `16px`와 tweak `12px`를 포함해 서로 자동 결합하지 않는다.
-- **반응형·상태:** 테마 교체는 기존 DOM에 `data-theme`만 바꾸므로 Desktop/Mobile 폭, 활성 아키타입과 게임·장바구니 같은 로컬 인터랙션 상태를 보존한다.
+- **반응형·상태:** 스타일 교체는 외부 preview viewport와 Desktop/Mobile·활성 아키타입·탭을 유지하면서 내부 renderer root와 motion을 새 스타일 것으로 교체한다. 교체 전 runtime snapshot을 복원하므로 게임·장바구니·댓글·채팅 같은 승인된 local state는 유지하되 이전 스타일의 카피·DOM 문법은 남기지 않는다.
 - **접근성:** 생성 계층은 포커스 순서와 ARIA를 변경하지 않는다. 색상 대비·접근성 메모는 catalog-validation의 기존 오류/경고 정책을 계속 따른다.
 - **오류 상태:** stale 또는 누락된 CSS는 빌드에서 복구 명령과 함께 실패한다. 알 수 없는 ID는 스타일을 추측하지 않으며, 잘못된 효과 값은 `THEME_EFFECT_*` 진단으로 차단한다.
 
@@ -171,7 +171,7 @@ flowchart LR
 - **영역 역할:** `src/preview/`는 Web 4탭 renderer, 전체 UI용 thumbnail recipe, motion descriptor와 불변 registry를 소유한다. Gallery·Detail·Peek·Dock과 `archetypeTemplates.js`의 Web 경로는 `src/preview/index.js`를 직접 사용한다. `mockupTemplates.js`는 이전 위치 인자 호출과 parity만 보존하고, `mockupRuntime.js`는 모든 아키타입 root에서 등록된 motion class·effect layer descriptor를 소비한다.
 - **구현 제약:** 정규 inventory와 공개 호환 API는 정적 definition에서 사전순으로 파생하며 별칭, 내부 map과 render 함수는 노출하지 않는다. 신규 스타일은 catalog의 세 참조와 `renderers.js`·`thumbnails.js`·`motions.js` definition을 함께 추가하고, `index.js`, compatibility 파일 또는 validation에 스타일별 switch/목록을 만들지 않는다. 런타임 등록·원격 HTML은 제공하지 않으며, 내부 UI의 승인된 dynamic import 경계는 아래 `render-scalability` 영역이 소유한다.
 - **접근성·모션:** effect layer는 `aria-hidden="true"`이고 pointer event를 받지 않는다. `prefers-reduced-motion`이면 runtime이 `motion-reduced`를 적용해 effect layer를 숨기고 반복 meter/media 동작을 시작하지 않으며, CSS가 thumbnail·template 반복 animation을 억제한다. off-screen thumbnail은 `IntersectionObserver`의 `in-view` 상태로 일시 정지한다. 기존 키보드·포커스·상호작용 상태 계약은 유지한다.
-- **반응형·상태:** registry는 device 폭을 결정하지 않는다. Detail의 `.mockup-viewport.desktop|mobile`이 동일 정규 스타일에서 레이아웃을 선택하며 Mobile은 모든 현재 `.archetype-unit`/`.mockup-unit`을 최대 `380px`로 제한하고 Web·Storefront·Dashboard·Chat을 모드 전용 규칙으로 재배치한다. hydration은 같은 root에서 class/layer를 중복 생성하지 않고 teardown cleanup을 보존한다. 테마만 바꾸는 경우 DOM을 재구축하지 않아 현재 action state가 유지된다.
+- **반응형·상태:** registry는 device 폭을 결정하지 않는다. Detail의 `.mockup-viewport.desktop|mobile`이 동일 정규 스타일에서 레이아웃을 선택하며 Mobile은 모든 현재 `.archetype-unit`/`.mockup-unit`을 최대 `380px`로 제한하고 Web·Storefront·Dashboard·Chat을 모드 전용 규칙으로 재배치한다. hydration은 같은 root에서 class/layer를 중복 생성하지 않고 teardown cleanup을 보존한다. 스타일 전환은 바깥 viewport identity를 유지하고 inner renderer를 교체한 뒤 승인된 사용자 state와 현재 Zoom을 재적용한다.
 - **오류 처리:** `hasPreviewReference()`와 capability 조회의 unknown은 `false`/`null`이다. 실제 render·hydration의 미등록 ID, 미지원 탭, 잘못된 definition/출력은 진단 필드를 가진 `PreviewRegistryError`다. Swiss, 일반 `Aa`, `none`으로 자동 대체하지 않으며 catalog prebuild가 정상 데이터의 세 참조와 파생 inventory 일치를 먼저 검사한다.
 
 ### 2.4 Wave 1 Visual Authoring Boundary
@@ -236,10 +236,10 @@ flowchart LR
 - **영역 역할:** `src/scalability/renderWindow.js`가 DOM과 state를 모르는 gallery window와 bounded picker를 제공한다. `mainView.js`는 한 canonical 결과를 36개씩 세 보기로 투영하고, `stylePickerMarkup.js`는 Detail 24개·Split 슬롯당 12개의 고비용 thumbnail 상한과 선택 고정을 공유한다.
 - **구현 제약:** Gallery page는 URL이 아닌 local 표현 상태이며 query/filter/sort/view 결과가 바뀌면 1페이지로 돌아간다. actual 120은 기본 네 페이지이고 Split native select는 전체 120 option을 유지해 visual window 밖 스타일도 접근 가능하다.
 - **지연 코드:** 초기 경로는 thumbnail·motion만 정적으로 사용한다. `lazyPreviewLoader.js`가 Detail/Split과 Peek/확정 component renderer를 최초 요청 때 불러오고 Promise를 공유한다. 실패 시 같은 URL을 재요청하지 않고 primary/retry facade를 순서대로 사용해 브라우저 module-map 실패 캐시를 피한다.
-- **접근성·상태:** pager는 native button과 polite range status, picker는 label이 있는 search와 polite 결과 status를 제공한다. 현재 선택은 검색 결과에 없어도 한 번 고정한다. loading은 `aria-busy`, error는 alert 문맥·재시도·취소를 제공하고 stale async 응답은 현재 state를 다시 확인한다.
+- **접근성·상태:** pager는 native button과 polite range status, picker는 label이 있는 search와 polite 결과 status를 제공한다. 현재 선택은 검색 결과에 없어도 한 번 고정한다. Detail loading/error는 modal opener capture, initial focus, Tab loop, Escape/cancel, focus restore를 제공하고 stale async 응답은 현재 state를 다시 확인한다. Peek와 Confirm Sheet는 배경을 막지 않는 non-modal `region`이며 각 preview viewport의 `data-theme`은 선택 ID와 일치한다.
 - **모션·수명:** thumbnail은 viewport 안에서만 실행하며 re-render/unmount 시 observer를 해제한다. reduced-motion에서는 observer·실행 animation이 0이고 페이지 교체 뒤 detached observed node도 0이다.
 - **초기 표시:** `body[data-app-pending]`의 UI를 `visibility:hidden`으로 정상 레이아웃 안에서 준비하고 웹 폰트 정착 뒤 노출한다. 이 방식은 공간을 제거하는 `display:none`과 달리 첫 화면 기하를 보존하며 Chrome 최종 CLS `0`을 달성했다.
-- **실측 기준:** actual 120은 보기별 최대 36 thumbnails와 네 페이지 전체 ID 도달성을 유지한다. 초기 JS/CSS `83.46/32.86kB` gzip, actual LCP `732ms`, CLS `0`, interaction max `142.8ms`, diagnostics/issue 0이다.
+- **실측 기준:** actual 120은 보기별 최대 36 thumbnails와 네 페이지 전체 ID 도달성을 유지한다. 초기 JS/CSS 기준선은 `88.60/32.86kB` gzip이고 Blog progress는 375/768/1024px의 실제 responsive scroll owner에서 각각 0→100과 ARIA를 확인한다. 기존 Chrome interaction 수치는 CDP 왕복이 섞여 FIN-F006 근거에서 제외했다. 새 hard gate는 페이지 내부 input dispatch부터 operation별 state/DOM 정착까지의 제품 처리시간을 재며, 독립 3회 모두 median 120ms/max 200ms 이하여야 한다. 정착 뒤 2 animation frames와 Long Task는 별도 presentation 진단으로 남겨 제품 처리와 frame scheduler 변동을 구분한다.
 
 ### 2.7 Actual 120 Expansion Boundary
 
@@ -308,9 +308,34 @@ Located at the topmost header of the detail modal:
   - `[ 🎵 Media Player ]`: Track vinyl/cassette artwork, play/pause controls, interactive scrub bar, visualizer.
   - `[ 💬 Chat & DM ]`: Multi-channel sidebar, chat bubble stream, emoji reactions, message composer.
 - **Device Switcher:** Desktop uses the standard preview width (up to `860px`); Mobile constrains every current `.archetype-unit` and legacy `.mockup-unit` preview to a `380px` phone frame, applies compact Web/Storefront/Dashboard/Chat layouts without relying on the outer browser breakpoint, and preserves the rendered interaction state.
+- **Zoom Switcher:** 80/100/120% 중 활성 버튼의 `data-scale`이 단일 진실 원천이다. 스타일 또는 아키타입 전환으로 inner renderer가 교체되면 hydration 뒤 같은 scale과 `center top` origin을 새 root에 다시 적용한다.
+
+#### 4.2.1 Stateful renderer transition matrix
+
+| Archetype | 스타일 전환 시 보존 | 새 스타일에서 다시 생성 |
+| --- | --- | --- |
+| Game | HP/coin/combo/target HP/level/kills | style name, renderer markup, motion/effect layer |
+| Web | 현재 tab과 input/select/checkbox 값 | style-specific component renderer와 copy |
+| Mobile | 표준 form control 값 | style copy와 visual structure |
+| E-commerce | quantity, color, size, cart | product/style copy, checkout dialog는 닫힘 |
+| Blog | claps, reading mode, comments | article/style copy, progress owner binding |
+| Dashboard | filter, sort와 행 기준 데이터 | style labels와 initial visual shell |
+| Media | play, progress, volume, queue index | track/style labels와 spectrum binding |
+| Chat | channel, 최대 50개 동적 user/bot message | style/channel shell과 motion |
+
+전환 순서는 `snapshot → teardown → 새 renderer HTML → data-theme/data-archetype → hydrate(snapshot) → Inspector refresh`다. `#mockup-viewport` identity, device class, scroll layout은 유지하지만 renderer root identity는 유지 대상으로 보지 않는다.
+
+#### 4.2.2 E-commerce checkout and Blog reading states
+
+- `바로 구매`와 cart checkout은 source를 구분한다. empty cart의 checkout은 disabled/안내 상태이고 direct buy는 quantity 1 이상이면 modal summary를 연다.
+- Checkout modal은 제목·source·수량·합계, 확인·취소를 제공한다. initial focus는 취소 control, Tab은 dialog 내부를 순환하고 Escape/취소는 opener로 복원한다. cart는 확인 완료 때만 비운다.
+- Blog reading mode는 버튼 `aria-pressed`, accessible label, light background와 dark text를 함께 바꾼다. progress bar는 `role="progressbar"`, `aria-valuemin/max/now`를 제공하고 1024px 이하에서는 `.modal-body-grid`, 그보다 넓으면 `.mockup-viewport`의 실제 scroll position을 사용한다.
+- Blog comment와 Chat message는 500자, 동적 history는 50개를 상한으로 하며 오류 status는 입력과 연결한다.
 
 ### 4.3 Right Column: Live Parameter Tweak Sliders & Reactive Design Spec Inspector
 - **Interactive Palette Cards:** HEX click-to-copy with audio ping and toast notice.
+- **표시·전달 경계:** 제목/배지, palette grid와 32px 이상 swatch, custom range track/thumb, Inspector와 장단점 card 규칙은 `audit9-detail.css`에 있고 Detail component chunk와 함께 지연 로드한다. 각 카드의 flex 축소를 금지해 카드가 아니라 우측 sidebar가 스크롤을 소유한다. 640px 이하에서는 palette와 장단점 grid를 한 열로 바꾸고 조작 target은 최소 44px을 유지한다.
+- **접근성·상태:** palette는 native button과 visible focus를 사용하고 range는 연결된 label/현재값을 유지한다. CSS 누락 회귀는 Detail sidebar markup의 모든 class가 실제 loaded stylesheet selector를 갖는지 Node에서 검사하며, Chrome은 computed style뿐 아니라 제목·설명의 실제 bounding box가 hero card 안에 보이는지도 검사한다.
 - **Live Parameter Tweak Sliders (Live CSS Variables Binding):**
   - Border Radius slider (`0px` ~ `64px`)
   - Border Width slider (`0px` ~ `12px`)

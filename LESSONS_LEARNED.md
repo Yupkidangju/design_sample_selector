@@ -91,3 +91,15 @@
 - 기존 QA에서 “총 catalog 36”과 “한 페이지 DOM 36”을 같은 상수로 취급한 문제가 드러났다. 총량·현재 결과·visible window를 별도 필드로 검증하면 확장 후에도 기존 bounded UI 계약을 약화하지 않는다.
 
 다음 고정 수량의 미구현 Wave는 없다. 후속은 legacy 24의 실제 출처·접근성 부채 정리, 사용자 피드백 기반 개별 시안 심화 또는 120종 이후 새 사양 중 하나로 시작한다.
+
+## 2026-08-31 — Multi Audit 9 remediation
+
+**근거:** `docs/multi_audit/9/final_audit_report_9.md`, `docs/multi_audit/9/re_audit_evidence_9.md`, `tests/auditRemediation9.test.js`, `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/report.json`
+
+- “DOM을 보존한다”와 “선택마다 distinct renderer를 보여 준다”는 같은 구현 계약이 아니다. 바깥 viewport identity와 사용자 state만 보존하고 inner renderer는 새 스타일에서 재생성해야 renderer·motion·Inspector가 한 canonical ID를 가리킨다.
+- state snapshot에 DOM-derived markup을 넣으면 이전 스타일 콘텐츠가 데이터처럼 새 renderer에 이식된다. Dashboard의 row HTML처럼 style-owned 값은 제외하고 filter/sort 같은 사용자 의도만 새 markup에 재적용해야 한다.
+- breadth 행렬이 1,920상태를 통과해도 실제 A→B event transition, nested dialog Escape, detached opener와 computed theme는 놓칠 수 있다. 생성 행렬과 stateful 사용자 흐름을 같은 Chrome gate 안에서 별도 assertion으로 유지해야 한다.
+- flex scroll container는 자식의 기본 `flex-shrink: 1` 때문에 overflow 없이도 콘텐츠를 접어 버릴 수 있다. selector와 font-size만 보지 말고 제목·설명의 실제 bounding box가 카드 안에 보이는지 함께 검사해야 한다.
+- timer cleanup 배열에 이미 완료된 short timeout의 closure를 계속 쌓으면 teardown 시점에는 누수가 아니어도 장기 세션 메모리가 커진다. 완료 시 owner set에서 스스로 제거하고 동일 목적의 chat reply·checkout은 coalescing/WeakMap으로 한 개만 소유하게 하는 편이 명확하다.
+- Crostini frame settlement는 scheduler 변동을 포함한다. CDP round-trip뿐 아니라 DOM 정착 뒤 2-frame wall time도 제품 처리 hard metric과 분리하고 `processingMs`·`presentation`·`endToEndMs`·Long Task를 함께 기록해야 한다. 기준값을 낮추지 않은 동일 조건 직렬 3회로 판정한다.
+- 배포 플랫폼을 모르는 상태에서 meta CSP를 임의 추가하면 현재 inline style·dynamic CSS·Google Fonts 계약을 오히려 깨뜨릴 수 있다. 저장소 범위의 미확정을 솔직히 남기고 실제 response header가 있는 배포 후보에서 별도 종결하는 것이 안전하다.

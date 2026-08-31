@@ -145,13 +145,13 @@ export function renderSelectionDock(container) {
   function renderConfirmSheet(sub, state) {
     const tweaks = state.liveTweaks;
     return `
-      <div class="confirm-sheet" role="dialog" aria-label="확정된 디자인">
+      <div class="confirm-sheet" role="region" aria-label="확정된 디자인">
         <div class="confirm-sheet-head">
           <h3>이 스타일로 확정했습니다</h3>
           <button class="dock-btn ghost" id="confirm-sheet-close">접기</button>
         </div>
         <div class="confirm-sheet-body">
-          <div class="confirm-preview" id="confirm-preview" aria-busy="true">
+          <div class="confirm-preview" id="confirm-preview" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
             <p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>
           </div>
           <div class="confirm-facts">

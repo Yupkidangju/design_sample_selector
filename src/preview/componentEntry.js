@@ -10,7 +10,8 @@ import { EXPANSION_RENDERER_DEFINITIONS } from './renderers-expansion.js';
 if (typeof document !== 'undefined') {
   await Promise.all([
     import('../styles/themeTokensExpansion.css'),
-    import('../styles/expansion-preview.css')
+    import('../styles/expansion-preview.css'),
+    import('../styles/audit9-detail.css')
   ]);
 }
 

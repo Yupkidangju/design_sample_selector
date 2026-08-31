@@ -19,6 +19,8 @@ export function bindDiscoveryUrlState(stateManager, browserWindow = globalThis.w
   if (!canBind(stateManager, browserWindow)) return () => {};
 
   let applyingUrl = true;
+  let disposed = false;
+  let pendingPopstateTimer = null;
   stateManager.setState(parseDiscoverySearch(browserWindow.location.search));
   applyingUrl = false;
 
@@ -33,16 +35,27 @@ export function bindDiscoveryUrlState(stateManager, browserWindow = globalThis.w
 
   const unsubscribe = stateManager.subscribe(state => writeCurrentUrl(state));
   const handlePopState = () => {
-    setTimeout(() => {
+    if (pendingPopstateTimer !== null) clearTimeout(pendingPopstateTimer);
+    pendingPopstateTimer = setTimeout(() => {
+      pendingPopstateTimer = null;
+      if (disposed) return;
       applyingUrl = true;
-      stateManager.setState(parseDiscoverySearch(browserWindow.location.search));
-      applyingUrl = false;
+      try {
+        stateManager.setState(parseDiscoverySearch(browserWindow.location.search));
+      } finally {
+        applyingUrl = false;
+      }
       writeCurrentUrl(stateManager.getState());
     }, 0);
   };
 
   browserWindow.addEventListener('popstate', handlePopState);
   return () => {
+    disposed = true;
+    if (pendingPopstateTimer !== null) {
+      clearTimeout(pendingPopstateTimer);
+      pendingPopstateTimer = null;
+    }
     unsubscribe();
     browserWindow.removeEventListener('popstate', handlePopState);
   };

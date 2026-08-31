@@ -8,7 +8,7 @@ import {
   writeFileSync
 } from 'node:fs';
 import { createServer } from 'node:net';
-import { tmpdir } from 'node:os';
+import { cpus, freemem, loadavg, tmpdir, totalmem } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,7 +41,11 @@ const ARCHETYPE_IDS = Object.freeze([
 const WEB_TABS = Object.freeze(['hero', 'widget', 'form', 'pricing']);
 const VIEW_MODES = Object.freeze(['GRID', 'BENTO', 'SPECTRUM']);
 const RESPONSIVE_WIDTHS = Object.freeze([375, 768, 1024, 1440]);
+const BLOG_PROGRESS_WIDTHS = Object.freeze([375, 768, 1024]);
 const REPRESENTATIVE_ID = 'spatial-glass-ui';
+const TRANSITION_ID = 'ai-native-gradient';
+const REPRESENTATIVE_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === REPRESENTATIVE_ID)?.name.en} System`;
+const TRANSITION_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === TRANSITION_ID)?.name.en} System`;
 const EXPECTED_STATE_COUNT = ALL_STYLES.length * ARCHETYPE_IDS.length * 2;
 
 const artifactOption = process.argv.find(argument => argument.startsWith('--artifacts='));
@@ -60,6 +64,9 @@ const runtimeSignals = {
 const issues = [];
 const requestUrls = [];
 const interactionSamples = [];
+const presentationSamples = [];
+const endToEndSamples = [];
+const operationSamples = [];
 const report = {
   checkedAt: new Date().toISOString(),
   chromeVersion: null,
@@ -77,6 +84,17 @@ const report = {
   matrix: null,
   responsiveWidths: [],
   representativeDetail: null,
+  audit9: {
+    lazyDetail: null,
+    statefulTransition: null,
+    detailSidebar: null,
+    audioPreInit: null,
+    zoom: null,
+    checkout: null,
+    blog: null,
+    dashboard: null,
+    keyboard: null
+  },
   split: null,
   peek: null,
   dock: null,
@@ -84,6 +102,12 @@ const report = {
   vitals: null,
   lazyCss: null,
   interactions: null,
+  hostLoad: {
+    platform: process.platform,
+    architecture: process.arch,
+    logicalCpuCount: cpus().length,
+    samples: []
+  },
   runtimeSignals,
   screenshots: [],
   issues
@@ -103,11 +127,54 @@ function check(condition, message) {
   if (!condition) issues.push(message);
 }
 
+function recordInteraction(operation, value) {
+  const measurement = value && typeof value === 'object' ? value : null;
+  const processingMs = Number(measurement?.processingMs ?? value);
+  const endToEndMs = Number(measurement?.endToEndMs ?? processingMs);
+  const postSettleFramesMs = Number(measurement?.postSettleFramesMs ?? 0);
+  if (!Number.isFinite(processingMs) || !Number.isFinite(endToEndMs)) return;
+  interactionSamples.push(processingMs);
+  endToEndSamples.push(endToEndMs);
+  if (Number.isFinite(postSettleFramesMs)) presentationSamples.push(postSettleFramesMs);
+  operationSamples.push({
+    operation,
+    processingMs: Number(processingMs.toFixed(2)),
+    endToEndMs: Number(endToEndMs.toFixed(2)),
+    ...(measurement ? {
+      handlerMs: Number(measurement.handlerMs.toFixed(2)),
+      settleMs: Number(measurement.settleMs.toFixed(2)),
+      postSettleFramesMs: Number(postSettleFramesMs.toFixed(2)),
+      longTasks: measurement.longTasks
+    } : {})
+  });
+}
+
+function sampleHostLoad(stage) {
+  const memoryTotalBytes = totalmem();
+  const memoryFreeBytes = freemem();
+  const loadAverage = loadavg().map(value => Number(value.toFixed(2)));
+  report.hostLoad.samples.push({
+    stage,
+    sampledAt: new Date().toISOString(),
+    loadAverage,
+    loadAveragePerCpu: loadAverage.map(value => Number((value / report.hostLoad.logicalCpuCount).toFixed(3))),
+    memoryTotalBytes,
+    memoryFreeBytes,
+    memoryUsedRatio: Number(((memoryTotalBytes - memoryFreeBytes) / memoryTotalBytes).toFixed(3))
+  });
+}
+
 function summarizeTimings(samples) {
   const normalized = samples.map(Number).filter(Number.isFinite);
+  const ordered = [...normalized].sort((left, right) => left - right);
+  const midpoint = Math.floor(ordered.length / 2);
+  const median = ordered.length % 2
+    ? ordered[midpoint]
+    : ((ordered[midpoint - 1] || 0) + (ordered[midpoint] || 0)) / 2;
   return {
     count: normalized.length,
     averageMs: Number((normalized.reduce((sum, value) => sum + value, 0) / Math.max(1, normalized.length)).toFixed(2)),
+    medianMs: Number(median.toFixed(2)),
     maxMs: Number(Math.max(0, ...normalized).toFixed(2))
   };
 }
@@ -283,6 +350,85 @@ async function clickSelector(selector, { double = false } = {}) {
   })()`);
 }
 
+async function measurePageInteraction(
+  selector,
+  settledExpression,
+  { double = false, timeout = 15_000 } = {}
+) {
+  const measurement = await evaluate(`(async () => {
+    const element = document.querySelector(${JSON.stringify(selector)});
+    if (!element) return { found: false, settled: false, processingMs: null, endToEndMs: null };
+    const nextFrame = () => new Promise(requestAnimationFrame);
+    const isSettled = () => Boolean(${settledExpression});
+    const observedLongTasks = [];
+    const longTaskObserver = PerformanceObserver.supportedEntryTypes?.includes('longtask')
+      ? new PerformanceObserver(list => observedLongTasks.push(...list.getEntries()))
+      : null;
+    longTaskObserver?.observe({ type: 'longtask', buffered: false });
+
+    element.scrollIntoView({ block: 'center', inline: 'center' });
+    await nextFrame();
+    const started = performance.now();
+    if (${double}) {
+      element.dispatchEvent(new MouseEvent('dblclick', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      }));
+    } else {
+      element.click();
+    }
+    const afterDispatch = performance.now();
+
+    const deadline = started + ${Number(timeout)};
+    let settled = isSettled();
+    while (!settled && performance.now() < deadline) {
+      await nextFrame();
+      settled = isSettled();
+    }
+    const settledAt = performance.now();
+    await nextFrame();
+    await nextFrame();
+    const finished = performance.now();
+    observedLongTasks.push(...(longTaskObserver?.takeRecords() || []));
+    longTaskObserver?.disconnect();
+    return {
+      found: true,
+      settled,
+      processingMs: settledAt - started,
+      endToEndMs: finished - started,
+      handlerMs: afterDispatch - started,
+      settleMs: settledAt - afterDispatch,
+      postSettleFramesMs: finished - settledAt,
+      longTasks: observedLongTasks
+        .filter(entry => entry.startTime >= started && entry.startTime <= finished)
+        .map(entry => ({
+          startTime: Number(entry.startTime.toFixed(2)),
+          durationMs: Number(entry.duration.toFixed(2))
+        }))
+    };
+  })()`);
+
+  if (!measurement?.found) throw new Error(`interaction 대상 누락: ${selector}`);
+  if (!measurement.settled) throw new Error(`interaction 정착 시간 초과: ${selector}`);
+  return measurement;
+}
+
+async function pressKey(key, code, windowsVirtualKeyCode) {
+  await client.send('Input.dispatchKeyEvent', {
+    type: 'rawKeyDown',
+    key,
+    code,
+    windowsVirtualKeyCode
+  });
+  await client.send('Input.dispatchKeyEvent', {
+    type: 'keyUp',
+    key,
+    code,
+    windowsVirtualKeyCode
+  });
+}
+
 async function setViewport(width, height = 1_050) {
   await client.send('Emulation.setDeviceMetricsOverride', {
     width,
@@ -296,19 +442,56 @@ async function setViewport(width, height = 1_050) {
   await sleep(100);
 }
 
-async function setSearch(value) {
-  const duration = await evaluate(`(async () => {
+async function setSearch(value, { record = true } = {}) {
+  const measurement = await evaluate(`(async () => {
+    const { appState } = await import('/src/state/appState.js');
     const input = document.querySelector('#search-input');
     if (!input) throw new Error('검색 input 누락');
+    const nextFrame = () => new Promise(requestAnimationFrame);
+    const expected = ${JSON.stringify(value)};
+    const observedLongTasks = [];
+    const longTaskObserver = PerformanceObserver.supportedEntryTypes?.includes('longtask')
+      ? new PerformanceObserver(list => observedLongTasks.push(...list.getEntries()))
+      : null;
+    longTaskObserver?.observe({ type: 'longtask', buffered: false });
     const started = performance.now();
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-    setter.call(input, ${JSON.stringify(value)});
+    setter.call(input, expected);
     input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
-    await new Promise(requestAnimationFrame);
-    await new Promise(requestAnimationFrame);
-    return performance.now() - started;
+    const afterDispatch = performance.now();
+    let settled = appState.getState().searchQuery === expected
+      && document.querySelector('#search-input')?.value === expected
+      && Boolean(document.querySelector('#main-root .gallery-wrapper, #main-root .empty-results-box'));
+    const deadline = started + 15_000;
+    while (!settled && performance.now() < deadline) {
+      await nextFrame();
+      settled = appState.getState().searchQuery === expected
+        && document.querySelector('#search-input')?.value === expected
+        && Boolean(document.querySelector('#main-root .gallery-wrapper, #main-root .empty-results-box'));
+    }
+    const settledAt = performance.now();
+    await nextFrame();
+    await nextFrame();
+    const finished = performance.now();
+    observedLongTasks.push(...(longTaskObserver?.takeRecords() || []));
+    longTaskObserver?.disconnect();
+    return {
+      settled,
+      processingMs: settledAt - started,
+      endToEndMs: finished - started,
+      handlerMs: afterDispatch - started,
+      settleMs: settledAt - afterDispatch,
+      postSettleFramesMs: finished - settledAt,
+      longTasks: observedLongTasks
+        .filter(entry => entry.startTime >= started && entry.startTime <= finished)
+        .map(entry => ({
+          startTime: Number(entry.startTime.toFixed(2)),
+          durationMs: Number(entry.duration.toFixed(2))
+        }))
+    };
   })()`);
-  interactionSamples.push(duration);
+  if (!measurement?.settled) throw new Error(`검색 interaction 정착 시간 초과: ${value}`);
+  if (record) recordInteraction(value ? `search:${value}` : 'search:clear', measurement);
 }
 
 async function captureScreenshot(name) {
@@ -376,6 +559,74 @@ async function verifyInitialAndGallery() {
   check(report.initial.header120 && report.initial.filter120, 'header/filter actual 120 표기 실패');
   check(report.initial.overflow <= 1, `초기 overflow ${report.initial.overflow}px`);
 
+  const audioBeforeFirstPlay = await evaluate(`(async () => {
+    const [{ synthAudio }, { appState }] = await Promise.all([
+      import('/src/audio/synthAudio.js'),
+      import('/src/state/appState.js')
+    ]);
+    const input = document.querySelector('#input-audio-volume');
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    const initializedBefore = synthAudio.initialized;
+    setter.call(input, '0');
+    input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+    return {
+      initializedBefore,
+      stateBeforeInit: appState.getState().audio.volume,
+      sliderBeforeInit: Number(input.value)
+    };
+  })()`);
+  await clickSelector('#btn-audio-play');
+  await waitFor(
+    `document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
+    '최초 volume 0 BGM 재생'
+  );
+  const audioAfterFirstPlay = await evaluate(`(async () => {
+    const [{ synthAudio }, { appState }] = await Promise.all([
+      import('/src/audio/synthAudio.js'),
+      import('/src/state/appState.js')
+    ]);
+    await new Promise(requestAnimationFrame);
+    return {
+      initialized: synthAudio.initialized,
+      playing: synthAudio.isPlaying,
+      stateVolume: appState.getState().audio.volume,
+      gain: synthAudio.masterGain?.gain?.value ?? null
+    };
+  })()`);
+  await clickSelector('#btn-audio-play');
+  await waitFor(
+    `!document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
+    'BGM probe 정지'
+  );
+  const audioRestored = await evaluate(`(async () => {
+    const [{ appState }] = await Promise.all([import('/src/state/appState.js')]);
+    const input = document.querySelector('#input-audio-volume');
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    setter.call(input, '0.5');
+    input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+    return {
+      stateVolume: appState.getState().audio.volume,
+      sliderVolume: Number(input.value)
+    };
+  })()`);
+  report.audit9.audioPreInit = {
+    beforeFirstPlay: audioBeforeFirstPlay,
+    afterFirstPlay: audioAfterFirstPlay,
+    restored: audioRestored
+  };
+  check(
+    audioBeforeFirstPlay.initializedBefore === false
+      && audioBeforeFirstPlay.stateBeforeInit === 0
+      && audioBeforeFirstPlay.sliderBeforeInit === 0
+      && audioAfterFirstPlay.initialized
+      && audioAfterFirstPlay.playing
+      && audioAfterFirstPlay.stateVolume === 0
+      && audioAfterFirstPlay.gain === 0
+      && audioRestored.stateVolume === 0.5
+      && audioRestored.sliderVolume === 0.5,
+    '최초 AudioContext 생성 전 volume 상태/gain 동기화 실패'
+  );
+
   // Core Web Vitals는 QA의 페이지·모달 전환이 시작되기 전 초기 로드 구간에서 동결한다.
   await sleep(400);
   report.vitals = await evaluate(`(() => {
@@ -397,13 +648,18 @@ async function verifyInitialAndGallery() {
   check(initialExpansionCss.length === 0, `초기 경로에서 expansion CSS 요청: ${initialExpansionCss.join(', ')}`);
 
   for (const mode of VIEW_MODES) {
-    const started = await evaluate('performance.now()');
-    await clickSelector(`.view-mode-btn[data-mode="${mode}"]`);
+    const isActiveMode = await evaluate(
+      `document.querySelector('.view-mode-btn[data-mode="${mode}"]')?.getAttribute('aria-pressed') === 'true'`
+    );
+    const duration = isActiveMode ? null : await measurePageInteraction(
+      `.view-mode-btn[data-mode="${mode}"]`,
+      `document.querySelector('.view-mode-btn[data-mode="${mode}"]')?.getAttribute('aria-pressed') === 'true'`
+    );
     await waitFor(
       `document.querySelector('.view-mode-btn[data-mode="${mode}"]')?.getAttribute('aria-pressed') === 'true'`,
       `${mode} 보기`
     );
-    interactionSamples.push((await evaluate('performance.now()')) - started);
+    if (!isActiveMode) recordInteraction(`gallery:view:${mode}`, duration);
 
     const ids = [];
     const expansionThumbIds = [];
@@ -427,13 +683,18 @@ async function verifyInitialAndGallery() {
       expansionThumbIds.push(...page.expansionThumbIds);
       check(page.overflow <= 1, `${mode} ${pageCount}페이지 overflow ${page.overflow}px`);
       if (!page.canNext) break;
-      const pageStarted = await evaluate('performance.now()');
-      await clickSelector('#main-root [data-gallery-page="next"]');
+      const pageDuration = await measurePageInteraction(
+        '#main-root [data-gallery-page="next"]',
+        `document.activeElement?.classList.contains('gallery-page-status')`
+      );
       await waitFor(
         `document.activeElement?.classList.contains('gallery-page-status')`,
         `${mode} 다음 페이지`
       );
-      interactionSamples.push((await evaluate('performance.now()')) - pageStarted);
+      recordInteraction(
+        `gallery:${mode}:page:${pageCount}->${pageCount + 1}`,
+        pageDuration
+      );
     }
     const result = {
       mode,
@@ -598,7 +859,7 @@ async function verifyMatrixAndLazyCss() {
 }
 
 async function verifyResponsive() {
-  await setSearch('');
+  await setSearch('', { record: false });
   await clickSelector('.view-mode-btn[data-mode="GRID"]');
   await waitFor(`document.querySelectorAll('#main-root [data-result-id]').length === 36`, '반응형 첫 페이지');
   for (const width of RESPONSIVE_WIDTHS) {
@@ -668,16 +929,229 @@ async function verifyRepresentativeFlows() {
   const tileSelector = `.bento-item-card[data-sub-id="${REPRESENTATIVE_ID}"]`;
   await waitFor(`Boolean(document.querySelector(${JSON.stringify(tileSelector)}))`, '대표 신규 tile');
 
-  const detailStarted = await evaluate('performance.now()');
+  await client.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 180,
+    downloadThroughput: -1,
+    uploadThroughput: -1
+  });
+  await evaluate(`document.querySelector(${JSON.stringify(tileSelector)})?.focus()`);
+  const injectedStarted = await evaluate('performance.now()');
   await clickSelector(tileSelector, { double: true });
+  report.audit9.lazyDetail = await evaluate(`(() => ({
+    dialog: document.querySelector('.lazy-preview-state')?.getAttribute('role') || null,
+    busy: document.querySelector('.lazy-preview-state')?.getAttribute('aria-busy') || null,
+    activeCancel: document.activeElement?.hasAttribute('data-lazy-detail-cancel') || false,
+    openerId: document.querySelector(${JSON.stringify(tileSelector)})?.dataset.subId || null
+  }))()`);
+  report.audit9.lazyDetail.loadingCaptureMs = Number(
+    ((await evaluate('performance.now()')) - injectedStarted).toFixed(2)
+  );
+  await client.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 0,
+    downloadThroughput: -1,
+    uploadThroughput: -1
+  });
+  check(
+    report.audit9.lazyDetail.dialog === 'dialog'
+      && report.audit9.lazyDetail.busy === 'true'
+      && report.audit9.lazyDetail.activeCancel,
+    'Detail lazy loading focus/dialog 계약 실패'
+  );
+  await pressKey('Escape', 'Escape', 27);
+  await waitFor(
+    `!document.querySelector('.lazy-preview-state')
+      && document.activeElement?.dataset.subId === '${REPRESENTATIVE_ID}'`,
+    'lazy Detail Escape/focus restore'
+  );
+  report.audit9.lazyDetail.escapeClosed = true;
+  report.audit9.lazyDetail.openerRestored = true;
+
+  const detailDuration = await measurePageInteraction(
+    tileSelector,
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`,
+    { double: true, timeout: 15_000 }
+  );
   await waitFor(
     `document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`,
     '대표 신규 Detail',
     15_000
   );
-  interactionSamples.push((await evaluate('performance.now()')) - detailStarted);
+  report.audit9.lazyDetail.actualLoadMs = Number(detailDuration.processingMs.toFixed(2));
+  recordInteraction('detail:open', detailDuration);
+
+  report.audit9.detailSidebar = await evaluate(`(() => {
+    const card = document.querySelector('.palette-swatch-card');
+    const swatch = document.querySelector('.swatch-color');
+    const slider = document.querySelector('.tweak-slider');
+    const title = document.querySelector('.style-title');
+    const description = document.querySelector('.style-desc');
+    const hero = document.querySelector('.style-hero-summary');
+    const block = document.querySelector('.sidebar-block');
+    const paletteGrid = document.querySelector('.palette-swatches-grid');
+    const cardStyle = getComputedStyle(card);
+    const swatchRect = swatch.getBoundingClientRect();
+    const sliderStyle = getComputedStyle(slider);
+    const heroRect = hero.getBoundingClientRect();
+    const titleRect = title.getBoundingClientRect();
+    const descriptionRect = description.getBoundingClientRect();
+    return {
+      cardDisplay: cardStyle.display,
+      cardBackground: cardStyle.backgroundColor,
+      cardHeight: Number(card.getBoundingClientRect().height.toFixed(1)),
+      swatchWidth: Number(swatchRect.width.toFixed(1)),
+      swatchHeight: Number(swatchRect.height.toFixed(1)),
+      swatchColor: getComputedStyle(swatch).backgroundColor,
+      sliderAppearance: sliderStyle.appearance || sliderStyle.webkitAppearance,
+      sliderHeight: Number(slider.getBoundingClientRect().height.toFixed(1)),
+      titleFontSize: Number.parseFloat(getComputedStyle(title).fontSize),
+      heroHeight: Number(heroRect.height.toFixed(1)),
+      heroScrollHeight: hero.scrollHeight,
+      titleVisible: titleRect.height > 0
+        && titleRect.top >= heroRect.top
+        && titleRect.bottom <= heroRect.bottom + 1,
+      descriptionVisible: descriptionRect.height > 0
+        && descriptionRect.top >= heroRect.top
+        && descriptionRect.bottom <= heroRect.bottom + 1,
+      blockBorderStyle: getComputedStyle(block).borderTopStyle,
+      paletteColumns: getComputedStyle(paletteGrid).gridTemplateColumns
+    };
+  })()`);
+  check(
+    report.audit9.detailSidebar.cardDisplay === 'grid'
+      && report.audit9.detailSidebar.cardBackground !== 'rgba(0, 0, 0, 0)'
+      && report.audit9.detailSidebar.cardHeight >= 50
+      && report.audit9.detailSidebar.swatchWidth >= 32
+      && report.audit9.detailSidebar.swatchHeight >= 32
+      && report.audit9.detailSidebar.swatchColor !== 'rgba(0, 0, 0, 0)'
+      && report.audit9.detailSidebar.sliderAppearance === 'none'
+      && report.audit9.detailSidebar.sliderHeight >= 19
+      && report.audit9.detailSidebar.titleFontSize >= 22
+      && report.audit9.detailSidebar.titleVisible
+      && report.audit9.detailSidebar.descriptionVisible
+      && report.audit9.detailSidebar.blockBorderStyle === 'solid'
+      && report.audit9.detailSidebar.paletteColumns !== 'none',
+    '공통 Detail 사이드바 computed presentation 실패'
+  );
+
+  const gameBefore = await evaluate(`(() => {
+    const viewport = document.querySelector('#mockup-viewport');
+    const renderer = viewport?.firstElementChild;
+    const target = viewport?.querySelector('#game-target');
+    window.__dssAudit9Viewport = viewport;
+    window.__dssAudit9Renderer = renderer;
+    target?.focus();
+    return {
+      coin: viewport?.querySelector('#game-coin-count')?.textContent.trim() || null,
+      motion: [...(renderer?.classList || [])].filter(name => name.startsWith('motion-')),
+      targetFocused: document.activeElement === target
+    };
+  })()`);
+  await pressKey('Enter', 'Enter', 13);
+  const gameAfterKeyboard = await waitFor(
+    `document.querySelector('#game-coin-count')?.textContent.trim() !== ${JSON.stringify(gameBefore.coin)}
+      && document.querySelector('#game-coin-count')?.textContent.trim()`,
+    'Game role button Enter'
+  );
+
+  const transitionDuration = await measurePageInteraction(
+    `.top-style-chip[data-sub-id="${TRANSITION_ID}"]`,
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
+      && (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브')`
+  );
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
+      && (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브')`,
+    'stateful renderer 전환'
+  );
+  recordInteraction(
+    `detail:style:${REPRESENTATIVE_ID}->${TRANSITION_ID}`,
+    transitionDuration
+  );
+  const transitioned = await evaluate(`(() => {
+    const viewport = document.querySelector('#mockup-viewport');
+    const renderer = viewport?.firstElementChild;
+    return {
+      viewportIdentity: window.__dssAudit9Viewport === viewport,
+      rendererRebuilt: window.__dssAudit9Renderer !== renderer,
+      theme: viewport?.dataset.theme || null,
+      coin: viewport?.querySelector('#game-coin-count')?.textContent.trim() || null,
+      motion: [...(renderer?.classList || [])].filter(name => name.startsWith('motion-')),
+      styleText: viewport?.querySelector('.hud-player-level')?.textContent.trim() || '',
+      inspectorUpdated: (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브'),
+      selectedChip: document.querySelector('.top-style-chip[aria-selected="true"]')?.dataset.subId || null
+    };
+  })()`);
+
+  await clickSelector(`.top-style-chip[data-sub-id="${REPRESENTATIVE_ID}"]`);
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`,
+    '대표 style 복귀'
+  );
+  const returnedCoin = await evaluate(`document.querySelector('#game-coin-count')?.textContent.trim() || null`);
+  report.audit9.statefulTransition = {
+    from: REPRESENTATIVE_ID,
+    to: TRANSITION_ID,
+    gameBefore,
+    gameAfterKeyboard,
+    transitioned,
+    returnedCoin
+  };
+  check(gameBefore.targetFocused && gameAfterKeyboard !== gameBefore.coin, 'Game role button Enter 동작 실패');
+  check(transitioned.viewportIdentity && transitioned.rendererRebuilt, 'style 전환 renderer identity 계약 실패');
+  check(transitioned.theme === TRANSITION_ID && transitioned.selectedChip === TRANSITION_ID, 'style 전환 theme/selector 불일치');
+  check(transitioned.coin === gameAfterKeyboard && returnedCoin === gameAfterKeyboard, 'style 전환 Game state 소실');
+  check(
+    transitioned.inspectorUpdated
+      && transitioned.styleText.includes('AI 네이티브')
+      && JSON.stringify(transitioned.motion) !== JSON.stringify(gameBefore.motion),
+    'style 전환 renderer text/motion/Inspector 동기화 실패'
+  );
+
+  await clickSelector('.zoom-btn[data-scale="1.2"]');
+  await waitFor(
+    `document.querySelector('#mockup-viewport .archetype-unit, #mockup-viewport .mockup-unit')?.style.transform === 'scale(1.2)'`,
+    '120% Zoom 적용'
+  );
+  await clickSelector(`.top-style-chip[data-sub-id="${TRANSITION_ID}"]`);
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'`,
+    'Zoom style 전환'
+  );
+  const zoomAfterStyleSwap = await evaluate(`(() => ({
+    activeScale: document.querySelector('.zoom-btn.active')?.dataset.scale || null,
+    transform: document.querySelector('#mockup-viewport .archetype-unit, #mockup-viewport .mockup-unit')?.style.transform || null
+  }))()`);
+  await clickSelector(`.top-style-chip[data-sub-id="${REPRESENTATIVE_ID}"]`);
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`,
+    'Zoom 대표 style 복귀'
+  );
+
   await clickSelector('.archetype-tab-btn[data-archetype="web"]');
   await waitFor(`Boolean(document.querySelector('.e120-${REPRESENTATIVE_ID}-unit'))`, '대표 신규 Web');
+
+  const zoomAfterArchetype = await evaluate(`(() => ({
+    activeScale: document.querySelector('.zoom-btn.active')?.dataset.scale || null,
+    afterArchetypeSwap: document.querySelector('#mockup-viewport .archetype-unit, #mockup-viewport .mockup-unit')?.style.transform || null
+  }))()`);
+  report.audit9.zoom = {
+    ...zoomAfterArchetype,
+    afterStyleSwap: zoomAfterStyleSwap.transform
+  };
+  check(
+    zoomAfterStyleSwap.activeScale === '1.2'
+      && report.audit9.zoom.activeScale === '1.2'
+      && report.audit9.zoom.afterStyleSwap === 'scale(1.2)'
+      && report.audit9.zoom.afterArchetypeSwap === 'scale(1.2)',
+    'style/archetype renderer 전환 후 Zoom 표시·배율 불일치'
+  );
+  await clickSelector('.zoom-btn[data-scale="1.0"]');
+  await waitFor(
+    `document.querySelector('#mockup-viewport .archetype-unit, #mockup-viewport .mockup-unit')?.style.transform === 'scale(1)'`,
+    'Zoom 100% 복원'
+  );
 
   const desktop = await measureRepresentativeDevice('desktop');
   await captureScreenshot('spatial-glass-ui-desktop');
@@ -695,6 +1169,217 @@ async function verifyRepresentativeFlows() {
   check(desktop.clipped === 0 && mobile.clipped === 0, '대표 Detail control clipping 발생');
   check(desktop.overflow <= 1 && mobile.overflow <= 1, '대표 Detail 가로 overflow 발생');
   check(selectorState.chipCount === 15 && selectorState.selectedCount === 1, '대표 Detail category 15종 selector 실패');
+
+  await clickSelector('.archetype-tab-btn[data-archetype="ecommerce"]');
+  await waitFor(`Boolean(document.querySelector('.archetype-ecommerce'))`, 'E-commerce checkout');
+  const emptyCartDisabled = await evaluate(`document.querySelector('.cart-checkout-btn')?.disabled === true`);
+  await clickSelector('.instant-buy-btn[data-checkout-source="direct"]');
+  await waitFor(`Boolean(document.querySelector('.mock-checkout-dialog'))`, 'direct checkout dialog');
+  report.audit9.checkout = await evaluate(`(() => ({
+    emptyCartDisabled: ${emptyCartDisabled},
+    role: document.querySelector('.mock-checkout-dialog')?.getAttribute('role') || null,
+    modal: document.querySelector('.mock-checkout-dialog')?.getAttribute('aria-modal') || null,
+    activeCancel: document.activeElement?.hasAttribute('data-checkout-cancel') || false,
+    directSummary: (document.querySelector('.mock-checkout-summary')?.textContent || '').includes('바로 구매'),
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+  }))()`);
+  await pressKey('Escape', 'Escape', 27);
+  await waitFor(`!document.querySelector('.mock-checkout-dialog')`, 'checkout Escape close');
+  report.audit9.checkout.openerRestored = await evaluate(
+    `document.activeElement?.matches('.instant-buy-btn[data-checkout-source="direct"]') || false`
+  );
+  check(
+    report.audit9.checkout.emptyCartDisabled
+      && report.audit9.checkout.role === 'dialog'
+      && report.audit9.checkout.modal === 'true'
+      && report.audit9.checkout.activeCancel
+      && report.audit9.checkout.directSummary
+      && report.audit9.checkout.openerRestored,
+    'checkout source/focus/Escape 계약 실패'
+  );
+  check(report.audit9.checkout.overflow <= 1, `checkout overflow ${report.audit9.checkout.overflow}px`);
+
+  await clickSelector('.add-to-cart-btn');
+  await waitFor(
+    `Number(document.querySelector('#shop-cart-badge')?.textContent || 0) > 0
+      && document.querySelector('.cart-checkout-btn')?.disabled === false`,
+    'cart item 추가'
+  );
+  await clickSelector('.cart-checkout-btn[data-checkout-source="cart"]');
+  await waitFor(`Boolean(document.querySelector('.mock-checkout-dialog'))`, 'cart checkout dialog');
+  report.audit9.checkout.cartSummary = await evaluate(
+    `(document.querySelector('.mock-checkout-summary')?.textContent || '').includes('장바구니 결제')`
+  );
+  await clickSelector('.mock-checkout-actions [data-checkout-cancel]');
+  await waitFor(`!document.querySelector('.mock-checkout-dialog')`, 'cart checkout cancel');
+  report.audit9.checkout.cartPreservedAfterCancel = await evaluate(`
+    Number(document.querySelector('#shop-cart-badge')?.textContent || 0) > 0
+      && document.querySelector('.cart-checkout-btn')?.disabled === false
+  `);
+  await clickSelector('.cart-checkout-btn[data-checkout-source="cart"]');
+  await waitFor(`Boolean(document.querySelector('.mock-checkout-dialog'))`, 'cart checkout reopen');
+  await clickSelector('.mock-checkout-actions [data-checkout-confirm]');
+  await waitFor(`!document.querySelector('.mock-checkout-dialog')`, 'cart checkout confirm');
+  report.audit9.checkout.cartClearedAfterConfirm = await evaluate(`
+    document.querySelector('#shop-cart-badge')?.textContent.trim() === '0'
+      && document.querySelector('.cart-checkout-btn')?.disabled === true
+  `);
+  check(
+    report.audit9.checkout.cartSummary
+      && report.audit9.checkout.cartPreservedAfterCancel
+      && report.audit9.checkout.cartClearedAfterConfirm,
+    'cart checkout cancel/confirm 상태 계약 실패'
+  );
+
+  await clickSelector('.archetype-tab-btn[data-archetype="blog"]');
+  await waitFor(`Boolean(document.querySelector('.archetype-blog'))`, 'Blog runtime');
+  await setViewport(768, 1_050);
+  const blogBefore = await evaluate(`(() => {
+    const unit = document.querySelector('.archetype-blog');
+    const style = getComputedStyle(unit);
+    const input = document.querySelector('#blog-comment-input');
+    if (input) input.value = 'audit9-stateful-comment';
+    return {
+      background: style.backgroundColor,
+      color: style.color,
+      maxlength: input?.maxLength || null
+    };
+  })()`);
+  await clickSelector('.comment-submit-btn');
+  await clickSelector('[data-action="blog-reading-mode"]');
+  await waitFor(`document.querySelector('[data-action="blog-reading-mode"]')?.getAttribute('aria-pressed') === 'true'`, 'Blog light mode');
+  await clickSelector(`.top-style-chip[data-sub-id="${TRANSITION_ID}"]`);
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
+      && document.querySelector('[data-action="blog-reading-mode"]')?.getAttribute('aria-pressed') === 'true'
+      && (document.querySelector('#blog-comments-list')?.textContent || '').includes('audit9-stateful-comment')`,
+    'Blog state migration'
+  );
+  const responsiveProgress = [];
+  for (const width of BLOG_PROGRESS_WIDTHS) {
+    await setViewport(width, 1_050);
+    await sleep(40);
+    await evaluate(`(() => {
+      const owner = document.querySelector('.modal-body-grid');
+      if (!owner) return;
+      owner.scrollTop = 0;
+      owner.dispatchEvent(new Event('scroll'));
+    })()`);
+    await waitFor(
+      `document.querySelector('#blog-progress-track')?.getAttribute('aria-valuenow') === '0'`,
+      `Blog ${width}px progress start`
+    );
+    const start = await evaluate(`(() => {
+      const owner = document.querySelector('.modal-body-grid');
+      return {
+        maxScroll: Math.max(0, Math.round((owner?.scrollHeight || 0) - (owner?.clientHeight || 0))),
+        scrollTop: Math.round(owner?.scrollTop || 0),
+        startProgress: Number(document.querySelector('#blog-progress-track')?.getAttribute('aria-valuenow') || -1)
+      };
+    })()`);
+    await evaluate(`(() => {
+      const owner = document.querySelector('.modal-body-grid');
+      if (!owner) return;
+      owner.scrollTop = Math.max(0, owner.scrollHeight - owner.clientHeight);
+      owner.dispatchEvent(new Event('scroll'));
+    })()`);
+    await waitFor(
+      `document.querySelector('#blog-progress-track')?.getAttribute('aria-valuenow') === '100'`,
+      `Blog ${width}px progress end`
+    );
+    const end = await evaluate(`(() => {
+      const owner = document.querySelector('.modal-body-grid');
+      return {
+        scrollTop: Math.round(owner?.scrollTop || 0),
+        endProgress: Number(document.querySelector('#blog-progress-track')?.getAttribute('aria-valuenow') || -1),
+        ariaValueText: document.querySelector('#blog-progress-track')?.getAttribute('aria-valuetext') || null
+      };
+    })()`);
+    responsiveProgress.push({ width, ...start, ...end });
+  }
+  const blogState = await evaluate(`(() => {
+    const unit = document.querySelector('.archetype-blog');
+    const style = getComputedStyle(unit);
+    return {
+      before: ${JSON.stringify(blogBefore)},
+      after: { background: style.backgroundColor, color: style.color },
+      pressed: document.querySelector('[data-action="blog-reading-mode"]')?.getAttribute('aria-pressed') || null,
+      commentPreserved: (document.querySelector('#blog-comments-list')?.textContent || '').includes('audit9-stateful-comment'),
+      dynamicComments: document.querySelectorAll('#blog-comments-list .comment-item.is-runtime').length,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+    };
+  })()`);
+  report.audit9.blog = { ...blogState, responsiveProgress };
+  check(
+    report.audit9.blog.before.maxlength === 500
+      && report.audit9.blog.pressed === 'true'
+      && report.audit9.blog.commentPreserved
+      && report.audit9.blog.dynamicComments === 1,
+    'Blog 입력/light/state migration 계약 실패'
+  );
+  check(
+    report.audit9.blog.before.background !== report.audit9.blog.after.background
+      && report.audit9.blog.before.color !== report.audit9.blog.after.color,
+    'Blog reading mode computed color 변화 없음'
+  );
+  check(
+    report.audit9.blog.responsiveProgress.length === BLOG_PROGRESS_WIDTHS.length
+      && report.audit9.blog.responsiveProgress.every(item => (
+        item.maxScroll > 0
+          && item.scrollTop > 0
+          && item.startProgress === 0
+          && item.endProgress === 100
+          && item.ariaValueText === '100% 읽음'
+      )),
+    'Blog 375/768/1024px scroll owner/progress 0→100 실패'
+  );
+  check(report.audit9.blog.overflow <= 1, `Blog responsive overflow ${report.audit9.blog.overflow}px`);
+  await clickSelector(`.top-style-chip[data-sub-id="${REPRESENTATIVE_ID}"]`);
+  await waitFor(`document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`, 'Blog 대표 style 복귀');
+  await setViewport(1440, 1_100);
+
+  await clickSelector('.archetype-tab-btn[data-archetype="dashboard"]');
+  await waitFor(`Boolean(document.querySelector('.archetype-dashboard'))`, 'Dashboard runtime');
+  await evaluate(`(() => {
+    const input = document.querySelector('.table-filter-input');
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+    setter.call(input, 'COMPLETED');
+    input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+  })()`);
+  await clickSelector('.dash-sort-btn[data-sort="project"]');
+  await waitFor(
+    `document.querySelectorAll('#dash-table-body tr').length === 2
+      && document.querySelector('.dash-sort-btn[data-sort="project"]')?.dataset.dir === '1'`,
+    'Dashboard filter/sort 설정'
+  );
+  await clickSelector(`.top-style-chip[data-sub-id="${TRANSITION_ID}"]`);
+  await waitFor(
+    `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
+      && document.querySelector('.table-filter-input')?.value === 'COMPLETED'
+      && document.querySelectorAll('#dash-table-body tr').length === 2`,
+    'Dashboard state migration'
+  );
+  report.audit9.dashboard = await evaluate(`(() => {
+    const bodyText = document.querySelector('#dash-table-body')?.textContent || '';
+    const sortButton = document.querySelector('.dash-sort-btn[data-sort="project"]');
+    return {
+      filterPreserved: document.querySelector('.table-filter-input')?.value === 'COMPLETED',
+      sortPreserved: sortButton?.classList.contains('active') && sortButton?.dataset.dir === '1',
+      filteredRows: document.querySelectorAll('#dash-table-body tr').length,
+      newStyleRows: bodyText.includes(${JSON.stringify(TRANSITION_PROJECT_LABEL)}),
+      staleStyleRows: bodyText.includes(${JSON.stringify(REPRESENTATIVE_PROJECT_LABEL)})
+    };
+  })()`);
+  check(
+    report.audit9.dashboard.filterPreserved
+      && report.audit9.dashboard.sortPreserved
+      && report.audit9.dashboard.filteredRows === 2
+      && report.audit9.dashboard.newStyleRows
+      && !report.audit9.dashboard.staleStyleRows,
+    'Dashboard filter/sort 또는 새 renderer row migration 실패'
+  );
+  await clickSelector(`.top-style-chip[data-sub-id="${REPRESENTATIVE_ID}"]`);
+  await waitFor(`document.querySelector('#mockup-viewport')?.dataset.theme === '${REPRESENTATIVE_ID}'`, 'Dashboard 대표 style 복귀');
 
   await clickSelector('#btn-modal-compare');
   await waitFor(`document.querySelectorAll('.split-viewport').length === 2`, 'actual 120 Split', 15_000);
@@ -726,11 +1411,18 @@ async function verifyRepresentativeFlows() {
     15_000
   );
   report.peek = await evaluate(`(() => ({
+    role: document.querySelector('.peek-card')?.getAttribute('role') || null,
     theme: document.querySelector('#peek-viewport')?.dataset.theme || null,
     root: Boolean(document.querySelector('#peek-viewport .e120-${REPRESENTATIVE_ID}-unit')),
     busy: document.querySelector('#peek-viewport')?.getAttribute('aria-busy') || null
   }))()`);
-  check(report.peek.root && report.peek.busy === null, '대표 신규 Peek 실패');
+  check(
+    report.peek.role === 'region'
+      && report.peek.theme === REPRESENTATIVE_ID
+      && report.peek.root
+      && report.peek.busy === null,
+    '대표 신규 Peek role/theme 실패'
+  );
 
   await clickSelector(tileSelector);
   await waitFor(`Boolean(document.querySelector('#dock-confirm'))`, '대표 신규 Dock');
@@ -741,12 +1433,36 @@ async function verifyRepresentativeFlows() {
     15_000
   );
   report.dock = await evaluate(`(() => ({
-    dialog: document.querySelector('.confirm-sheet')?.getAttribute('role') || null,
+    role: document.querySelector('.confirm-sheet')?.getAttribute('role') || null,
+    theme: document.querySelector('#confirm-preview')?.dataset.theme || null,
     root: Boolean(document.querySelector('#confirm-preview .e120-${REPRESENTATIVE_ID}-unit')),
     busy: document.querySelector('#confirm-preview')?.getAttribute('aria-busy') || null
   }))()`);
-  check(report.dock.dialog === 'dialog' && report.dock.root && report.dock.busy === null, '대표 신규 Dock/confirm 실패');
+  check(
+    report.dock.role === 'region'
+      && report.dock.theme === REPRESENTATIVE_ID
+      && report.dock.root
+      && report.dock.busy === null,
+    '대표 신규 Dock/confirm role/theme 실패'
+  );
   await clickSelector('#confirm-sheet-close');
+
+  await evaluate(`document.querySelector(${JSON.stringify(tileSelector)})?.focus()`);
+  await clickSelector(tileSelector, { double: true });
+  await waitFor(`Boolean(document.querySelector('#mockup-viewport'))`, 'keyboard Detail open');
+  await clickSelector('.archetype-tab-btn[data-archetype="blog"]');
+  await waitFor(`Boolean(document.querySelector('#blog-comment-input'))`, 'keyboard Detail Blog');
+  await evaluate(`document.querySelector('#blog-comment-input')?.focus()`);
+  await pressKey('Escape', 'Escape', 27);
+  await waitFor(`!document.querySelector('#mockup-viewport')`, 'input focus Detail Escape');
+  report.audit9.keyboard = await evaluate(`(() => ({
+    detailClosed: getComputedStyle(document.querySelector('#detail-root')).display === 'none',
+    openerRestored: document.activeElement?.dataset.subId === '${REPRESENTATIVE_ID}'
+  }))()`);
+  check(
+    report.audit9.keyboard.detailClosed && report.audit9.keyboard.openerRestored,
+    'input focus 중 Detail Escape/focus restore 실패'
+  );
 }
 
 async function verifyReducedMotionAndVitals() {
@@ -778,7 +1494,27 @@ async function verifyReducedMotionAndVitals() {
 }
 
 function finalizeReport() {
-  report.interactions = summarizeTimings(interactionSamples);
+  report.interactions = {
+    measurementMethod: {
+      metric: 'processingMs',
+      sampleSelection: 'state-changing named operations; no-ops excluded',
+      clock: 'window.performance.now()',
+      hardGateBoundary: 'input dispatch -> required state/DOM predicate settlement',
+      presentationBoundary: 'settlement -> 2 animation frames',
+      excludedFromHardGate: [
+        'CDP command round-trip',
+        'driver polling',
+        'artifact I/O',
+        'post-settlement frame scheduler wait'
+      ]
+    },
+    ...summarizeTimings(interactionSamples),
+    presentation: summarizeTimings(presentationSamples),
+    endToEnd: summarizeTimings(endToEndSamples),
+    operationSamples: [...operationSamples]
+  };
+  check(report.interactions.count >= 5, `interaction sample ${report.interactions.count}개/최소 5개`);
+  check(report.interactions.medianMs <= 120, `interaction median ${report.interactions.medianMs}ms/120ms`);
   check(report.interactions.maxMs <= 200, `interaction max ${report.interactions.maxMs}ms/200ms`);
   check(runtimeSignals.consoleWarnings.length === 0, `console warning ${runtimeSignals.consoleWarnings.length}개`);
   check(runtimeSignals.consoleErrors.length === 0, `console error ${runtimeSignals.consoleErrors.length}개`);
@@ -812,6 +1548,7 @@ async function main() {
   if (chromeVersion.status !== 0) throw new Error(`Chrome 실행 파일을 찾을 수 없음: ${CHROME_PATH}`);
   report.chromeVersion = chromeVersion.stdout.trim();
   mkdirSync(artifactDirectory, { recursive: true });
+  sampleHostLoad('before-start');
 
   check(ALL_STYLES.length === 120 && new Set(ALL_STYLES.map(style => style.id)).size === 120, 'Node catalog 120 계약 실패');
   check(EXPANSION_IDS.length === 84, `Node expansion ${EXPANSION_IDS.length}/84`);
@@ -884,9 +1621,11 @@ async function main() {
 
   await verifyInitialAndGallery();
   await verifyMatrixAndLazyCss();
+  sampleHostLoad('after-matrix');
   await verifyResponsive();
   await verifyRepresentativeFlows();
   await verifyReducedMotionAndVitals();
+  sampleHostLoad('after-browser-qa');
   finalizeReport();
   writeReport();
 
@@ -895,7 +1634,7 @@ async function main() {
     + `- Chrome: ${report.chromeVersion}\n`
     + `- catalog/category: ${report.catalog.count} / ${Object.values(report.catalog.categoryCounts).join(',')}\n`
     + `- matrix/Web tabs: ${report.summary.matrixStates} / ${report.summary.webTabs}\n`
-    + `- LCP/CLS/interaction max: ${report.vitals.lcpMs}ms / ${report.vitals.cls} / ${report.interactions.maxMs}ms\n`
+    + `- LCP/CLS/interaction median/max: ${report.vitals.lcpMs}ms / ${report.vitals.cls} / ${report.interactions.medianMs}ms / ${report.interactions.maxMs}ms\n`
     + `- diagnostics/issues: ${report.summary.diagnosticCount} / ${report.summary.issueCount}\n`
     + `- report: ${join(artifactDirectory, 'report.json')}\n`
   );
@@ -916,5 +1655,7 @@ try {
   client?.close();
   await stopProcess(chromeProcess);
   await stopProcess(viteProcess);
-  if (profileDirectory) rmSync(profileDirectory, { recursive: true, force: true });
+  if (profileDirectory) {
+    rmSync(profileDirectory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
 }

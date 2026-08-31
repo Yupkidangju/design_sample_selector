@@ -3,7 +3,7 @@
  * Observer pattern, LocalStorage persistence for bookmarks / confirmed style / recents.
  */
 
-import { canonicalizeSubId } from '../data/categories.js';
+import { MAIN_CATEGORIES, canonicalizeSubId } from '../data/categories.js';
 
 function loadJSON(key, fallback) {
   try {
@@ -111,6 +111,153 @@ const DEFAULT_STATE = {
   viewport: 'DESKTOP'
 };
 
+const ENUM_FIELDS = Object.freeze({
+  currentView: new Set(['MAIN', 'DETAIL', 'SPLIT_COMPARE']),
+  viewMode: new Set(['GRID', 'BENTO', 'SPECTRUM']),
+  sortMode: new Set(['catalog', 'name-asc', 'era-asc', 'era-desc']),
+  activeArchetype: new Set(['game', 'web', 'mobile', 'ecommerce', 'blog', 'dashboard', 'media', 'chat']),
+  activeComponentTab: new Set(['hero', 'widget', 'form', 'pricing']),
+  sandboxDevice: new Set(['desktop', 'mobile']),
+  compareReturnView: new Set(['MAIN', 'DETAIL']),
+  viewport: new Set(['DESKTOP', 'TABLET', 'MOBILE'])
+});
+const CATEGORY_IDS = new Set(MAIN_CATEGORIES.map(category => category.id));
+const STYLE_ID_FIELDS = new Set([
+  'selectedSubCategory',
+  'galleryFocusId',
+  'draftSubId',
+  'confirmedStyleId',
+  'peekSubId'
+]);
+const BOOLEAN_FIELDS = new Set([
+  'bookmarkFilterActive',
+  'confirmSheetOpen',
+  'canvasReady'
+]);
+const TWEAK_FIELDS = new Set([
+  'borderRadius',
+  'borderWidth',
+  'shadowDepth',
+  'backdropBlur',
+  'glowIntensity'
+]);
+const AUDIO_FIELD_TYPES = Object.freeze({
+  sfxEnabled: 'boolean',
+  isPlaying: 'boolean',
+  currentTrackIndex: 'number',
+  volume: 'number',
+  trackTitle: 'string'
+});
+
+function isPlainRecord(value) {
+  return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+}
+
+function sanitizeStatePatch(partialState) {
+  if (!isPlainRecord(partialState)) {
+    return { patch: {}, issues: [{ code: 'STATE_SHAPE_INVALID', field: '$patch' }] };
+  }
+
+  const patch = {};
+  const issues = [];
+  const reject = (code, field) => issues.push({ code, field });
+
+  for (const [field, value] of Object.entries(partialState)) {
+    if (!Object.prototype.hasOwnProperty.call(DEFAULT_STATE, field)) {
+      reject('STATE_FIELD_UNKNOWN', field);
+      continue;
+    }
+
+    if (ENUM_FIELDS[field]) {
+      if (ENUM_FIELDS[field].has(value)) patch[field] = value;
+      else reject('STATE_ENUM_INVALID', field);
+      continue;
+    }
+
+    if (STYLE_ID_FIELDS.has(field)) {
+      if (value === null) {
+        patch[field] = null;
+      } else {
+        const canonicalId = canonicalizeStoredId(value);
+        if (canonicalId) patch[field] = canonicalId;
+        else reject('STATE_ID_INVALID', field);
+      }
+      continue;
+    }
+
+    if (field === 'compareSubIds') {
+      const canonicalIds = Array.isArray(value) && value.length === 2
+        ? value.map(canonicalizeStoredId)
+        : [];
+      if (canonicalIds.length === 2 && canonicalIds.every(Boolean)) patch[field] = canonicalIds;
+      else reject('STATE_SHAPE_INVALID', field);
+      continue;
+    }
+
+    if (field === 'selectedMainCategory') {
+      if (value === null || CATEGORY_IDS.has(value)) patch[field] = value;
+      else reject('STATE_ID_INVALID', field);
+      continue;
+    }
+
+    if (field === 'activeFilter') {
+      if (value === 'ALL' || CATEGORY_IDS.has(value)) patch[field] = value;
+      else reject('STATE_ID_INVALID', field);
+      continue;
+    }
+
+    if (BOOLEAN_FIELDS.has(field)) {
+      if (typeof value === 'boolean') patch[field] = value;
+      else reject('STATE_TYPE_INVALID', field);
+      continue;
+    }
+
+    if (field === 'searchQuery') {
+      if (typeof value === 'string') patch[field] = value;
+      else reject('STATE_TYPE_INVALID', field);
+      continue;
+    }
+
+    if (field === 'activeFacets') {
+      const valid = isPlainRecord(value) && Object.values(value).every(items => (
+        Array.isArray(items) && items.every(item => typeof item === 'string')
+      ));
+      if (valid) patch[field] = value;
+      else reject('STATE_SHAPE_INVALID', field);
+      continue;
+    }
+
+    if (field === 'bookmarks' || field === 'recentlyViewed') {
+      const maxLen = field === 'recentlyViewed' ? 6 : Infinity;
+      const canonicalIds = canonicalizeStoredList(value, maxLen);
+      if (Array.isArray(value) && canonicalIds.length === value.length) patch[field] = canonicalIds;
+      else reject('STATE_ID_INVALID', field);
+      continue;
+    }
+
+    if (field === 'liveTweaks') {
+      const valid = isPlainRecord(value) && Object.entries(value).every(([key, item]) => (
+        TWEAK_FIELDS.has(key) && typeof item === 'number' && Number.isFinite(item)
+      ));
+      if (valid) patch[field] = value;
+      else reject('STATE_SHAPE_INVALID', field);
+      continue;
+    }
+
+    if (field === 'audio') {
+      const valid = isPlainRecord(value) && Object.entries(value).every(([key, item]) => (
+        AUDIO_FIELD_TYPES[key] === typeof item &&
+        (typeof item !== 'number' || Number.isFinite(item))
+      ));
+      if (valid) patch[field] = value;
+      else reject('STATE_SHAPE_INVALID', field);
+      continue;
+    }
+  }
+
+  return { patch, issues };
+}
+
 
 class AppStateManager {
   constructor() {
@@ -139,34 +286,42 @@ class AppStateManager {
   }
 
   setState(partialState) {
+    const { patch, issues } = sanitizeStatePatch(partialState);
+    if (issues.length) {
+      const diagnostics = issues.map(({ code, field }) => `${code}:${field}`);
+      console.warn('[AppState] Rejected invalid state fields.', diagnostics);
+    }
+    if (!Object.keys(patch).length) return false;
+
     const prevState = { ...this.state };
 
-    const nextAudio = partialState.audio
-      ? { ...this.state.audio, ...partialState.audio }
+    const nextAudio = patch.audio
+      ? { ...this.state.audio, ...patch.audio }
       : this.state.audio;
 
-    const nextTweaks = partialState.liveTweaks
-      ? { ...this.state.liveTweaks, ...partialState.liveTweaks }
+    const nextTweaks = patch.liveTweaks
+      ? { ...this.state.liveTweaks, ...patch.liveTweaks }
       : this.state.liveTweaks;
 
     this.state = {
       ...this.state,
-      ...partialState,
+      ...patch,
       audio: nextAudio,
       liveTweaks: nextTweaks
     };
 
-    if (partialState.bookmarks) {
+    if (patch.bookmarks) {
       saveJSON('dss_bookmarks_v2', this.state.bookmarks);
     }
-    if (Object.prototype.hasOwnProperty.call(partialState, 'confirmedStyleId')) {
+    if (Object.prototype.hasOwnProperty.call(patch, 'confirmedStyleId')) {
       saveJSON('dss_confirmed_v21', this.state.confirmedStyleId);
     }
-    if (partialState.recentlyViewed) {
+    if (patch.recentlyViewed) {
       saveJSON('dss_recent_v21', this.state.recentlyViewed);
     }
 
     this.notify(prevState);
+    return issues.length === 0;
   }
 
   toggleBookmark(subId) {
@@ -189,9 +344,10 @@ class AppStateManager {
   }
 
   setCompareSubIds(id1, id2) {
-    const a = canonicalizeStoredId(id1) || id1;
-    const b = canonicalizeStoredId(id2) || id2;
-    this.setState({ compareSubIds: [a, b] });
+    const a = canonicalizeStoredId(id1);
+    const b = canonicalizeStoredId(id2);
+    if (!a || !b) return false;
+    return this.setState({ compareSubIds: [a, b] });
   }
 
   pushRecentlyViewed(subId) {
@@ -202,8 +358,8 @@ class AppStateManager {
   }
 
   setActiveArchetype(archetype) {
-    if (!archetype) return;
-    this.setState({ activeArchetype: archetype });
+    if (!ENUM_FIELDS.activeArchetype.has(archetype)) return false;
+    return this.setState({ activeArchetype: archetype });
   }
 
   setConfirmedStyle(subId) {
