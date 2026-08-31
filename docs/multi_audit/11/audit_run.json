@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "turn": 11,
+  "project_root": "/home/eunho1/Projects/web/design_sample_selector",
+  "directory": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11",
+  "source_reports": [
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_01_tuner_contract_ui.md",
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_02_i18n_arch_runtime.md",
+    "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_03_security_resilience.md"
+  ],
+  "final_report": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/final_audit_report_11.md",
+  "created_at_utc": "2026-08-31T04:50:23.458720+00:00"
+}

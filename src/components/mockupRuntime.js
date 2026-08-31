@@ -13,6 +13,7 @@ import {
   getPreviewMotionDefinition,
   PreviewRegistryError
 } from '../preview/motionEntry.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 import { prefersReducedMotion } from '../utils/selection.js';
 
 export const MAX_RUNTIME_INPUT_LENGTH = 500;
@@ -22,6 +23,7 @@ const runtimeMap = new WeakMap();
 const unitCleanupMap = new WeakMap();
 const checkoutCleanupMap = new WeakMap();
 const pendingChatReplyMap = new WeakMap();
+const unitTranslatorMap = new WeakMap();
 const activeRoots = new Set();
 let checkoutDialogSequence = 0;
 
@@ -46,6 +48,7 @@ function runCleanups(rootEl) {
   ownedTimers?.forEach(timer => clearTimeout(timer));
   unitCleanupMap.delete(rt.unit);
   pendingChatReplyMap.delete(rt.unit);
+  unitTranslatorMap.delete(rt.unit);
   rt.cleanups.forEach((fn) => {
     try { fn(); } catch { /* ignore */ }
   });
@@ -162,6 +165,8 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
 
   const unit = rootEl.querySelector('.mockup-unit') || rootEl.querySelector('.archetype-unit') || rootEl;
   unitCleanupMap.set(unit, new Set());
+  const copy = options.snapshot?.copy;
+  unitTranslatorMap.set(unit, (key, values) => formatLocaleCopy(copy, key, values));
 
   unit.classList.add(motion.unitClass);
   if (options.compact) unit.classList.add('is-compact');
@@ -302,6 +307,10 @@ function showMockToast(unit, msg) {
     toast._hide = null;
     toast.classList.remove('show');
   }, 1600);
+}
+
+function runtimeText(unit, key, values) {
+  return unitTranslatorMap.get(unit)?.(key, values) || key;
 }
 
 function pulseClass(el, className, ms = 420) {
@@ -520,13 +529,13 @@ function handleGameTap(unit, target, store) {
     store.game.coins += 200;
     store.game.kills += 1;
     synthAudio.playSfx('SUCCESS');
-    showMockToast(unit, '🎉 MONSTER DEFEATED! +200 COINS');
+    showMockToast(unit, runtimeText(unit, 'runtime.game.defeated'));
     if (store.game.kills % 3 === 0) {
       store.game.level += 1;
       const lvl = unit.querySelector('.hud-player-level');
       if (lvl) updateGameLevelLabel(lvl, store.game.level);
       spawnLevelUpParticles(unit);
-      showMockToast(unit, `✨ LEVEL UP! LV. ${store.game.level}`);
+      showMockToast(unit, runtimeText(unit, 'runtime.game.levelUp', { level: store.game.level }));
     }
   } else {
     synthAudio.playSfx('COIN');
@@ -557,7 +566,7 @@ function handleGameSkill(unit, btn, store) {
 
   if (skill === 'r') {
     synthAudio.playSfx('SUCCESS');
-    showMockToast(unit, '💥 ULTIMATE ACTIVATED! 9999 CRITICAL!');
+    showMockToast(unit, runtimeText(unit, 'runtime.game.ultimate'));
     pulseClass(unit.querySelector('.game-arena-board'), 'fx-glitch', 600);
   } else if (skill === 'e') {
     store.game.hp = Math.min(1000, store.game.hp + 200);
@@ -566,10 +575,10 @@ function handleGameSkill(unit, btn, store) {
     if (hpFill) hpFill.style.width = `${(store.game.hp / 1000) * 100}%`;
     if (hpVal) hpVal.textContent = `${store.game.hp} / 1000`;
     synthAudio.playSfx('CONFIRM');
-    showMockToast(unit, '🧪 HP +200 RECOVERED');
+    showMockToast(unit, runtimeText(unit, 'runtime.game.recovered'));
   } else {
     synthAudio.playSfx('CLICK');
-    showMockToast(unit, `⚡ SKILL [${skill.toUpperCase()}] EXECUTED`);
+    showMockToast(unit, runtimeText(unit, 'runtime.game.skillExecuted', { skill: skill.toUpperCase() }));
   }
 
   scheduleOwnedTimeout(unit, () => {
@@ -587,7 +596,7 @@ function handleGameBoost(unit, btn, store) {
   if (comboElem) comboElem.textContent = `x${store.game.combo}`;
   synthAudio.playSfx('SUCCESS');
   pulseClass(btn, 'fx-bounce', 350);
-  showMockToast(unit, '🚀 COMBO MULTIPLIER BOOSTED!');
+  showMockToast(unit, runtimeText(unit, 'runtime.game.boosted'));
 }
 
 function handleShopSize(unit, btn, store) {
@@ -658,11 +667,11 @@ function renderShopState(unit, store) {
 
   if (cartList) {
     if (!store.shop.cart.length) {
-      cartList.innerHTML = '<p class="cart-empty-msg">장바구니가 비어 있습니다.</p>';
+      cartList.innerHTML = `<p class="cart-empty-msg">${runtimeText(unit, 'archetype.shop.empty')}</p>`;
     } else {
       cartList.innerHTML = store.shop.cart.map((item) => `
         <div class="cart-item-row">
-          <span>에디션 디자인 상품 ${item.size || store.shop.selectedSize} (${item.qty}개)</span>
+          <span>${runtimeText(unit, 'runtime.shop.item', { size: item.size || store.shop.selectedSize, count: item.qty })}</span>
           <strong>₩${item.price.toLocaleString()}</strong>
         </div>
       `).join('');
@@ -673,7 +682,7 @@ function renderShopState(unit, store) {
 function handleShopCheckout(unit, trigger, store) {
   const source = trigger.getAttribute('data-checkout-source') === 'cart' ? 'cart' : 'direct';
   if (source === 'cart' && store.shop.cart.length === 0) {
-    showMockToast(unit, '장바구니가 비어 있습니다.');
+    showMockToast(unit, runtimeText(unit, 'archetype.shop.empty'));
     return;
   }
   openShopCheckoutDialog(unit, trigger, store, source);
@@ -690,19 +699,19 @@ function openShopCheckoutDialog(unit, opener, store, source) {
   const layer = document.createElement('div');
   layer.className = 'mock-checkout-layer';
   layer.innerHTML = `
-    <button type="button" class="mock-checkout-backdrop" data-checkout-cancel aria-label="결제 취소"></button>
+    <button type="button" class="mock-checkout-backdrop" data-checkout-cancel aria-label="${runtimeText(unit, 'runtime.shop.checkoutCancel')}"></button>
     <section class="mock-checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="${checkoutTitleId}">
       <p class="mock-checkout-kicker">${source === 'cart' ? 'CART CHECKOUT' : 'DIRECT PURCHASE'}</p>
-      <h3 id="${checkoutTitleId}">주문 내용을 확인하세요</h3>
+      <h3 id="${checkoutTitleId}">${runtimeText(unit, 'runtime.shop.checkoutTitle')}</h3>
       <dl class="mock-checkout-summary">
-        <div><dt>주문 방식</dt><dd>${source === 'cart' ? '장바구니 결제' : '바로 구매'}</dd></div>
-        <div><dt>수량</dt><dd>${totalItems}개</dd></div>
-        <div><dt>합계</dt><dd>₩${totalPrice.toLocaleString()}</dd></div>
+        <div><dt>${runtimeText(unit, 'runtime.shop.method')}</dt><dd>${runtimeText(unit, source === 'cart' ? 'runtime.shop.cartCheckout' : 'runtime.shop.directPurchase')}</dd></div>
+        <div><dt>${runtimeText(unit, 'runtime.shop.quantity')}</dt><dd>${totalItems}</dd></div>
+        <div><dt>${runtimeText(unit, 'runtime.shop.total')}</dt><dd>₩${totalPrice.toLocaleString()}</dd></div>
       </dl>
-      <p class="mock-checkout-note">실제 결제가 발생하지 않는 디자인 시뮬레이션입니다.</p>
+      <p class="mock-checkout-note">${runtimeText(unit, 'runtime.shop.simulationNote')}</p>
       <div class="mock-checkout-actions">
-        <button type="button" data-checkout-cancel>취소</button>
-        <button type="button" data-checkout-confirm>결제 확인</button>
+        <button type="button" data-checkout-cancel>${runtimeText(unit, 'runtime.shop.cancel')}</button>
+        <button type="button" data-checkout-confirm>${runtimeText(unit, 'runtime.shop.confirm')}</button>
       </div>
     </section>
   `;
@@ -720,7 +729,7 @@ function openShopCheckoutDialog(unit, opener, store, source) {
       renderShopState(unit, store);
       unit.querySelector('#shop-cart-drawer')?.classList.remove('open');
       synthAudio.playSfx('SUCCESS');
-      showMockToast(unit, '💳 결제가 성공적으로 시뮬레이션되었습니다! 감사합니다.');
+      showMockToast(unit, runtimeText(unit, 'runtime.shop.success'));
     } else {
       synthAudio.playSfx('CLOSE');
     }
@@ -782,7 +791,7 @@ function applyBlogReadingMode(unit, store) {
   const button = unit.querySelector('[data-action="blog-reading-mode"]');
   if (button) {
     button.setAttribute('aria-pressed', String(store.blog.isLightMode));
-    button.setAttribute('aria-label', store.blog.isLightMode ? '어두운 읽기 모드로 전환' : '밝은 읽기 모드로 전환');
+    button.setAttribute('aria-label', runtimeText(unit, store.blog.isLightMode ? 'runtime.blog.darkMode' : 'archetype.blog.readingModeAria'));
   }
 }
 
@@ -790,11 +799,11 @@ function submitBlogComment(unit, input, store) {
   const text = (input.value || '').trim();
   const status = unit.querySelector('#blog-comment-status');
   if (!text) {
-    if (status) status.textContent = '댓글 내용을 입력해 주세요.';
+    if (status) status.textContent = runtimeText(unit, 'runtime.blog.empty');
     return;
   }
   if (text.length > MAX_RUNTIME_INPUT_LENGTH) {
-    if (status) status.textContent = `댓글은 ${MAX_RUNTIME_INPUT_LENGTH}자 이하로 입력해 주세요.`;
+    if (status) status.textContent = runtimeText(unit, 'runtime.blog.max', { max: MAX_RUNTIME_INPUT_LENGTH });
     input.focus();
     return;
   }
@@ -803,7 +812,7 @@ function submitBlogComment(unit, input, store) {
   const countSpan = unit.querySelector('#blog-comment-count');
 
   if (commentsList) {
-    const item = createTextEntry('comment-item is-runtime', '방문자 (You)', text);
+    const item = createTextEntry('comment-item is-runtime', runtimeText(unit, 'runtime.blog.visitor'), text);
     commentsList.insertBefore(item, commentsList.firstChild);
     Array.from(commentsList.querySelectorAll('.comment-item.is-runtime'))
       .slice(MAX_RUNTIME_HISTORY)
@@ -812,7 +821,7 @@ function submitBlogComment(unit, input, store) {
 
   store.blog.comments = [...store.blog.comments, text].slice(-MAX_RUNTIME_HISTORY);
   if (countSpan) countSpan.textContent = String(2 + store.blog.comments.length);
-  if (status) status.textContent = `댓글이 등록되었습니다. ${text.length}/${MAX_RUNTIME_INPUT_LENGTH}자`;
+  if (status) status.textContent = runtimeText(unit, 'runtime.blog.added', { length: text.length, max: MAX_RUNTIME_INPUT_LENGTH });
 
   input.value = '';
   synthAudio.playSfx('CONFIRM');
@@ -822,11 +831,11 @@ function submitChatMessage(unit, input, store) {
   const text = (input.value || '').trim();
   const status = unit.querySelector('#chat-message-status');
   if (!text) {
-    if (status) status.textContent = '메시지를 입력해 주세요.';
+    if (status) status.textContent = runtimeText(unit, 'runtime.chat.empty');
     return;
   }
   if (text.length > MAX_RUNTIME_INPUT_LENGTH) {
-    if (status) status.textContent = `메시지는 ${MAX_RUNTIME_INPUT_LENGTH}자 이하로 입력해 주세요.`;
+    if (status) status.textContent = runtimeText(unit, 'runtime.chat.max', { max: MAX_RUNTIME_INPUT_LENGTH });
     input.focus();
     return;
   }
@@ -836,13 +845,13 @@ function submitChatMessage(unit, input, store) {
   store.chat.messages = [...store.chat.messages, userMessage].slice(-MAX_RUNTIME_HISTORY);
   store.chat.msgCount = 2 + store.chat.messages.length;
   if (container) {
-    container.appendChild(createChatEntry(userMessage));
+    container.appendChild(createChatEntry(unit, userMessage));
     trimChatHistory(container);
     container.scrollTop = container.scrollHeight;
   }
 
   input.value = '';
-  if (status) status.textContent = `메시지를 전송했습니다. ${text.length}/${MAX_RUNTIME_INPUT_LENGTH}자`;
+  if (status) status.textContent = runtimeText(unit, 'runtime.chat.sent', { length: text.length, max: MAX_RUNTIME_INPUT_LENGTH });
   synthAudio.playSfx('CONFIRM');
 
   // 빠른 연속 전송은 마지막 응답 하나로 합쳐 pending timer 수를 제한한다.
@@ -852,11 +861,11 @@ function submitChatMessage(unit, input, store) {
     if (!container || !unit.isConnected) return;
     const botMessage = {
       role: 'peer',
-      text: '요청한 테마 프리뷰가 실시간으로 반영되었습니다! 🎨'
+      text: runtimeText(unit, 'runtime.chat.reply')
     };
     store.chat.messages = [...store.chat.messages, botMessage].slice(-MAX_RUNTIME_HISTORY);
     store.chat.msgCount = 2 + store.chat.messages.length;
-    container.appendChild(createChatEntry(botMessage));
+    container.appendChild(createChatEntry(unit, botMessage));
     trimChatHistory(container);
     container.scrollTop = container.scrollHeight;
     synthAudio.playSfx('REVEAL');
@@ -902,7 +911,7 @@ function bindBlogProgress(scroller, unit, cleanups) {
     if (fill) fill.style.width = `${pct}%`;
     if (progress) {
       progress.setAttribute('aria-valuenow', String(rounded));
-      progress.setAttribute('aria-valuetext', `${rounded}% 읽음`);
+      progress.setAttribute('aria-valuetext', runtimeText(unit, 'runtime.blog.readPercent', { percent: rounded }));
     }
   };
   const owners = new Set([scroller, scroller.closest('.modal-body-grid')].filter(Boolean));
@@ -948,7 +957,7 @@ function restoreArchetypeState(unit, store, archetype) {
     const commentsList = unit.querySelector('#blog-comments-list');
     if (commentsList) {
       store.blog.comments.forEach((text) => {
-        const item = createTextEntry('comment-item is-runtime', '방문자 (You)', text);
+        const item = createTextEntry('comment-item is-runtime', runtimeText(unit, 'runtime.blog.visitor'), text);
         commentsList.insertBefore(item, commentsList.firstChild);
       });
     }
@@ -994,7 +1003,7 @@ function restoreArchetypeState(unit, store, archetype) {
     if (topic) topic.textContent = `# ${store.chat.channel}`;
     const messages = unit.querySelector('#chat-messages-container');
     if (messages) {
-      store.chat.messages.forEach((message) => messages.appendChild(createChatEntry(message)));
+      store.chat.messages.forEach((message) => messages.appendChild(createChatEntry(unit, message)));
       messages.scrollTop = messages.scrollHeight;
     }
   }
@@ -1017,7 +1026,7 @@ function createTextEntry(className, authorText, bodyText) {
   return item;
 }
 
-function createChatEntry(message) {
+function createChatEntry(unit, message) {
   const item = document.createElement('div');
   item.className = `chat-bubble-msg ${message.role === 'peer' ? 'peer' : 'user'} is-runtime`;
   const avatar = document.createElement('div');
@@ -1027,7 +1036,9 @@ function createChatEntry(message) {
   content.className = 'msg-content';
   const sender = document.createElement('span');
   sender.className = 'msg-sender';
-  sender.textContent = message.role === 'peer' ? 'Design AI Bot' : 'You';
+  sender.textContent = message.role === 'peer'
+    ? runtimeText(unit, 'runtime.chat.bot')
+    : runtimeText(unit, 'archetype.chat.you');
   const body = document.createElement('p');
   body.textContent = message.text;
   content.appendChild(sender);

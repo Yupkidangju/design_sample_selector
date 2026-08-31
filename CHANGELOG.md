@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- **Audit 11 Re-audit #1 i18n acceptance:** 296-key 5-locale copy parity, catalog field provenance/placeholder gate와 5-locale Detail 네 Inspector pane·machine-key·focus/scroll·runtime live status 보존을 검증하는 격리 Chrome gate를 추가.
+- **Audit 11 semantic tuner·5-locale runtime:** surface/control/pill geometry, 단일 `TUNER_LIMITS`, `ko/en/ja/zh-CN/zh-TW` lazy locale pack, native endonym 메뉴, URL→storage→browser→한국어 선택 순서와 immutable locale snapshot/epoch를 추가.
+- **Audit 11 회귀·시각 게이트:** 999 bounds, locale completeness·machine-key invariance·악성 문자열·prototype URL·선택 locale 정렬 테스트와 5 locale × 320/768/1280/1920 및 200% 대응 캡처를 추가.
 - **Audit 10 Pages artifact 계약:** `/design_sample_selector/` Vite base, recursive lazy closure/release manifest, GitHub Actions `dist` directory deploy와 Pages-like Chrome gate를 추가해 source-root publish를 배포 전에 차단.
 - **Bounded recovery와 안전 진단:** Preview/Detail import를 primary + retry 한 번으로 제한하고 terminal reload/cancel 상태, phase/attempt/resource class in-memory diagnostic과 mount rollback 계약을 추가.
 - **Audit 9 stateful 재감사 게이트:** 스타일 A→B 전환, Peek/확정 테마, direct/cart checkout, Blog 읽기 모드·375/768/1024px 진행률, lazy focus, Game 키보드, Dashboard 상태 이관과 실패 경계를 Node 집중 회귀 및 actual-120 Chrome 시나리오에 추가. 1,920 device 상태·Web 480탭·diagnostics 0과 CDP 왕복을 제외한 browser-local interaction 직렬 3회를 통과했다.
@@ -35,6 +38,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **모션 hydration 회귀 게이트:** component root class, effect layer, reduced-motion, observer cleanup, unknown motion과 잘못된 renderer HTML 출력의 구조화 실패를 Node fixture에서 검증.
 
 ### Changed
+- **Locale-neutral catalog와 Inspector 경계:** 검색·이름 정렬·legacy projection·Detail·Inspector가 활성 locale overlay를 소비하고 palette display name 대신 stable ID로 CSS/DTCG 구조 키를 생성하도록 변경. locale 전환은 선택·tweak·mock runtime·Inspector tab·scroll·focus를 보존.
+- **Semantic radius projection:** theme geometry를 surface/control/pill로 분리하고 live radius는 명시적인 `[data-tweak-surface]`에만 적용. catalog validator·AppState·slider·artifact generator가 같은 범위를 사용.
 - **Audit 10 상호작용·신뢰·상태 경계:** Peek에 native 상세 button과 실제 double click을 연결하고 Detail mount disposer/초기 subscriber rollback, executable renderer sink 거부, localStorage key 16,384자·bookmark 120·recents 6개 상한을 적용.
 - **Project-site QA 경로:** 기존 네 Chrome 게이트와 초기 bundle analyzer를 `/design_sample_selector/` production base에 맞추고 Pages 정상 경로 및 outer/shared/3 CSS/Detail/render/hydrate fault matrix를 CI deploy 전 필수 게이트로 연결.
 - **FIN-F006 측정 계약 및 재검증:** interaction hard gate는 실제 상태 변화가 있는 operation만 페이지 안에서 input dispatch→요구 state/DOM 정착의 제품 처리시간을 측정하고, no-op·CDP 왕복·외부 polling·artifact I/O와 정착 후 scheduler 대기를 제외한다. 정착 뒤 2 animation frames와 Long Task는 별도 presentation 진단치로 보존한다. 최종 격리 Chrome 직렬 3회가 각각 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max)로 통과했다.
@@ -56,6 +61,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
 
 ### Fixed
+- **Audit 11 visible/ARIA·Inspector i18n:** Header·Discovery·Gallery·Detail·Split·recovery와 8개 archetype HTML을 같은 locale snapshot에 연결하고 CSS comment·Markdown prose·DTCG display metadata가 locale별로 바뀌도록 수정. 국제 고유 디자인명 fallback은 field/reason과 함께 보고하고 placeholder는 completeness에서 거부한다.
+- **Locale 전환 focus와 번역 가능 Dashboard gate:** Detail locale 재렌더 뒤 focus trap이 복원된 Inspector control을 첫 버튼으로 덮던 문제를 수정하고, actual-120 Dashboard filter가 고정 영문 표시값 대신 현재 locale의 성공 label을 사용하도록 변경.
+- **Audit 11 999px·URL·출력 경계:** 8개 expansion 시안의 pill 값이 tuner default와 전체 화면 geometry로 번지던 문제, prototype/oversize discovery URL crash, 번역 palette key 충돌, code pane raw HTML 및 CSS/Markdown/JSON 경계 불일치를 수정.
+- **Crostini Chrome 감사 안정성:** Discovery 게이트가 `data-app-pending` 해제 전에 숨겨진 pagination을 클릭하던 문제를 실제 결과 변화/포커스 검증으로 분리하고, 오디오 장치가 없는 headless 실행에서는 명시적 opt-in으로 오디오 probe와 SFX만 제외해 비오디오 1,920 상태를 계속 검증하도록 보완.
 - **Pages Preview/Detail 장애와 Peek affordance:** source CSS module graph가 live에서 실패하던 배포 경계를 production artifact로 전환하고, Peek native `상세 보기`/double click, 실패한 Detail listener·handler cleanup, corrupt/oversize storage 복구와 executable renderer output 차단을 구현.
 - **독립 재감사 공통 Detail/Audio/Zoom 회귀:** 120종 Detail 공통 사이드바의 누락 selector를 lazy CSS로 복구하고 flex 카드 축소로 제목·설명이 가려지지 않게 했으며, AudioContext 생성 전 volume을 최초 master gain에 반영하고 스타일·아키타입 renderer 재생성 뒤 선택 Zoom을 다시 적용한다.
 - **스타일·테마 정합성과 상호작용 복구:** 스타일 전환 뒤 남던 이전 renderer/텍스트와 Dashboard 행 markup을 제거하고 Inspector·motion을 선택 ID와 동기화. Peek/확정 `data-theme`, Game Enter/Space, form focus 중 Detail Escape, lazy loading/error focus trap·복원을 수정.

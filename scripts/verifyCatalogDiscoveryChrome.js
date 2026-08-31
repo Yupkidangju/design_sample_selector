@@ -17,10 +17,12 @@ import {
   groupStylesByEra,
   queryCatalogForDiscoveryState
 } from '../src/catalog/index.js';
+import { loadLocaleSnapshot } from '../src/i18n/index.js';
 
 const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CHROME_PATH = process.env.DSS_CHROME_PATH || '/usr/bin/google-chrome';
 const CORE_STYLES = getAllStyles();
+const DEFAULT_LOCALE_SNAPSHOT = await loadLocaleSnapshot('ko');
 const VIEW_MODES = Object.freeze(['GRID', 'BENTO', 'SPECTRUM']);
 const RESPONSIVE_WIDTHS = Object.freeze([320, 375, 414, 768, 1024, 1440]);
 
@@ -67,7 +69,11 @@ function check(condition, message) {
 }
 
 function expectedIds(state = {}) {
-  return queryCatalogForDiscoveryState(CORE_STYLES, state)
+  return queryCatalogForDiscoveryState(CORE_STYLES, {
+    locale: 'ko',
+    localizedStyles: DEFAULT_LOCALE_SNAPSHOT.catalog.styles,
+    ...state
+  })
     .slice(0, 36)
     .map(style => style.id);
 }
@@ -214,7 +220,10 @@ async function waitFor(expression, label, timeout = 10_000) {
 
 async function waitForApp(url) {
   await waitFor(
-    `location.href === ${JSON.stringify(url)} && document.readyState === 'complete' && Boolean(document.querySelector('.discovery-controls'))`,
+    `location.href === ${JSON.stringify(url)}
+      && document.readyState === 'complete'
+      && document.body?.hasAttribute('data-app-pending') === false
+      && Boolean(document.querySelector('.discovery-controls'))`,
     `앱 로드 ${url}`,
     15_000
   );
@@ -226,10 +235,17 @@ async function navigate(url) {
 }
 
 async function clickSelector(selector) {
+  const scrolled = await evaluate(`(() => {
+    const element = document.querySelector(${JSON.stringify(selector)});
+    if (!element) return false;
+    element.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+    return true;
+  })()`);
+  if (!scrolled) return false;
+  await evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
   const point = await evaluate(`(() => {
     const element = document.querySelector(${JSON.stringify(selector)});
     if (!element) return null;
-    element.scrollIntoView({ block: 'center', inline: 'center' });
     const rect = element.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return null;
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
@@ -365,15 +381,20 @@ async function waitForIds(ids, label, { ordered = true } = {}) {
 async function collectPagedResultIds() {
   const collected = [];
   while (true) {
-    collected.push(...await readResultIds());
+    const currentIds = await readResultIds();
+    collected.push(...currentIds);
     const canNext = await evaluate(
       `Boolean(document.querySelector('[data-gallery-page="next"]:not(:disabled)'))`
     );
     if (!canNext) break;
     await clickSelector('[data-gallery-page="next"]');
     await waitFor(
-      `document.activeElement?.classList.contains('gallery-page-status')`,
+      `document.querySelector('[data-result-id]')?.dataset.resultId !== ${JSON.stringify(currentIds[0])}`,
       'gallery 다음 페이지'
+    );
+    check(
+      await evaluate(`document.activeElement?.classList.contains('gallery-page-status')`),
+      'gallery 페이지 전환 후 상태 문구 focus 복원 실패'
     );
   }
   return collected;

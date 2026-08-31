@@ -5,6 +5,8 @@
 
 import { appState } from '../state/appState.js';
 import { synthAudio, BGM_TRACKS } from '../audio/synthAudio.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 
 const widgetCleanups = new WeakMap();
 
@@ -14,6 +16,8 @@ export function renderAudioWidget(container) {
 
   const currentAudio = appState.getState().audio;
   const currentTrack = BGM_TRACKS[currentAudio.currentTrackIndex] || BGM_TRACKS[0];
+  const copy = getActiveLocaleSnapshot()?.copy;
+  const t = (key, values) => formatLocaleCopy(copy, key, values);
   const cleanups = [];
 
   container.innerHTML = `
@@ -31,17 +35,17 @@ export function renderAudioWidget(container) {
       <!-- Control Buttons Group -->
       <div class="audio-controls-group">
         <!-- Play / Pause Button -->
-        <button class="audio-ctrl-btn btn-play" id="btn-audio-play" title="BGM 재생 / 일시정지 (Lo-Fi Chill Synth)" aria-label="BGM Play/Pause">
+        <button class="audio-ctrl-btn btn-play" id="btn-audio-play" title="${t('audio.playTitle')}" aria-label="${t('audio.playTitle')}">
           <span id="icon-play-state">▶</span>
         </button>
 
         <!-- Next Track Button -->
-        <button class="audio-ctrl-btn btn-next" id="btn-audio-next" title="다음 BGM 트랙 변경" aria-label="Next Track">
+        <button class="audio-ctrl-btn btn-next" id="btn-audio-next" title="${t('audio.nextTitle')}" aria-label="${t('audio.nextTitle')}">
           <span>⏭</span>
         </button>
 
         <!-- SFX Toggle Button -->
-        <button class="audio-ctrl-btn btn-sfx active" id="btn-audio-sfx" title="UI 인터랙션 효과음 On/Off" aria-label="Toggle Sound Effects">
+        <button class="audio-ctrl-btn btn-sfx active" id="btn-audio-sfx" title="${t('audio.sfxTitle')}" aria-label="${t('audio.sfxTitle')}">
           <span id="icon-sfx-state">🔊</span>
         </button>
       </div>
@@ -49,7 +53,7 @@ export function renderAudioWidget(container) {
       <!-- Master Volume Slider -->
       <div class="volume-slider-group">
         <span class="vol-label">VOL</span>
-        <input type="range" class="vol-slider" id="input-audio-volume" min="0" max="1" step="0.05" value="${currentAudio.volume}" title="마스터 볼륨 조절">
+        <input type="range" class="vol-slider" id="input-audio-volume" min="0" max="1" step="0.05" value="${currentAudio.volume}" title="${t('audio.volumeTitle')}" aria-label="${t('audio.volumeTitle')}">
       </div>
       <span class="audio-widget-status" id="audio-widget-status" role="status" aria-live="polite"></span>
     </div>
@@ -79,10 +83,10 @@ export function renderAudioWidget(container) {
       const wasPlaying = synthAudio.isPlaying;
       const isNowPlaying = await synthAudio.toggleBgm();
       if (!wasPlaying && !isNowPlaying) {
-        if (status) status.textContent = '오디오를 시작하지 못했습니다. 재생 버튼을 다시 눌러 주세요.';
+        if (status) status.textContent = t('audio.startError');
         return;
       }
-      if (status) status.textContent = isNowPlaying ? '배경 음악을 재생합니다.' : '배경 음악을 일시정지했습니다.';
+      if (status) status.textContent = t(isNowPlaying ? 'audio.playing' : 'audio.paused');
       synthAudio.playSfx('CLICK');
     });
   }

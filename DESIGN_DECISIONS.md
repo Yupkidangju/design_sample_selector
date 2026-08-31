@@ -366,3 +366,28 @@
   - repository/build/Pages-like 검증과 actual deployment 검증이 분리된다. workflow를 push하고 Pages Source를 GitHub Actions로 선택하기 전 live HOLD는 해제할 수 없다.
   - GitHub Pages의 고정 cache header와 이전 hash grace retention 부재는 플랫폼 잔여 위험이다. directory artifact와 release manifest로 partial publish를 차단하고 live smoke에서 stale/fresh context를 함께 확인한다.
   - arbitrary deep pathname은 지원하지 않으며 root + query/hash만 제품 계약이다.
+
+---
+
+## 21. Decision 021: Semantic Radius and Dependency-Free Lazy Locale Packs
+
+- **Status:** Accepted, implemented, and repository/local Crostini verified (2026-08-31)
+- **Context:** 두 expansion grammar의 장식용 `999px`가 theme radius와 tuner default에 동시에 투영되고, Detail CSS가 root와 38개 surface/control을 강제로 둥글게 만들었다. 동시에 5개 언어 요구는 locale state, catalog display data, 검색·정렬, Inspector와 안전한 출력 경계를 함께 필요로 하지만 초기 JS 예산은 작다.
+- **Decision:**
+  - `TUNER_LIMITS`를 단일 계약으로 사용하고 `999px`를 pill semantic token으로만 보존한다. 조절 radius는 opt-in surface에만 적용한다.
+  - 테마/category는 대상 tweak default로 reset, archetype과 locale은 tweak를 보존한다. locale은 runtime·Inspector UI·scroll·focus도 보존한다.
+  - 외부 i18n framework를 추가하지 않고 5개 locale registry와 literal dynamic import pack을 사용한다. URL→storage→browser→한국어 precedence와 last-known-good failure policy를 적용한다.
+  - canonical ID와 palette stable ID는 machine syntax의 유일한 key다. 번역 display string을 slug/selector/token key로 사용하지 않는다.
+  - 번역 문자열은 DOM text와 artifact context별 escape/size 경계를 통과하며 Inspector pane은 immutable locale snapshot에서 함께 생성한다.
+  - locale catalog field는 번역·승인 fallback·placeholder provenance를 함께 보고한다. 국제 고유 디자인명 외의 공통 placeholder는 completeness에서 거부한다.
+- **Alternatives Considered:**
+  - `999`를 64로 clamp하면 pill 의미가 사라지고 손상된 데이터가 조용히 승인된다.
+  - 전역 `--theme-radius`를 tuner가 계속 덮으면 내부 component geometry와 스타일 구분이 다시 훼손된다.
+  - 모든 locale을 초기 JS에 포함하면 기존 gzip 예산을 넘길 위험이 크다.
+  - 번역 이름을 CSS/DTCG key로 slugify하면 CJK의 빈 문자열·충돌과 locale별 diff를 만든다.
+- **Consequences:**
+  - locale pack completeness와 lazy chunk/Pages base 검증이 새 build gate가 된다.
+  - 전문 번역 감수는 구조 검증과 별도의 콘텐츠 품질 단계로 남는다.
+  - locale 전환은 단순 text swap보다 복잡하지만 명시적 snapshot/epoch로 stale pane과 runtime 손실을 차단한다.
+  - Re-audit #1 수정 후 Node `214/214`, Vite `89 modules`, 5-locale Detail/Inspector와 runtime live status, actual-120 `1,920`상태·Web `480`탭·diagnostics 0, Discovery 9시나리오·6폭과 Pages fault 9종이 통과했다.
+  - 초기 JS `88,191/88,980B`, CSS `32,994/33,000B` gzip으로 hard budget을 유지했다. 다음 초기 경로 변경도 bundle gate를 통과해야 하며 locale copy는 초기 청크가 아닌 lazy 경계를 유지한다.

@@ -4,6 +4,8 @@
  */
 
 import { MAIN_CATEGORIES, canonicalizeSubId } from '../data/categories.js';
+import { isTweakPatchValid } from '../tuner/contract.js';
+import { LOCALE_STORAGE_KEY, SUPPORTED_LOCALES } from '../i18n/contract.js';
 
 export const STORAGE_VALUE_MAX_CHARS = 16_384;
 export const MAX_STORED_BOOKMARKS = MAIN_CATEGORIES.reduce(
@@ -88,6 +90,7 @@ function loadStoredRecents() {
 }
 
 const DEFAULT_STATE = {
+  locale: 'ko',
   currentView: 'MAIN', // 'MAIN' | 'DETAIL' | 'SPLIT_COMPARE'
   viewMode: 'GRID', // 'GRID' | 'BENTO' | 'SPECTRUM'
   selectedMainCategory: null,
@@ -128,6 +131,7 @@ const DEFAULT_STATE = {
 };
 
 const ENUM_FIELDS = Object.freeze({
+  locale: new Set(SUPPORTED_LOCALES),
   currentView: new Set(['MAIN', 'DETAIL', 'SPLIT_COMPARE']),
   viewMode: new Set(['GRID', 'BENTO', 'SPECTRUM']),
   sortMode: new Set(['catalog', 'name-asc', 'era-asc', 'era-desc']),
@@ -149,13 +153,6 @@ const BOOLEAN_FIELDS = new Set([
   'bookmarkFilterActive',
   'confirmSheetOpen',
   'canvasReady'
-]);
-const TWEAK_FIELDS = new Set([
-  'borderRadius',
-  'borderWidth',
-  'shadowDepth',
-  'backdropBlur',
-  'glowIntensity'
 ]);
 const AUDIO_FIELD_TYPES = Object.freeze({
   sfxEnabled: 'boolean',
@@ -252,9 +249,7 @@ function sanitizeStatePatch(partialState) {
     }
 
     if (field === 'liveTweaks') {
-      const valid = isPlainRecord(value) && Object.entries(value).every(([key, item]) => (
-        TWEAK_FIELDS.has(key) && typeof item === 'number' && Number.isFinite(item)
-      ));
+      const valid = isTweakPatchValid(value);
       if (valid) patch[field] = value;
       else reject('STATE_SHAPE_INVALID', field);
       continue;
@@ -334,6 +329,9 @@ export class AppStateManager {
     }
     if (patch.recentlyViewed) {
       saveJSON('dss_recent_v21', this.state.recentlyViewed);
+    }
+    if (patch.locale) {
+      try { localStorage.setItem(LOCALE_STORAGE_KEY, patch.locale); } catch { /* 저장소 실패는 locale 전환을 막지 않는다. */ }
     }
 
     this.notify(prevState);

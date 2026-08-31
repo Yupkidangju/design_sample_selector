@@ -7,22 +7,24 @@ import {
 } from './index.js';
 
 /** 새 정규 레코드를 Wave 0 UI가 사용하는 평면 형태로 투영한다. */
-export function toLegacySubDesign(style) {
+export function toLegacySubDesign(style, localized = null) {
+  const localizedStyle = localized?.styles?.[style.id];
   return deepFreeze({
     id: style.id,
-    name: style.name.ko,
+    name: localizedStyle?.name || style.name.ko,
     nameEn: style.name.en,
-    shortDesc: style.summary.ko,
+    shortDesc: localizedStyle?.summary || style.summary.ko,
     previewType: style.preview.rendererId,
     moodTags: style.editorial.moodTags,
     defaultTweaks: style.defaultTweaks,
-    characteristics: style.editorial.characteristics,
-    pros: style.editorial.pros,
-    cons: style.editorial.cons,
+    characteristics: localizedStyle?.characteristics || style.editorial.characteristics,
+    pros: localizedStyle?.pros || style.editorial.pros,
+    cons: localizedStyle?.cons || style.editorial.cons,
     palette: style.palette.map(color => ({
-      name: color.name.en || color.name.ko,
+      id: color.id,
+      name: localizedStyle?.palette?.find(item => item.id === color.id)?.name || color.name.en || color.name.ko,
       hex: color.value,
-      usage: color.usage.ko
+      usage: localizedStyle?.palette?.find(item => item.id === color.id)?.usage || color.usage.ko
     })),
     motionProfile: style.preview.motionId,
     thumbMotif: style.preview.thumbnailId
@@ -86,4 +88,31 @@ export function getLegacyAllSubDesigns() {
 export function findLegacySubById(id) {
   const style = getStyleById(id);
   return style ? LEGACY_FLAT_SUB_DESIGN_BY_ID.get(style.id) || null : null;
+}
+
+export function getLocalizedLegacyMainCategories(snapshot) {
+  const catalog = snapshot?.catalog;
+  return deepFreeze(getCategories().map(category => ({
+    id: category.id,
+    title: catalog?.categories?.[category.id]?.title || category.title.ko,
+    titleEn: category.title.en,
+    description: catalog?.categories?.[category.id]?.description || category.description.ko,
+    icon: category.icon,
+    accentColor: category.accentColor,
+    tags: category.tags,
+    subCategories: getStylesByCategory(category.id).map(style => toLegacySubDesign(style, catalog))
+  })));
+}
+
+export function getLocalizedLegacyAllSubDesigns(snapshot) {
+  return deepFreeze(getLocalizedLegacyMainCategories(snapshot).flatMap(category => (
+    category.subCategories.map(style => ({
+      ...style,
+      categoryId: category.id,
+      categoryTitle: category.title,
+      categoryTitleEn: category.titleEn,
+      accentColor: category.accentColor,
+      icon: category.icon
+    }))
+  )));
 }

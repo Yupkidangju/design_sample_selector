@@ -13,6 +13,9 @@ import {
   updateFacetSelection
 } from '../src/catalog/index.js';
 import { CORE_PACK_MANIFEST } from '../src/catalog/packs/core/manifest.js';
+import { activateLocale } from '../src/i18n/index.js';
+
+await activateLocale('ko');
 
 const CORE_STYLE_IDS = new Set(CORE_PACK_MANIFEST.styleIds);
 const ALL_STYLES = getAllStyles();

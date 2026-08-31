@@ -12,6 +12,19 @@ import { bindDiscoveryUrlState } from './state/discoveryUrlState.js';
 import { renderDiscoveryControls } from './components/discoveryControls.js';
 import { loadDetailViewModule } from './components/lazyPreviewLoader.js';
 import { recordRecoveryDiagnostic } from './utils/recoveryDiagnostics.js';
+import {
+  LOCALE_STORAGE_KEY,
+  activateLocale,
+  commitLocale,
+  getActiveLocaleSnapshot,
+  resolveLocalePreference
+} from './i18n/index.js';
+import { formatLocaleCopy } from './i18n/format.js';
+
+function localizedCopy(key, values, fallback) {
+  const copy = formatLocaleCopy(getActiveLocaleSnapshot()?.copy, key, values);
+  return copy === key ? fallback : copy;
+}
 
 function renderFatalBootstrapError(appContainer) {
   const detailContainer = appContainer?.querySelector('#detail-root')
@@ -39,15 +52,15 @@ function renderFatalBootstrapError(appContainer) {
   kicker.textContent = 'APPLICATION RECOVERY';
   const title = document.createElement('h2');
   title.id = 'bootstrap-fatal-title';
-  title.textContent = '애플리케이션을 시작하지 못했습니다';
+  title.textContent = localizedCopy('recovery.fatalTitle', {}, 'The application could not start');
   const description = document.createElement('p');
   description.id = 'bootstrap-fatal-description';
-  description.textContent = '페이지를 다시 불러와 초기화를 재시도해 주세요.';
+  description.textContent = localizedCopy('recovery.fatalDescription', {}, 'Reload the page to retry initialization.');
   const actions = document.createElement('div');
   actions.className = 'lazy-preview-actions';
   const retry = document.createElement('button');
   retry.type = 'button';
-  retry.textContent = '다시 시도';
+  retry.textContent = localizedCopy('recovery.retry', {}, 'Try again');
   retry.addEventListener('click', () => window.location.reload());
   panel.addEventListener('keydown', event => {
     if (event.key !== 'Tab') return;
@@ -65,6 +78,21 @@ async function initApp() {
   const appContainer = document.querySelector('.app-container');
   try {
     console.log('[DesignSpectrum] Initializing Web Showcase Application...');
+
+    let storedLocale = '';
+    try { storedLocale = window.localStorage?.getItem(LOCALE_STORAGE_KEY) || ''; } catch { /* 저장소 접근 실패는 감지를 막지 않는다. */ }
+    const initialLocale = resolveLocalePreference({
+      search: window.location.search,
+      stored: storedLocale,
+      languages: navigator.languages || [navigator.language]
+    });
+    try {
+      await commitLocale(initialLocale, appState, window);
+    } catch {
+      await activateLocale('ko');
+      appState.setState({ locale: 'ko' });
+      document.documentElement.lang = 'ko';
+    }
 
     const interactiveComponentsPromise = import('./components/interactiveEntry.js');
 
@@ -89,12 +117,12 @@ async function initApp() {
     if (headerContainer) renderHeader(headerContainer);
     if (discoveryContainer) renderDiscoveryControls(discoveryContainer);
     if (mainContainer) renderMainView(mainContainer);
+    if (audioContainer) renderAudioWidget(audioContainer);
     if (dockContainer || peekContainer) {
       const { renderSelectionDock, renderPeekPreview } = await interactiveComponentsPromise;
       if (dockContainer) renderSelectionDock(dockContainer);
       if (peekContainer) renderPeekPreview(peekContainer);
     }
-    if (audioContainer) renderAudioWidget(audioContainer);
 
     if (detailContainer) {
       let detailMounted = false;
@@ -183,25 +211,26 @@ async function initApp() {
 
       const renderLazyDetailState = (status, retry = () => {}, terminal = false) => {
         const failed = status === 'error';
+        const t = (key, fallback) => localizedCopy(key, {}, fallback);
         detailContainer.style.display = 'block';
         detailContainer.innerHTML = `
           <div class="detail-modal-backdrop"></div>
           <div class="lazy-preview-state" role="dialog" aria-modal="true"
                aria-labelledby="lazy-preview-title" tabindex="-1" ${failed ? '' : 'aria-busy="true"'}>
             <p class="lazy-preview-kicker">ON-DEMAND PREVIEW</p>
-            <h2 id="lazy-preview-title">${failed ? '상세 시안을 불러오지 못했습니다' : '상세 시안을 준비하고 있습니다'}</h2>
+            <h2 id="lazy-preview-title">${failed ? t('recovery.errorTitle', 'Unable to load detail') : t('recovery.loadingTitle', 'Preparing detail')}</h2>
             <p>${failed
               ? (terminal
-                ? '복구 시도가 끝났습니다. 페이지를 새로고침하거나 메인 갤러리로 돌아가 주세요.'
-                : '프리뷰 모듈을 다시 요청하거나 메인 갤러리로 돌아갈 수 있습니다.')
-              : '선택한 스타일의 인터랙티브 구성 요소를 불러오는 중입니다.'}</p>
+                ? t('recovery.terminalDescription', 'Recovery attempts are complete. Reload or return to the main gallery.')
+                : t('recovery.retryDescription', 'Retry the preview module or return to the main gallery.'))
+              : t('recovery.loadingDescription', 'Loading interactive components.')}</p>
             <div class="lazy-preview-actions">
               ${failed
                 ? (terminal
-                  ? '<button type="button" data-lazy-detail-reload>페이지 새로고침</button>'
-                  : '<button type="button" data-lazy-detail-retry>다시 시도</button>')
+                  ? `<button type="button" data-lazy-detail-reload>${t('recovery.reload', 'Reload page')}</button>`
+                  : `<button type="button" data-lazy-detail-retry>${t('recovery.retry', 'Try again')}</button>`)
                 : ''}
-              <button type="button" data-lazy-detail-cancel>메인으로 돌아가기</button>
+              <button type="button" data-lazy-detail-cancel>${t('recovery.backMain', 'Return to main')}</button>
             </div>
           </div>
         `;

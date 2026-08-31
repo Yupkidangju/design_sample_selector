@@ -4,8 +4,44 @@
  */
 
 import { THEME_TOKENS_MAP, getThemeDefinitionById } from '../theme/index.js';
+import { TUNER_LIMITS, isTweakValueValid } from '../tuner/contract.js';
+import { getLocaleCopy } from '../i18n/copy.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 
 export { THEME_TOKENS_MAP };
+
+const MARKDOWN_PROSE = Object.freeze({
+  ko: Object.freeze({
+    state: '테마 전환 시 게임 점수, 장바구니 항목, 폼 입력값을 보존합니다.',
+    accessibility: 'WAI-ARIA 역할과 키보드 탐색을 준수합니다.',
+    audio: 'Web Audio API 기반 상태 전환 효과음을 연결합니다.',
+    integration: 'HTML 요소에 테마 속성을 적용하여 스타일을 활성화합니다.'
+  }),
+  en: Object.freeze({
+    state: 'Preserve game scores, cart items, and form values across theme changes.',
+    accessibility: 'Follow WAI-ARIA roles and keyboard navigation.',
+    audio: 'Connect state transitions to Web Audio API feedback.',
+    integration: 'Apply the theme attribute to an HTML element to activate the style.'
+  }),
+  ja: Object.freeze({
+    state: 'テーマ切替時もゲームスコア、カート項目、フォーム入力を保持します。',
+    accessibility: 'WAI-ARIAロールとキーボード操作に準拠します。',
+    audio: '状態遷移をWeb Audio APIのフィードバックに接続します。',
+    integration: 'HTML要素にテーマ属性を適用してスタイルを有効化します。'
+  }),
+  'zh-CN': Object.freeze({
+    state: '切换主题时保留游戏得分、购物车项目与表单输入。',
+    accessibility: '遵循WAI-ARIA角色与键盘导航规范。',
+    audio: '使用Web Audio API为状态变化提供反馈。',
+    integration: '为HTML元素应用主题属性以启用样式。'
+  }),
+  'zh-TW': Object.freeze({
+    state: '切換主題時保留遊戲得分、購物車項目與表單輸入。',
+    accessibility: '遵循WAI-ARIA角色與鍵盤導覽規範。',
+    audio: '使用Web Audio API為狀態變化提供回饋。',
+    integration: '為HTML元素套用主題屬性以啟用樣式。'
+  })
+});
 
 // Archetype CSS Templates
 const ARCHETYPE_CSS_MAP = {
@@ -14,7 +50,7 @@ const ARCHETYPE_CSS_MAP = {
   background: var(--theme-bg);
   color: var(--theme-text);
   font-family: var(--theme-font-family);
-  border-radius: var(--tweak-radius, var(--theme-radius));
+  border-radius: var(--tweak-surface-radius, var(--theme-surface-radius, var(--theme-radius)));
   padding: 16px;
 }
 .game-hud-header {
@@ -22,7 +58,7 @@ const ARCHETYPE_CSS_MAP = {
   justify-content: space-between;
   background: var(--theme-surface);
   border: var(--tweak-border-width, var(--theme-border-width)) solid var(--theme-border);
-  border-radius: var(--tweak-radius, var(--theme-radius));
+  border-radius: var(--theme-control-radius, var(--theme-radius));
   padding: 12px;
   box-shadow: 0 var(--tweak-shadow-depth, 12px) 24px rgba(0,0,0,0.3);
 }
@@ -31,7 +67,7 @@ const ARCHETYPE_CSS_MAP = {
 .arena-target {
   background: var(--theme-surface);
   border: var(--tweak-border-width, 2px) solid var(--theme-accent);
-  border-radius: var(--tweak-radius, 12px);
+  border-radius: var(--tweak-surface-radius, 12px);
   box-shadow: 0 0 calc(20px * var(--tweak-glow-intensity, 1)) var(--theme-accent);
   cursor: pointer;
   transition: transform 0.1s ease;
@@ -60,7 +96,7 @@ const ARCHETYPE_CSS_MAP = {
   background: var(--theme-accent);
   color: var(--theme-bg);
   border: var(--tweak-border-width, 1px) solid transparent;
-  border-radius: var(--tweak-radius, 8px);
+  border-radius: var(--theme-control-radius, 8px);
   padding: 10px 22px;
   font-weight: 600;
   box-shadow: 0 var(--tweak-shadow-depth, 8px) 16px rgba(0,0,0,0.2);
@@ -73,7 +109,7 @@ const ARCHETYPE_CSS_MAP = {
   background: var(--theme-bg);
   color: var(--theme-text);
   border: var(--tweak-border-width, 1px) solid var(--theme-border);
-  border-radius: calc(var(--tweak-radius, 20px) + 8px);
+  border-radius: calc(var(--tweak-surface-radius, 20px) + 8px);
   overflow: hidden;
   box-shadow: 0 var(--tweak-shadow-depth, 20px) 40px rgba(0,0,0,0.5);
 }
@@ -81,7 +117,7 @@ const ARCHETYPE_CSS_MAP = {
 .mobile-feature-card {
   background: var(--theme-surface);
   border: var(--tweak-border-width, 1px) solid var(--theme-border);
-  border-radius: var(--tweak-radius, 12px);
+  border-radius: var(--tweak-surface-radius, 12px);
   padding: 14px;
   backdrop-filter: blur(var(--tweak-backdrop-blur, 16px));
 }
@@ -103,14 +139,14 @@ const ARCHETYPE_CSS_MAP = {
 .product-details {
   background: var(--theme-surface);
   border: var(--tweak-border-width, 1px) solid var(--theme-border);
-  border-radius: var(--tweak-radius, 16px);
+  border-radius: var(--tweak-surface-radius, 16px);
   box-shadow: 0 var(--tweak-shadow-depth, 10px) 25px rgba(0,0,0,0.15);
   padding: 20px;
 }
 .add-to-cart-btn {
   background: var(--theme-accent);
   color: var(--theme-bg);
-  border-radius: var(--tweak-radius, 8px);
+  border-radius: var(--theme-control-radius, 8px);
   padding: 12px 24px;
   font-weight: 700;
   width: 100%;
@@ -151,7 +187,7 @@ const ARCHETYPE_CSS_MAP = {
 .metric-card {
   background: var(--theme-surface);
   border: var(--tweak-border-width, 1px) solid var(--theme-border);
-  border-radius: var(--tweak-radius, 12px);
+  border-radius: var(--tweak-surface-radius, 12px);
   padding: 16px;
   box-shadow: 0 var(--tweak-shadow-depth, 8px) 20px rgba(0,0,0,0.2);
 }
@@ -166,7 +202,7 @@ const ARCHETYPE_CSS_MAP = {
   background: var(--theme-bg);
   color: var(--theme-text);
   font-family: var(--theme-font-family);
-  border-radius: var(--tweak-radius, 20px);
+  border-radius: var(--tweak-surface-radius, 20px);
   padding: 24px;
   text-align: center;
 }
@@ -202,7 +238,7 @@ const ARCHETYPE_CSS_MAP = {
 .chat-bubble-msg.user {
   background: var(--theme-accent);
   color: var(--theme-bg);
-  border-radius: var(--tweak-radius, 16px) var(--tweak-radius, 16px) 2px var(--tweak-radius, 16px);
+  border-radius: var(--theme-control-radius, 16px) var(--theme-control-radius, 16px) 2px var(--theme-control-radius, 16px);
   padding: 10px 16px;
   align-self: flex-end;
 }
@@ -210,7 +246,7 @@ const ARCHETYPE_CSS_MAP = {
   background: var(--theme-surface);
   color: var(--theme-text);
   border: var(--tweak-border-width, 1px) solid var(--theme-border);
-  border-radius: var(--tweak-radius, 16px) var(--tweak-radius, 16px) var(--tweak-radius, 16px) 2px;
+  border-radius: var(--theme-control-radius, 16px) var(--theme-control-radius, 16px) var(--theme-control-radius, 16px) 2px;
   padding: 10px 16px;
   align-self: flex-start;
 }`
@@ -220,17 +256,71 @@ function getExportThemeTokens(subDesign) {
   return getThemeDefinitionById(subDesign?.id)?.cssCustomProperties || null;
 }
 
+function paletteKey(color) {
+  if (typeof color?.id === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(color.id)) return color.id;
+  return slugify(typeof color?.name === 'string' ? color.name : color?.name?.en || color?.name?.ko || 'color');
+}
+
+function paletteValue(color) {
+  const value = color?.hex || color?.value;
+  if (typeof value !== 'string' || value.length > 256 || /[;{}]/.test(value)) {
+    throw new TypeError('Palette color contains unsupported CSS syntax.');
+  }
+  return value;
+}
+
+function cssCommentText(value) {
+  return String(value ?? '').replace(/\*\//g, '*\\/').replace(/[\r\n]+/g, ' ').slice(0, 240);
+}
+
+function markdownText(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\|/g, '\\|')
+    .replace(/`/g, '\\`');
+}
+
+function resolveLocaleContext(localeOrSnapshot) {
+  const snapshot = localeOrSnapshot && typeof localeOrSnapshot === 'object'
+    ? localeOrSnapshot
+    : null;
+  const locale = snapshot?.locale || (typeof localeOrSnapshot === 'string' ? localeOrSnapshot : 'ko');
+  const copy = snapshot?.copy || getLocaleCopy(locale);
+  return {
+    locale,
+    copy,
+    prose: MARKDOWN_PROSE[locale] || MARKDOWN_PROSE.ko,
+    t: (key, values) => formatLocaleCopy(copy, key, values)
+  };
+}
+
+function resolveTweak(tweaks, key, fallback) {
+  const value = tweaks?.[key] ?? fallback;
+  if (!isTweakValueValid(key, value)) {
+    throw new RangeError(`${key} must be between ${TUNER_LIMITS[key].min} and ${TUNER_LIMITS[key].max}`);
+  }
+  return value;
+}
+
 /**
  * 1. Live CSS Snippet Generator
  */
-export function generateLiveCSSSnippet(subDesign, tweaks = {}, archetype = 'game', mode = 'full') {
+export function generateLiveCSSSnippet(subDesign, tweaks = {}, archetype = 'game', mode = 'full', localeOrSnapshot = 'ko') {
   const tokens = getExportThemeTokens(subDesign);
   if (!tokens) return '/* No design selected */';
-  const paletteRules = (subDesign.palette || []).map(p => `  --color-${slugify(p.name)}: ${p.hex};`).join('\n');
+  const { t } = resolveLocaleContext(localeOrSnapshot);
+  const paletteRules = (subDesign.palette || []).map(p => `  --color-${paletteKey(p)}: ${paletteValue(p)};`).join('\n');
+  const radius = resolveTweak(tweaks, 'borderRadius', 16);
+  const borderWidth = resolveTweak(tweaks, 'borderWidth', 1);
+  const shadowDepth = resolveTweak(tweaks, 'shadowDepth', 12);
+  const backdropBlur = resolveTweak(tweaks, 'backdropBlur', 16);
+  const glowIntensity = resolveTweak(tweaks, 'glowIntensity', 1);
 
-  const tokenBlock = `/* === [${subDesign.nameEn}] Theme Tokens & Live Tweaks === */
+  const tokenBlock = `/* === ${cssCommentText(t('artifact.css.theme', { name: subDesign.name }))} === */
 [data-theme="${subDesign.id}"] {
-  /* Dynamic Theme Tokens */
+  /* ${cssCommentText(t('artifact.css.dynamicTokens'))} */
   --theme-bg: ${tokens['--theme-bg']};
   --theme-surface: ${tokens['--theme-surface']};
   --theme-surface-subtle: ${tokens['--theme-surface-subtle']};
@@ -245,18 +335,19 @@ export function generateLiveCSSSnippet(subDesign, tweaks = {}, archetype = 'game
   --theme-font-family: ${tokens['--theme-font-family']};
   --theme-glow: ${tokens['--theme-glow']};
 
-  /* Color Palette */
+  /* ${cssCommentText(t('artifact.css.palette'))} */
 ${paletteRules}
 
-  /* Live Tweaked Metrics */
-  --tweak-radius: ${tweaks.borderRadius ?? 16}px;
-  --tweak-border-width: ${tweaks.borderWidth ?? 1}px;
-  --tweak-shadow-depth: ${tweaks.shadowDepth ?? 12}px;
-  --tweak-backdrop-blur: ${tweaks.backdropBlur ?? 16}px;
-  --tweak-glow-intensity: ${Number(tweaks.glowIntensity ?? 1).toFixed(1)};
+  /* ${cssCommentText(t('artifact.css.tweaks'))} */
+  --tweak-surface-radius: ${radius}px;
+  --tweak-border-width: ${borderWidth}px;
+  --tweak-shadow-depth: ${shadowDepth}px;
+  --tweak-backdrop-blur: ${backdropBlur}px;
+  --tweak-glow-intensity: ${Number(glowIntensity).toFixed(1)};
 }`;
 
-  const compBlock = ARCHETYPE_CSS_MAP[archetype] || ARCHETYPE_CSS_MAP.game;
+  const compBlock = (ARCHETYPE_CSS_MAP[archetype] || ARCHETYPE_CSS_MAP.game)
+    .replace(/^\/\*[^\n]+\*\//, `/* === ${cssCommentText(t(`detail.${archetype}`))} CSS === */`);
 
   if (mode === 'tokens') {
     return tokenBlock;
@@ -270,15 +361,16 @@ ${paletteRules}
 /**
  * 2. Live designs.md Markdown Spec Generator
  */
-export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype = 'game', device = 'desktop') {
+export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype = 'game', device = 'desktop', localeOrSnapshot = 'ko') {
   const tokens = getExportThemeTokens(subDesign);
   if (!tokens) return '# Design Specification (No Selection)';
+  const { t, prose } = resolveLocaleContext(localeOrSnapshot);
 
-  const paletteRows = (subDesign.palette || []).map(p => `| \`${p.name}\` | \`${p.hex}\` | <span style="display:inline-block;width:12px;height:12px;background:${p.hex};border-radius:2px;border:1px solid #666;"></span> | ${p.usage || '주요 테마 색상'} |`).join('\n');
+  const paletteRows = (subDesign.palette || []).map(p => `| \`${markdownText(p.name)}\` | \`${paletteValue(p)}\` | <span style="display:inline-block;width:12px;height:12px;background:${paletteValue(p)};border-radius:2px;border:1px solid #666;"></span> | ${markdownText(p.usage || t('artifact.paletteUsage', { style: subDesign.name, color: p.name }))} |`).join('\n');
 
-  const charList = (subDesign.characteristics || []).map(c => `- ✓ ${c}`).join('\n');
-  const prosList = (subDesign.pros || []).map(p => `- 👍 ${p}`).join('\n');
-  const consList = (subDesign.cons || []).map(c => `- ⚠️ ${c}`).join('\n');
+  const charList = (subDesign.characteristics || []).map(c => `- ✓ ${markdownText(c)}`).join('\n');
+  const prosList = (subDesign.pros || []).map(p => `- 👍 ${markdownText(p)}`).join('\n');
+  const consList = (subDesign.cons || []).map(c => `- ⚠️ ${markdownText(c)}`).join('\n');
 
   const archetypeDiagrams = {
     game: `\`\`\`
@@ -372,7 +464,7 @@ export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype
 
   const currentDiagram = archetypeDiagrams[archetype] || archetypeDiagrams.game;
 
-  return `# Design Specification: ${subDesign.name} (\`${subDesign.nameEn}\`)
+  return `# Design Specification: ${markdownText(subDesign.name)} (\`${markdownText(subDesign.nameEn)}\`)
 
 > **Version:** 2.3.0  
 > **Genre Category:** ${subDesign.categoryId || 'General'}  
@@ -382,19 +474,19 @@ export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype
 
 ---
 
-## 1. Overview & Aesthetic Description
-${subDesign.shortDesc || '선택된 디자인 사조의 시각적 언어와 인터랙션 토큰 명세서입니다.'}
+## 1. ${markdownText(t('artifact.markdown.overview'))}
+${markdownText(subDesign.shortDesc || t('artifact.dtcg.description', { name: subDesign.name }))}
 
 ---
 
-## 2. Color Palette Design Tokens
+## 2. ${markdownText(t('artifact.markdown.palette'))}
 | Token Name | HEX Code | Swatch | Intended Role |
 | :--- | :--- | :---: | :--- |
 ${paletteRows}
 
 ---
 
-## 3. Dynamic Live Tweak Parameters
+## 3. ${markdownText(t('artifact.markdown.tweaks'))}
 | Parameter | Live Value | Default | Allowed Range | Unit |
 | :--- | :---: | :---: | :---: | :--- |
 | **Border Radius** | \`${tweaks.borderRadius ?? 16}px\` | \`${subDesign.defaultTweaks?.borderRadius ?? 16}px\` | \`0px ~ 64px\` | CSS Pixels |
@@ -405,37 +497,37 @@ ${paletteRows}
 
 ---
 
-## 4. Typography & Font Stack
+## 4. ${markdownText(t('artifact.markdown.typography'))}
 - **Display & Heading Font:** \`${tokens['--theme-font-family']}\`
 - **Body & UI Font:** \`'Inter', -apple-system, BlinkMacSystemFont, sans-serif\`
 - **Monospace / Code Font:** \`'Fira Code', 'Courier New', monospace\`
 
 ---
 
-## 5. Active Archetype UI Structure: \`${archetype.toUpperCase()}\`
+## 5. ${markdownText(t('artifact.markdown.structure'))}: \`${archetype.toUpperCase()}\`
 ${currentDiagram}
 
-### 5.1 Kinetic Interaction & State Rules
-- **State Preservation:** 테마 스위치 시 게임 점수, 카트 아이템, 폼 입력값 보존 (Zero-Rebuild).
-- **Accessibility:** WAI-ARIA \`role="tab"\`, \`role="button"\`, 키보드 탐색(\`[\` / \`]\`, \`ArrowLeft\` / \`ArrowRight\`) 준수.
-- **Audio Feedback:** Web Audio API 기반 상태 전환 사운드 효과(THEME_SWAP, CLICK, COPY, SFX) 연동.
+### 5.1 ${markdownText(t('artifact.markdown.interaction'))}
+- **State Preservation:** ${markdownText(prose.state)}
+- **Accessibility:** ${markdownText(prose.accessibility)}
+- **Audio Feedback:** ${markdownText(prose.audio)}
 
 ---
 
-## 6. Characteristics & Design Guidelines
-### 📋 핵심 시각적 특징
+## 6. ${markdownText(t('artifact.markdown.guidelines'))}
+### 📋 ${markdownText(t('detail.inspectorTitle'))}
 ${charList}
 
-### 👍 추천 사용처 및 장점
+### 👍 ${markdownText(t('detail.pros'))}
 ${prosList}
 
-### ⚠️ 주의사항 및 한계점
+### ⚠️ ${markdownText(t('detail.cons'))}
 ${consList}
 
 ---
 
-## 7. Integration Quickstart
-HTML 요소에 테마 속성을 적용하여 스타일을 활성화합니다.
+## 7. ${markdownText(t('artifact.markdown.quickstart'))}
+${markdownText(prose.integration)}
 \`\`\`html
 <div class="archetype-unit" data-theme="${subDesign.id}" data-archetype="${archetype}">
   <!-- Your semantic markup here -->
@@ -562,30 +654,37 @@ function parseFontFamily(cssValue) {
 /**
  * 3. Live Design Tokens JSON Generator (DTCG Format Module 2025.10)
  */
-export function generateLiveTokensJSON(subDesign, tweaks = {}) {
+export function generateLiveTokensJSON(subDesign, tweaks = {}, localeOrSnapshot = 'ko') {
   const tokens = getExportThemeTokens(subDesign);
   if (!tokens) return '{}';
+  const { locale, t } = resolveLocaleContext(localeOrSnapshot);
   const resolvedTweaks = { ...subDesign.defaultTweaks, ...tweaks };
+  for (const [key, fallback] of Object.entries({ borderRadius: 16, borderWidth: 1, shadowDepth: 12, backdropBlur: 16, glowIntensity: 1 })) {
+    resolvedTweaks[key] = resolveTweak(resolvedTweaks, key, fallback);
+  }
 
   const colorTokens = {};
   (subDesign.palette || []).forEach(paletteColor => {
-    colorTokens[slugify(paletteColor.name)] = createDtcgColorToken(
-      paletteColor.hex,
+    colorTokens[paletteKey(paletteColor)] = createDtcgColorToken(
+      paletteValue(paletteColor),
       paletteColor.usage || 'Palette color'
     );
   });
 
   const tokenStructure = {
+    $description: t('artifact.dtcg.description', { name: subDesign.name }),
     $extensions: {
       'com.design-sample-selector': {
-        name: subDesign.nameEn,
+        name: subDesign.name,
+        displayName: subDesign.name,
+        locale,
         id: subDesign.id,
         version: '2.3.0',
         format: 'DTCG 2025.10'
       }
     },
     color: {
-      ...colorTokens,
+      palette: colorTokens,
       background: createDtcgColorToken(tokens['--theme-bg']),
       surface: createDtcgColorToken(tokens['--theme-surface']),
       border: createDtcgColorToken(tokens['--theme-border']),

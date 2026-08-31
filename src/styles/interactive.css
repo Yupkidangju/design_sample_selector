@@ -2746,62 +2746,21 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
   scrollbar-width: thin;
 }
 
-/* Parameter Tweaks Dynamic Propagation to All Archetype Elements */
+/* Inspector tweaks apply only to explicitly opted-in preview surfaces. */
 .mockup-viewport {
-  --theme-radius: var(--tweak-radius, 12px);
-  --theme-border-width: var(--tweak-border-width, 1px);
   --theme-shadow: 0 var(--tweak-shadow-depth, 10px) calc(var(--tweak-shadow-depth, 10px) * 2) rgba(0, 0, 0, 0.5);
 }
 
+[data-tweak-surface] {
+  border-radius: var(--tweak-surface-radius, var(--theme-surface-radius, var(--theme-radius)));
+  border-width: var(--tweak-border-width, var(--theme-border-width));
+  box-shadow: 0 var(--tweak-shadow-depth, 10px) calc(var(--tweak-shadow-depth, 10px) * 2) rgba(0, 0, 0, 0.5);
+}
+
 .archetype-unit {
-  border-radius: var(--tweak-radius, var(--theme-radius)) !important;
-  border-width: var(--tweak-border-width, var(--theme-border-width)) !important;
-  box-shadow: 0 var(--tweak-shadow-depth, 10px) calc(var(--tweak-shadow-depth, 10px) * 2) rgba(0, 0, 0, 0.5) !important;
   filter: drop-shadow(0 0 calc(8px * var(--tweak-glow-intensity, 1)) var(--theme-accent, #00F0FF));
   backdrop-filter: blur(var(--tweak-backdrop-blur, 16px));
   -webkit-backdrop-filter: blur(var(--tweak-backdrop-blur, 16px));
-}
-
-.archetype-unit .game-hud-header,
-.archetype-unit .game-arena-board,
-.archetype-unit .game-action-bar,
-.archetype-unit .skill-btn,
-.archetype-unit .stat-badge,
-.archetype-unit .web-nav-header,
-.archetype-unit .web-btn-subtle,
-.archetype-unit .web-btn-primary,
-.archetype-unit .mobile-frame,
-.archetype-unit .mobile-avatar,
-.archetype-unit .mobile-notif-card,
-.archetype-unit .mobile-feature-card,
-.archetype-unit .mobile-toggle-card,
-.archetype-unit .mobile-card-btn,
-.archetype-unit .mobile-like-btn,
-.archetype-unit .shop-header,
-.archetype-unit .cart-trigger-btn,
-.archetype-unit .shop-product-layout,
-.archetype-unit .product-gallery,
-.archetype-unit .quantity-stepper,
-.archetype-unit .add-to-cart-btn,
-.archetype-unit .instant-buy-btn,
-.archetype-unit .blog-callout,
-.archetype-unit .blog-action-btn,
-.archetype-unit .blog-like-btn,
-.archetype-unit .comment-input,
-.archetype-unit .comment-submit-btn,
-.archetype-unit .comment-item,
-.archetype-unit .metric-card,
-.archetype-unit .dash-table-wrapper,
-.archetype-unit .period-btn,
-.archetype-unit .media-player-card,
-.archetype-unit .media-btn,
-.archetype-unit .chat-sidebar,
-.archetype-unit .channel-item,
-.archetype-unit .msg-content,
-.archetype-unit .chat-input,
-.archetype-unit .chat-send-btn {
-  border-radius: var(--tweak-radius, var(--theme-radius)) !important;
-  border-width: var(--tweak-border-width, var(--theme-border-width)) !important;
 }
 
 /* Device preview responsiveness follows the sandbox mode, not the browser window. */

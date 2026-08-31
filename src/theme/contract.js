@@ -17,6 +17,12 @@ export const THEME_TOKEN_CSS_PROPERTIES = deepFreeze({
   glow: '--theme-glow'
 });
 
+export const THEME_GEOMETRY_CSS_PROPERTIES = deepFreeze({
+  surfaceRadius: '--theme-surface-radius',
+  controlRadius: '--theme-control-radius',
+  pillRadius: '--theme-pill-radius'
+});
+
 /** 개별 스타일이 선택되지 않았을 때의 전역 런타임 fallback. */
 export const ROOT_THEME_TOKENS = deepFreeze({
   background: '#0B0F19',
@@ -32,4 +38,10 @@ export const ROOT_THEME_TOKENS = deepFreeze({
   shadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
   fontFamily: "'Inter', sans-serif",
   glow: '0 0 20px rgba(0, 240, 255, 0.35)'
+});
+
+export const ROOT_THEME_GEOMETRY = deepFreeze({
+  surfaceRadius: ROOT_THEME_TOKENS.radius,
+  controlRadius: ROOT_THEME_TOKENS.radius,
+  pillRadius: '999px'
 });

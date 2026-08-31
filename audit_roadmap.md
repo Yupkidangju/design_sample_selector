@@ -208,9 +208,19 @@
 - actual-120은 1,920상태·Web 480탭, Wave 1은 576상태, Discovery는 9시나리오·6폭, Scalability는 actual+synthetic 60/120과 LCP 848ms·CLS 0을 재통과했다. 상세 finding ledger와 report SHA는 `docs/multi_audit/10/re_audit_evidence_10.md`에 있다.
 - live Pages는 최종 재검증에서도 source `index.html`/`src/main.js`를 제공하고 새 hashed entry를 404로 응답했다. workflow push, Pages Source=GitHub Actions, live fresh/cache smoke와 CSP·Fonts 응답 검증 전에는 운영 PASS로 승격하지 않는다.
 
+### Phase 4K Audit 11 Re-audit #1 i18n Remediation Record (2026-08-31)
+
+- **판정:** 저장소·로컬 Crostini 범위 `PASS 후보 / 독립 재감사 대기`. FIN-F004/F005/F007/F009의 catalog placeholder, visible/ARIA 고정 문자열, Inspector locale 미사용과 false-green gate를 `spec.md` §5.10.10–11에 대조해 재작업했다.
+- 5 locale snapshot은 296개 copy key parity와 catalog field provenance를 가진다. placeholder는 모두 0이고 ja/zh의 국제 고유 디자인명 120개만 `international-proper-name` 승인 fallback으로 보고한다.
+- CSS comment, 8개 archetype HTML visible/ARIA, Markdown heading/prose, DTCG description/display metadata는 locale별로 바뀌며 CSS key 22개, HTML machine attribute 17개와 DTCG top structural key 4개는 동일하다.
+- locale 전환 시 Inspector `html` tab, `btn-inspector-copy` focus, nonzero sidebar scroll, `swiss-grid/game` renderer identity가 유지됐다. focus trap 재연결은 복원된 target을 첫 버튼으로 덮지 않는다.
+- 전체 Node `214/214`, catalog 오류 0/legacy 경고 56, 두 theme CSS 최신, 89-module Vite build와 22-file Pages closure, initial JS/CSS `88,191/32,994B` gzip, offline production audit 취약점 0을 통과했다.
+- Chrome 151에서 5-locale Detail/Inspector 화면 5개와 runtime live status·diagnostics/issues 0, actual-120 1,920상태·Web 480탭·processing median/max `17.85/107.2ms`, Discovery 9시나리오·6폭·89/89 named input, Pages network/consumer fault `7/2`·issues 0을 기록했다.
+- 원본 source report 3개와 manifest/sidecar는 size·SHA-256이 모두 일치한다. 상세 RED→GREEN·finding ledger·명령·artifact 경로는 `docs/multi_audit/11/re_audit_evidence_11_1.md`에 있다.
+
 ### Next Recommended Gate and Remaining Risks
 
-- **현재 승인 게이트:** actual 120, Audit 9와 Audit 10의 저장소/로컬 런타임 재감사는 `APPROVE / COMPLETE`다. 다음 필수 게이트는 새 Pages workflow를 실제 게시한 뒤 hashed closure, fresh/cache smoke, CSP/security headers/Google Fonts response를 확인하는 것이다.
+- **현재 승인 게이트:** actual 120, Audit 9와 Audit 10의 저장소/로컬 런타임은 `APPROVE / COMPLETE`이며 Audit 11 Re-audit #1 수정은 독립 재감사 대기 `PASS 후보`다. 다음 필수 게이트는 Audit 11 독립 재감사와 실제 Pages의 hashed closure, fresh/cache smoke, CSP/security headers/Google Fonts response 확인이다.
 - **남은 품질 부채:** 기존 24개 `legacy` 스타일의 출처·접근성·대비 경고 56개는 공개 기준선으로 남아 있다. 허위 메타데이터로 제거하지 않고 실제 조사·검토와 함께 해소해야 한다.
 - **남은 motion 품질 부채:** `sparkline`, `vhs-shift`, `ken-burns`, `tile-stagger` 4개는 의도적으로 `metadata-only`이며 ID 전용 시각 동작이 없다. `hard-punch`, `hard-press`, `inset-press` 3개는 초기 반복 모션이 아니라 상호작용 시에만 동작한다. 새 효과를 만들거나 motion 강도를 보정하는 작업은 호환 이전 범위에서 제외했으므로 style-pack 저작/시각 QA 사양에서 별도 승인한다.
 - **남은 확장 위험:** Audit 9 수정 후 초기 CSS 예산 여유는 144 bytes, JS 예산 여유는 384 bytes뿐이다. 120종 이후에는 현재 async CSS·bounded DOM 경계를 유지하고 새 예산을 승인해야 한다.

@@ -133,7 +133,7 @@ export const EXPANSION_GRAMMARS = deepFreeze({
       lineages: ['postmodernism', 'psychedelia', 'retrofuturism'], media: ['graphic', 'print', 'web-ui'], materiality: ['flat', 'screen'],
       density: 'maximal', tone: ['energetic', 'immersive'], motion: 'expressive', regions: ['europe', 'north-america'], maturity: 'canonical'
     },
-    radius: 999, borderWidth: 2, shadowDepth: 12, fontFamily: "'Arial Black', sans-serif",
+    radius: 24, controlRadius: 12, pillRadius: 999, borderWidth: 2, shadowDepth: 12, fontFamily: "'Arial Black', sans-serif",
     characteristics: ['반복 파형·방사선·동심원의 착시 무대', '극단적인 색 대비와 곡선 타이포'],
     pros: '음악·이벤트·문화 콘텐츠에 강한 리듬과 장면성을 준다.',
     cons: '고주파 패턴은 시각 피로와 멀미를 유발할 수 있다.',
@@ -217,7 +217,7 @@ export const EXPANSION_GRAMMARS = deepFreeze({
       lineages: ['cyberculture', 'retrofuturism', 'postmodernism'], media: ['graphic', 'web-ui', 'illustration'], materiality: ['metal', 'plastic', 'screen'],
       density: 'maximal', tone: ['playful', 'luxurious'], motion: 'expressive', regions: ['global-internet', 'north-america'], maturity: 'emerging'
     },
-    radius: 999, borderWidth: 2, shadowDepth: 18, fontFamily: "'Arial Black', sans-serif",
+    radius: 24, controlRadius: 16, pillRadius: 999, borderWidth: 2, shadowDepth: 18, fontFamily: "'Arial Black', sans-serif",
     characteristics: ['크롬 타이포·별빛·스티커형 배지', '고채도 분홍과 전기색의 과장된 광택'],
     pros: '패션·음악·팬덤 콘텐츠에 즉각적인 시대성과 유희성을 준다.',
     cons: '반사색이 텍스트 획과 겹치면 낮은 대비처럼 보일 수 있다.',
@@ -384,6 +384,11 @@ function toStyleRecord(blueprint, order) {
       shadowDepth: grammar.shadowDepth,
       backdropBlur: grammar.backdropBlur || 0,
       glowIntensity: grammar.dark ? 0.65 : 0
+    },
+    themeGeometry: {
+      surfaceRadius: `${grammar.radius}px`,
+      controlRadius: `${grammar.controlRadius ?? grammar.radius}px`,
+      pillRadius: `${grammar.pillRadius ?? 999}px`
     },
     ...(grammar.backdropBlur ? { themeEffects: { backdropBlur: grammar.backdropBlur } } : {}),
     palette: [

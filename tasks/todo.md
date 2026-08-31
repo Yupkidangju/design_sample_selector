@@ -1,59 +1,83 @@
-# Task List: `catalog-expansion-120`
+# Task List: Audit 11 radius·5-locale remediation
 
-**Source plan:** `tasks/plan.md`
+**Plan:** `tasks/plan.md`
 
-**Source specification:** `SPEC-catalog-expansion-120.md`
+**Status:** `COMPLETE` (2026-08-31)
 
-**Task list status:** 구현 완료 (`COMPLETE`)
+## Task 1: 계약 문서 동기화
 
-**승인일:** 2026-08-31
+- [x] semantic surface/control/pill radius와 공통 tuner limits를 정의한다.
+- [x] theme/category/archetype/locale 전환 preserve/reset 행렬을 정의한다.
+- [x] 5 locale ID, 선택 우선순위, fallback, machine ID 불변성을 정의한다.
 
-**완료일:** 2026-08-31
+**Verification:** 문서 상호 대조와 Decision 021 기록
 
-> 사용자의 “120개 추가까지 한꺼번에” 요청은 기존 36종을 포함한 실제 총 120종을 한 번에 완료하는 승인으로 해석한다. 내부 체크포인트마다 자동 검증하되 추가 승인 대기는 없다.
+## Task 2: Audit 11 RED 회귀 테스트
 
----
+- [x] 999 default, broad selector, state 상한, artifact 불일치를 재현한다.
+- [x] prototype facet/oversize URL crash를 재현한다.
+- [x] locale pack completeness, machine key invariance, unsafe text sink를 재현한다.
 
-## Phase A — 계약·authoring 기반
+**Verification:** `node --test tests/auditRemediation11.test.js`가 수정 전 의도대로 실패
 
-- [x] Task 1: 실제 120/신규 84/category별 15/기존 36 무회귀 실패 테스트 작성
-- [x] Task 2: 21개 문법·source·token·카피를 만드는 expansion authoring factory 구현
-- [x] Task 3: `modern-foundations`, `raw-materials` 24종 데이터 구현
-- [x] Task 4: `dimensional-pop`, `retro-editorial` 24종 데이터 구현
-- [x] Task 5: `web-millennium`, `data-spatial`, `soft-play` 36종 데이터 구현
+## Task 3: Radius와 외부 URL 경계 수정
 
-### Checkpoint A
+- [x] 공유 `TUNER_LIMITS`를 catalog validation·AppState·DOM·generator에 적용한다.
+- [x] 문제 grammar의 pill radius와 surface default를 분리한다.
+- [x] `data-tweak-surface` opt-in으로 broad `!important` selector를 제거한다.
+- [x] Discovery URL을 allowlist/null-prototype/길이 상한으로 보호한다.
 
-- [x] 신규 84종 canonical schema 통과
-- [x] 신규 84종 `ready`, warning/error 0
-- [x] 기존 36 ID 순서·legacy 경고 56 유지
+**Verification:** Audit 11 radius/URL 집중 테스트와 120종 scan
 
-## Phase B — 팩·프리뷰·theme
+## Checkpoint A
 
-- [x] Task 6: 7개 pack manifest와 catalog index 통합
-- [x] Task 7: 84개 고유 thumbnail 정의와 entrypoint 통합
-- [x] Task 8: 84개 component renderer 정의와 Desktop/Mobile 반응형 통합
-- [x] Task 9: 84개 motion descriptor와 reduced-motion 통합
-- [x] Task 10: 신규 84종 theme/detail CSS 생성 및 lazy chunk 분리
+- [x] 집중 테스트 green
+- [x] catalog/theme 생성 최신 상태
+- [x] 기존 radius 관련 회귀 테스트 통과
 
-### Checkpoint B
+## Task 4: Locale contract와 lazy pack 구현
 
-- [x] renderer/thumbnail/motion inventory 120/120/120, fallback 0
-- [x] Web 120×4 및 archetype 120×8×2 렌더 계약 통과
-- [x] initial CSS에 expansion 상세 CSS가 포함되지 않음
+- [x] 5 locale registry, 정규화, URL/storage/browser precedence를 구현한다.
+- [x] UI message와 catalog overlay pack을 locale별 lazy chunk로 분리한다.
+- [x] 120 styles/category/facet/palette display field completeness를 검증한다.
 
-## Phase C — 제품·검증·인수인계
+**Verification:** locale unit test, Vite chunk/budget 검사
 
-- [x] Task 11: 실제 120종 기준 탐색·페이지·선택·export·기존 QA 계약 전환
-- [x] Task 12: 120종 전용 Crostini Chrome QA와 npm 명령 구현
-- [x] Task 13: 전체 테스트·catalog/theme/build/bundle/Chrome 검증
-- [x] Task 14: spec/design/ADR/README/CHANGELOG/build/summary/capability/audit 문서 동기화
-- [x] Task 15: 코드 품질·단순화·diff·비밀정보·잔여 프로세스 최종 점검
+## Task 5: Header·Discovery·Gallery locale 연결
 
-### Final Checkpoint
+- [x] native endonym select와 document `lang`을 state에 연결한다.
+- [x] 검색 문서와 이름 정렬이 선택 locale을 사용한다.
+- [x] main/discovery locale-sensitive copy와 ARIA가 같은 snapshot을 사용한다.
 
-- [x] 실제 catalog 총 120종, category별 15종
-- [x] 기존 36종 호환 및 신규 84종 fallback 0
-- [x] 초기 JS/CSS, DOM, interaction, LCP/CLS 예산 통과
-- [x] Chrome diagnostics·접근성·Desktop/Mobile 전환 통과
-- [x] 문서와 구현이 일치하고 미완료 위험이 명시됨
+**Verification:** 5 locale 상태/검색/정렬/keyboard 테스트
+
+## Task 6: Detail·Inspector 원자적 locale 전환
+
+- [x] locale을 Inspector context/epoch에 포함한다.
+- [x] machine key는 stable palette ID를 사용하고 human metadata만 번역한다.
+- [x] locale 변경 시 mock runtime·Inspector tab·scroll·focus를 보존한다.
+- [x] code pane과 dynamic localized text sink를 context-safe하게 갱신한다.
+
+**Verification:** rapid toggle, malicious corpus, 4-pane coherence 테스트
+
+## Checkpoint B
+
+- [x] 전체 Node 테스트 통과
+- [x] Vite build와 bundle budget 통과
+- [x] dependency audit 통과
+
+## Task 7: Crostini Chrome 재감사
+
+- [x] 5 locale × 320/768/1280/1920 폭과 200% 대응 reflow를 검사한다.
+- [x] 문제 8종과 전체 8 archetype의 radius·device 행렬 및 대표 screenshot을 검사한다.
+- [x] keyboard/AX, locale 전환, Pages base lazy chunks와 diagnostics 0을 검사한다.
+
+**Verification:** 프로젝트 내 감사 11 Chrome report·screenshots 보존
+
+## Task 8: 문서·증거·최종 리뷰
+
+- [x] README/CHANGELOG/spec/designs/ADR를 구현과 동기화한다.
+- [x] finding별 대조·수정·검증을 `re_audit_evidence_11.md`에 기록한다.
+- [x] correctness/readability/architecture/security/performance 5축 diff 리뷰를 완료한다.
+
+**Verification:** `git diff --check`, 비밀 패턴 검사, 최종 자동·브라우저 게이트 기록

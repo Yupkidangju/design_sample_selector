@@ -108,7 +108,7 @@ test('Audit 9: lazy Detail owns focus trap, Escape, restoration, and fatal boots
   assert.match(mainSource, /event\.key === 'Escape'/u);
   assert.match(mainSource, /lazyOpener/u);
   assert.match(mainSource, /renderFatalBootstrapError/u);
-  assert.match(mainSource, /다시 시도/u);
+  assert.match(mainSource, /recovery\.retry/u);
   assert.match(detailSource, /lastFocusedSubId/u);
   assert.match(detailSource, /galleryFocusId/u);
 });

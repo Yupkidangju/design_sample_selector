@@ -285,6 +285,25 @@ flowchart LR
 
 ---
 
+### 2.9 Locale Snapshot and Semantic Geometry Boundary
+
+`src/i18n/`은 locale ID·fallback·296-key copy inventory, catalog overlay와 lazy pack lifecycle을 소유한다. AppState에는 검증된 locale ID만 commit하며 pack import가 끝나기 전 visible state를 바꾸지 않는다. Header, Discovery, Gallery, Detail, Split, recovery, 8개 archetype, 상호작용 runtime과 Inspector는 각 update 시작 시 하나의 locale snapshot을 읽어 혼합 언어 frame을 만들지 않는다. Catalog coverage는 번역·승인 fallback·placeholder를 field 단위로 분리하며 placeholder가 하나라도 있으면 snapshot validation을 실패시킨다.
+
+```mermaid
+flowchart LR
+  U[URL / storage / browser] --> R[Locale registry]
+  R -->|validated pack| S[AppState.locale]
+  S --> H[Header · document.lang]
+  S --> D[Discovery · search · sort]
+  S --> V[Gallery · Detail]
+  S --> I[Inspector immutable snapshot]
+  I --> A[CSS comment · HTML copy · Markdown prose · DTCG metadata]
+```
+
+Inspector의 사람용 산출물만 locale별로 바뀐다. CSS custom property/selector, HTML ID·data attribute, DTCG structural key는 canonical ID와 stable palette ID를 사용해 같은 set을 유지한다. locale 재렌더는 기존 focus target을 복원한 뒤 focus trap만 다시 연결하며 첫 버튼으로 재초점하지 않는다.
+
+테마 geometry는 `surface/control/pill` 세 의미를 가진다. Tuner는 preview markup의 `data-tweak-surface`에만 `--tweak-surface-radius`와 border/shadow 변수를 적용한다. badge·chip·meter처럼 capsule을 의도한 요소는 `--theme-pill-radius`를 사용하고 tuner가 덮어쓰지 않는다.
+
 ## 3. Main Gallery Layout & 3 View Modes
 
 ### 3.1 Top Navigation & Search/Filter Controls
@@ -363,6 +382,8 @@ Located at the topmost header of the detail modal:
   - Shadow Depth slider (`0px` ~ `30px`)
   - Backdrop Blur slider (`0px` ~ `32px`)
   - Glow Intensity slider (`0.0` ~ `2.0`)
+- **Semantic scope:** radius/border/shadow는 root와 선택된 주요 surface의 `data-tweak-surface`에만 적용한다. 내부 button/input/badge의 고유 geometry와 pill radius는 유지한다.
+- **Locale transition:** locale 변경은 현재 renderer state를 snapshot/rehydrate하고 활성 Inspector tab/CSS mode, sidebar·viewport scroll과 focus를 복원한다. 네 pane은 동일 locale epoch에서 함께 생성하고 code node는 `textContent`로 기록한다.
 - **Dynamic 4-Tab Reactive Inspector & Spec Generator:**
   - `role="tablist"` navigation: `[ 💻 Live CSS ]`, `[ 📄 Live HTML ]`, `[ 📋 Live designs.md ]`, `[ 🏷️ Design Tokens ]`.
   - **Live CSS Sub-Toggles:** `전체 번들 (Full)` / `테마 토큰만 (Tokens Only)` / `아키타입 CSS (Component)`.

@@ -5,7 +5,9 @@
 
 import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
-import { findSubById } from '../data/categories.js';
+import { getLocalizedLegacyAllSubDesigns } from '../catalog/legacyAdapter.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
@@ -46,22 +48,26 @@ export function renderSelectionDock(container) {
       return;
     }
 
-    const draft = findSubById(draftSubId) || findSubById(confirmedStyleId);
-    const confirmed = findSubById(confirmedStyleId);
-    const recents = recentlyViewed.map(findSubById).filter(Boolean);
+    const snapshot = getActiveLocaleSnapshot();
+    const t = (key, values) => formatLocaleCopy(snapshot?.copy, key, values);
+    const localizedById = new Map(getLocalizedLegacyAllSubDesigns(snapshot).map(style => [style.id, style]));
+    const findLocalized = id => localizedById.get(id) || null;
+    const draft = findLocalized(draftSubId) || findLocalized(confirmedStyleId);
+    const confirmed = findLocalized(confirmedStyleId);
+    const recents = recentlyViewed.map(findLocalized).filter(Boolean);
     const isBookmarked = draft ? bookmarks.includes(draft.id) : false;
     const inCompare = draft && (compareSubIds[0] === draft.id || compareSubIds[1] === draft.id);
 
     container.innerHTML = `
-      <div class="selection-dock ${confirmSheetOpen ? 'is-expanded' : ''}" role="region" aria-label="선택한 디자인">
-        ${confirmSheetOpen && confirmed ? renderConfirmSheet(confirmed, state) : ''}
+      <div class="selection-dock ${confirmSheetOpen ? 'is-expanded' : ''}" role="region" aria-label="${escapeHtml(t('dock.region'))}">
+        ${confirmSheetOpen && confirmed ? renderConfirmSheet(confirmed, state, t) : ''}
 
         <div class="dock-bar">
-          <div class="dock-confirmed-chip ${confirmed ? 'has-value' : ''}" id="dock-open-confirmed" title="확정된 스타일">
-            <span class="dock-chip-label">선택됨</span>
+          <div class="dock-confirmed-chip ${confirmed ? 'has-value' : ''}" id="dock-open-confirmed" title="${escapeHtml(t('dock.confirmedTitle'))}">
+            <span class="dock-chip-label">${escapeHtml(t('dock.selected'))}</span>
             ${confirmed
               ? `<span class="dock-chip-name">${escapeHtml(confirmed.name)}</span>`
-              : `<span class="dock-chip-empty">미확정</span>`}
+              : `<span class="dock-chip-empty">${escapeHtml(t('dock.unconfirmed'))}</span>`}
           </div>
 
           ${draft ? `
@@ -74,18 +80,18 @@ export function renderSelectionDock(container) {
               </div>
             </div>
             <div class="dock-actions">
-              <button class="dock-btn primary" id="dock-open-detail">자세히 보기</button>
-              <button class="dock-btn" id="dock-confirm">${confirmed?.id === draft.id ? '확정됨 ✓' : '이 스타일 확정'}</button>
-              <button class="dock-btn" id="dock-compare">${inCompare ? '비교에 담김' : '비교에 담기'}</button>
+              <button class="dock-btn primary" id="dock-open-detail">${escapeHtml(t('dock.details'))}</button>
+              <button class="dock-btn" id="dock-confirm">${escapeHtml(t(confirmed?.id === draft.id ? 'dock.confirmed' : 'dock.confirm'))}</button>
+              <button class="dock-btn" id="dock-compare">${escapeHtml(t(inCompare ? 'dock.inCompare' : 'dock.addCompare'))}</button>
               <button class="dock-btn" id="dock-bookmark">${isBookmarked ? '★' : '☆'}</button>
-              <button class="dock-btn ghost" id="dock-clear" aria-label="선택 해제">✕</button>
+              <button class="dock-btn ghost" id="dock-clear" aria-label="${escapeHtml(t('dock.clear'))}">✕</button>
             </div>
           ` : `
-            <p class="dock-hint">갤러리에서 스타일을 클릭해 담으세요. 더블클릭하면 바로 자세히 봅니다.</p>
+            <p class="dock-hint">${escapeHtml(t('dock.hint'))}</p>
           `}
 
           ${recents.length ? `
-            <div class="dock-recents" aria-label="최근 본 스타일">
+            <div class="dock-recents" aria-label="${escapeHtml(t('dock.recents'))}">
               ${recents.map((s) => `
                 <button class="dock-recent-btn ${s.id === draft?.id ? 'active' : ''}" data-recent-id="${s.id}" title="${escapeHtml(s.name)}">
                   ${renderPreviewThumbnail({ thumbnailId: s.thumbMotif, design: s })}
@@ -112,6 +118,7 @@ export function renderSelectionDock(container) {
   }
 
   async function loadConfirmPreview(sub, renderVersion) {
+    const t = (key, values) => formatLocaleCopy(getActiveLocaleSnapshot()?.copy, key, values);
     if (confirmFailureSubId !== sub.id) {
       confirmFailureSubId = sub.id;
       confirmFailureCount = 0;
@@ -119,7 +126,7 @@ export function renderSelectionDock(container) {
     const preview = container.querySelector('#confirm-preview');
     if (!preview || !isCurrentConfirmPreview(sub, renderVersion)) return;
     preview.setAttribute('aria-busy', 'true');
-    preview.innerHTML = '<p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>';
+    preview.innerHTML = `<p class="inline-preview-state" role="status">${escapeHtml(t('dock.loading'))}</p>`;
 
     let failurePhase = 'import';
     try {
@@ -135,7 +142,7 @@ export function renderSelectionDock(container) {
       });
       currentPreview.removeAttribute('aria-busy');
       failurePhase = 'hydrate';
-      hydrateMockup(currentPreview, sub, { tab: 'hero' });
+      hydrateMockup(currentPreview, sub, { tab: 'hero', snapshot: getActiveLocaleSnapshot() });
       confirmFailureCount = 0;
     } catch (error) {
       if (!isCurrentConfirmPreview(sub, renderVersion)) return;
@@ -155,10 +162,10 @@ export function renderSelectionDock(container) {
       currentPreview.removeAttribute('aria-busy');
       currentPreview.innerHTML = `
         <div class="inline-preview-state" role="alert">
-          <p>확정 시안을 불러오지 못했습니다.</p>
+          <p>${escapeHtml(t('dock.failed'))}</p>
           ${terminal
-            ? '<button class="dock-btn" type="button" data-confirm-preview-reload>페이지 새로고침</button>'
-            : '<button class="dock-btn" type="button" data-confirm-preview-retry>다시 시도</button>'}
+            ? `<button class="dock-btn" type="button" data-confirm-preview-reload>${escapeHtml(t('recovery.reload'))}</button>`
+            : `<button class="dock-btn" type="button" data-confirm-preview-retry>${escapeHtml(t('recovery.retry'))}</button>`}
         </div>
       `;
       currentPreview.querySelector('[data-confirm-preview-retry]')
@@ -168,17 +175,17 @@ export function renderSelectionDock(container) {
     }
   }
 
-  function renderConfirmSheet(sub, state) {
+  function renderConfirmSheet(sub, state, t) {
     const tweaks = state.liveTweaks;
     return `
-      <div class="confirm-sheet" role="region" aria-label="확정된 디자인">
+      <div class="confirm-sheet" role="region" aria-label="${escapeHtml(t('dock.confirmedRegion'))}">
         <div class="confirm-sheet-head">
-          <h3>이 스타일로 확정했습니다</h3>
-          <button class="dock-btn ghost" id="confirm-sheet-close">접기</button>
+          <h3>${escapeHtml(t('dock.confirmedHeading'))}</h3>
+          <button class="dock-btn ghost" id="confirm-sheet-close">${escapeHtml(t('dock.collapse'))}</button>
         </div>
         <div class="confirm-sheet-body">
           <div class="confirm-preview" id="confirm-preview" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
-            <p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>
+            <p class="inline-preview-state" role="status">${escapeHtml(t('dock.loading'))}</p>
           </div>
           <div class="confirm-facts">
             <p class="confirm-desc">${escapeHtml(sub.shortDesc)}</p>
@@ -196,10 +203,10 @@ box-shadow: 0 ${tweaks.shadowDepth}px ${tweaks.shadowDepth * 2}px rgba(0,0,0,.4)
 backdrop-filter: blur(${tweaks.backdropBlur}px);
 --glow: ${tweaks.glowIntensity};</pre>
             <div class="confirm-sheet-actions">
-              <button class="dock-btn" id="confirm-copy-css">CSS 복사</button>
-              <button class="dock-btn" id="confirm-open-detail">샌드박스 열기</button>
-              <button class="dock-btn" id="confirm-to-compare">비교에 올리기</button>
-              <button class="dock-btn ghost" id="confirm-browse">다른 스타일 보기</button>
+              <button class="dock-btn" id="confirm-copy-css">${escapeHtml(t('dock.copyCss'))}</button>
+              <button class="dock-btn" id="confirm-open-detail">${escapeHtml(t('dock.openSandbox'))}</button>
+              <button class="dock-btn" id="confirm-to-compare">${escapeHtml(t('dock.raiseCompare'))}</button>
+              <button class="dock-btn ghost" id="confirm-browse">${escapeHtml(t('dock.browse'))}</button>
             </div>
           </div>
         </div>

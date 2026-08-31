@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "run_directory": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11",
+  "reports": [
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_01_tuner_contract_ui.md",
+      "sha256": "add0d341a169a40515b4f139755f12168ed7cc6c6991316a8a99e1db0353fb0c",
+      "size": 26858,
+      "sealed_at_utc": "2026-08-31T05:03:40.108777+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_02_i18n_arch_runtime.md",
+      "sha256": "2aff63ffed377bc3fb5659ccfc364c2a55156d1968b70dca29548be93fdafffe",
+      "size": 32119,
+      "sealed_at_utc": "2026-08-31T05:10:38.275095+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector/docs/multi_audit/11/sub_audit_03_security_resilience.md",
+      "sha256": "4245c96ba186cf68ba2524b4f6be23dd3fa604028653c52c386f8eb5719d674f",
+      "size": 37468,
+      "sealed_at_utc": "2026-08-31T05:11:02.862905+00:00"
+    }
+  ],
+  "missing_source_reports": [],
+  "finalized_at_utc": "2026-08-31T05:12:15.384973+00:00"
+}

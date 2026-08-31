@@ -5,8 +5,11 @@ import {
 } from '../catalog/index.js';
 import {
   getLegacyAllSubDesigns,
-  getLegacyMainCategories
+  getLegacyMainCategories,
+  getLocalizedLegacyAllSubDesigns,
+  getLocalizedLegacyMainCategories
 } from '../catalog/legacyAdapter.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
 import {
   RENDER_SCALABILITY_BUDGETS,
   createRenderWindow
@@ -21,9 +24,9 @@ const CATEGORY_BY_ID = new Map(
   LEGACY_CATEGORIES.map(category => [category.id, category])
 );
 
-function createEntry(style) {
-  const sub = LEGACY_STYLE_BY_ID.get(style.id);
-  const category = CATEGORY_BY_ID.get(style.categoryId);
+function createEntry(style, styleById = LEGACY_STYLE_BY_ID, categoryById = CATEGORY_BY_ID) {
+  const sub = styleById.get(style.id);
+  const category = categoryById.get(style.categoryId);
   if (!sub || !category) {
     throw new Error(`갤러리 호환 projection이 없습니다: ${style.id}`);
   }
@@ -35,11 +38,19 @@ function createEntry(style) {
  * Grid만 카테고리별로 묶고 Bento는 전역 순서, Spectrum은 시대 순서를 사용한다.
  */
 export function createGalleryModel(state = {}) {
-  const results = queryCatalogForDiscoveryState(ALL_STYLES, state);
-  const entries = Object.freeze(results.map(createEntry));
+  const snapshot = getActiveLocaleSnapshot();
+  const categoriesSource = snapshot ? getLocalizedLegacyMainCategories(snapshot) : LEGACY_CATEGORIES;
+  const stylesSource = snapshot ? getLocalizedLegacyAllSubDesigns(snapshot) : getLegacyAllSubDesigns();
+  const styleById = new Map(stylesSource.map(style => [style.id, style]));
+  const categoryById = new Map(categoriesSource.map(category => [category.id, category]));
+  const results = queryCatalogForDiscoveryState(ALL_STYLES, {
+    ...state,
+    localizedStyles: snapshot?.catalog?.styles
+  });
+  const entries = Object.freeze(results.map(style => createEntry(style, styleById, categoryById)));
   const entryById = new Map(entries.map(entry => [entry.style.id, entry]));
 
-  const categories = Object.freeze(LEGACY_CATEGORIES
+  const categories = Object.freeze(categoriesSource
     .map(category => {
       const categoryEntries = entries.filter(entry => entry.category.id === category.id);
       if (!categoryEntries.length) return null;

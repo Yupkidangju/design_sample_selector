@@ -7,6 +7,7 @@ import {
 } from '../contract.js';
 import { isBasicColorValue } from './color.js';
 import { collectCatalogQualityIssues } from './quality.js';
+import { isTweakValueValid } from '../../tuner/contract.js';
 
 const ROOT_COLLECTIONS = Object.freeze(['categories', 'facets', 'styles', 'packs']);
 const REFERENCE_COLLECTIONS = Object.freeze([
@@ -48,6 +49,7 @@ const TWEAK_KEYS = Object.freeze([
   'glowIntensity'
 ]);
 const THEME_EFFECT_KEYS = Object.freeze(['backdropBlur']);
+const THEME_GEOMETRY_KEYS = Object.freeze(['surfaceRadius', 'controlRadius', 'pillRadius']);
 const DIMENSION_PATTERN = /^(?:0|(?:\d+(?:\.\d+)?|\.\d+)(?:px|rem|em|%|vw|vh))$/i;
 
 function isRecord(value) {
@@ -352,13 +354,13 @@ function validateTweaks(tweaks, issues, context, path) {
     return;
   }
   for (const key of TWEAK_KEYS) {
-    if (!Number.isFinite(tweaks[key]) || tweaks[key] < 0) {
+    if (!isTweakValueValid(key, tweaks[key])) {
       addFieldIssue(
         issues,
         context,
         'TWEAK_VALUE_INVALID',
         `${path}.${key}`,
-        '기본 트윅 값은 0 이상의 유한한 숫자여야 합니다.'
+        '기본 트윅 값이 공통 튜너 허용 범위를 벗어났습니다.'
       );
     }
   }
@@ -395,6 +397,19 @@ function validateThemeEffects(effects, issues, context, path) {
   }
 }
 
+function validateThemeGeometry(geometry, issues, context, path) {
+  if (geometry === undefined) return;
+  if (!isRecord(geometry)) {
+    addFieldIssue(issues, context, 'FIELD_TYPE_INVALID', path, '테마 기하 객체가 필요합니다.');
+    return;
+  }
+  for (const key of THEME_GEOMETRY_KEYS) {
+    if (typeof geometry[key] !== 'string' || !DIMENSION_PATTERN.test(geometry[key])) {
+      addFieldIssue(issues, context, 'THEME_GEOMETRY_INVALID', `${path}.${key}`, '지원하는 CSS 치수 값이 필요합니다.');
+    }
+  }
+}
+
 function validateStyle(style, issues) {
   const path = recordPath('styles', style);
   const context = { entityType: 'style', entityId: isNonEmptyString(style?.id) ? style.id : null };
@@ -425,6 +440,7 @@ function validateStyle(style, issues) {
   validatePreview(style.preview, issues, context, `${path}.preview`);
   validateTweaks(style.defaultTweaks, issues, context, `${path}.defaultTweaks`);
   validateThemeEffects(style.themeEffects, issues, context, `${path}.themeEffects`);
+  validateThemeGeometry(style.themeGeometry, issues, context, `${path}.themeGeometry`);
   validatePalette(style.palette, issues, context, `${path}.palette`);
   if (!isRecord(style.editorial)) {
     addFieldIssue(issues, context, 'FIELD_TYPE_INVALID', `${path}.editorial`, '편집 메타데이터 객체가 필요합니다.');

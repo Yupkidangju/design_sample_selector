@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-08-31T05:56:14.581Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "isolatedProfile": true,
+  "catalog": {
+    "count": 120,
+    "expansionCount": 84,
+    "categoryCounts": {
+      "swiss": 15,
+      "brutalism": 15,
+      "depth": 15,
+      "retro": 15,
+      "editorial": 15,
+      "y2k": 15,
+      "hypertech": 15,
+      "soft3d": 15
+    },
+    "grammarCount": 21
+  },
+  "initial": {
+    "visible": 36,
+    "unique": 36,
+    "total": 120,
+    "thumbnails": 36,
+    "header120": true,
+    "filter120": true,
+    "pagination": true,
+    "overflow": 0
+  },
+  "galleryModes": [],
+  "matrix": null,
+  "responsiveWidths": [],
+  "representativeDetail": null,
+  "audit9": {
+    "lazyDetail": null,
+    "statefulTransition": null,
+    "detailSidebar": null,
+    "audioPreInit": null,
+    "zoom": null,
+    "checkout": null,
+    "blog": null,
+    "dashboard": null,
+    "keyboard": null
+  },
+  "split": null,
+  "peek": null,
+  "dock": null,
+  "reducedMotion": null,
+  "vitals": null,
+  "lazyCss": null,
+  "interactions": null,
+  "hostLoad": {
+    "platform": "linux",
+    "architecture": "x64",
+    "logicalCpuCount": 8,
+    "samples": [
+      {
+        "stage": "before-start",
+        "sampledAt": "2026-08-31T05:56:14.607Z",
+        "loadAverage": [
+          0.76,
+          9.15,
+          7.61
+        ],
+        "loadAveragePerCpu": [
+          0.095,
+          1.144,
+          0.951
+        ],
+        "memoryTotalBytes": 6784000000,
+        "memoryFreeBytes": 1901355008,
+        "memoryUsedRatio": 0.72
+      }
+    ]
+  },
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [],
+  "issues": [],
+  "protocolBrowser": "Chrome/151.0.7922.173",
+  "fatal": "Error: 최초 volume 0 BGM 재생 대기 시간 초과: false\n    at waitFor (file:///home/eunho1/Projects/web/design_sample_selector/scripts/verifyCatalog120Chrome.js:315:9)\n    at async verifyInitialAndGallery (file:///home/eunho1/Projects/web/design_sample_selector/scripts/verifyCatalog120Chrome.js:579:3)\n    at async main (file:///home/eunho1/Projects/web/design_sample_selector/scripts/verifyCatalog120Chrome.js:1625:3)\n    at async file:///home/eunho1/Projects/web/design_sample_selector/scripts/verifyCatalog120Chrome.js:1651:3"
+}

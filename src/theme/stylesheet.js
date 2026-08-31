@@ -1,5 +1,10 @@
 import { ID_PATTERN, THEME_TOKEN_KEYS } from '../catalog/contract.js';
-import { ROOT_THEME_TOKENS, THEME_TOKEN_CSS_PROPERTIES } from './contract.js';
+import {
+  ROOT_THEME_GEOMETRY,
+  ROOT_THEME_TOKENS,
+  THEME_GEOMETRY_CSS_PROPERTIES,
+  THEME_TOKEN_CSS_PROPERTIES
+} from './contract.js';
 import {
   getCoreThemeDefinitions,
   getExpansionThemeDefinitions
@@ -12,6 +17,7 @@ const GENERATED_FILE_HEADER = `/**
  */`;
 
 const CSS_PROPERTY_ORDER = Object.values(THEME_TOKEN_CSS_PROPERTIES);
+const GEOMETRY_PROPERTY_ORDER = Object.values(THEME_GEOMETRY_CSS_PROPERTIES);
 
 function assertTokenContract(tokens, label) {
   if (!tokens || typeof tokens !== 'object' || Array.isArray(tokens)) {
@@ -63,6 +69,9 @@ function serializeRootBlock(rootTokens) {
   const declarations = THEME_TOKEN_KEYS.map(key => (
     `  ${THEME_TOKEN_CSS_PROPERTIES[key]}: ${rootTokens[key]};`
   ));
+  for (const [key, property] of Object.entries(THEME_GEOMETRY_CSS_PROPERTIES)) {
+    declarations.push(`  ${property}: ${ROOT_THEME_GEOMETRY[key]};`);
+  }
   return [':root {', ...declarations, '}'].join('\n');
 }
 
@@ -76,6 +85,14 @@ function serializeThemeBlock(definition) {
   const declarations = CSS_PROPERTY_ORDER.map(property => (
     `  ${property}: ${definition.cssCustomProperties[property]};`
   ));
+  const geometry = definition.geometryCustomProperties || Object.fromEntries(
+    GEOMETRY_PROPERTY_ORDER.map(property => [property, (
+      property === '--theme-pill-radius' ? '999px' : definition.cssCustomProperties['--theme-radius']
+    )])
+  );
+  for (const property of GEOMETRY_PROPERTY_ORDER) {
+    declarations.push(`  ${property}: ${geometry[property]};`);
+  }
   if (Object.hasOwn(definition.themeEffects || {}, 'backdropBlur')) {
     const value = `blur(${definition.themeEffects.backdropBlur}px)`;
     declarations.push(`  backdrop-filter: ${value};`);

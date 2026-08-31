@@ -118,7 +118,7 @@ function getLocalizedTextValues(value) {
   return [value.ko, value.en].filter(text => typeof text === 'string');
 }
 
-function createSearchDocument(style) {
+function createSearchDocument(style, localizedStyle) {
   const category = CATEGORY_BY_ID.get(style.categoryId);
   const values = [
     style.id,
@@ -132,6 +132,16 @@ function createSearchDocument(style) {
     ...(style.editorial?.characteristics || []),
     style.classification?.era?.label
   ];
+  if (localizedStyle) {
+    values.push(
+      localizedStyle.name,
+      localizedStyle.summary,
+      ...(localizedStyle.characteristics || []),
+      ...(localizedStyle.pros || []),
+      ...(localizedStyle.cons || []),
+      ...(localizedStyle.palette || []).flatMap(item => [item.name, item.usage])
+    );
+  }
 
   for (const facet of FACET_DEFINITIONS) {
     for (const valueId of getStyleFacetValues(style, facet.id)) {
@@ -164,7 +174,11 @@ function compareEra(left, right, direction) {
   return sortByOrderThenId(left, right);
 }
 
-function getSortComparator(sort) {
+function getSortComparator(sort, localizedStyles, locale) {
+  if (sort === 'name-asc' && localizedStyles) return (left, right) => (
+    localizedStyles[left.id].name.localeCompare(localizedStyles[right.id].name, locale)
+      || sortByOrderThenId(left, right)
+  );
   if (sort === 'name-asc') return compareNames;
   if (sort === 'era-asc') return (left, right) => compareEra(left, right, 'asc');
   if (sort === 'era-desc') return (left, right) => compareEra(left, right, 'desc');
@@ -184,6 +198,7 @@ export function queryCatalogStyles(styles, options = {}) {
       : []
   );
   const sort = DISCOVERY_SORT_MODES.includes(options?.sort) ? options.sort : 'catalog';
+  const localizedStyles = options?.localizedStyles;
 
   const results = source.filter(style => {
     if (!style || typeof style !== 'object') return false;
@@ -191,7 +206,7 @@ export function queryCatalogStyles(styles, options = {}) {
     if (bookmarksOnly && !bookmarkedIds.has(style.id)) return false;
 
     if (queryTokens.length) {
-      const document = createSearchDocument(style);
+      const document = createSearchDocument(style, localizedStyles?.[style.id]);
       if (!queryTokens.every(token => document.includes(token))) return false;
     }
 
@@ -202,7 +217,7 @@ export function queryCatalogStyles(styles, options = {}) {
     return true;
   });
 
-  return Object.freeze(results.sort(getSortComparator(sort)));
+  return Object.freeze(results.sort(getSortComparator(sort, localizedStyles, options?.locale)));
 }
 
 export function queryCatalogForDiscoveryState(styles, state = {}) {
@@ -212,7 +227,9 @@ export function queryCatalogForDiscoveryState(styles, state = {}) {
     facets: state?.activeFacets,
     sort: state?.sortMode,
     bookmarksOnly: state?.bookmarkFilterActive,
-    bookmarkedIds: state?.bookmarks
+    bookmarkedIds: state?.bookmarks,
+    localizedStyles: state?.localizedStyles,
+    locale: state?.locale
   });
 }
 

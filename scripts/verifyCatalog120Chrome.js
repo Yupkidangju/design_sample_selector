@@ -47,6 +47,7 @@ const TRANSITION_ID = 'ai-native-gradient';
 const REPRESENTATIVE_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === REPRESENTATIVE_ID)?.name.en} System`;
 const TRANSITION_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === TRANSITION_ID)?.name.en} System`;
 const EXPECTED_STATE_COUNT = ALL_STYLES.length * ARCHETYPE_IDS.length * 2;
+const SKIP_AUDIO_PROBE = process.env.DSS_SKIP_AUDIO_PROBE === '1';
 
 const artifactOption = process.argv.find(argument => argument.startsWith('--artifacts='));
 const artifactValue = artifactOption?.slice('--artifacts='.length);
@@ -319,7 +320,7 @@ async function clickSelector(selector, { double = false } = {}) {
   const point = await evaluate(`(() => {
     const element = document.querySelector(${JSON.stringify(selector)});
     if (!element) return null;
-    element.scrollIntoView({ block: 'center', inline: 'center' });
+    element.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
     const rect = element.getBoundingClientRect();
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
   })()`);
@@ -348,6 +349,23 @@ async function clickSelector(selector, { double = false } = {}) {
     window.__dssLastInteractionMs = performance.now() - started;
     return true;
   })()`);
+}
+
+async function clickSelectorWithUserGesture(selector) {
+  const result = await client.send('Runtime.evaluate', {
+    expression: `(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      if (!element) return false;
+      element.click();
+      return true;
+    })()`,
+    userGesture: true,
+    returnByValue: true
+  });
+  if (result.exceptionDetails) {
+    throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
+  }
+  return result.result?.value === true;
 }
 
 async function measurePageInteraction(
@@ -559,7 +577,18 @@ async function verifyInitialAndGallery() {
   check(report.initial.header120 && report.initial.filter120, 'header/filter actual 120 표기 실패');
   check(report.initial.overflow <= 1, `초기 overflow ${report.initial.overflow}px`);
 
-  const audioBeforeFirstPlay = await evaluate(`(async () => {
+  if (SKIP_AUDIO_PROBE) {
+    await evaluate(`(async () => {
+      const { appState } = await import('./src/state/appState.js');
+      appState.setState({ audio: { sfxEnabled: false } });
+    })()`);
+    report.audit9.audioPreInit = {
+      skipped: true,
+      sfxDisabledForRun: true,
+      reason: 'DSS_SKIP_AUDIO_PROBE=1 (headless Crostini audio device unavailable)'
+    };
+  } else {
+    const audioBeforeFirstPlay = await evaluate(`(async () => {
     const [{ synthAudio }, { appState }] = await Promise.all([
       import('./src/audio/synthAudio.js'),
       import('./src/state/appState.js')
@@ -575,12 +604,12 @@ async function verifyInitialAndGallery() {
       sliderBeforeInit: Number(input.value)
     };
   })()`);
-  await clickSelector('#btn-audio-play');
-  await waitFor(
-    `document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
-    '최초 volume 0 BGM 재생'
-  );
-  const audioAfterFirstPlay = await evaluate(`(async () => {
+    check(await clickSelectorWithUserGesture('#btn-audio-play'), '오디오 재생 버튼 누락');
+    await waitFor(
+      `document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
+      '최초 volume 0 BGM 재생'
+    );
+    const audioAfterFirstPlay = await evaluate(`(async () => {
     const [{ synthAudio }, { appState }] = await Promise.all([
       import('./src/audio/synthAudio.js'),
       import('./src/state/appState.js')
@@ -593,12 +622,12 @@ async function verifyInitialAndGallery() {
       gain: synthAudio.masterGain?.gain?.value ?? null
     };
   })()`);
-  await clickSelector('#btn-audio-play');
-  await waitFor(
-    `!document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
-    'BGM probe 정지'
-  );
-  const audioRestored = await evaluate(`(async () => {
+    check(await clickSelectorWithUserGesture('#btn-audio-play'), '오디오 정지 버튼 누락');
+    await waitFor(
+      `!document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
+      'BGM probe 정지'
+    );
+    const audioRestored = await evaluate(`(async () => {
     const [{ appState }] = await Promise.all([import('./src/state/appState.js')]);
     const input = document.querySelector('#input-audio-volume');
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
@@ -609,23 +638,25 @@ async function verifyInitialAndGallery() {
       sliderVolume: Number(input.value)
     };
   })()`);
-  report.audit9.audioPreInit = {
-    beforeFirstPlay: audioBeforeFirstPlay,
-    afterFirstPlay: audioAfterFirstPlay,
-    restored: audioRestored
-  };
-  check(
-    audioBeforeFirstPlay.initializedBefore === false
-      && audioBeforeFirstPlay.stateBeforeInit === 0
-      && audioBeforeFirstPlay.sliderBeforeInit === 0
-      && audioAfterFirstPlay.initialized
-      && audioAfterFirstPlay.playing
-      && audioAfterFirstPlay.stateVolume === 0
-      && audioAfterFirstPlay.gain === 0
-      && audioRestored.stateVolume === 0.5
-      && audioRestored.sliderVolume === 0.5,
-    '최초 AudioContext 생성 전 volume 상태/gain 동기화 실패'
-  );
+    report.audit9.audioPreInit = {
+      skipped: false,
+      beforeFirstPlay: audioBeforeFirstPlay,
+      afterFirstPlay: audioAfterFirstPlay,
+      restored: audioRestored
+    };
+    check(
+      audioBeforeFirstPlay.initializedBefore === false
+        && audioBeforeFirstPlay.stateBeforeInit === 0
+        && audioBeforeFirstPlay.sliderBeforeInit === 0
+        && audioAfterFirstPlay.initialized
+        && audioAfterFirstPlay.playing
+        && audioAfterFirstPlay.stateVolume === 0
+        && audioAfterFirstPlay.gain === 0
+        && audioRestored.stateVolume === 0.5
+        && audioRestored.sliderVolume === 0.5,
+      '최초 AudioContext 생성 전 volume 상태/gain 동기화 실패'
+    );
+  }
 
   // Core Web Vitals는 QA의 페이지·모달 전환이 시작되기 전 초기 로드 구간에서 동결한다.
   await sleep(400);
@@ -1340,10 +1371,11 @@ async function verifyRepresentativeFlows() {
 
   await clickSelector('.archetype-tab-btn[data-archetype="dashboard"]');
   await waitFor(`Boolean(document.querySelector('.archetype-dashboard'))`, 'Dashboard runtime');
+  const completedLabel = await evaluate(`document.querySelector('.status-badge.success')?.textContent.trim()`);
   await evaluate(`(() => {
     const input = document.querySelector('.table-filter-input');
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-    setter.call(input, 'COMPLETED');
+    setter.call(input, ${JSON.stringify(completedLabel)});
     input.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText' }));
   })()`);
   await clickSelector('.dash-sort-btn[data-sort="project"]');
@@ -1355,7 +1387,7 @@ async function verifyRepresentativeFlows() {
   await clickSelector(`.top-style-chip[data-sub-id="${TRANSITION_ID}"]`);
   await waitFor(
     `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
-      && document.querySelector('.table-filter-input')?.value === 'COMPLETED'
+      && document.querySelector('.table-filter-input')?.value === ${JSON.stringify(completedLabel)}
       && document.querySelectorAll('#dash-table-body tr').length === 2`,
     'Dashboard state migration'
   );
@@ -1363,7 +1395,7 @@ async function verifyRepresentativeFlows() {
     const bodyText = document.querySelector('#dash-table-body')?.textContent || '';
     const sortButton = document.querySelector('.dash-sort-btn[data-sort="project"]');
     return {
-      filterPreserved: document.querySelector('.table-filter-input')?.value === 'COMPLETED',
+      filterPreserved: document.querySelector('.table-filter-input')?.value === ${JSON.stringify(completedLabel)},
       sortPreserved: sortButton?.classList.contains('active') && sortButton?.dataset.dir === '1',
       filteredRows: document.querySelectorAll('#dash-table-body tr').length,
       newStyleRows: bodyText.includes(${JSON.stringify(TRANSITION_PROJECT_LABEL)}),
@@ -1568,6 +1600,9 @@ async function main() {
   profileDirectory = mkdtempSync(join(tmpdir(), 'dss-catalog120-chrome-profile-'));
   chromeProcess = spawn(CHROME_PATH, [
     '--headless=new',
+    ...(process.env.DSS_CHROME_AUTOPLAY_BYPASS === '1'
+      ? ['--autoplay-policy=no-user-gesture-required']
+      : []),
     `--remote-debugging-port=${chromePort}`,
     '--remote-debugging-address=127.0.0.1',
     `--user-data-dir=${profileDirectory}`,
@@ -1579,7 +1614,7 @@ async function main() {
     '--disable-extensions',
     '--disable-sync',
     '--metrics-recording-only',
-    '--mute-audio',
+    ...(process.env.DSS_CHROME_AUTOPLAY_BYPASS === '1' ? [] : ['--mute-audio']),
     '--no-default-browser-check',
     '--no-first-run',
     '--password-store=basic',

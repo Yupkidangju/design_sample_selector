@@ -34,6 +34,9 @@ import {
   renderPreviewThumbnail
 } from '../src/preview/index.js';
 import { createRetryableModuleLoader } from '../src/components/lazyPreviewLoader.js';
+import { activateLocale } from '../src/i18n/index.js';
+
+await activateLocale('ko');
 
 function createItems(count) {
   return Object.freeze(Array.from({ length: count }, (_, index) => Object.freeze({

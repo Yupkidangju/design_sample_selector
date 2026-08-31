@@ -264,6 +264,28 @@ export interface MainCategory {
 7. preview renderer는 정적 프로젝트 코드만 신뢰한다. registry는 비어 있지 않은 `.mockup-unit` root뿐 아니라 script/iframe/object/embed, inline event handler와 `javascript:` URL을 기계적으로 거부한다. runtime registration과 remote HTML은 계속 지원하지 않는다.
 8. localStorage 값은 key당 UTF-16 16,384자 이하, bookmark는 현재 actual catalog 수(120) 이하, recents는 6개 이하다. 초과·손상 JSON은 사용하지 않고 해당 key를 제거한 뒤 안전한 기본값으로 복구한다.
 
+### 5.10 Semantic Tuner Geometry and Five-Locale Contract
+
+1. `borderRadius` tuner의 단일 승인 범위는 `0..64px`다. catalog ingestion, AppState patch, range input과 CSS/Markdown/DTCG generator는 같은 `TUNER_LIMITS`를 사용하며 범위 밖 값을 조용히 clamp하지 않고 거부한다.
+2. theme geometry는 surface/control/pill 의미를 분리한다. `--theme-surface-radius`와 호환 `--theme-radius`는 일반 면, `--theme-control-radius`는 control, `--theme-pill-radius`는 capsule/badge 전용이다. `999px`는 pill token에서만 허용되고 `defaultTweaks.borderRadius`가 될 수 없다.
+3. radius/border tweak는 명시적 `data-tweak-surface`만 갱신한다. 모든 카드·버튼·입력을 포괄하는 selector와 broad `!important` override는 허용하지 않는다.
+4. 상태 전환 행렬은 다음과 같다.
+
+| 전환 | 선택/renderer | live tweaks | mock runtime | Inspector tab·scroll·focus |
+| --- | --- | --- | --- | --- |
+| theme/style | 대상 style로 교체 | 대상 기본값으로 reset | 승인 snapshot 이관 | 보존 |
+| category | 첫 style로 교체 | 대상 기본값으로 reset | 승인 snapshot 이관 | 보존 |
+| archetype | archetype 교체 | 보존 | 해당 archetype 기준 재생성 | 보존 |
+| locale | 동일 선택 유지 | 보존 | 보존 | 보존 |
+
+5. 지원 locale ID는 `ko`, `en`, `ja`, `zh-CN`, `zh-TW`다. 초기 선택은 유효한 URL `lang` → localStorage → browser preference → `ko` 순서이며, locale pack load/validation 실패 시 현재 last-known-good locale을 유지한다.
+6. UI message와 catalog display overlay는 locale별 pack으로 분리하고 한국어 외 pack은 초기 bundle 밖의 literal dynamic import로 전달한다. 각 pack은 120 styles, category/facet, palette display field와 UI key parity를 검증한다.
+7. locale 변경은 `document.documentElement.lang`, visible UI/ARIA, 검색·이름 정렬과 Inspector 네 pane을 하나의 immutable locale snapshot/epoch로 갱신한다.
+8. 번역 대상은 사람용 visible/ARIA text, CSS comment, Markdown prose, HTML visible copy, DTCG `$description`/display metadata다. CSS property/custom-property ID, selector, HTML ID/data attribute, DTCG structural key와 download filename은 locale-neutral이다.
+9. URL query는 전체 길이와 각 key/value 길이를 제한하고 category/facet/locale allowlist를 통과한 값만 사용한다. prototype inherited key, 중복·malformed·oversize 입력은 bootstrap/popstate를 중단하지 않고 무시한다.
+10. locale catalog completeness는 field별 provenance를 `translated`, `approved-fallback`, `placeholder`로 구분해 집계한다. 국제적으로 통용되는 고유 디자인명·브랜드명만 원문 영어를 `approved-fallback`으로 유지할 수 있으며, summary·category/facet 설명·palette usage·characteristics·pros·cons의 공통 placeholder는 completeness로 인정하지 않는다. 지원 locale snapshot은 `placeholder=0`이어야 하고 승인 fallback은 field와 사유를 기계적으로 보고해야 한다.
+11. Header, Discovery, Gallery, Detail, Split, lazy/fatal recovery와 Inspector preview의 사람용 visible text, `aria-label`, `title`, live status는 같은 locale snapshot에서 해석한다. Inspector CSS comment·HTML visible/ARIA copy·Markdown prose·DTCG `$description`/display metadata도 해당 snapshot을 사용하되 §5.10.8의 machine syntax와 structural key는 locale 간 동일해야 한다.
+
 ---
 
 ## 6. Procedural Audio Engine Contract
@@ -388,6 +410,8 @@ Implementation follows the reviewed gates in `CAPABILITY_MAP.md`. 기반 모듈,
 Audit 9 독립 재감사에서 재현한 공통 Detail 사이드바 CSS, 최초 재생 전 볼륨, renderer 전환 후 Zoom 상태를 수정했다. FIN-F006은 no-op·CDP 왕복·frame scheduler 대기를 제품 처리시간에서 분리하는 위 계약으로 교체했고, Chrome 151 격리 직렬 3회가 1,920 device 상태·Web 480탭·diagnostics 0과 함께 각각 `16.95/111.4ms`, `18.05/131.9ms`, `22.0/108.6ms`(median/max)를 통과했다. 현재 판정은 저장소·로컬 Crostini 범위 `PASS`, FIN-F006은 `Resolved`다. 초기 JS/CSS는 `88.60/32.86kB` gzip으로 예산 안이며 FIN-F016 운영 CSP·Fonts만 실제 배포 증거가 없어 미확정이다. 다음 미구현 Wave 수치는 없으며 120종을 넘는 확장은 별도 사양으로 시작한다.
 
 Audit 10 수정 후 저장소와 Pages-like Crostini Chrome 범위는 `PASS`다. production base·15-file release closure, bounded import/render/hydrate terminal, Peek mouse/keyboard 진입, transactional Detail mount, safe diagnostic, renderer HTML·localStorage 경계가 자동 게이트에 고정됐다. 전체 Node `190/190`, Vite `78 modules`, 초기 JS/CSS `86.73/32.90kB` gzip, actual-120 `1,920`상태·Web `480`탭과 Pages fault 9종이 통과했다. 다만 2026-08-31 현재 실제 Pages는 여전히 source `index.html`/`src/main.js`를 제공하고 새 hashed entry는 404이므로 workflow 게시와 live smoke 전 운영 판정은 `HOLD`다.
+
+Audit 11 Re-audit #1 수정 후 semantic radius와 5-locale 저장소·로컬 Crostini 범위는 독립 재감사 대기 상태의 `PASS 후보`다. FIN-F004/F005/F007/F009는 field provenance와 `placeholder=0`, 296-key snapshot copy, 8개 archetype·상호작용 runtime·Inspector human artifact locale 적용, 5-locale Detail 네 pane·machine-key·focus/scroll/live status Chrome gate로 재작업했다. 최종 Node `214/214`, Vite `89 modules`, 카탈로그 오류 0·기존 legacy 경고 56, initial JS/CSS `88,191/32,994B` gzip, actual-120 `1,920`상태·Web `480`탭·diagnostics 0, Discovery 9시나리오·6폭, Pages fault 9종이 통과했다. 상세 근거는 `docs/multi_audit/11/re_audit_evidence_11_1.md`다. 전문 번역 감수와 운영 CSP·Google Fonts 응답 헤더는 별도 미확정 위험이다.
 
 ### 9.3 Quality invariant
 

@@ -3,7 +3,9 @@
  */
 
 import { appState } from '../state/appState.js';
-import { findSubById } from '../data/categories.js';
+import { getLocalizedLegacyAllSubDesigns } from '../catalog/legacyAdapter.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
 import { recordRecoveryDiagnostic } from '../utils/recoveryDiagnostics.js';
@@ -28,11 +30,12 @@ export function renderPeekPreview(container) {
   }
 
   async function loadPeekPreview(sub) {
+    const t = (key, values) => formatLocaleCopy(getActiveLocaleSnapshot()?.copy, key, values);
     const requestId = ++paintVersion;
     const viewport = container.querySelector('#peek-viewport');
     if (!viewport) return;
     viewport.setAttribute('aria-busy', 'true');
-    viewport.innerHTML = '<p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>';
+    viewport.innerHTML = `<p class="inline-preview-state" role="status">${escapeHtml(t('peek.loading'))}</p>`;
 
     let failurePhase = 'import';
     try {
@@ -48,7 +51,7 @@ export function renderPeekPreview(container) {
       });
       currentViewport.removeAttribute('aria-busy');
       failurePhase = 'hydrate';
-      hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true });
+      hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true, snapshot: getActiveLocaleSnapshot() });
       previewFailureCount = 0;
     } catch (error) {
       if (!isCurrentPeek(sub, requestId)) return;
@@ -68,10 +71,10 @@ export function renderPeekPreview(container) {
       currentViewport.removeAttribute('aria-busy');
       currentViewport.innerHTML = `
         <div class="inline-preview-state" role="alert">
-          <p>미리보기를 불러오지 못했습니다.</p>
+          <p>${escapeHtml(t('peek.failed'))}</p>
           ${terminal
-            ? '<button type="button" data-peek-preview-reload>페이지 새로고침</button>'
-            : '<button type="button" data-peek-preview-retry>다시 시도</button>'}
+            ? `<button type="button" data-peek-preview-reload>${escapeHtml(t('recovery.reload'))}</button>`
+            : `<button type="button" data-peek-preview-retry>${escapeHtml(t('recovery.retry'))}</button>`}
         </div>
       `;
       currentViewport.querySelector('[data-peek-preview-retry]')
@@ -100,7 +103,9 @@ export function renderPeekPreview(container) {
       return;
     }
 
-    const sub = findSubById(peekSubId);
+    const snapshot = getActiveLocaleSnapshot();
+    const t = (key, values) => formatLocaleCopy(snapshot?.copy, key, values);
+    const sub = getLocalizedLegacyAllSubDesigns(snapshot).find(style => style.id === peekSubId);
     if (!sub) {
       paintVersion += 1;
       container.style.display = 'none';
@@ -112,18 +117,18 @@ export function renderPeekPreview(container) {
       previewFailureCount = 0;
       teardownMockup(container.querySelector('#peek-viewport'));
       container.innerHTML = `
-        <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="region" aria-label="${escapeHtml(sub.name)} 미리보기">
+        <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="region" aria-label="${escapeHtml(t('peek.previewAria', { name: sub.name }))}">
           <div class="peek-meta">
             <span class="peek-cat">${escapeHtml(sub.icon)} ${escapeHtml(sub.categoryTitle)}</span>
             <strong>${escapeHtml(sub.name)}</strong>
             <span class="peek-en">${escapeHtml(sub.nameEn)}</span>
           </div>
           <div class="peek-viewport" id="peek-viewport" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
-            <p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>
+            <p class="inline-preview-state" role="status">${escapeHtml(t('peek.loading'))}</p>
           </div>
           <div class="peek-footer">
-            <p class="peek-hint">클릭으로 담기 · 더블클릭 또는 상세 보기로 열기 · Esc 닫기</p>
-            <button class="peek-open-detail-btn" type="button" data-peek-open-detail>상세 보기</button>
+            <p class="peek-hint">${escapeHtml(t('peek.hint'))}</p>
+            <button class="peek-open-detail-btn" type="button" data-peek-open-detail>${escapeHtml(t('peek.details'))}</button>
           </div>
         </div>
       `;

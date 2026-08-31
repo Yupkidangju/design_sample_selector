@@ -1,7 +1,7 @@
 import { getAllStyles } from '../catalog/index.js';
 import { deepFreeze, THEME_TOKEN_KEYS } from '../catalog/contract.js';
 import { CORE_PACK_MANIFEST } from '../catalog/packs/core/manifest.js';
-import { THEME_TOKEN_CSS_PROPERTIES } from './contract.js';
+import { THEME_GEOMETRY_CSS_PROPERTIES, THEME_TOKEN_CSS_PROPERTIES } from './contract.js';
 
 const EMPTY_THEME_EFFECTS = deepFreeze({});
 
@@ -9,6 +9,17 @@ function projectCssCustomProperties(tokens) {
   return Object.fromEntries(
     THEME_TOKEN_KEYS.map(key => [THEME_TOKEN_CSS_PROPERTIES[key], tokens[key]])
   );
+}
+
+function projectGeometry(style) {
+  const geometry = style.themeGeometry || {
+    surfaceRadius: style.tokens.radius,
+    controlRadius: style.tokens.radius,
+    pillRadius: '999px'
+  };
+  return Object.fromEntries(Object.entries(THEME_GEOMETRY_CSS_PROPERTIES).map(([key, property]) => (
+    [property, geometry[key]]
+  )));
 }
 
 const THEME_DEFINITIONS = deepFreeze(
@@ -19,6 +30,7 @@ const THEME_DEFINITIONS = deepFreeze(
     order: style.order,
     tokens: style.tokens,
     cssCustomProperties: projectCssCustomProperties(style.tokens),
+    geometryCustomProperties: projectGeometry(style),
     themeEffects: style.themeEffects || EMPTY_THEME_EFFECTS
   }))
 );

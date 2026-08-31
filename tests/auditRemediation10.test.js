@@ -135,7 +135,7 @@ test('Audit 10: recovery diagnostic은 안전한 필드만 최대 20개 보존�
 test('Audit 10: Peek는 native 상세 보기와 실제 double click을 같은 Detail 경로에 연결한다', () => {
   const source = readProjectFile('src/components/peekPreview.js');
   assert.match(source, /openDetailFor/u);
-  assert.match(source, /<button[^>]*data-peek-open-detail[^>]*>상세 보기<\/button>/u);
+  assert.match(source, /data-peek-open-detail>\$\{escapeHtml\(t\('peek\.details'\)\)\}<\/button>/u);
   assert.match(source, /addEventListener\('dblclick'/u);
   assert.match(source, /closest\('\[data-mock-action\], button, a, input, select, textarea'/u);
   assert.match(source, /data-peek-open-detail[^\n]*addEventListener\('click'/u);

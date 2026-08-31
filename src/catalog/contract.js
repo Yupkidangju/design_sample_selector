@@ -110,6 +110,14 @@ export function isStyleVisible(style, options = {}) {
  */
 
 /**
+ * 사용자 튜너와 분리된 테마 고유 표면 기하 토큰이다.
+ * @typedef {Object} ThemeGeometry
+ * @property {string} surfaceRadius
+ * @property {string} controlRadius
+ * @property {string} pillRadius
+ */
+
+/**
  * @typedef {Object} StyleClassification
  * @property {'historical-movement'|'revival'|'technique'|'interface-language'|'microtrend'|'speculative'} kind
  * @property {{ start: number|null, end: number|null, label: string }} era
@@ -138,6 +146,7 @@ export function isStyleVisible(style, options = {}) {
  * @property {{ rendererId: string, thumbnailId: string, motionId: string }} preview
  * @property {{ borderRadius: number, borderWidth: number, shadowDepth: number, backdropBlur: number, glowIntensity: number }} defaultTweaks
  * @property {ThemeEffects} [themeEffects]
+ * @property {ThemeGeometry} [themeGeometry]
  * @property {{ id: string, name: LocalizedText, value: string, usage: LocalizedText }[]} palette
  * @property {{ moodTags: string[], characteristics: string[], pros: string[], cons: string[], accessibilityNotes: string[] }} editorial
  * @property {{ reviewedAt: string, sources: object[], assets: object[] }} provenance

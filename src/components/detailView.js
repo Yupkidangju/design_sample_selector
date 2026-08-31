@@ -10,8 +10,12 @@
  * - Side-by-Side Dual Split Comparison Sandbox Mode
  */
 
-import { MAIN_CATEGORIES, getAllSubDesigns } from '../data/categories.js';
+import { MAIN_CATEGORIES as BASE_MAIN_CATEGORIES, getAllSubDesigns } from '../data/categories.js';
+import { getLocalizedLegacyAllSubDesigns, getLocalizedLegacyMainCategories } from '../catalog/legacyAdapter.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 import { appState } from '../state/appState.js';
+import { TUNER_LIMITS } from '../tuner/contract.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { copyToClipboard } from '../utils/clipboard.js';
 import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
@@ -31,19 +35,24 @@ import {
   resolveInspectorContext
 } from '../utils/inspectorState.js';
 import { canvasVisualEngine } from '../wasm/visualEngine.js';
-import { 
-  generateLiveCSSSnippet, 
-  generateLiveDesignSpecMarkdown, 
-  generateLiveTokensJSON, 
-  downloadFile 
-} from '../utils/designSpecGenerator.js';
+import { downloadFile } from '../utils/designSpecGenerator.js';
 
-const ALL_SUB_DESIGNS = getAllSubDesigns();
+let MAIN_CATEGORIES = BASE_MAIN_CATEGORIES;
+let ALL_SUB_DESIGNS = getAllSubDesigns();
 let detailKeyHandler = null;
 let splitKeyHandler = null;
 let lastFocusedElement = null;
 let lastFocusedSubId = null;
 let activeFocusTrap = null;
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 function requireSubDesign(id, context) {
   const design = ALL_SUB_DESIGNS.find(subDesign => subDesign.id === id);
@@ -73,6 +82,7 @@ export function renderDetailView(container) {
   let currentRenderedArchetype = null;
   let currentRenderedTab = null;
   let currentRenderedDevice = null;
+  let currentRenderedLocale = null;
   let currentRenderedCompareIds = [null, null];
   let splitPickerQueries = { A: '', B: '' };
   let { activeTab: activeInspectorTab, activeCssMode: activeCssSubMode } = createDefaultInspectorUiState();
@@ -88,6 +98,14 @@ export function renderDetailView(container) {
 
   function update() {
     const state = appState.getState();
+    const localeChanged = currentRenderedLocale !== state.locale;
+    if (localeChanged) {
+      const snapshot = getActiveLocaleSnapshot();
+      if (snapshot?.locale === state.locale) {
+        MAIN_CATEGORIES = getLocalizedLegacyMainCategories(snapshot);
+        ALL_SUB_DESIGNS = getLocalizedLegacyAllSubDesigns(snapshot);
+      }
+    }
     const { 
       currentView, 
       selectedMainCategory, 
@@ -111,6 +129,7 @@ export function renderDetailView(container) {
 
       const needFullSplitRender = (
         currentRenderedView !== 'SPLIT_COMPARE' ||
+        localeChanged ||
         currentRenderedCompareIds[0] !== compareSubIds[0] ||
         currentRenderedCompareIds[1] !== compareSubIds[1]
       );
@@ -122,6 +141,7 @@ export function renderDetailView(container) {
         currentRenderedArchetype = activeArchetype;
         currentRenderedTab = activeComponentTab;
         currentRenderedCompareIds = [...compareSubIds];
+        currentRenderedLocale = state.locale;
       } else if (currentRenderedArchetype !== activeArchetype || currentRenderedTab !== activeComponentTab) {
         updateSplitTabsOnly(container, compareSubIds, activeArchetype, activeComponentTab);
         currentRenderedArchetype = activeArchetype;
@@ -166,12 +186,20 @@ export function renderDetailView(container) {
     container.style.display = 'block';
     canvasVisualEngine.pauseLoop();
 
-    const isInitialOpen = currentRenderedView !== 'DETAIL';
-    const needArchetypeRebuild = isInitialOpen || currentRenderedArchetype !== activeArchetype || (activeArchetype === 'web' && currentRenderedTab !== activeComponentTab);
+    const isNewOpen = currentRenderedView !== 'DETAIL';
+    const needFullRender = isNewOpen || localeChanged;
+    const needArchetypeRebuild = needFullRender || currentRenderedArchetype !== activeArchetype || (activeArchetype === 'web' && currentRenderedTab !== activeComponentTab);
     const needRendererSwap = !needArchetypeRebuild && currentRenderedSubId !== selectedSubCategory;
 
-    if (isInitialOpen) {
-      resetInspectorUiState();
+    if (needFullRender) {
+      const previousViewport = localeChanged ? container.querySelector('#mockup-viewport') : null;
+      const continuity = localeChanged ? {
+        initialState: snapshotMockupState(previousViewport),
+        sidebarScrollTop: container.querySelector('.detail-sidebar-section')?.scrollTop || 0,
+        bodyScrollTop: container.querySelector('.modal-body-grid')?.scrollTop || 0,
+        focusId: document.activeElement?.id || null
+      } : null;
+      if (isNewOpen) resetInspectorUiState();
       // SPLIT→DETAIL 재진입은 스플릿 컨트롤로 opener를 덮어쓰지 않는다 (SEC-F003)
       if (currentRenderedView !== 'SPLIT_COMPARE') {
         lastFocusedElement = document.activeElement;
@@ -179,13 +207,14 @@ export function renderDetailView(container) {
           || state.galleryFocusId
           || null;
       }
-      renderFullDetailModal(container, subDesign, mainCat, state);
+      renderFullDetailModal(container, subDesign, mainCat, state, continuity);
       currentRenderedView = 'DETAIL';
       currentRenderedSubId = selectedSubCategory;
       currentRenderedArchetype = activeArchetype;
       currentRenderedTab = activeComponentTab;
       currentRenderedDevice = sandboxDevice;
-      setupFocusTrap(container);
+      currentRenderedLocale = state.locale;
+      setupFocusTrap(container, { focusInitial: !localeChanged });
     } else if (needArchetypeRebuild) {
       // Archetype changed: rebuild viewport HTML
       rebuildArchetypeViewport(container, subDesign, activeArchetype, activeComponentTab, sandboxDevice);
@@ -266,10 +295,13 @@ export function renderDetailView(container) {
     });
   }
 
-  function renderFullDetailModal(root, subDesign, mainCat, state) {
+  function renderFullDetailModal(root, subDesign, mainCat, state, continuity = null) {
     teardownHydratedViewports(root);
     const { activeArchetype = 'game', activeComponentTab = 'hero', sandboxDevice = 'desktop', liveTweaks, bookmarks } = state;
     const isBookmarked = bookmarks.includes(subDesign.id);
+    const localeSnapshot = getActiveLocaleSnapshot();
+    const messages = localeSnapshot?.messages || {};
+    const t = (key, values) => formatLocaleCopy(localeSnapshot?.copy, key, values);
 
     root.innerHTML = `
       <div class="detail-modal-backdrop" id="modal-backdrop"></div>
@@ -280,17 +312,17 @@ export function renderDetailView(container) {
         <header class="universal-top-bar" id="universal-top-bar">
           <div class="top-bar-row-main">
             <div class="top-breadcrumbs">
-              <button class="breadcrumb-back-btn" id="btn-modal-back" title="메인 갤러리로 돌아가기">
-                <span>← 메인</span>
+              <button class="breadcrumb-back-btn" id="btn-modal-back" title="${escapeHtml(t('detail.backMainTitle'))}">
+                <span>← ${escapeHtml(t('detail.backMain'))}</span>
               </button>
               <span class="breadcrumb-sep">/</span>
-              <span class="breadcrumb-category" id="top-cat-name">${mainCat.title}</span>
+              <span class="breadcrumb-category" id="top-cat-name">${escapeHtml(mainCat.title)}</span>
               <span class="breadcrumb-sep">/</span>
-              <span class="breadcrumb-sub" id="top-sub-name">${subDesign.name}</span>
+              <span class="breadcrumb-sub" id="top-sub-name">${escapeHtml(subDesign.name)}</span>
             </div>
 
             <!-- 8 Major Category Tabs -->
-            <nav class="top-cat-tabs" role="tablist" aria-label="디자인 대분류">
+            <nav class="top-cat-tabs" role="tablist" aria-label="${escapeHtml(t('detail.categoryTabs'))}">
               ${MAIN_CATEGORIES.map(c => `
                 <button class="top-cat-tab-btn ${c.id === mainCat.id ? 'active' : ''}" 
                         data-cat-id="${c.id}" 
@@ -298,22 +330,22 @@ export function renderDetailView(container) {
                         role="tab"
                         aria-selected="${c.id === mainCat.id}">
                   <span>${c.icon}</span>
-                  <span>${c.title}</span>
+                  <span>${escapeHtml(c.title)}</span>
                 </button>
               `).join('')}
             </nav>
 
             <div class="modal-top-actions">
-              <button class="modal-action-chip ${isBookmarked ? 'active' : ''}" id="btn-modal-bookmark" title="즐겨찾기 토글">
-                <span>${isBookmarked ? '★ 북마크됨' : '☆ 북마크'}</span>
+              <button class="modal-action-chip ${isBookmarked ? 'active' : ''}" id="btn-modal-bookmark" title="${escapeHtml(t('detail.bookmarkToggle'))}">
+                <span>${escapeHtml(t(isBookmarked ? 'detail.bookmarked' : 'detail.bookmark'))}</span>
               </button>
-              <button class="modal-action-chip" id="btn-modal-confirm" title="이 스타일 확정">
-                <span>${state.confirmedStyleId === subDesign.id ? '✓ 확정됨' : '이 스타일 확정'}</span>
+              <button class="modal-action-chip" id="btn-modal-confirm" title="${escapeHtml(t('detail.confirm'))}">
+                <span>${escapeHtml(t(state.confirmedStyleId === subDesign.id ? 'detail.confirmed' : 'detail.confirm'))}</span>
               </button>
-              <button class="modal-action-chip" id="btn-modal-compare" title="다른 스타일과 나란히 비교">
-                <span>⚖️ 스플릿 비교</span>
+              <button class="modal-action-chip" id="btn-modal-compare" title="${escapeHtml(t('detail.compareTitle'))}">
+                <span>${escapeHtml(t('detail.compare'))}</span>
               </button>
-              <button class="modal-close-btn" id="btn-modal-close" aria-label="닫기">
+              <button class="modal-close-btn" id="btn-modal-close" aria-label="${escapeHtml(t('detail.close'))}">
                 <span>✕</span>
               </button>
             </div>
@@ -324,6 +356,7 @@ export function renderDetailView(container) {
             categoryId: mainCat.id,
             categoryTitle: mainCat.title,
             selectedId: subDesign.id,
+            snapshot: localeSnapshot,
             renderThumbnail: renderPreviewThumbnail
           })}
         </header>
@@ -334,43 +367,43 @@ export function renderDetailView(container) {
           <section class="mockup-sandbox-section">
             <div class="sandbox-header">
               <!-- 8 Core Page Archetypes Navigation -->
-              <div class="archetype-tabs-nav" role="tablist" aria-label="화면 아키타입">
+              <div class="archetype-tabs-nav" role="tablist" aria-label="${escapeHtml(t('detail.archetypeTabs'))}">
                 <button class="archetype-tab-btn ${activeArchetype === 'game' ? 'active' : ''}" data-archetype="game" role="tab" aria-selected="${activeArchetype === 'game'}">
-                  <span>🎮 게임</span>
+                  <span>🎮 ${escapeHtml(t('detail.game'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'web' ? 'active' : ''}" data-archetype="web" role="tab" aria-selected="${activeArchetype === 'web'}">
-                  <span>🌐 웹 SaaS</span>
+                  <span>🌐 ${escapeHtml(t('detail.web'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'mobile' ? 'active' : ''}" data-archetype="mobile" role="tab" aria-selected="${activeArchetype === 'mobile'}">
-                  <span>📱 모바일</span>
+                  <span>📱 ${escapeHtml(t('detail.mobile'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'ecommerce' ? 'active' : ''}" data-archetype="ecommerce" role="tab" aria-selected="${activeArchetype === 'ecommerce'}">
-                  <span>🛍️ 쇼핑몰</span>
+                  <span>🛍️ ${escapeHtml(t('detail.ecommerce'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'blog' ? 'active' : ''}" data-archetype="blog" role="tab" aria-selected="${activeArchetype === 'blog'}">
-                  <span>📰 블로그</span>
+                  <span>📰 ${escapeHtml(t('detail.blog'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'dashboard' ? 'active' : ''}" data-archetype="dashboard" role="tab" aria-selected="${activeArchetype === 'dashboard'}">
-                  <span>📊 대시보드</span>
+                  <span>📊 ${escapeHtml(t('detail.dashboard'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'media' ? 'active' : ''}" data-archetype="media" role="tab" aria-selected="${activeArchetype === 'media'}">
-                  <span>🎵 미디어</span>
+                  <span>🎵 ${escapeHtml(t('detail.media'))}</span>
                 </button>
                 <button class="archetype-tab-btn ${activeArchetype === 'chat' ? 'active' : ''}" data-archetype="chat" role="tab" aria-selected="${activeArchetype === 'chat'}">
-                  <span>💬 채팅</span>
+                  <span>💬 ${escapeHtml(t('detail.chat'))}</span>
                 </button>
               </div>
 
               <!-- Device & Zoom Controls -->
               <div class="sandbox-controls-group">
-                <div class="zoom-switcher" role="group" aria-label="뷰포트 배율">
-                  <button class="zoom-btn" data-scale="0.8" title="80% 축소">80%</button>
-                  <button class="zoom-btn active" data-scale="1.0" title="100% 기본">100%</button>
-                  <button class="zoom-btn" data-scale="1.2" title="120% 확대">120%</button>
+                <div class="zoom-switcher" role="group" aria-label="${escapeHtml(t('detail.zoomGroup'))}">
+                  <button class="zoom-btn" data-scale="0.8" title="${escapeHtml(t('detail.zoom80'))}">80%</button>
+                  <button class="zoom-btn active" data-scale="1.0" title="${escapeHtml(t('detail.zoom100'))}">100%</button>
+                  <button class="zoom-btn" data-scale="1.2" title="${escapeHtml(t('detail.zoom120'))}">120%</button>
                 </div>
-                <div class="device-switcher" role="group" aria-label="디바이스 전환">
-                  <button class="device-btn ${sandboxDevice === 'desktop' ? 'active' : ''}" data-device="desktop">💻 Desktop</button>
-                  <button class="device-btn ${sandboxDevice === 'mobile' ? 'active' : ''}" data-device="mobile">📱 Mobile</button>
+                <div class="device-switcher" role="group" aria-label="${escapeHtml(t('detail.deviceGroup'))}">
+                  <button class="device-btn ${sandboxDevice === 'desktop' ? 'active' : ''}" data-device="desktop">💻 ${escapeHtml(messages.desktop || 'Desktop')}</button>
+                  <button class="device-btn ${sandboxDevice === 'mobile' ? 'active' : ''}" data-device="mobile">📱 ${escapeHtml(messages.mobile || 'Mobile')}</button>
                 </div>
               </div>
             </div>
@@ -378,16 +411,16 @@ export function renderDetailView(container) {
             <!-- Web Archetype Sub-Tabs (Hero, Widget, Form, Pricing) -->
             <div class="component-tabs-nav" id="web-sub-tabs" role="tablist" style="display: ${activeArchetype === 'web' ? 'flex' : 'none'};">
               <button class="comp-tab-btn ${activeComponentTab === 'hero' ? 'active' : ''}" data-tab="hero" role="tab" aria-selected="${activeComponentTab === 'hero'}">
-                <span>🎯 히어로</span>
+                <span>🎯 ${escapeHtml(t('detail.hero'))}</span>
               </button>
               <button class="comp-tab-btn ${activeComponentTab === 'widget' ? 'active' : ''}" data-tab="widget" role="tab" aria-selected="${activeComponentTab === 'widget'}">
-                <span>📊 위젯</span>
+                <span>📊 ${escapeHtml(t('detail.widget'))}</span>
               </button>
               <button class="comp-tab-btn ${activeComponentTab === 'form' ? 'active' : ''}" data-tab="form" role="tab" aria-selected="${activeComponentTab === 'form'}">
-                <span>⚡ 폼</span>
+                <span>⚡ ${escapeHtml(t('detail.form'))}</span>
               </button>
               <button class="comp-tab-btn ${activeComponentTab === 'pricing' ? 'active' : ''}" data-tab="pricing" role="tab" aria-selected="${activeComponentTab === 'pricing'}">
-                <span>🏷️ 가격표</span>
+                <span>🏷️ ${escapeHtml(t('detail.pricing'))}</span>
               </button>
             </div>
 
@@ -397,20 +430,18 @@ export function renderDetailView(container) {
                  data-theme="${subDesign.id}"
                  data-archetype="${activeArchetype}"
                  style="
-                   --theme-radius: ${liveTweaks.borderRadius}px;
-                   --theme-border-width: ${liveTweaks.borderWidth}px;
                    --theme-shadow: 0 ${liveTweaks.shadowDepth}px ${Math.max(10, liveTweaks.shadowDepth * 2)}px rgba(0, 0, 0, 0.5);
-                   --tweak-radius: ${liveTweaks.borderRadius}px;
+                   --tweak-surface-radius: ${liveTweaks.borderRadius}px;
                    --tweak-border-width: ${liveTweaks.borderWidth}px;
                    --tweak-shadow-depth: ${liveTweaks.shadowDepth}px;
                    --tweak-backdrop-blur: ${liveTweaks.backdropBlur}px;
                    --tweak-glow-intensity: ${liveTweaks.glowIntensity};
                  ">
-              ${getArchetypeHTML(activeArchetype, subDesign, { tab: activeComponentTab })}
+              ${getArchetypeHTML(activeArchetype, subDesign, { tab: activeComponentTab, snapshot: localeSnapshot })}
             </div>
             
             <div class="sandbox-footer-hint">
-              <span>💡 화면 내부 요소를 클릭하거나 조작하면 실제 인터랙션 및 사운드가 작동합니다.</span>
+              <span>💡 ${escapeHtml(messages.previewHint || '')}</span>
             </div>
           </section>
 
@@ -418,24 +449,24 @@ export function renderDetailView(container) {
           <aside class="detail-sidebar-section">
             <div class="style-hero-summary">
               <div class="style-badge-row">
-                <span class="style-category-badge">${mainCat.title}</span>
-                <span class="style-motion-badge">모션: ${subDesign.motionProfile || 'Normal'}</span>
+                <span class="style-category-badge">${escapeHtml(mainCat.title)}</span>
+                <span class="style-motion-badge">${escapeHtml(t('detail.motion', { value: subDesign.motionProfile || 'Normal' }))}</span>
               </div>
-              <h2 class="style-title" id="modal-style-title">${subDesign.name}</h2>
-              <span class="style-title-en">${subDesign.nameEn}</span>
-              <p class="style-desc">${subDesign.shortDesc}</p>
+              <h2 class="style-title" id="modal-style-title">${escapeHtml(subDesign.name)}</h2>
+              <span class="style-title-en">${escapeHtml(subDesign.nameEn)}</span>
+              <p class="style-desc">${escapeHtml(subDesign.shortDesc)}</p>
             </div>
 
             <!-- Palette Palette -->
             <div class="sidebar-block">
-              <h3 class="block-title">🎨 고유 컬러 팔레트 (클릭하여 HEX 복사)</h3>
+              <h3 class="block-title">🎨 ${escapeHtml(messages.palette || '')}</h3>
               <div class="palette-swatches-grid" id="palette-swatches-grid">
                 ${subDesign.palette.map(p => `
-                  <button class="palette-swatch-card" data-hex="${p.hex}" data-name="${p.name}">
+                  <button class="palette-swatch-card" data-hex="${escapeHtml(p.hex)}" data-name="${escapeHtml(p.name)}">
                     <span class="swatch-color" style="background: ${p.hex}"></span>
                     <div class="swatch-meta">
-                      <span class="swatch-name">${p.name}</span>
-                      <span class="swatch-hex">${p.hex}</span>
+                      <span class="swatch-name">${escapeHtml(p.name)}</span>
+                      <span class="swatch-hex">${escapeHtml(p.hex)}</span>
                     </div>
                   </button>
                 `).join('')}
@@ -445,30 +476,30 @@ export function renderDetailView(container) {
             <!-- Live Parameter Tuner Sliders -->
             <div class="sidebar-block">
               <div class="block-title-row">
-                <h3 class="block-title">🎛️ 실시간 파라미터 튜너 (Live CSS Tuning)</h3>
-                <button class="reset-tweaks-btn" id="btn-reset-tweaks" title="스타일 고유 기본값으로 리셋">↺ 기본값 리셋</button>
+                <h3 class="block-title">🎛️ ${escapeHtml(messages.liveTuner || '')}</h3>
+                <button class="reset-tweaks-btn" id="btn-reset-tweaks" title="${escapeHtml(messages.reset || '')}">↺ ${escapeHtml(messages.reset || '')}</button>
               </div>
               
               <div class="tweaks-controls-list">
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>모서리 둥글기 (Border Radius)</span>
+                    <span>${escapeHtml(t('detail.radius'))} (Border Radius)</span>
                     <strong id="val-radius">${liveTweaks.borderRadius}px</strong>
                   </div>
-                  <input type="range" min="0" max="64" value="${liveTweaks.borderRadius}" class="tweak-slider" id="slider-radius" />
+                  <input type="range" min="${TUNER_LIMITS.borderRadius.min}" max="${TUNER_LIMITS.borderRadius.max}" step="${TUNER_LIMITS.borderRadius.step}" value="${liveTweaks.borderRadius}" class="tweak-slider" id="slider-radius" />
                 </div>
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>테두리 두께 (Border Width)</span>
+                    <span>${escapeHtml(t('detail.border'))} (Border Width)</span>
                     <strong id="val-border">${liveTweaks.borderWidth}px</strong>
                   </div>
-                  <input type="range" min="0" max="12" value="${liveTweaks.borderWidth}" class="tweak-slider" id="slider-border" />
+                  <input type="range" min="${TUNER_LIMITS.borderWidth.min}" max="${TUNER_LIMITS.borderWidth.max}" step="${TUNER_LIMITS.borderWidth.step}" value="${liveTweaks.borderWidth}" class="tweak-slider" id="slider-border" />
                 </div>
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>그림자 깊이 (Shadow Depth)</span>
+                    <span>${escapeHtml(t('detail.shadow'))} (Shadow Depth)</span>
                     <strong id="val-shadow">${liveTweaks.shadowDepth}px</strong>
                   </div>
                   <input type="range" min="0" max="30" value="${liveTweaks.shadowDepth}" class="tweak-slider" id="slider-shadow" />
@@ -476,7 +507,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>배경 블러 (Backdrop Blur)</span>
+                    <span>${escapeHtml(t('detail.blur'))} (Backdrop Blur)</span>
                     <strong id="val-blur">${liveTweaks.backdropBlur}px</strong>
                   </div>
                   <input type="range" min="0" max="32" value="${liveTweaks.backdropBlur}" class="tweak-slider" id="slider-blur" />
@@ -484,7 +515,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>발광 강도 (Glow Intensity)</span>
+                    <span>${escapeHtml(t('detail.glow'))} (Glow Intensity)</span>
                     <strong id="val-glow">${Number(liveTweaks.glowIntensity ?? 1).toFixed(1)}</strong>
                   </div>
                   <input type="range" min="0" max="2" step="0.1" value="${liveTweaks.glowIntensity ?? 1}" class="tweak-slider" id="slider-glow" />
@@ -495,11 +526,11 @@ export function renderDetailView(container) {
             <!-- Reactive Design Spec & Code Inspector (v2.3.0) -->
             <div class="sidebar-block" id="detail-inspector-block">
               <div class="block-title-row">
-                <h3 class="block-title">🛠️ 실시간 디자인 사양 및 인스펙터</h3>
+                <h3 class="block-title">🛠️ ${escapeHtml(t('detail.inspectorTitle'))}</h3>
               </div>
 
               <!-- 4-Tab Navigation Bar -->
-              <nav class="inspector-tab-nav" role="tablist" aria-label="디자인 인스펙터 탭">
+              <nav class="inspector-tab-nav" role="tablist" aria-label="${escapeHtml(messages.inspector || '')}">
                 <button class="inspector-tab-btn active" data-insp-tab="css" role="tab" aria-selected="true" id="tab-insp-css">
                   <span>💻 Live CSS</span>
                 </button>
@@ -516,56 +547,56 @@ export function renderDetailView(container) {
 
               <!-- Live CSS Sub-Toggles -->
               <div class="css-submode-nav" id="css-submode-nav">
-                <button class="css-submode-btn active" data-css-sub="full">전체 번들</button>
-                <button class="css-submode-btn" data-css-sub="tokens">테마 토큰만</button>
-                <button class="css-submode-btn" data-css-sub="component">아키타입 CSS</button>
+                <button class="css-submode-btn active" data-css-sub="full">${escapeHtml(t('detail.cssFull'))}</button>
+                <button class="css-submode-btn" data-css-sub="tokens">${escapeHtml(t('detail.cssTokens'))}</button>
+                <button class="css-submode-btn" data-css-sub="component">${escapeHtml(t('detail.cssComponent'))}</button>
               </div>
 
               <!-- Inspector Content Panes -->
               <div class="inspector-viewer-container">
                 <div class="inspector-pane active" id="pane-css">
-                  <pre class="code-inspector-box"><code id="live-css-code">${generateLiveCSSSnippet(subDesign, liveTweaks, activeArchetype, activeCssSubMode)}</code></pre>
+                  <pre class="code-inspector-box"><code id="live-css-code"></code></pre>
                 </div>
                 <div class="inspector-pane" id="pane-html">
                   <pre class="code-inspector-box"><code id="live-html-code"></code></pre>
                 </div>
                 <div class="inspector-pane" id="pane-md">
-                  <pre class="code-inspector-box markdown-inspector-box"><code id="live-md-code">${generateLiveDesignSpecMarkdown(subDesign, liveTweaks, activeArchetype, sandboxDevice)}</code></pre>
+                  <pre class="code-inspector-box markdown-inspector-box"><code id="live-md-code"></code></pre>
                 </div>
                 <div class="inspector-pane" id="pane-json">
-                  <pre class="code-inspector-box"><code id="live-json-code">${generateLiveTokensJSON(subDesign, liveTweaks)}</code></pre>
+                  <pre class="code-inspector-box"><code id="live-json-code"></code></pre>
                 </div>
               </div>
 
               <!-- Action Toolbar -->
               <div class="inspector-action-bar">
-                <button class="inspector-action-btn" id="btn-inspector-copy" title="현재 탭 내용 복사">
-                  <span>📋 클립보드 복사</span>
+                <button class="inspector-action-btn" id="btn-inspector-copy" title="${escapeHtml(t('detail.copyCurrent'))}">
+                  <span>📋 ${escapeHtml(t('detail.copyClipboard'))}</span>
                 </button>
-                <button class="inspector-action-btn" id="btn-inspector-download" title="현재 탭 파일 다운로드">
-                  <span id="btn-inspector-download-label">💾 .css 다운로드</span>
+                <button class="inspector-action-btn" id="btn-inspector-download" title="${escapeHtml(t('detail.downloadCurrent'))}">
+                  <span id="btn-inspector-download-label">${escapeHtml(t('detail.downloadCss'))}</span>
                 </button>
-                <button class="inspector-action-btn primary-export" id="btn-inspector-bundle" title="네 가지 산출물을 한 TXT로 합친 통합 스냅샷 내보내기">
-                  <span>📦 통합 TXT 스냅샷</span>
+                <button class="inspector-action-btn primary-export" id="btn-inspector-bundle" title="${escapeHtml(t('detail.bundleTitle'))}">
+                  <span>📦 ${escapeHtml(t('detail.bundle'))}</span>
                 </button>
               </div>
             </div>
 
             <!-- Characteristics / Pros & Cons -->
             <div class="sidebar-block">
-              <h3 class="block-title">📋 디자인 사조 특징 및 가이드</h3>
+              <h3 class="block-title">📋 ${escapeHtml(messages.characteristics || '')}</h3>
               <div class="characteristics-list" id="characteristics-list">
-                ${subDesign.characteristics.map(c => `<div class="char-chip">✓ ${c}</div>`).join('')}
+                ${subDesign.characteristics.map(c => `<div class="char-chip">✓ ${escapeHtml(c)}</div>`).join('')}
               </div>
               
               <div class="pros-cons-grid" id="pros-cons-grid">
                 <div class="pros-box">
-                  <h4>👍 장점 및 적합한 분야</h4>
-                  <ul>${subDesign.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                  <h4>👍 ${escapeHtml(messages.pros || '')}</h4>
+                  <ul>${subDesign.pros.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
                 </div>
                 <div class="cons-box">
-                  <h4>⚠️ 주의점 및 한계</h4>
-                  <ul>${subDesign.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                  <h4>⚠️ ${escapeHtml(messages.cons || '')}</h4>
+                  <ul>${subDesign.cons.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
                 </div>
               </div>
             </div>
@@ -577,7 +608,31 @@ export function renderDetailView(container) {
     attachDetailEventListeners(root);
     const viewport = root.querySelector('#mockup-viewport');
     if (viewport) {
-      hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
+      hydrateMockup(viewport, subDesign, {
+        archetype: activeArchetype,
+        tab: activeComponentTab,
+        snapshot: localeSnapshot,
+        initialState: continuity?.initialState || null
+      });
+    }
+    root.querySelectorAll('.inspector-tab-btn').forEach(button => {
+      const active = button.getAttribute('data-insp-tab') === activeInspectorTab;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    root.querySelectorAll('.inspector-pane').forEach(pane => {
+      pane.classList.toggle('active', pane.id === `pane-${activeInspectorTab}`);
+    });
+    root.querySelectorAll('.css-submode-btn').forEach(button => {
+      button.classList.toggle('active', button.getAttribute('data-css-sub') === activeCssSubMode);
+    });
+    const sidebar = root.querySelector('.detail-sidebar-section');
+    const body = root.querySelector('.modal-body-grid');
+    if (sidebar) sidebar.scrollTop = continuity?.sidebarScrollTop || 0;
+    if (body) body.scrollTop = continuity?.bodyScrollTop || 0;
+    if (continuity?.focusId) {
+      const focusTarget = document.getElementById(continuity.focusId);
+      if (focusTarget && root.contains(focusTarget)) focusTarget.focus({ preventScroll: true });
     }
     refreshAllInspectorPanes(root);
   }
@@ -588,11 +643,11 @@ export function renderDetailView(container) {
     if (!viewport) return;
 
     teardownMockup(viewport);
-    viewport.innerHTML = getArchetypeHTML(activeArchetype, subDesign, { tab: activeComponentTab });
+    viewport.innerHTML = getArchetypeHTML(activeArchetype, subDesign, { tab: activeComponentTab, snapshot: getActiveLocaleSnapshot() });
     viewport.className = `mockup-viewport ${sandboxDevice}`;
     viewport.setAttribute('data-theme', subDesign.id);
     viewport.setAttribute('data-archetype', activeArchetype);
-    hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab });
+    hydrateMockup(viewport, subDesign, { archetype: activeArchetype, tab: activeComponentTab, snapshot: getActiveLocaleSnapshot() });
     applySelectedZoom(root);
     refreshAllInspectorPanes(root);
 
@@ -622,13 +677,14 @@ export function renderDetailView(container) {
       const initialState = snapshotMockupState(viewport);
       const { activeArchetype, activeComponentTab, sandboxDevice } = state;
       teardownMockup(viewport);
-      viewport.innerHTML = getArchetypeHTML(activeArchetype, newSubDesign, { tab: activeComponentTab });
+      viewport.innerHTML = getArchetypeHTML(activeArchetype, newSubDesign, { tab: activeComponentTab, snapshot: getActiveLocaleSnapshot() });
       viewport.className = `mockup-viewport ${sandboxDevice}`;
       viewport.setAttribute('data-theme', newSubDesign.id);
       viewport.setAttribute('data-archetype', activeArchetype);
       hydrateMockup(viewport, newSubDesign, {
         archetype: activeArchetype,
         tab: activeComponentTab,
+        snapshot: getActiveLocaleSnapshot(),
         initialState
       });
       applySelectedZoom(root);
@@ -667,6 +723,7 @@ export function renderDetailView(container) {
         categoryTitle: mainCat.title,
         selectedId: newSubDesign.id,
         query: currentQuery,
+        snapshot: getActiveLocaleSnapshot(),
         renderThumbnail: renderPreviewThumbnail
       });
     }
@@ -681,6 +738,8 @@ export function renderDetailView(container) {
 
   // Update Metadata & Inspector in Sidebar
   function updateDetailMetadataAndInspector(root, subDesign, mainCat, state) {
+    const copy = getActiveLocaleSnapshot()?.copy;
+    const t = (key, values) => formatLocaleCopy(copy, key, values);
     const title = root.querySelector('#modal-style-title');
     const titleEn = root.querySelector('.style-title-en');
     const desc = root.querySelector('.style-desc');
@@ -691,17 +750,17 @@ export function renderDetailView(container) {
     if (titleEn) titleEn.textContent = subDesign.nameEn;
     if (desc) desc.textContent = subDesign.shortDesc;
     if (catBadge) catBadge.textContent = mainCat.title;
-    if (motionBadge) motionBadge.textContent = `모션: ${subDesign.motionProfile || 'Normal'}`;
+    if (motionBadge) motionBadge.textContent = t('detail.motion', { value: subDesign.motionProfile || 'Normal' });
 
     // Update Palette Swatches
     const paletteGrid = root.querySelector('#palette-swatches-grid');
     if (paletteGrid) {
       paletteGrid.innerHTML = subDesign.palette.map(p => `
-        <button class="palette-swatch-card" data-hex="${p.hex}" data-name="${p.name}">
+        <button class="palette-swatch-card" data-hex="${escapeHtml(p.hex)}" data-name="${escapeHtml(p.name)}">
           <span class="swatch-color" style="background: ${p.hex}"></span>
           <div class="swatch-meta">
-            <span class="swatch-name">${p.name}</span>
-            <span class="swatch-hex">${p.hex}</span>
+            <span class="swatch-name">${escapeHtml(p.name)}</span>
+            <span class="swatch-hex">${escapeHtml(p.hex)}</span>
           </div>
         </button>
       `).join('');
@@ -710,19 +769,19 @@ export function renderDetailView(container) {
     // Update Characteristics & Pros/Cons
     const charList = root.querySelector('#characteristics-list');
     if (charList) {
-      charList.innerHTML = subDesign.characteristics.map(c => `<div class="char-chip">✓ ${c}</div>`).join('');
+      charList.innerHTML = subDesign.characteristics.map(c => `<div class="char-chip">✓ ${escapeHtml(c)}</div>`).join('');
     }
 
     const prosCons = root.querySelector('#pros-cons-grid');
     if (prosCons) {
       prosCons.innerHTML = `
         <div class="pros-box">
-          <h4>👍 장점 및 적합한 분야</h4>
-          <ul>${subDesign.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+          <h4>👍 ${escapeHtml(t('detail.pros'))}</h4>
+          <ul>${subDesign.pros.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
         </div>
         <div class="cons-box">
-          <h4>⚠️ 주의점 및 한계</h4>
-          <ul>${subDesign.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+          <h4>⚠️ ${escapeHtml(t('detail.cons'))}</h4>
+          <ul>${subDesign.cons.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
         </div>
       `;
     }
@@ -732,14 +791,14 @@ export function renderDetailView(container) {
     if (bookmarkBtn) {
       const isBookmarked = state.bookmarks.includes(subDesign.id);
       bookmarkBtn.classList.toggle('active', isBookmarked);
-      bookmarkBtn.querySelector('span').textContent = isBookmarked ? '★ 북마크됨' : '☆ 북마크';
+      bookmarkBtn.querySelector('span').textContent = t(isBookmarked ? 'detail.bookmarked' : 'detail.bookmark');
     }
 
     const confirmBtn = root.querySelector('#btn-modal-confirm');
     if (confirmBtn) {
       const isConfirmed = state.confirmedStyleId === subDesign.id;
       confirmBtn.classList.toggle('active', isConfirmed);
-      confirmBtn.querySelector('span').textContent = isConfirmed ? '✓ 확정됨' : '이 스타일 확정';
+      confirmBtn.querySelector('span').textContent = t(isConfirmed ? 'detail.confirmed' : 'detail.confirm');
     }
 
     refreshAllInspectorPanes(root);
@@ -762,17 +821,15 @@ export function renderDetailView(container) {
     if (bookmarkBtn) {
       const isBookmarked = bookmarks.includes(subDesign.id);
       bookmarkBtn.classList.toggle('active', isBookmarked);
-      bookmarkBtn.querySelector('span').textContent = isBookmarked ? '★ 북마크됨' : '☆ 북마크';
+      bookmarkBtn.querySelector('span').textContent = formatLocaleCopy(getActiveLocaleSnapshot()?.copy, isBookmarked ? 'detail.bookmarked' : 'detail.bookmark');
     }
   }
 
   function applyTweaksToDOM(root, tweaks, subDesign) {
     const viewport = root.querySelector('#mockup-viewport');
     if (viewport) {
-      viewport.style.setProperty('--theme-radius', `${tweaks.borderRadius}px`);
-      viewport.style.setProperty('--theme-border-width', `${tweaks.borderWidth}px`);
       viewport.style.setProperty('--theme-shadow', `0 ${tweaks.shadowDepth}px ${Math.max(10, tweaks.shadowDepth * 2)}px rgba(0, 0, 0, 0.5)`);
-      viewport.style.setProperty('--tweak-radius', `${tweaks.borderRadius}px`);
+      viewport.style.setProperty('--tweak-surface-radius', `${tweaks.borderRadius}px`);
       viewport.style.setProperty('--tweak-border-width', `${tweaks.borderWidth}px`);
       viewport.style.setProperty('--tweak-shadow-depth', `${tweaks.shadowDepth}px`);
       viewport.style.setProperty('--tweak-backdrop-blur', `${tweaks.backdropBlur}px`);
@@ -877,7 +934,8 @@ export function renderDetailView(container) {
         const status = topBar.querySelector('#detail-style-picker-status');
         if (scroller) scroller.innerHTML = chips.markup;
         if (status) {
-          status.textContent = `${chips.matchCount}개 세부 스타일${chips.selectedPinned ? ' · 현재 선택 고정' : ''}`;
+          const copy = getActiveLocaleSnapshot()?.copy;
+          status.textContent = `${formatLocaleCopy(copy, 'detail.styleMatches', { count: chips.matchCount })}${chips.selectedPinned ? ` · ${formatLocaleCopy(copy, 'split.selectedPinned')}` : ''}`;
         }
       });
     }
@@ -928,7 +986,7 @@ export function renderDetailView(container) {
         const isNow = appState.toggleBookmark(currentSubId);
         synthAudio.playSfx('BOOKMARK');
         bookmarkBtn.classList.toggle('active', isNow);
-        bookmarkBtn.querySelector('span').textContent = isNow ? '★ 북마크됨' : '☆ 북마크';
+        bookmarkBtn.querySelector('span').textContent = formatLocaleCopy(getActiveLocaleSnapshot()?.copy, isNow ? 'detail.bookmarked' : 'detail.bookmark');
       });
     }
 
@@ -938,7 +996,7 @@ export function renderDetailView(container) {
       confirmBtn.addEventListener('click', () => {
         const currentSubId = appState.getState().selectedSubCategory;
         confirmStyle(currentSubId);
-        confirmBtn.querySelector('span').textContent = '✓ 확정됨';
+        confirmBtn.querySelector('span').textContent = formatLocaleCopy(getActiveLocaleSnapshot()?.copy, 'detail.confirmed');
         confirmBtn.classList.add('active');
       });
     }
@@ -960,7 +1018,7 @@ export function renderDetailView(container) {
         if (!card) return;
         const hex = card.getAttribute('data-hex');
         const name = card.getAttribute('data-name');
-        copyToClipboard(hex, `${name} 색상 코드`);
+        copyToClipboard(hex, formatLocaleCopy(getActiveLocaleSnapshot()?.copy, 'detail.colorCode', { name }));
       });
     }
 
@@ -990,13 +1048,14 @@ export function renderDetailView(container) {
 
         const downloadLabel = root.querySelector('#btn-inspector-download-label');
         if (downloadLabel) {
+          const copy = getActiveLocaleSnapshot()?.copy;
           const labels = {
-            css: '💾 .css 다운로드',
-            html: '💾 .html 다운로드',
-            md: '💾 .md 다운로드',
-            json: '💾 .json 다운로드'
+            css: formatLocaleCopy(copy, 'detail.downloadCss'),
+            html: formatLocaleCopy(copy, 'detail.downloadHtml'),
+            md: formatLocaleCopy(copy, 'detail.downloadMarkdown'),
+            json: formatLocaleCopy(copy, 'detail.downloadJson')
           };
-          downloadLabel.textContent = labels[tab] || '💾 파일 다운로드';
+          downloadLabel.textContent = labels[tab] || formatLocaleCopy(copy, 'detail.downloadFile');
         }
 
         refreshAllInspectorPanes(root);
@@ -1023,11 +1082,12 @@ export function renderDetailView(container) {
     const inspCopyBtn = root.querySelector('#btn-inspector-copy');
     if (inspCopyBtn) {
       inspCopyBtn.addEventListener('click', () => {
+        const copy = getActiveLocaleSnapshot()?.copy;
         const paneMap = {
-          css: { label: 'CSS 스타일 코드' },
-          html: { label: 'HTML 마크업' },
-          md: { label: 'designs.md 사양서' },
-          json: { label: '디자인 토큰 JSON' }
+          css: { label: formatLocaleCopy(copy, 'detail.codeCss') },
+          html: { label: formatLocaleCopy(copy, 'detail.codeHtml') },
+          md: { label: formatLocaleCopy(copy, 'detail.codeMarkdown') },
+          json: { label: formatLocaleCopy(copy, 'detail.codeJson') }
         };
         const activeMeta = paneMap[activeInspectorTab] || paneMap.css;
         const code = getCurrentInspectorContent(root, activeInspectorTab, activeCssSubMode);
@@ -1216,7 +1276,7 @@ ${htmlContent}
   }
 
   // --- WAI-ARIA Focus Trap Helper ---
-  function setupFocusTrap(modalRoot) {
+  function setupFocusTrap(modalRoot, { focusInitial = true } = {}) {
     removeFocusTrap();
     const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -1243,8 +1303,10 @@ ${htmlContent}
     };
 
     modalRoot.addEventListener('keydown', activeFocusTrap);
-    const initialTarget = modalRoot.querySelector('.breadcrumb-back-btn') || modalRoot.querySelector('button');
-    if (initialTarget) initialTarget.focus();
+    if (focusInitial) {
+      const initialTarget = modalRoot.querySelector('.breadcrumb-back-btn') || modalRoot.querySelector('button');
+      if (initialTarget) initialTarget.focus();
+    }
   }
 
   function removeFocusTrap() {
@@ -1258,6 +1320,8 @@ ${htmlContent}
   function renderSplitCompareView(root, compareIds, activeArchetype, currentTab) {
     const sub1 = requireSubDesign(compareIds[0], 'comparison A');
     const sub2 = requireSubDesign(compareIds[1], 'comparison B');
+    const localeSnapshot = getActiveLocaleSnapshot();
+    const t = (key, values) => formatLocaleCopy(localeSnapshot?.copy, key, values);
 
     teardownHydratedViewports(root);
     root.innerHTML = `
@@ -1268,11 +1332,11 @@ ${htmlContent}
         <div class="split-top-bar">
           <div class="split-head-title">
             <span class="split-icon">⚖️</span>
-            <h2 id="split-modal-title">스플릿 듀얼 디자인 비교 샌드박스 (Side-by-Side)</h2>
+            <h2 id="split-modal-title">${escapeHtml(t('split.title'))}</h2>
           </div>
 
           <!-- Synchronized Archetype Tab Controls -->
-          <div class="archetype-tabs-nav" role="tablist" aria-label="비교 아키타입">
+          <div class="archetype-tabs-nav" role="tablist" aria-label="${escapeHtml(t('split.archetypes'))}">
             ${getSplitArchetypeTabs(activeArchetype).map(tab => `
               <button class="split-tab-btn ${tab.ariaSelected === 'true' ? 'active' : ''}"
                       id="split-tab-${tab.id}"
@@ -1280,11 +1344,11 @@ ${htmlContent}
                       role="tab"
                       aria-selected="${tab.ariaSelected}"
                       aria-controls="split-viewport-a split-viewport-b"
-                      tabindex="${tab.tabIndex}">${tab.label}</button>
+                      tabindex="${tab.tabIndex}">${escapeHtml(t(`detail.${tab.id}`))}</button>
             `).join('')}
           </div>
 
-          <button class="modal-close-btn" id="btn-compare-close" aria-label="닫기">
+          <button class="modal-close-btn" id="btn-compare-close" aria-label="${escapeHtml(t('split.close'))}">
             <span>✕</span>
           </button>
         </div>
@@ -1295,8 +1359,8 @@ ${htmlContent}
           <div class="split-col split-left" style="--split-accent: ${sub1.accentColor}">
             <div class="split-col-header">
               <div class="split-select-wrapper">
-                <span class="split-badge">스타일 A</span>
-                <select class="split-style-select" id="select-style-a" aria-label="스타일 A 선택">
+                <span class="split-badge">${escapeHtml(t('split.styleA'))}</span>
+                <select class="split-style-select" id="select-style-a" aria-label="${escapeHtml(t('split.selectA'))}">
                   ${ALL_SUB_DESIGNS.map(s => `
                     <option value="${s.id}" ${s.id === sub1.id ? 'selected' : ''}>
                       [${s.categoryTitle}] ${s.name}
@@ -1314,10 +1378,11 @@ ${htmlContent}
               slot: 'A',
               query: splitPickerQueries.A,
               selectedId: sub1.id,
+              snapshot: localeSnapshot,
               renderThumbnail: renderPreviewThumbnail
             })}
             <div class="split-viewport" id="split-viewport-a" data-theme="${sub1.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
-              ${getArchetypeHTML(activeArchetype, sub1, { tab: currentTab })}
+              ${getArchetypeHTML(activeArchetype, sub1, { tab: currentTab, snapshot: localeSnapshot })}
             </div>
           </div>
 
@@ -1325,8 +1390,8 @@ ${htmlContent}
           <div class="split-col split-right" style="--split-accent: ${sub2.accentColor}">
             <div class="split-col-header">
               <div class="split-select-wrapper">
-                <span class="split-badge">스타일 B</span>
-                <select class="split-style-select" id="select-style-b" aria-label="스타일 B 선택">
+                <span class="split-badge">${escapeHtml(t('split.styleB'))}</span>
+                <select class="split-style-select" id="select-style-b" aria-label="${escapeHtml(t('split.selectB'))}">
                   ${ALL_SUB_DESIGNS.map(s => `
                     <option value="${s.id}" ${s.id === sub2.id ? 'selected' : ''}>
                       [${s.categoryTitle}] ${s.name}
@@ -1344,10 +1409,11 @@ ${htmlContent}
               slot: 'B',
               query: splitPickerQueries.B,
               selectedId: sub2.id,
+              snapshot: localeSnapshot,
               renderThumbnail: renderPreviewThumbnail
             })}
             <div class="split-viewport" id="split-viewport-b" data-theme="${sub2.id}" data-archetype="${activeArchetype}" role="tabpanel" aria-labelledby="split-tab-${activeArchetype}" tabindex="0">
-              ${getArchetypeHTML(activeArchetype, sub2, { tab: currentTab })}
+              ${getArchetypeHTML(activeArchetype, sub2, { tab: currentTab, snapshot: localeSnapshot })}
             </div>
           </div>
         </div>
@@ -1357,8 +1423,8 @@ ${htmlContent}
     attachSplitCompareListeners(root, compareIds);
     const viewA = root.querySelector('#split-viewport-a');
     const viewB = root.querySelector('#split-viewport-b');
-    if (viewA) hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab });
-    if (viewB) hydrateMockup(viewB, sub2, { archetype: activeArchetype, tab: currentTab });
+    if (viewA) hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab, snapshot: localeSnapshot });
+    if (viewB) hydrateMockup(viewB, sub2, { archetype: activeArchetype, tab: currentTab, snapshot: localeSnapshot });
     setupFocusTrap(root);
   }
 
@@ -1378,19 +1444,19 @@ ${htmlContent}
 
     if (viewA) {
       teardownMockup(viewA);
-      viewA.innerHTML = getArchetypeHTML(activeArchetype, sub1, { tab: currentTab });
+      viewA.innerHTML = getArchetypeHTML(activeArchetype, sub1, { tab: currentTab, snapshot: getActiveLocaleSnapshot() });
       viewA.setAttribute('data-theme', sub1.id);
       viewA.setAttribute('data-archetype', activeArchetype);
       viewA.setAttribute('aria-labelledby', `split-tab-${activeArchetype}`);
-      hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab });
+      hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab, snapshot: getActiveLocaleSnapshot() });
     }
     if (viewB) {
       teardownMockup(viewB);
-      viewB.innerHTML = getArchetypeHTML(activeArchetype, sub2, { tab: currentTab });
+      viewB.innerHTML = getArchetypeHTML(activeArchetype, sub2, { tab: currentTab, snapshot: getActiveLocaleSnapshot() });
       viewB.setAttribute('data-theme', sub2.id);
       viewB.setAttribute('data-archetype', activeArchetype);
       viewB.setAttribute('aria-labelledby', `split-tab-${activeArchetype}`);
-      hydrateMockup(viewB, sub2, { archetype: activeArchetype, tab: currentTab });
+      hydrateMockup(viewB, sub2, { archetype: activeArchetype, tab: currentTab, snapshot: getActiveLocaleSnapshot() });
     }
   }
 
@@ -1473,7 +1539,7 @@ ${htmlContent}
         const status = splitModal.querySelector(`#split-picker-status-${slotLower}`);
         if (picker) picker.innerHTML = chips.markup;
         if (status) {
-          status.textContent = `${chips.matchCount}개 일치${chips.selectedPinned ? ' · 현재 선택 고정' : ''}`;
+          status.textContent = `${formatLocaleCopy(getActiveLocaleSnapshot()?.copy, 'split.matchCount', { count: chips.matchCount })}${chips.selectedPinned ? ` · ${formatLocaleCopy(getActiveLocaleSnapshot()?.copy, 'split.selectedPinned')}` : ''}`;
         }
       });
     }

@@ -124,15 +124,15 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   assert.equal(outputCount, 960);
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), legacyStyles),
-    '6f796c898974cd4a4d0ceba36e94ee6b1f4065ba965b7b5af9d2cfd7b00992d2'
+    '52f9fb0f8a62425dcde10889381f1a714408f4d7bd78cc2159dd9d5dae777767'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), coreStyles),
-    '901ecc70ce28a9ab249698aa8486c42e0d9a0736ed7252430792b2fe7d8fd945'
+    '94a2c53503d4c84a22d9f91f893e58bf8b57822dd8da5465411b51e76ec92308'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    '112307cf6534f64ea6555761ed54f60141529a2153a592fdad03c92ccb7ebb09'
+    'f26ed85749a0a0dcf900de166713e47543f2afda0b44262f0e47f5db3cd2f1b8'
   );
 });
 
@@ -181,15 +181,15 @@ test('non-Web archetypes remain byte-stable and ignore component-tab options', (
 
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, legacyStyles),
-    '03637532f556e72f4d7d838b9f5416069766215f5af8b86c68b014098f512de7'
+    '041690a743b30c0fdaa90d8b672ff891d1028b348d53ab1be692249f7c5f48b9'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, coreStyles),
-    'f9daab061de9065d7919440a2954a627504a08e9ec30c94aee21dd435ddd6abd'
+    '9a930418ecd40750243cec4bbffce48a65b4c4ceab37c90874ee837882be986a'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, styles),
-    '591dfa4ac6787c4d190f098efed7bc5fb577212a1e83833e6da864e192ce34cd'
+    '2a880e361606f3c55cf7be95303346f5e966a5362cdfacbeaf78a6ae1f73b33a'
   );
 });
 

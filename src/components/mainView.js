@@ -11,6 +11,8 @@ import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
 import { observeThumbMotion } from './mockupRuntime.js';
 import { createGalleryModel, createGalleryWindow } from './galleryModel.js';
 import { renderGalleryPagination } from './galleryPagination.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 import {
   selectDraft,
   openDetailFor,
@@ -36,6 +38,8 @@ export function renderMainView(container, options = {}) {
   function updateView() {
     if (disposed) return;
     const state = stateManager.getState();
+    const snapshot = getActiveLocaleSnapshot();
+    const t = (key, values) => formatLocaleCopy(snapshot?.copy, key, values);
     const {
       searchQuery,
       viewMode,
@@ -60,11 +64,9 @@ export function renderMainView(container, options = {}) {
       container.innerHTML = `
         <div class="empty-results-box">
           <div class="empty-icon">🔍</div>
-          <h2 class="empty-title">일치하는 디자인 스타일이 없습니다</h2>
-          <p class="empty-desc">${searchQuery
-            ? `검색어 <strong>"${escapeHtml(searchQuery)}"</strong>와 현재 조건에`
-            : '현재 선택된 조건에'} 부합하는 시안을 찾지 못했습니다.</p>
-          <button class="empty-reset-btn" id="btn-empty-reset" type="button">전체 목록으로 초기화</button>
+          <h2 class="empty-title">${escapeHtml(t('gallery.emptyTitle'))}</h2>
+          <p class="empty-desc">${escapeHtml(t(searchQuery ? 'gallery.emptyQuery' : 'gallery.emptyConditions', { query: searchQuery }))}</p>
+          <button class="empty-reset-btn" id="btn-empty-reset" type="button">${escapeHtml(t('gallery.resetAll'))}</button>
         </div>
       `;
       const resetBtn = container.querySelector('#btn-empty-reset');
@@ -86,16 +88,16 @@ export function renderMainView(container, options = {}) {
 
     let contentHtml = '';
     if (viewMode === 'BENTO') {
-      contentHtml = renderBentoModeHTML(model.entries, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId });
+      contentHtml = renderBentoModeHTML(model.entries, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId }, t);
     } else if (viewMode === 'SPECTRUM') {
-      contentHtml = renderSpectrumModeHTML(model.eraGroups, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId });
+      contentHtml = renderSpectrumModeHTML(model.eraGroups, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId }, t, snapshot);
     } else {
-      contentHtml = renderStandardGridHTML(model.categories, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId });
+      contentHtml = renderStandardGridHTML(model.categories, bookmarks, { galleryFocusId, draftSubId, confirmedStyleId }, t);
     }
 
     container.innerHTML = `
       <section class="gallery-wrapper view-mode-${viewMode.toLowerCase()}" data-result-count="${model.resultIds.length}">
-        <p class="gallery-hint">클릭하면 하단에 담고, 더블클릭하면 자세히 봅니다. 화살표로 이동 · Enter 열기 · Space 비교 슬롯.</p>
+        <p class="gallery-hint">${escapeHtml(t('gallery.hint'))}</p>
         ${contentHtml}
         ${renderGalleryPagination(model.window)}
       </section>
@@ -128,7 +130,7 @@ export function renderMainView(container, options = {}) {
     return bits.join(' ');
   }
 
-  function renderStandardGridHTML(categories, bookmarks, flags) {
+  function renderStandardGridHTML(categories, bookmarks, flags, t) {
     let html = `<div class="category-nodes-grid">`;
 
     categories.forEach((cat, idx) => {
@@ -145,17 +147,17 @@ export function renderMainView(container, options = {}) {
           <div class="card-title-group">
             <div class="category-icon-wrapper">${cat.icon}</div>
             <div>
-              <h2 class="category-main-title">${cat.title}</h2>
-              <span class="category-en-title">${cat.titleEn}</span>
+              <h2 class="category-main-title">${escapeHtml(cat.title)}</h2>
+              <span class="category-en-title">${escapeHtml(cat.titleEn)}</span>
             </div>
           </div>
 
-          <p class="category-description">${cat.description}</p>
+          <p class="category-description">${escapeHtml(cat.description)}</p>
 
           <div class="hover-reveal-section">
             <div class="reveal-header">
-              <span class="reveal-title">파생 세부 스타일 (${cat.subCategories.length}종)</span>
-              <span class="reveal-hint">타일을 고르면 도크에 담깁니다</span>
+              <span class="reveal-title">${escapeHtml(t('gallery.derivedStyles', { count: cat.subCategories.length }))}</span>
+              <span class="reveal-hint">${escapeHtml(t('gallery.tileHint'))}</span>
             </div>
 
             <div class="subcategories-badges-wrapper sub-tile-grid">
@@ -177,8 +179,8 @@ export function renderMainView(container, options = {}) {
                     <button class="badge-bookmark-btn ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
                             type="button"
-                            aria-label="${sub.name} ${isSaved ? '북마크 해제' : '북마크 저장'}"
-                            title="${isSaved ? '북마크 해제' : '즐겨찾기 저장'}">
+                            aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}"
+                            title="${escapeHtml(t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.favoriteSave'))}">
                       ${isSaved ? '★' : '☆'}
                     </button>
                   </div>
@@ -194,7 +196,7 @@ export function renderMainView(container, options = {}) {
     return html;
   }
 
-  function renderBentoModeHTML(entries, bookmarks, flags) {
+  function renderBentoModeHTML(entries, bookmarks, flags, t) {
     let html = `<div class="bento-gallery-grid">`;
     entries.forEach((entry, index) => {
       const { sub, category: cat } = entry;
@@ -207,7 +209,7 @@ export function renderMainView(container, options = {}) {
              data-sub-id="${sub.id}"
              data-result-id="${sub.id}"
              tabindex="0"
-             aria-label="${sub.name} 시안 선택"
+             aria-label="${escapeHtml(t('gallery.selectDesign', { name: sub.name }))}"
              style="--bento-accent: ${cat.accentColor}">
           <div class="bento-card-glow"></div>
           <div class="bento-thumb-frame">
@@ -221,8 +223,8 @@ export function renderMainView(container, options = {}) {
             <button class="bento-bookmark-toggle ${isSaved ? 'bookmarked' : ''}"
                     data-sub-id="${sub.id}"
                     type="button"
-                    aria-label="${sub.name} ${isSaved ? '북마크 해제' : '북마크 저장'}"
-                    title="${isSaved ? '북마크 해제' : '즐겨찾기 저장'}">
+                    aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}"
+                    title="${escapeHtml(t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.favoriteSave'))}">
               ${isSaved ? '★' : '☆'}
             </button>
           </div>
@@ -240,7 +242,7 @@ export function renderMainView(container, options = {}) {
             <div class="bento-tags-list">
               ${sub.moodTags.slice(0, 2).map((tag) => `<span class="bento-tag">#${tag}</span>`).join('')}
             </div>
-            <span class="bento-open-cta">담기 →</span>
+            <span class="bento-open-cta">${escapeHtml(t('gallery.pick'))}</span>
           </div>
         </div>
       `;
@@ -250,13 +252,13 @@ export function renderMainView(container, options = {}) {
     return html;
   }
 
-  function renderSpectrumModeHTML(eraGroups, bookmarks, flags) {
+  function renderSpectrumModeHTML(eraGroups, bookmarks, flags, t, snapshot) {
     let html = `
       <div class="spectrum-stream-container">
-        <div class="spectrum-timeline-axis" aria-label="현재 결과의 시대 순서">
+        <div class="spectrum-timeline-axis" aria-label="${escapeHtml(t('gallery.eraOrder'))}">
           <span class="spectrum-axis-label">ERA SPECTRUM</span>
           <div class="spectrum-axis-nodes">
-            ${eraGroups.map(group => `<span class="axis-node">${group.label.ko}</span>`).join('<span class="axis-line" aria-hidden="true"></span>')}
+            ${eraGroups.map(group => `<span class="axis-node">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</span>`).join('<span class="axis-line" aria-hidden="true"></span>')}
           </div>
         </div>
         <div class="spectrum-cards-flow">
@@ -268,8 +270,8 @@ export function renderMainView(container, options = {}) {
           <div class="spectrum-group-header">
             <span class="group-icon">${String(groupIndex + 1).padStart(2, '0')}</span>
             <div class="group-titles">
-              <h3 class="group-title" id="era-group-${group.id}">${group.label.ko}</h3>
-              <span class="group-en">${group.label.en} · ${group.entries.length}종</span>
+              <h3 class="group-title" id="era-group-${group.id}">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</h3>
+              <span class="group-en">${group.label.en} · ${group.entries.length}</span>
             </div>
           </div>
           <div class="spectrum-sub-grid">
@@ -281,7 +283,7 @@ export function renderMainView(container, options = {}) {
                      data-sub-id="${sub.id}"
                      data-result-id="${sub.id}"
                      tabindex="0"
-                     aria-label="${sub.name} 시안 선택"
+                     aria-label="${escapeHtml(t('gallery.selectDesign', { name: sub.name }))}"
                      style="--group-accent: ${cat.accentColor}">
                   <div class="spec-thumb-frame">
                     ${renderPreviewThumbnail({ thumbnailId: sub.thumbMotif, design: sub })}
@@ -295,7 +297,7 @@ export function renderMainView(container, options = {}) {
                     <button class="spec-bookmark ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
                             type="button"
-                            aria-label="${sub.name} ${isSaved ? '북마크 해제' : '북마크 저장'}">
+                            aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}">
                       ${isSaved ? '★' : '☆'}
                     </button>
                   </div>
@@ -307,7 +309,7 @@ export function renderMainView(container, options = {}) {
                   </div>
                   <div class="spec-footer">
                     <span class="spec-tag">${sub.moodTags[0] || 'Design'}</span>
-                    <span class="spec-cta">담기 →</span>
+                    <span class="spec-cta">${escapeHtml(t('gallery.pick'))}</span>
                   </div>
                 </div>
               `;
@@ -457,6 +459,7 @@ export function renderMainView(container, options = {}) {
       state.sortMode !== prevState?.sortMode ||
       state.bookmarkFilterActive !== prevState?.bookmarkFilterActive ||
       state.bookmarks !== prevState?.bookmarks
+      || state.locale !== prevState?.locale
     ) {
       if (state.currentView === 'MAIN') {
         container.style.display = 'block';

@@ -7,6 +7,8 @@ import {
   normalizeSearchQuery,
   queryCatalogForDiscoveryState
 } from '../catalog/index.js';
+import { getActiveLocaleSnapshot } from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 
 const ALL_STYLES = getAllStyles();
 const CATEGORIES = getCategories();
@@ -23,28 +25,29 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-function renderRemoveChip({ label, clearKey, facetId, valueId }) {
+function renderRemoveChip({ label, clearKey, facetId, valueId }, snapshot) {
   const data = clearKey
     ? `data-clear-key="${clearKey}"`
     : `data-remove-facet="${facetId}" data-remove-value="${valueId}"`;
   return `
     <button type="button" class="discovery-active-chip" ${data}
-            aria-label="조건 제거: ${escapeHtml(label)}">
+            aria-label="${escapeHtml(formatLocaleCopy(snapshot?.copy, 'discovery.removeCondition', { label }))}">
       <span>${escapeHtml(label)}</span>
       <span aria-hidden="true">×</span>
     </button>
   `;
 }
 
-function getActiveChips(state, facets) {
+function getActiveChips(state, facets, snapshot) {
   const chips = [];
+  const copy = snapshot?.copy;
   const query = normalizeSearchQuery(state?.searchQuery);
-  if (query) chips.push({ label: `검색: ${query}`, clearKey: 'query' });
+  if (query) chips.push({ label: formatLocaleCopy(copy, 'discovery.searchChip', { query }), clearKey: 'query' });
 
   const category = CATEGORY_BY_ID.get(state?.activeFilter);
-  if (category) chips.push({ label: `카테고리: ${category.title.ko}`, clearKey: 'category' });
+  if (category) chips.push({ label: `${formatLocaleCopy(copy, 'discovery.categoryPrefix')}: ${snapshot?.catalog?.categories?.[category.id]?.title || category.title.ko}`, clearKey: 'category' });
   if (state?.bookmarkFilterActive === true) {
-    chips.push({ label: '북마크만', clearKey: 'bookmark' });
+    chips.push({ label: formatLocaleCopy(copy, 'discovery.bookmarksOnly'), clearKey: 'bookmark' });
   }
 
   for (const facet of FACETS) {
@@ -52,7 +55,7 @@ function getActiveChips(state, facets) {
     for (const value of facet.values) {
       if (!selected.has(value.id)) continue;
       chips.push({
-        label: `${facet.label.ko}: ${value.label.ko}`,
+        label: `${snapshot?.catalog?.facets?.[facet.id]?.label || facet.label.ko}: ${snapshot?.catalog?.facets?.[facet.id]?.values?.[value.id] || value.label.ko}`,
         facetId: facet.id,
         valueId: value.id
       });
@@ -61,7 +64,7 @@ function getActiveChips(state, facets) {
   return chips;
 }
 
-function renderFacetOption(facet, value, selected) {
+function renderFacetOption(facet, value, selected, snapshot) {
   const isSingle = facet.selectionMode === 'single';
   const inputType = isSingle ? 'radio' : 'checkbox';
   const inputId = `facet-${facet.id}-${value.id}`;
@@ -71,13 +74,13 @@ function renderFacetOption(facet, value, selected) {
       <input type="${inputType}" name="facet-${facet.id}" id="${inputId}"
              value="${value.id}" data-facet-id="${facet.id}"
              ${selected.has(value.id) ? 'checked' : ''}>
-      <span class="facet-option-label">${escapeHtml(value.label.ko)}</span>
-      <span class="facet-option-count" aria-label="${count}개 스타일">${count}</span>
+      <span class="facet-option-label">${escapeHtml(snapshot?.catalog?.facets?.[facet.id]?.values?.[value.id] || value.label.ko)}</span>
+      <span class="facet-option-count" aria-label="${escapeHtml(formatLocaleCopy(snapshot?.copy, 'discovery.styleCount', { count }))}">${count}</span>
     </label>
   `;
 }
 
-function renderFacetGroup(facet, selections, openFacetIds) {
+function renderFacetGroup(facet, selections, openFacetIds, snapshot) {
   const selected = new Set(selections[facet.id] || []);
   const values = facet.values.filter(value => (
     FACET_COUNTS[facet.id][value.id] > 0 || selected.has(value.id)
@@ -89,34 +92,38 @@ function renderFacetGroup(facet, selections, openFacetIds) {
     <details class="facet-group" data-facet-group="${facet.id}"
              ${openFacetIds.has(facet.id) ? 'open' : ''}>
       <summary>
-        <span>${escapeHtml(facet.label.ko)}</span>
+        <span>${escapeHtml(snapshot?.catalog?.facets?.[facet.id]?.label || facet.label.ko)}</span>
         <span class="facet-group-summary-state">
-          <span class="facet-group-meta">${selected.size ? `${selected.size}개 선택` : '전체'}</span>
+          <span class="facet-group-meta">${selected.size ? escapeHtml(formatLocaleCopy(snapshot?.copy, 'discovery.selectedCount', { count: selected.size })) : escapeHtml(formatLocaleCopy(snapshot?.copy, 'discovery.all'))}</span>
           <span class="disclosure-indicator" aria-hidden="true"></span>
         </span>
       </summary>
       <fieldset class="facet-options">
-        <legend class="visually-hidden">${escapeHtml(facet.label.ko)} · ${isSingle ? '하나만 선택' : '복수 선택 가능'}</legend>
+        <legend class="visually-hidden">${escapeHtml(snapshot?.catalog?.facets?.[facet.id]?.label || facet.label.ko)} · ${escapeHtml(formatLocaleCopy(snapshot?.copy, isSingle ? 'discovery.singleLegend' : 'discovery.multipleLegend'))}</legend>
         ${isSingle ? `
           <label class="facet-option" for="${allId}">
             <input type="radio" name="facet-${facet.id}" id="${allId}"
                    value="" data-facet-id="${facet.id}" ${selected.size === 0 ? 'checked' : ''}>
-            <span class="facet-option-label">전체</span>
+            <span class="facet-option-label">${escapeHtml(formatLocaleCopy(snapshot?.copy, 'discovery.all'))}</span>
           </label>
         ` : ''}
-        ${values.map(value => renderFacetOption(facet, value, selected)).join('')}
+        ${values.map(value => renderFacetOption(facet, value, selected, snapshot)).join('')}
       </fieldset>
     </details>
   `;
 }
 
 export function renderDiscoveryControlsHTML(state = {}, uiState = {}) {
+  const snapshot = getActiveLocaleSnapshot();
+  const messages = snapshot?.messages || {};
+  const copy = snapshot?.copy;
   const selections = normalizeFacetSelections(state?.activeFacets);
   const results = queryCatalogForDiscoveryState(ALL_STYLES, {
     ...state,
-    activeFacets: selections
+    activeFacets: selections,
+    localizedStyles: snapshot?.catalog?.styles
   });
-  const activeChips = getActiveChips(state, selections);
+  const activeChips = getActiveChips(state, selections, snapshot);
   const openFacetIds = uiState?.openFacetIds instanceof Set
     ? uiState.openFacetIds
     : new Set();
@@ -126,41 +133,41 @@ export function renderDiscoveryControlsHTML(state = {}, uiState = {}) {
     <section class="discovery-controls" aria-labelledby="discovery-title">
       <div class="discovery-toolbar">
         <div class="discovery-summary">
-          <span class="discovery-eyebrow">STYLE DISCOVERY</span>
-          <h2 id="discovery-title">원하는 디자인을 조건으로 좁혀보세요</h2>
+          <span class="discovery-eyebrow">${escapeHtml(formatLocaleCopy(copy, 'discovery.filterEyebrow'))}</span>
+          <h2 id="discovery-title">${escapeHtml(formatLocaleCopy(copy, 'discovery.title'))}</h2>
           <p class="discovery-result-status" role="status" aria-live="polite" aria-atomic="true">
-            전체 ${ALL_STYLES.length}종 중 <strong>${results.length}종</strong> 표시${activeChips.length ? ` · 활성 조건 ${activeChips.length}개` : ''}
+            ${escapeHtml(formatLocaleCopy(copy, 'discovery.resultStatus', { total: ALL_STYLES.length, count: results.length }))}${activeChips.length ? ` · ${escapeHtml(formatLocaleCopy(copy, 'discovery.activeCount', { count: activeChips.length }))}` : ''}
           </p>
         </div>
         <div class="discovery-toolbar-actions">
-          <label for="discovery-sort">정렬</label>
-          <select id="discovery-sort" aria-label="결과 정렬">
-            <option value="catalog" ${state?.sortMode === 'catalog' || !state?.sortMode ? 'selected' : ''}>기본 카탈로그 순</option>
-            <option value="name-asc" ${state?.sortMode === 'name-asc' ? 'selected' : ''}>영문 이름 A–Z</option>
-            <option value="era-asc" ${state?.sortMode === 'era-asc' ? 'selected' : ''}>오래된 시대부터</option>
-            <option value="era-desc" ${state?.sortMode === 'era-desc' ? 'selected' : ''}>최신 시대부터</option>
+          <label for="discovery-sort">${escapeHtml(messages.sort || '')}</label>
+          <select id="discovery-sort" aria-label="${escapeHtml(formatLocaleCopy(copy, 'discovery.sortAria'))}">
+            <option value="catalog" ${state?.sortMode === 'catalog' || !state?.sortMode ? 'selected' : ''}>${escapeHtml(messages.catalogOrder || '')}</option>
+            <option value="name-asc" ${state?.sortMode === 'name-asc' ? 'selected' : ''}>${escapeHtml(messages.nameAscending || '')}</option>
+            <option value="era-asc" ${state?.sortMode === 'era-asc' ? 'selected' : ''}>${escapeHtml(messages.eraAscending || '')}</option>
+            <option value="era-desc" ${state?.sortMode === 'era-desc' ? 'selected' : ''}>${escapeHtml(messages.eraDescending || '')}</option>
           </select>
           <button type="button" class="discovery-reset-btn" id="discovery-reset"
-                  ${hasOverrides ? '' : 'disabled'}>조건 초기화</button>
+                  ${hasOverrides ? '' : 'disabled'}>${escapeHtml(messages.clearFilters || '')}</button>
         </div>
       </div>
 
       <details class="discovery-filter-panel" ${uiState?.panelOpen ? 'open' : ''}>
         <summary id="discovery-panel-toggle">
           <span class="discovery-panel-heading">
-            <span>세부 필터 10개</span>
-            <span class="discovery-panel-summary">시대 · 계보 · 매체 · 질감 · 분위기 등</span>
+            <span>${escapeHtml(formatLocaleCopy(copy, 'discovery.panelTitle'))}</span>
+            <span class="discovery-panel-summary">${escapeHtml(formatLocaleCopy(copy, 'discovery.panelSummary'))}</span>
           </span>
           <span class="disclosure-indicator" aria-hidden="true"></span>
         </summary>
         <div class="discovery-panel-body">
-          <div class="discovery-active-filters" aria-label="현재 활성 조건">
+          <div class="discovery-active-filters" aria-label="${escapeHtml(formatLocaleCopy(copy, 'discovery.activeConditions'))}">
             ${activeChips.length
-              ? activeChips.map(renderRemoveChip).join('')
-              : '<p>활성화된 세부 조건이 없습니다.</p>'}
+              ? activeChips.map(chip => renderRemoveChip(chip, snapshot)).join('')
+              : `<p>${escapeHtml(formatLocaleCopy(copy, 'discovery.noActive'))}</p>`}
           </div>
           <div class="facet-groups-grid">
-            ${FACETS.map(facet => renderFacetGroup(facet, selections, openFacetIds)).join('')}
+            ${FACETS.map(facet => renderFacetGroup(facet, selections, openFacetIds, snapshot)).join('')}
           </div>
         </div>
       </details>

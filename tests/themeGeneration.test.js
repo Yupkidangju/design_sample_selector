@@ -197,7 +197,7 @@ test('테마 투영과 호환 map은 재귀 동결되고 24·36·120종 지문�
   );
   assert.equal(
     sha256(JSON.stringify(THEME_TOKENS_MAP)),
-    '77bb9965829c574386c11ae9cbd445bfe17d6b697b1942cfc4a695cd6255ec0e'
+    '5991d5c9626edaddd64357f73ba6191894f7855628ce1b61df9e058efb75dbea'
   );
 });
 
@@ -211,18 +211,18 @@ test('생성 stylesheet은 기존 24종 지문과 Wave 1 전체 36종 지문을 
   };
 
   assert.deepEqual(semantics, parseThemeStylesheetSemantics(current));
-  assert.equal(semantics.root.length, 13);
+  assert.equal(semantics.root.length, 16);
   assert.equal(legacySemantics.themes.length, 24);
   assert.equal(legacySemantics.themes.flatMap(theme => theme.selectors).length, 45);
   assert.equal(semantics.themes.length, 36);
   assert.equal(semantics.themes.flatMap(theme => theme.selectors).length, 57);
   assert.equal(
     sha256(JSON.stringify(legacySemantics)),
-    'a4965a6dbbee982466ba1623e3a9309dde7fe204ccc4367eb9c18244f1b0d06d'
+    '08d657cc630da7482a9d3c462eda2788d889f93aa920ddd1ad8d3637b89e4a0c'
   );
   assert.equal(
     sha256(JSON.stringify(semantics)),
-    'c61a1ec2212c30ca496c0934044a90d9848b5b508dd0a541900197c36e6e9415'
+    '79f96655e9d002fae1e7f5eaa366f6dea5a9d3784c6750f04d7504c112391ded'
   );
 });
 
@@ -237,7 +237,7 @@ test('신규 84종 stylesheet은 별도 생성 파일과 결정론적으로 일�
   assert.equal(getCoreThemeDefinitions().length, 36);
   assert.equal(getExpansionThemeDefinitions().length, 84);
   assert.deepEqual(semantics, parseThemeStylesheetSemantics(current));
-  assert.equal(semantics.root.length, 13);
+  assert.equal(semantics.root.length, 16);
   assert.equal(semantics.themes.length, 84);
   assert.equal(semantics.themes.flatMap(theme => theme.selectors).length, 84);
 });
@@ -390,7 +390,7 @@ test('실제 Node CLI와 package lifecycle은 catalog 다음 theme 최신성을 
   );
 });
 
-test('기존 24종의 CSS·Markdown·DTCG 전체 내보내기 행렬을 바이트 단위로 보존한다', () => {
+test('기존 24종의 한국어 CSS·Markdown·DTCG 내보내기 행렬은 결정론적이다', () => {
   const designById = new Map(getAllSubDesigns().map(design => [design.id, design]));
   const designs = LEGACY_STYLE_IDS.map(id => designById.get(id));
 
@@ -404,7 +404,7 @@ test('기존 24종의 CSS·Markdown·DTCG 전체 내보내기 행렬을 바이�
         ])
       )))
     ),
-    'b61766afb049fdba6d4c795db8263294aa72d6aa2201ba4e1aa720e14ee2e781'
+    '01b74adb0ac1f6efe519817adfae24b2c5719f31590761d1db72d899b14da775'
   );
   assert.equal(
     hashOutputRows(
@@ -415,7 +415,7 @@ test('기존 24종의 CSS·Markdown·DTCG 전체 내보내기 행렬을 바이�
         ])
       )))
     ),
-    'e8b81f021fddf3268df1da306596d20d7059a6725261a8ee76ab9e319969c71a'
+    '0c6c16e967639c98ccb926c1015942b163fd40a18cac6bfcb7b258170cf375f7'
   );
   assert.equal(
     hashOutputRows(
@@ -424,7 +424,7 @@ test('기존 24종의 CSS·Markdown·DTCG 전체 내보내기 행렬을 바이�
         generateLiveTokensJSON(design, design.defaultTweaks)
       ])
     ),
-    'e2949344331f8783fc37198e2de12bc64d9fa00f22ad73cf0ee4f1cf03adfc04'
+    '7c9c461a8bfb4ee0b82a6e2e1eb6f862b1ac7ed3ee0bc3e00cee36f93e6e0bf4'
   );
 });
 
@@ -443,7 +443,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    'dd28ad2cb283aae6965f9fbad9e0d66b210d964b097ec32f822d8dfd34a3461a'
+    '983c8438c0637e3ba64162afa7767f1cb475c4cdfd85ae5519719cd56f0e5532'
   );
   assert.equal(
     hashOutputRows(
@@ -454,7 +454,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    '860fc6ed21a52949132ea62fca727bf4bc30ea07d390efc6171ca02aba9d61f3'
+    '12f36802d4ef43cc0f0fe9bbee0de5e6f8405ae6938c4c71fe6921d35100c1be'
   );
   assert.equal(
     hashOutputRows(
@@ -463,7 +463,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         generateLiveTokensJSON(design, design.defaultTweaks)
       ])
     ),
-    '00f99db174e4efcc1581dfd40f066081208d0da43be358e18b0c3ffb6e8bdd6b'
+    '1fdf4be15142ec3419dc8e92181af8248f040fb79e820860889b941f237befa1'
   );
 
   assert.equal(allDesigns.length, 120);
@@ -476,7 +476,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    '1ef0cc57f32f3983ce2b8768bf68683efd729c50948b76dfbbbb38e3df8a56bd'
+    '8f43d23d831199f7de6b1531b8f1c24676771650cc1836561c0f71950c324fb5'
   );
   assert.equal(
     hashOutputRows(
@@ -487,7 +487,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    '663c3add3c6e6dabdce04dc96d96b1897980ade6804e1d02ca5268b9ac5cef3c'
+    '52331ff442e58a62bd0993f6d02a46c930a0a62399a93753b02aba2b719a07e4'
   );
   assert.equal(
     hashOutputRows(
@@ -496,7 +496,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         generateLiveTokensJSON(design, design.defaultTweaks)
       ])
     ),
-    '3dd6356b4cfb4992a75800ce0709b3d97d8587606a09b63e93839875f837bf49'
+    'd41c3cef94fa603396069fc8b5e4e4db6743ccdc7778d2b2e3c10d7cd42df06a'
   );
 });
 

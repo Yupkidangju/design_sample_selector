@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-30T16:15:26.533Z",
+  "checkedAt": "2026-08-31T08:14:48.819Z",
   "chromeVersion": "Google Chrome 151.0.7922.173",
   "isolatedProfile": true,
   "catalog": {
@@ -64,7 +64,7 @@
     "grammarCount": 21,
     "minDesktopWidth": 712,
     "maxMobileWidth": 320,
-    "durationMs": 3287,
+    "durationMs": 3462.6,
     "failureCount": 0,
     "failures": []
   },
@@ -102,7 +102,7 @@
     "id": "spatial-glass-ui",
     "desktop": {
       "device": "desktop",
-      "width": 665,
+      "width": 831,
       "grid": "220px 280px",
       "active": true,
       "clipped": 0,
@@ -122,6 +122,147 @@
       "categoryId": "hypertech"
     }
   },
+  "audit9": {
+    "lazyDetail": {
+      "dialog": "dialog",
+      "busy": "true",
+      "activeCancel": true,
+      "openerId": "spatial-glass-ui",
+      "loadingCaptureMs": 15.2,
+      "escapeClosed": true,
+      "openerRestored": true,
+      "actualLoadMs": 71.9
+    },
+    "statefulTransition": {
+      "from": "spatial-glass-ui",
+      "to": "ai-native-gradient",
+      "gameBefore": {
+        "coin": "1,420",
+        "motion": [
+          "motion-spatial-glass-ui-motion"
+        ],
+        "targetFocused": true
+      },
+      "gameAfterKeyboard": "1,470",
+      "transitioned": {
+        "viewportIdentity": true,
+        "rendererRebuilt": true,
+        "theme": "ai-native-gradient",
+        "coin": "1,470",
+        "motion": [
+          "motion-ai-native-gradient-motion"
+        ],
+        "styleText": "LV. 42 AI 네이티브 그라디언트",
+        "inspectorUpdated": true,
+        "selectedChip": "ai-native-gradient"
+      },
+      "returnedCoin": "1,470"
+    },
+    "detailSidebar": {
+      "cardDisplay": "grid",
+      "cardBackground": "rgba(255, 255, 255, 0.024)",
+      "cardHeight": 53,
+      "swatchWidth": 35.4,
+      "swatchHeight": 35.4,
+      "swatchColor": "rgb(8, 16, 29)",
+      "sliderAppearance": "none",
+      "sliderHeight": 19.6,
+      "titleFontSize": 28,
+      "heroHeight": 151.4,
+      "heroScrollHeight": 152,
+      "titleVisible": true,
+      "descriptionVisible": true,
+      "blockBorderStyle": "solid",
+      "paletteColumns": "158.219px 158.219px 158.219px"
+    },
+    "audioPreInit": {
+      "skipped": false,
+      "beforeFirstPlay": {
+        "initializedBefore": false,
+        "stateBeforeInit": 0,
+        "sliderBeforeInit": 0
+      },
+      "afterFirstPlay": {
+        "initialized": true,
+        "playing": true,
+        "stateVolume": 0,
+        "gain": 0
+      },
+      "restored": {
+        "stateVolume": 0.5,
+        "sliderVolume": 0.5
+      }
+    },
+    "zoom": {
+      "activeScale": "1.2",
+      "afterArchetypeSwap": "scale(1.2)",
+      "afterStyleSwap": "scale(1.2)"
+    },
+    "checkout": {
+      "emptyCartDisabled": true,
+      "role": "dialog",
+      "modal": "true",
+      "activeCancel": true,
+      "directSummary": true,
+      "overflow": 0,
+      "openerRestored": true,
+      "cartSummary": true,
+      "cartPreservedAfterCancel": true,
+      "cartClearedAfterConfirm": true
+    },
+    "blog": {
+      "before": {
+        "background": "rgb(8, 16, 29)",
+        "color": "rgb(248, 250, 252)",
+        "maxlength": 500
+      },
+      "after": {
+        "background": "rgb(247, 243, 234)",
+        "color": "rgb(31, 41, 51)"
+      },
+      "pressed": "true",
+      "commentPreserved": true,
+      "dynamicComments": 1,
+      "overflow": 0,
+      "responsiveProgress": [
+        {
+          "width": 375,
+          "maxScroll": 1775,
+          "scrollTop": 1775,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        },
+        {
+          "width": 768,
+          "maxScroll": 1344,
+          "scrollTop": 1344,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        },
+        {
+          "width": 1024,
+          "maxScroll": 1312,
+          "scrollTop": 1312,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        }
+      ]
+    },
+    "dashboard": {
+      "filterPreserved": true,
+      "sortPreserved": true,
+      "filteredRows": 2,
+      "newStyleRows": true,
+      "staleStyleRows": false
+    },
+    "keyboard": {
+      "detailClosed": true,
+      "openerRestored": true
+    }
+  },
   "split": {
     "optionA": 120,
     "optionB": 120,
@@ -138,12 +279,14 @@
     "overflow": 0
   },
   "peek": {
-    "theme": null,
+    "role": "region",
+    "theme": "spatial-glass-ui",
     "root": true,
     "busy": null
   },
   "dock": {
-    "dialog": "dialog",
+    "role": "region",
+    "theme": "spatial-glass-ui",
     "root": true,
     "busy": null
   },
@@ -152,20 +295,232 @@
     "runningAnimations": 0
   },
   "vitals": {
-    "lcpMs": 732,
+    "lcpMs": 840,
     "cls": 0
   },
   "lazyCss": {
     "initialRequests": [],
     "afterMatrixRequests": [
-      "http://127.0.0.1:41925/src/styles/themeTokensExpansion.css",
-      "http://127.0.0.1:41925/src/styles/expansion-preview.css"
+      "http://127.0.0.1:45277/design_sample_selector/src/styles/themeTokensExpansion.css",
+      "http://127.0.0.1:45277/design_sample_selector/src/styles/expansion-preview.css"
     ]
   },
   "interactions": {
-    "count": 15,
-    "averageMs": 55.11,
-    "maxMs": 142.8
+    "measurementMethod": {
+      "metric": "processingMs",
+      "sampleSelection": "state-changing named operations; no-ops excluded",
+      "clock": "window.performance.now()",
+      "hardGateBoundary": "input dispatch -> required state/DOM predicate settlement",
+      "presentationBoundary": "settlement -> 2 animation frames",
+      "excludedFromHardGate": [
+        "CDP command round-trip",
+        "driver polling",
+        "artifact I/O",
+        "post-settlement frame scheduler wait"
+      ]
+    },
+    "count": 14,
+    "averageMs": 29.21,
+    "medianMs": 19.7,
+    "maxMs": 113.2,
+    "presentation": {
+      "count": 14,
+      "averageMs": 42.21,
+      "medianMs": 23.95,
+      "maxMs": 204.1
+    },
+    "endToEnd": {
+      "count": 14,
+      "averageMs": 71.41,
+      "medianMs": 46.9,
+      "maxMs": 317.3
+    },
+    "operationSamples": [
+      {
+        "operation": "gallery:GRID:page:1->2",
+        "processingMs": 33,
+        "endToEndMs": 54,
+        "handlerMs": 32.9,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 21,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:GRID:page:2->3",
+        "processingMs": 15.4,
+        "endToEndMs": 49.9,
+        "handlerMs": 15.4,
+        "settleMs": 0,
+        "postSettleFramesMs": 34.5,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:GRID:page:3->4",
+        "processingMs": 8.3,
+        "endToEndMs": 32.8,
+        "handlerMs": 8.3,
+        "settleMs": 0,
+        "postSettleFramesMs": 24.5,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:view:BENTO",
+        "processingMs": 12.6,
+        "endToEndMs": 69.1,
+        "handlerMs": 12.6,
+        "settleMs": 0,
+        "postSettleFramesMs": 56.5,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:1->2",
+        "processingMs": 28.4,
+        "endToEndMs": 38.7,
+        "handlerMs": 28.4,
+        "settleMs": 0,
+        "postSettleFramesMs": 10.3,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:2->3",
+        "processingMs": 26.6,
+        "endToEndMs": 50.5,
+        "handlerMs": 26.6,
+        "settleMs": 0,
+        "postSettleFramesMs": 23.9,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:3->4",
+        "processingMs": 10.4,
+        "endToEndMs": 33.8,
+        "handlerMs": 10.4,
+        "settleMs": 0,
+        "postSettleFramesMs": 23.4,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:view:SPECTRUM",
+        "processingMs": 14.4,
+        "endToEndMs": 54.8,
+        "handlerMs": 14.3,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 40.4,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:1->2",
+        "processingMs": 24.8,
+        "endToEndMs": 43.9,
+        "handlerMs": 24.8,
+        "settleMs": 0,
+        "postSettleFramesMs": 19.1,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:2->3",
+        "processingMs": 18,
+        "endToEndMs": 33.6,
+        "handlerMs": 18,
+        "settleMs": 0,
+        "postSettleFramesMs": 15.6,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:3->4",
+        "processingMs": 10.5,
+        "endToEndMs": 34.5,
+        "handlerMs": 10.5,
+        "settleMs": 0,
+        "postSettleFramesMs": 24,
+        "longTasks": []
+      },
+      {
+        "operation": "search:spatial-glass-ui",
+        "processingMs": 21.4,
+        "endToEndMs": 30.2,
+        "handlerMs": 21.3,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 8.8,
+        "longTasks": []
+      },
+      {
+        "operation": "detail:open",
+        "processingMs": 71.9,
+        "endToEndMs": 156.7,
+        "handlerMs": 1.7,
+        "settleMs": 70.2,
+        "postSettleFramesMs": 84.8,
+        "longTasks": []
+      },
+      {
+        "operation": "detail:style:spatial-glass-ui->ai-native-gradient",
+        "processingMs": 113.2,
+        "endToEndMs": 317.3,
+        "handlerMs": 6.5,
+        "settleMs": 106.7,
+        "postSettleFramesMs": 204.1,
+        "longTasks": []
+      }
+    ]
+  },
+  "hostLoad": {
+    "platform": "linux",
+    "architecture": "x64",
+    "logicalCpuCount": 8,
+    "samples": [
+      {
+        "stage": "before-start",
+        "sampledAt": "2026-08-31T08:14:48.870Z",
+        "loadAverage": [
+          0.25,
+          0.22,
+          0.21
+        ],
+        "loadAveragePerCpu": [
+          0.031,
+          0.028,
+          0.026
+        ],
+        "memoryTotalBytes": 6784000000,
+        "memoryFreeBytes": 1845030912,
+        "memoryUsedRatio": 0.728
+      },
+      {
+        "stage": "after-matrix",
+        "sampledAt": "2026-08-31T08:14:54.651Z",
+        "loadAverage": [
+          0.52,
+          0.27,
+          0.23
+        ],
+        "loadAveragePerCpu": [
+          0.065,
+          0.034,
+          0.029
+        ],
+        "memoryTotalBytes": 6784000000,
+        "memoryFreeBytes": 1421410304,
+        "memoryUsedRatio": 0.79
+      },
+      {
+        "stage": "after-browser-qa",
+        "sampledAt": "2026-08-31T08:14:59.707Z",
+        "loadAverage": [
+          0.56,
+          0.29,
+          0.24
+        ],
+        "loadAveragePerCpu": [
+          0.07,
+          0.036,
+          0.03
+        ],
+        "memoryTotalBytes": 6784000000,
+        "memoryFreeBytes": 1326379008,
+        "memoryUsedRatio": 0.804
+      }
+    ]
   },
   "runtimeSignals": {
     "consoleWarnings": [],

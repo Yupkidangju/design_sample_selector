@@ -277,7 +277,7 @@ test('기존 24종 레거시 콘텐츠의 전체 특성화 지문을 보존한�
   });
   const digest = createHash('sha256').update(serializedContract).digest('hex');
 
-  assert.equal(digest, '9606fff732786604fcb4f1d71d00016b59d9154a9963965c95711849fe46d4f3');
+  assert.equal(digest, '42b216b88fbc47bf9841ba0fe00b80a738f4031d9718f1336695351abba430a3');
 });
 
 test('카탈로그 계약 상수와 ID 규칙이 승인 사양을 따른다', () => {
@@ -375,7 +375,7 @@ test('core 24종은 새 StyleRecord 계약으로 레거시 데이터를 무손�
     assert.deepEqual(style.editorial.accessibilityNotes, [], style.id);
     assert.equal(style.palette.length, legacy.palette.length, style.id);
     assert.deepEqual(
-      style.palette.map(color => ({ name: color.name.en, hex: color.value, usage: color.usage.ko })),
+      style.palette.map(color => ({ id: color.id, name: color.name.en, hex: color.value, usage: color.usage.ko })),
       legacy.palette,
       style.id
     );
@@ -505,6 +505,7 @@ test('레거시 어댑터는 기존 평면 필드와 카테고리 구조를 보�
       pros: canonical.editorial.pros,
       cons: canonical.editorial.cons,
       palette: canonical.palette.map(color => ({
+        id: color.id,
         name: color.name.en,
         hex: color.value,
         usage: color.usage.ko

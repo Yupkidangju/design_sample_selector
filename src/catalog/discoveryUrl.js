@@ -5,8 +5,12 @@ import {
   normalizeSearchQuery
 } from './discovery.js';
 import { FACET_DEFINITIONS } from './facets.js';
+import { normalizeLocale } from '../i18n/contract.js';
 
 const CATEGORY_IDS = new Set(CATEGORY_DEFINITIONS.map(category => category.id));
+const FACET_IDS = new Set(FACET_DEFINITIONS.map(facet => facet.id));
+const SEARCH_INPUT_MAX_CHARS = 4_096;
+const FACET_ENTRY_MAX_CHARS = 128;
 const VIEW_MODE_BY_PARAM = Object.freeze({
   grid: 'GRID',
   bento: 'BENTO',
@@ -19,6 +23,7 @@ const PARAM_BY_VIEW_MODE = Object.freeze({
 });
 
 export const DEFAULT_DISCOVERY_STATE = Object.freeze({
+  locale: 'ko',
   searchQuery: '',
   activeFilter: 'ALL',
   activeFacets: Object.freeze({}),
@@ -39,6 +44,7 @@ export function normalizeDiscoveryState(input = {}) {
     : 'GRID';
 
   return Object.freeze({
+    locale: normalizeLocale(input?.locale) || 'ko',
     searchQuery: normalizeSearchQuery(input?.searchQuery),
     activeFilter,
     activeFacets: normalizeFacetSelections(input?.activeFacets),
@@ -50,19 +56,22 @@ export function normalizeDiscoveryState(input = {}) {
 
 function toSearchParams(search) {
   if (search instanceof URLSearchParams) return new URLSearchParams(search);
-  return new URLSearchParams(typeof search === 'string' ? search : '');
+  const value = typeof search === 'string' ? search.slice(0, SEARCH_INPUT_MAX_CHARS) : '';
+  return new URLSearchParams(value);
 }
 
 export function parseDiscoverySearch(search = '') {
   const params = toSearchParams(search);
-  const activeFacets = {};
+  const activeFacets = Object.create(null);
 
   for (const entry of params.getAll('f')) {
+    if (entry.length > FACET_ENTRY_MAX_CHARS) continue;
     const separator = entry.indexOf(':');
     if (separator <= 0 || separator === entry.length - 1) continue;
     const facetId = entry.slice(0, separator);
     const valueId = entry.slice(separator + 1);
-    if (!activeFacets[facetId]) activeFacets[facetId] = [];
+    if (!FACET_IDS.has(facetId)) continue;
+    if (!Object.hasOwn(activeFacets, facetId)) activeFacets[facetId] = [];
     activeFacets[facetId].push(valueId);
   }
 
@@ -72,7 +81,8 @@ export function parseDiscoverySearch(search = '') {
     activeFacets,
     sortMode: params.get('sort') || 'catalog',
     viewMode: VIEW_MODE_BY_PARAM[params.get('view')] || 'GRID',
-    bookmarkFilterActive: params.get('saved') === '1'
+    bookmarkFilterActive: params.get('saved') === '1',
+    locale: normalizeLocale(params.get('lang')) || 'ko'
   });
 }
 
@@ -93,6 +103,7 @@ export function serializeDiscoverySearch(input = {}) {
   if (state.sortMode !== 'catalog') params.set('sort', state.sortMode);
   if (state.viewMode !== 'GRID') params.set('view', PARAM_BY_VIEW_MODE[state.viewMode]);
   if (state.bookmarkFilterActive) params.set('saved', '1');
+  if (state.locale !== 'ko') params.set('lang', state.locale);
 
   const query = params.toString();
   return query ? `?${query}` : '';

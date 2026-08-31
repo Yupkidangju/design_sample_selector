@@ -18,6 +18,9 @@
   --theme-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 20px rgba(0, 240, 255, 0.35);
+  --theme-surface-radius: 12px;
+  --theme-control-radius: 12px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="ulm-rationalism"] {
@@ -34,6 +37,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Helvetica Neue', Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="swiss-poster"] {
@@ -50,6 +56,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Helvetica Neue', Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="dutch-total-design"] {
@@ -66,6 +75,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Helvetica Neue', Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="new-wave-typography"] {
@@ -82,6 +94,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Helvetica Neue', Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="modular-grid-system"] {
@@ -98,6 +113,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Inter', 'Helvetica Neue', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="functional-wayfinding"] {
@@ -114,6 +132,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Inter', 'Helvetica Neue', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="japanese-ma-minimal"] {
@@ -130,6 +151,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Inter', 'Helvetica Neue', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="scandinavian-functional"] {
@@ -146,6 +170,9 @@
   --theme-shadow: none;
   --theme-font-family: 'Inter', 'Helvetica Neue', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="information-isotype"] {
@@ -162,6 +189,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Impact, 'Arial Black', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="web-brutalism"] {
@@ -178,6 +208,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Impact, 'Arial Black', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="anti-design"] {
@@ -194,6 +227,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Impact, 'Arial Black', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="dada-collage"] {
@@ -210,6 +246,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Impact, 'Arial Black', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="grunge-typography"] {
@@ -226,6 +265,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', Impact, sans-serif;
   --theme-glow: 0 0 24px #E8502E66;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="industrial-stencil"] {
@@ -242,6 +284,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', Impact, sans-serif;
   --theme-glow: 0 0 24px #F2B70566;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="monochrome-xerox"] {
@@ -258,6 +303,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', Impact, sans-serif;
   --theme-glow: 0 0 24px #F1F1E866;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="glitch-brutalism"] {
@@ -274,6 +322,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', Impact, sans-serif;
   --theme-glow: 0 0 24px #00F0FF66;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="maximalist-chaos"] {
@@ -290,6 +341,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #FF4E0066;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="black-metal-editorial"] {
@@ -306,6 +360,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #E8E5DC66;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="concrete-interface"] {
@@ -322,6 +379,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #E3A72F66;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="paper-cut-layers"] {
@@ -338,6 +398,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #F9731666;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="acrylic-ui"] {
@@ -354,6 +417,9 @@
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 18px;
+  --theme-control-radius: 18px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -372,6 +438,9 @@
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 18px;
+  --theme-control-radius: 18px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -390,6 +459,9 @@
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 18px;
+  --theme-control-radius: 18px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -408,6 +480,9 @@
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 18px;
+  --theme-control-radius: 18px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -426,6 +501,9 @@
   --theme-shadow: 0 10px 40px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: 0 0 24px #7C5CFC66;
+  --theme-surface-radius: 22px;
+  --theme-control-radius: 22px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="isometric-depth"] {
@@ -442,6 +520,9 @@
   --theme-shadow: 0 10px 40px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: 0 0 24px #38BDF866;
+  --theme-surface-radius: 22px;
+  --theme-control-radius: 22px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="low-poly-interface"] {
@@ -458,6 +539,9 @@
   --theme-shadow: 0 10px 40px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: 0 0 24px #2DD4BF66;
+  --theme-surface-radius: 22px;
+  --theme-control-radius: 22px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="soft-plastic"] {
@@ -474,6 +558,9 @@
   --theme-shadow: 0 10px 40px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: 0 0 24px #A78BFA66;
+  --theme-surface-radius: 22px;
+  --theme-control-radius: 22px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="embossed-letterpress"] {
@@ -490,6 +577,9 @@
   --theme-shadow: 0 3px 10px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 3px;
+  --theme-control-radius: 3px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="mid-century-modern"] {
@@ -506,6 +596,9 @@
   --theme-shadow: 0 3px 10px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 3px;
+  --theme-control-radius: 3px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="atomic-age"] {
@@ -522,6 +615,9 @@
   --theme-shadow: 0 3px 10px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 3px;
+  --theme-control-radius: 3px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="pop-art-halftone"] {
@@ -538,6 +634,9 @@
   --theme-shadow: 0 3px 10px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 3px;
+  --theme-control-radius: 3px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="op-art"] {
@@ -549,11 +648,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #F8F8F2;
   --theme-accent-secondary: #FF3B30;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 6px 24px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #F8F8F266;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 12px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="space-age"] {
@@ -565,11 +667,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #FF7A59;
   --theme-accent-secondary: #63E6E2;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 6px 24px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #FF7A5966;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 12px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="disco-glam"] {
@@ -581,11 +686,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #F4C95D;
   --theme-accent-secondary: #EC4899;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 6px 24px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #F4C95D66;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 12px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="seventies-groovy"] {
@@ -597,11 +705,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #F07A24;
   --theme-accent-secondary: #B8C33D;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 6px 24px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #F07A2466;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 12px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="eighties-new-wave"] {
@@ -618,6 +729,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #FF3D8166;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="retro-computing"] {
@@ -634,6 +748,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #7CFF8A66;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="pulp-comic"] {
@@ -650,6 +767,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #F3C64066;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="newspaper-broadsheet"] {
@@ -666,6 +786,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #F2EDE066;
+  --theme-surface-radius: 4px;
+  --theme-control-radius: 4px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="literary-journal"] {
@@ -682,6 +805,9 @@
   --theme-shadow: 0 2px 4px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="academic-modern"] {
@@ -698,6 +824,9 @@
   --theme-shadow: 0 2px 4px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="archival-museum"] {
@@ -714,6 +843,9 @@
   --theme-shadow: 0 2px 4px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="photobook-minimal"] {
@@ -730,6 +862,9 @@
   --theme-shadow: 0 2px 4px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="botanical-editorial"] {
@@ -746,6 +881,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 8px;
+  --theme-control-radius: 8px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="wabi-sabi-paper"] {
@@ -762,6 +900,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 8px;
+  --theme-control-radius: 8px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="collage-magazine"] {
@@ -778,6 +919,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 8px;
+  --theme-control-radius: 8px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="typographic-poster"] {
@@ -794,6 +938,9 @@
   --theme-shadow: 0 3px 12px rgba(15, 23, 42, 0.28);
   --theme-font-family: Georgia, 'Times New Roman', serif;
   --theme-glow: none;
+  --theme-surface-radius: 8px;
+  --theme-control-radius: 8px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="luxury-serif-minimal"] {
@@ -810,6 +957,9 @@
   --theme-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
   --theme-font-family: Verdana, Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="early-web"] {
@@ -826,6 +976,9 @@
   --theme-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
   --theme-font-family: Verdana, Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="geocities-maximal"] {
@@ -842,6 +995,9 @@
   --theme-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
   --theme-font-family: Verdana, Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="aqua-desktop"] {
@@ -858,6 +1014,9 @@
   --theme-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
   --theme-font-family: Verdana, Arial, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 0px;
+  --theme-control-radius: 0px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="luna-desktop"] {
@@ -874,6 +1033,9 @@
   --theme-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
   --theme-font-family: Tahoma, Verdana, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 16px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="web2-gloss"] {
@@ -890,6 +1052,9 @@
   --theme-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
   --theme-font-family: Tahoma, Verdana, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 16px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="flash-portal"] {
@@ -906,6 +1071,9 @@
   --theme-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
   --theme-font-family: Tahoma, Verdana, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 16px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="blogspot-collage"] {
@@ -922,6 +1090,9 @@
   --theme-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
   --theme-font-family: Tahoma, Verdana, sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 16px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="cyber-y2k"] {
@@ -933,11 +1104,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #28E1D1;
   --theme-accent-secondary: #A855F7;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #28E1D166;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="kawaii-pixel-web"] {
@@ -949,11 +1123,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #FF78B7;
   --theme-accent-secondary: #62E5DF;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #FF78B766;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="scene-core-web"] {
@@ -965,11 +1142,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #C7FF00;
   --theme-accent-secondary: #FF3DA1;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #C7FF0066;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="mcbling-gloss"] {
@@ -981,11 +1161,14 @@
   --theme-text-muted: #CBD5E1;
   --theme-accent: #F4C95D;
   --theme-accent-secondary: #F062B2;
-  --theme-radius: 999px;
+  --theme-radius: 24px;
   --theme-border-width: 2px;
   --theme-shadow: 0 9px 36px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Arial Black', sans-serif;
   --theme-glow: 0 0 24px #F4C95D66;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 16px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="tech-optimism-2000"] {
@@ -1002,6 +1185,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #34D5E866;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="cyberpunk-tactical-hud"] {
@@ -1018,6 +1204,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #00E5C766;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="sci-fi-fui"] {
@@ -1034,6 +1223,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #46C6FF66;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="terminal-matrix"] {
@@ -1050,6 +1242,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Fira Code', monospace;
   --theme-glow: 0 0 24px #5CFF7966;
+  --theme-surface-radius: 2px;
+  --theme-control-radius: 2px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="data-dense-dashboard"] {
@@ -1066,6 +1261,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #4CC9F066;
+  --theme-surface-radius: 6px;
+  --theme-control-radius: 6px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="real-time-monitor"] {
@@ -1082,6 +1280,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #2DD4BF66;
+  --theme-surface-radius: 6px;
+  --theme-control-radius: 6px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="chromatic-aberration"] {
@@ -1098,6 +1299,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #33D6FF66;
+  --theme-surface-radius: 6px;
+  --theme-control-radius: 6px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="generative-grid"] {
@@ -1114,6 +1318,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #64E57266;
+  --theme-surface-radius: 6px;
+  --theme-control-radius: 6px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="biometric-interface"] {
@@ -1130,6 +1337,9 @@
   --theme-shadow: 0 11px 44px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #35E3C166;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 24px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
 }
@@ -1148,6 +1358,9 @@
   --theme-shadow: 0 11px 44px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #79D7FF66;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 24px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
 }
@@ -1166,6 +1379,9 @@
   --theme-shadow: 0 11px 44px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #8B7CFF66;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 24px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
 }
@@ -1184,6 +1400,9 @@
   --theme-shadow: 0 11px 44px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Inter', sans-serif;
   --theme-glow: 0 0 24px #58E0FF66;
+  --theme-surface-radius: 24px;
+  --theme-control-radius: 24px;
+  --theme-pill-radius: 999px;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
 }
@@ -1202,6 +1421,9 @@
   --theme-shadow: 0 7px 28px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 28px;
+  --theme-control-radius: 28px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="toy-block-ui"] {
@@ -1218,6 +1440,9 @@
   --theme-shadow: 0 7px 28px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 28px;
+  --theme-control-radius: 28px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="kawaii-pastel"] {
@@ -1234,6 +1459,9 @@
   --theme-shadow: 0 7px 28px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 28px;
+  --theme-control-radius: 28px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="sticker-book"] {
@@ -1250,6 +1478,9 @@
   --theme-shadow: 0 7px 28px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 28px;
+  --theme-control-radius: 28px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="doodle-interface"] {
@@ -1266,6 +1497,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Trebuchet MS', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 14px;
+  --theme-control-radius: 14px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="papercraft-ui"] {
@@ -1282,6 +1516,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Trebuchet MS', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 14px;
+  --theme-control-radius: 14px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="cozy-knit"] {
@@ -1298,6 +1535,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Trebuchet MS', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 14px;
+  --theme-control-radius: 14px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="dreamcore-cloud"] {
@@ -1314,6 +1554,9 @@
   --theme-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Trebuchet MS', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 14px;
+  --theme-control-radius: 14px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="kidcore-play"] {
@@ -1330,6 +1573,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 32px;
+  --theme-control-radius: 32px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="biomorphic-soft"] {
@@ -1346,6 +1592,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 32px;
+  --theme-control-radius: 32px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="pastel-gradient"] {
@@ -1362,6 +1611,9 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 32px;
+  --theme-control-radius: 32px;
+  --theme-pill-radius: 999px;
 }
 
 [data-theme="cartoon-dashboard"] {
@@ -1378,4 +1630,7 @@
   --theme-shadow: 0 5px 20px rgba(15, 23, 42, 0.28);
   --theme-font-family: 'Space Grotesk', sans-serif;
   --theme-glow: none;
+  --theme-surface-radius: 32px;
+  --theme-control-radius: 32px;
+  --theme-pill-radius: 999px;
 }

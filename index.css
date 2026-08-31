@@ -241,6 +241,14 @@ body[data-app-pending] > :not(#bg-canvas) {
   flex-wrap: wrap;
 }
 
+.locale-picker select {
+  padding: 0 8px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-dark-secondary);
+  color: var(--text-primary);
+}
+
+
 /* 3-View Mode Switcher */
 .view-mode-group {
   display: flex;

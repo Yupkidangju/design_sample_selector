@@ -238,7 +238,7 @@ export class SynthAudioEngine {
     this.initialized = false;
   }
 
-  async init() {
+  init() {
     if (this.initialized) return Boolean(this.ctx);
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -309,7 +309,7 @@ export class SynthAudioEngine {
 
   async ensureAudioContext() {
     try {
-      const initialized = await this.init();
+      const initialized = this.init();
       if (!initialized || !this.ctx) return false;
       if (this.ctx.state !== 'running') await this.ctx.resume();
       return this.ctx.state === 'running';

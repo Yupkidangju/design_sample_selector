@@ -12,6 +12,7 @@ function hasDiscoveryStateChanged(state, previous) {
     || state.sortMode !== previous?.sortMode
     || state.bookmarkFilterActive !== previous?.bookmarkFilterActive
     || state.bookmarks !== previous?.bookmarks
+    || state.locale !== previous?.locale
   );
 }
 

@@ -1,5 +1,5 @@
 const HEX_COLOR_PATTERN = /^#(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i;
-const GRADIENT_PATTERN = /^(?:linear|radial)-gradient\([\s\S]+\)$/i;
+const GRADIENT_PATTERN = /^linear-gradient\([\s\S]+\)$/i;
 const NUMBER_PATTERN = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
 
 function parseStrictNumber(value) {
@@ -15,7 +15,7 @@ export function isBasicColorValue(value) {
   return normalized.length > 0 && (
     HEX_COLOR_PATTERN.test(normalized)
     || parseRgbParts(normalized) !== null
-    || parseHslParts(normalized) !== null
+    // Artifact generator와 동일하게 hex/rgb/transparent/linear-gradient만 허용한다.
     || GRADIENT_PATTERN.test(normalized)
     || normalized.toLowerCase() === 'transparent'
   );

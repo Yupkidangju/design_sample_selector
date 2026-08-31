@@ -95,6 +95,8 @@ npm run qa:wave1:chrome -- --artifacts=.antigravity/archive/wave1-chrome-qa
 
 ### 6. 카탈로그 탐색 사용과 Chrome 검증
 
+- 상단 언어 메뉴는 `한국어`, `English`, `日本語`, `简体中文`, `繁體中文`을 native endonym으로 제공하고 선택한 locale을 문서 언어, 검색·이름 정렬, 카탈로그 표시 정보와 Detail Inspector snapshot에 함께 적용합니다.
+- 최초 locale은 URL `lang` → 저장된 선택 → 브라우저 언어 → 한국어 순서로 결정합니다. URL에는 `ko`, `en`, `ja`, `zh-CN`, `zh-TW`만 허용하며 pack 로드나 검증이 실패하면 현재 정상 locale을 유지합니다.
 - 검색은 한국어·영어 이름, alias, category와 facet metadata를 함께 찾으며 최대 120자입니다.
 - 상위 category와 `Bookmarks`는 독립 조건이므로 동시에 선택할 수 있습니다. 그 아래의 10개 facet은 필요한 항목만 펼쳐 radio/checkbox로 좁힙니다.
 - 정렬은 카탈로그·이름·시대 오름차순·시대 내림차순을 제공합니다. Grid는 category별, Bento는 전역 정렬, Spectrum은 실제 스타일 시대별로 같은 결과 집합을 보여 줍니다.
@@ -132,7 +134,7 @@ npm run qa:scalability:chrome
 npm run qa:catalog120:chrome
 ```
 
-Audit 9 독립 재감사에서 확인한 공통 Detail 사이드바, 최초 재생 전 볼륨, renderer 전환 후 Zoom 결함을 수정했습니다. 사이드바 카드가 flex 높이 안에서 축소돼 제목·설명이 가려지는 후속 회귀도 제거하고 실제 가시영역을 Chrome 게이트에 고정했습니다. 성능 hard gate는 실제 상태 변화가 있는 operation의 페이지 내부 input→요구 state/DOM 정착 처리시간만 측정하고 정착 후 2 animation frames와 Long Task는 별도 presentation 진단치로 기록합니다. 격리 Chrome 151 직렬 3회가 모두 통과해 현재 판정은 저장소·로컬 Crostini 범위 `PASS`이며, 초기 JS/CSS는 `88.60/32.86kB` gzip입니다. FIN-F016 운영 CSP·Google Fonts는 배포 증거가 없어 미확정입니다. 최종 증거는 `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/`와 `docs/multi_audit/9/re_audit_evidence_9.md`에 보존됩니다.
+Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 120종 catalog coverage는 초기 bundle 밖에서 지연 로드되며 palette stable ID와 CSS/HTML/DTCG machine key는 언어와 무관하게 유지됩니다. Re-audit #1 수정 후 Node `214/214`, 5-locale Detail/Inspector Chrome, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 모두 issues 0을 통과했습니다. 초기 JS/CSS는 `88,191/88,980B`, `32,994/33,000B` gzip이므로 locale/UI 기능 추가 때마다 `analyze:bundle`을 다시 실행해야 합니다. 최신 근거는 `docs/multi_audit/11/re_audit_evidence_11_1.md`와 `.antigravity/archive/audit11-rework-reaudit1/`에 보존됩니다.
 
 ### 8. GitHub Pages production artifact와 복구 검증
 

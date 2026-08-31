@@ -8,6 +8,14 @@ import { appState } from '../state/appState.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { MAIN_CATEGORIES, findSubById, getAllSubDesigns } from '../data/categories.js';
 import { openDetailFor, openSplitCompare } from '../utils/selection.js';
+import { getLocalizedLegacyMainCategories } from '../catalog/legacyAdapter.js';
+import {
+  LOCALE_ENDONYMS,
+  SUPPORTED_LOCALES,
+  commitLocale,
+  getActiveLocaleSnapshot
+} from '../i18n/index.js';
+import { formatLocaleCopy } from '../i18n/format.js';
 
 const STYLE_COUNT = getAllSubDesigns().length;
 
@@ -15,15 +23,22 @@ export function renderHeader(container) {
   if (!container) return;
 
   function update() {
-    const { activeFilter, searchQuery, viewMode, bookmarks, bookmarkFilterActive, confirmedStyleId, canvasReady } = appState.getState();
+    const { activeFilter, searchQuery, viewMode, bookmarks, bookmarkFilterActive, confirmedStyleId, canvasReady, locale } = appState.getState();
+    const localeSnapshot = getActiveLocaleSnapshot();
+    const messages = localeSnapshot?.messages || {};
+    const copy = localeSnapshot?.copy;
+    const t = (key, values) => formatLocaleCopy(copy, key, values);
+    const categories = localeSnapshot ? getLocalizedLegacyMainCategories(localeSnapshot) : MAIN_CATEGORIES;
     const bookmarkCount = bookmarks.length;
-    const confirmed = confirmedStyleId ? findSubById(confirmedStyleId) : null;
+    const confirmed = confirmedStyleId
+      ? categories.flatMap(category => category.subCategories).find(style => style.id === confirmedStyleId) || null
+      : null;
 
     container.innerHTML = `
       <header class="app-header">
         <!-- Top Bar: Logo, Search, View Modes, Bookmarks, Compare -->
         <div class="header-main">
-          <div class="brand-container" id="brand-home-btn" role="button" tabindex="0" title="메인 홈으로 이동">
+          <div class="brand-container" id="brand-home-btn" role="button" tabindex="0" title="${escapeHtml(t('header.homeTitle'))}">
             <div class="brand-logo-symbol">
               <span class="logo-icon">🎨</span>
               <span class="logo-pulse"></span>
@@ -33,7 +48,7 @@ export function renderHeader(container) {
                 <h1 class="brand-title">DESIGN SPECTRUM</h1>
                 <span class="brand-badge-v2">v2.3 LIVE</span>
               </div>
-              <p class="brand-subtitle">8대 대분류 · ${STYLE_COUNT}종 라이브 시안 · 8대 아키타입 · 동적 샌드박스</p>
+              <p class="brand-subtitle">${escapeHtml(messages.subtitle || '')}</p>
             </div>
           </div>
 
@@ -43,65 +58,71 @@ export function renderHeader(container) {
               <span class="search-icon">🔍</span>
               <input type="search"
                      id="search-input" 
-                     aria-label="디자인 스타일 검색"
+                     aria-label="${escapeHtml(messages.search || '')}"
                      maxlength="120"
-                     placeholder="검색 또는 / 키 · 예: Y2K, 글래스, 키네틱..." 
+                     placeholder="${escapeHtml(messages.search || '')}"
                      value="${escapeHtml(searchQuery)}" 
                      autocomplete="off" />
-              ${searchQuery ? `<button class="search-clear-btn" id="btn-search-clear" type="button" aria-label="검색어 지우기" title="검색어 지우기">✕</button>` : ''}
+              ${searchQuery ? `<button class="search-clear-btn" id="btn-search-clear" type="button" aria-label="${escapeHtml(t('header.clearSearch'))}" title="${escapeHtml(t('header.clearSearch'))}">✕</button>` : ''}
             </div>
           </div>
 
           <!-- Utility & Action Controls -->
           <div class="header-actions">
+            <label class="locale-picker">
+              <span class="sr-only">${escapeHtml(messages.language || '')}</span>
+              <select id="locale-select" aria-label="${escapeHtml(messages.language || '')}">
+                ${SUPPORTED_LOCALES.map(item => `<option value="${item}" ${item === locale ? 'selected' : ''}>${LOCALE_ENDONYMS[item]}</option>`).join('')}
+              </select>
+            </label>
             <!-- 3 View Mode Switcher -->
-            <div class="view-mode-group" role="group" aria-label="갤러리 뷰 모드">
-              <button class="view-mode-btn ${viewMode === 'GRID' ? 'active' : ''}" data-mode="GRID" type="button" aria-pressed="${viewMode === 'GRID'}" title="표준 그리드 뷰">
+            <div class="view-mode-group" role="group" aria-label="${escapeHtml(t('header.viewGroup'))}">
+              <button class="view-mode-btn ${viewMode === 'GRID' ? 'active' : ''}" data-mode="GRID" type="button" aria-pressed="${viewMode === 'GRID'}" title="${escapeHtml(t('header.gridTitle'))}">
                 <span class="mode-icon">⊞</span>
-                <span class="mode-label">Grid</span>
+                <span class="mode-label">${messages.grid || 'Grid'}</span>
               </button>
-              <button class="view-mode-btn ${viewMode === 'BENTO' ? 'active' : ''}" data-mode="BENTO" type="button" aria-pressed="${viewMode === 'BENTO'}" title="비대칭 벤토 그리드 뷰">
+              <button class="view-mode-btn ${viewMode === 'BENTO' ? 'active' : ''}" data-mode="BENTO" type="button" aria-pressed="${viewMode === 'BENTO'}" title="${escapeHtml(t('header.bentoTitle'))}">
                 <span class="mode-icon">▤</span>
-                <span class="mode-label">Bento</span>
+                <span class="mode-label">${messages.bento || 'Bento'}</span>
               </button>
-              <button class="view-mode-btn ${viewMode === 'SPECTRUM' ? 'active' : ''}" data-mode="SPECTRUM" type="button" aria-pressed="${viewMode === 'SPECTRUM'}" title="연대기 스펙트럼 뷰">
+              <button class="view-mode-btn ${viewMode === 'SPECTRUM' ? 'active' : ''}" data-mode="SPECTRUM" type="button" aria-pressed="${viewMode === 'SPECTRUM'}" title="${escapeHtml(t('header.spectrumTitle'))}">
                 <span class="mode-icon">〰</span>
-                <span class="mode-label">Spectrum</span>
+                <span class="mode-label">${messages.spectrum || 'Spectrum'}</span>
               </button>
             </div>
 
             <!-- Bookmarks Filter Toggle -->
-            <button class="btn-util-chip ${bookmarkFilterActive ? 'active-bookmark-chip' : ''}" id="btn-toggle-bookmark-filter" type="button" aria-pressed="${bookmarkFilterActive}" title="북마크한 스타일만 모아보기">
+            <button class="btn-util-chip ${bookmarkFilterActive ? 'active-bookmark-chip' : ''}" id="btn-toggle-bookmark-filter" type="button" aria-pressed="${bookmarkFilterActive}" title="${escapeHtml(t('header.bookmarksOnly'))}">
               <span class="util-icon">⭐️</span>
-              <span>북마크 (${bookmarkCount})</span>
+              <span>${messages.bookmark || ''} (${bookmarkCount})</span>
             </button>
 
-            <button class="btn-util-chip ${confirmed ? 'active-confirm-chip' : ''}" id="btn-open-confirmed" type="button" title="확정한 스타일">
+            <button class="btn-util-chip ${confirmed ? 'active-confirm-chip' : ''}" id="btn-open-confirmed" type="button" title="${escapeHtml(t('header.confirmedTitle'))}">
               <span class="util-icon">✓</span>
-              <span>${confirmed ? `선택됨: ${confirmed.name}` : '선택 없음'}</span>
+              <span>${confirmed ? `${messages.saved || ''}: ${escapeHtml(confirmed.name)}` : (messages.noSelection || '')}</span>
             </button>
-            <button class="btn-util-chip btn-compare-chip" id="btn-open-compare-modal" type="button" title="2개 스타일 스플릿 듀얼 비교">
+            <button class="btn-util-chip btn-compare-chip" id="btn-open-compare-modal" type="button" title="${escapeHtml(t('header.compareTitle'))}">
               <span class="util-icon">⚖️</span>
-              <span>스플릿 비교</span>
+              <span>${escapeHtml(messages.compare || '')}</span>
             </button>
           </div>
         </div>
 
         <!-- Filter Tags Navigation Bar -->
         <div class="filter-bar-wrapper">
-          <nav class="filter-tag-nav" aria-label="디자인 카테고리">
-            <span class="filter-label">장르 필터:</span>
+          <nav class="filter-tag-nav" aria-label="${escapeHtml(t('header.categoryNav'))}">
+            <span class="filter-label">${escapeHtml(t('header.filtersLabel'))}:</span>
             <button class="filter-tag-btn ${activeFilter === 'ALL' ? 'active' : ''}" data-filter="ALL" type="button" aria-pressed="${activeFilter === 'ALL'}">
-              전체 (${STYLE_COUNT}종)
+              ${messages.all || ''} (${STYLE_COUNT}${escapeHtml(t('header.styleUnit'))})
             </button>
-            ${MAIN_CATEGORIES.map(cat => `
+            ${categories.map(cat => `
               <button class="filter-tag-btn ${activeFilter === cat.id ? 'active' : ''}"
                       data-filter="${cat.id}"
                       type="button"
                       aria-pressed="${activeFilter === cat.id}"
                       style="--tag-accent: ${cat.accentColor}">
                 <span class="tag-icon">${cat.icon}</span>
-                <span>${cat.title} (${cat.subCategories.length})</span>
+                <span>${escapeHtml(cat.title)} (${cat.subCategories.length})</span>
               </button>
             `).join('')}
           </nav>
@@ -145,6 +166,18 @@ export function renderHeader(container) {
     }
 
     bindSearchControls();
+
+    container.querySelector('#locale-select')?.addEventListener('change', async event => {
+      const select = event.currentTarget;
+      select.disabled = true;
+      try {
+        await commitLocale(select.value, appState, window);
+      } catch {
+        select.value = appState.getState().locale;
+      } finally {
+        select.disabled = false;
+      }
+    });
 
     // View Mode Buttons
     const viewModeBtns = container.querySelectorAll('.view-mode-btn');
@@ -244,8 +277,9 @@ export function renderHeader(container) {
       clearBtn.className = 'search-clear-btn';
       clearBtn.id = 'btn-search-clear';
       clearBtn.type = 'button';
-      clearBtn.setAttribute('aria-label', '검색어 지우기');
-      clearBtn.title = '검색어 지우기';
+      const clearLabel = formatLocaleCopy(getActiveLocaleSnapshot()?.copy, 'header.clearSearch');
+      clearBtn.setAttribute('aria-label', clearLabel);
+      clearBtn.title = clearLabel;
       clearBtn.textContent = '✕';
       box.appendChild(clearBtn);
       bindSearchClear();
@@ -262,6 +296,7 @@ export function renderHeader(container) {
       state.bookmarks?.length !== prevState.bookmarks?.length ||
       state.bookmarkFilterActive !== prevState.bookmarkFilterActive ||
       state.confirmedStyleId !== prevState.confirmedStyleId
+      || state.locale !== prevState.locale
     );
   }
 

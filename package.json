@@ -16,6 +16,7 @@
     "preqa:catalog120:chrome": "npm run build",
     "qa:catalog120:chrome": "node scripts/verifyCatalog120Chrome.js",
     "qa:pages:chrome": "node scripts/verifyPagesRecoveryChrome.js",
+    "qa:i18n:chrome": "node scripts/verifyI18nInspectorChrome.js",
     "analyze:bundle": "node scripts/analyzeInitialBundle.js",
     "verify:pages-artifact": "node scripts/verifyPagesArtifact.js",
     "preqa:scalability:chrome": "npm run build",
