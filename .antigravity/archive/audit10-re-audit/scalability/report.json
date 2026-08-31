@@ -1,0 +1,835 @@
+{
+  "checkedAt": "2026-08-31T02:25:52.513Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "isolatedProfile": true,
+  "timingMethod": {
+    "metric": "processingMs",
+    "hardGateBoundary": "input dispatch -> required state/DOM predicate settlement",
+    "presentationBoundary": "settlement -> requested animation frames"
+  },
+  "bundle": {
+    "checkedAt": "2026-08-31T02:25:52.525Z",
+    "distDirectory": "dist",
+    "indexPath": "dist/index.html",
+    "assets": [
+      {
+        "type": "javascript",
+        "relation": "module",
+        "source": "/design_sample_selector/assets/index-D3nAoTWB.js",
+        "path": "assets/index-D3nAoTWB.js",
+        "rawBytes": 271212,
+        "gzipBytes": 86732
+      },
+      {
+        "type": "css",
+        "relation": "stylesheet",
+        "source": "/design_sample_selector/assets/index-BLM9Ut3z.css",
+        "path": "assets/index-BLM9Ut3z.css",
+        "rawBytes": 171899,
+        "gzipBytes": 32896
+      }
+    ],
+    "javascript": {
+      "assetCount": 1,
+      "rawBytes": 271212,
+      "gzipBytes": 86732,
+      "budgetBytes": 88980,
+      "withinBudget": true
+    },
+    "css": {
+      "assetCount": 1,
+      "rawBytes": 171899,
+      "gzipBytes": 32896,
+      "budgetBytes": 33000,
+      "withinBudget": true
+    },
+    "issues": [],
+    "passed": true
+  },
+  "vitals": {
+    "domContentLoadedMs": 409.79999999701977,
+    "loadMs": 781.7999999970198,
+    "fcpMs": 540,
+    "lcpMs": 848,
+    "cls": 0,
+    "layoutShifts": []
+  },
+  "initialRequests": [
+    "http://127.0.0.1:44577/design_sample_selector/assets/index-D3nAoTWB.js",
+    "http://127.0.0.1:44577/design_sample_selector/assets/index-BLM9Ut3z.css",
+    "http://127.0.0.1:44577/design_sample_selector/assets/interactiveEntry-BJ2n9OaL.js",
+    "http://127.0.0.1:44577/design_sample_selector/assets/clipboard-DiW0AAOS.js"
+  ],
+  "core": {
+    "galleryModes": [
+      {
+        "mode": "GRID",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "BENTO",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "SPECTRUM",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      }
+    ],
+    "interactions": {
+      "viewChange": {
+        "metric": "processingMs",
+        "samples": [
+          5.7,
+          8.4,
+          5.6,
+          4.2,
+          5.6
+        ],
+        "medianMs": 5.6,
+        "maximumMs": 8.4,
+        "presentation": {
+          "samples": [
+            0.7,
+            1.5,
+            1.3,
+            27.5,
+            1.7
+          ],
+          "medianMs": 1.5,
+          "maximumMs": 27.5
+        },
+        "endToEnd": {
+          "samples": [
+            6.4,
+            9.9,
+            6.9,
+            31.7,
+            7.3
+          ],
+          "medianMs": 7.3,
+          "maximumMs": 31.7
+        }
+      },
+      "search": {
+        "metric": "processingMs",
+        "samples": [
+          28,
+          11.7,
+          20.9,
+          7.2,
+          20.7
+        ],
+        "medianMs": 20.7,
+        "maximumMs": 28,
+        "presentation": {
+          "samples": [
+            27.3,
+            40.8,
+            19.9,
+            17.8,
+            15.9
+          ],
+          "medianMs": 19.9,
+          "maximumMs": 40.8
+        },
+        "endToEnd": {
+          "samples": [
+            55.3,
+            52.5,
+            40.8,
+            25,
+            36.6
+          ],
+          "medianMs": 40.8,
+          "maximumMs": 55.3
+        }
+      },
+      "splitSearch": {
+        "metric": "processingMs",
+        "samples": [
+          1.3,
+          0.8,
+          1.6,
+          0.7,
+          1.4
+        ],
+        "medianMs": 1.3,
+        "maximumMs": 1.6,
+        "presentation": {
+          "samples": [
+            20.6,
+            110.3,
+            106.2,
+            113.6,
+            108.1
+          ],
+          "medianMs": 108.1,
+          "maximumMs": 113.6
+        },
+        "endToEnd": {
+          "samples": [
+            21.9,
+            111.1,
+            107.8,
+            114.3,
+            109.5
+          ],
+          "medianMs": 109.5,
+          "maximumMs": 114.3
+        }
+      }
+    },
+    "lazyLoading": {
+      "initialLazyRequests": [],
+      "loadingObserved": true,
+      "failureState": {
+        "busy": null,
+        "alert": "미리보기를 불러오지 못했습니다.\n          다시 시도",
+        "retryLabel": "다시 시도"
+      },
+      "interceptedComponentFailures": 1,
+      "retrySucceeded": true,
+      "resourcesAfterRetry": [
+        "http://127.0.0.1:44577/design_sample_selector/assets/componentLazyEntry-4yh-WdBp.js",
+        "http://127.0.0.1:44577/design_sample_selector/assets/componentEntry-CBFGy9_w.js"
+      ]
+    },
+    "detail": {
+      "categoryId": "swiss",
+      "chipCount": 15,
+      "thumbnailCount": 15,
+      "foreignCategoryCount": 0,
+      "selectedCount": 1,
+      "searchVisible": false,
+      "theme": "swiss-grid",
+      "deviceClass": "mockup-viewport desktop",
+      "statefulSwap": {
+        "sameViewport": true,
+        "rendererRebuilt": true,
+        "selectedId": "corporate-minimal",
+        "theme": "corporate-minimal"
+      },
+      "devices": [
+        {
+          "device": "mobile",
+          "viewportClass": "mockup-viewport mobile",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 761,
+          "unitWidth": 365
+        },
+        {
+          "device": "desktop",
+          "viewportClass": "mockup-viewport desktop",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 761,
+          "unitWidth": 715
+        }
+      ],
+      "coldEntryMs": 60.2,
+      "coldEntry": {
+        "processingMs": 60.2,
+        "postSettleFramesMs": 6.1,
+        "endToEndMs": 66.3
+      },
+      "warmEntries": {
+        "metric": "processingMs",
+        "samples": [
+          9.2,
+          10.8,
+          12.5,
+          17.3,
+          9.7
+        ],
+        "medianMs": 10.8,
+        "maximumMs": 17.3,
+        "presentation": {
+          "samples": [
+            28.1,
+            50,
+            58.5,
+            0.8,
+            42.4
+          ],
+          "medianMs": 42.4,
+          "maximumMs": 58.5
+        },
+        "endToEnd": {
+          "samples": [
+            37.3,
+            60.8,
+            71,
+            18.1,
+            52.1
+          ],
+          "medianMs": 52.1,
+          "maximumMs": 71
+        }
+      }
+    },
+    "split": {
+      "visualA": 12,
+      "visualB": 12,
+      "thumbnailsA": 12,
+      "thumbnailsB": 12,
+      "optionsA": 120,
+      "optionsB": 120,
+      "selectedA": "swiss-grid",
+      "selectedB": "neo-brutalism",
+      "overflow": 0,
+      "afterSearch": {
+        "visualA": 12,
+        "selectedCount": 1,
+        "focusId": "split-style-search-a",
+        "statusRole": "status",
+        "live": "polite"
+      }
+    },
+    "selection": {
+      "role": "region",
+      "theme": "swiss-grid",
+      "busy": null,
+      "previewCount": 1,
+      "componentResources": 1
+    },
+    "responsiveWidths": [
+      {
+        "width": 320,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 768,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1024,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1440,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      }
+    ],
+    "reducedMotion": {
+      "matches": true,
+      "thumbnails": 36,
+      "inView": 0,
+      "runningAnimations": 0
+    },
+    "initial": {
+      "resultCount": 36,
+      "uniqueCount": 36,
+      "totalCount": 120,
+      "thumbnails": 36,
+      "pagination": true,
+      "nodes": 494,
+      "overflow": 0
+    }
+  },
+  "synthetic": [
+    {
+      "count": 60,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 421,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 946,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 30,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 60,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 420,
+      "interactions": {
+        "viewChange": {
+          "metric": "processingMs",
+          "samples": [
+            2.4,
+            2.5,
+            4.3,
+            4.8,
+            1.9
+          ],
+          "medianMs": 2.5,
+          "maximumMs": 4.8,
+          "presentation": {
+            "samples": [
+              46.3,
+              32.1,
+              29.3,
+              43.6,
+              31.6
+            ],
+            "medianMs": 32.1,
+            "maximumMs": 46.3
+          },
+          "endToEnd": {
+            "samples": [
+              48.7,
+              34.6,
+              33.6,
+              48.4,
+              33.5
+            ],
+            "medianMs": 34.6,
+            "maximumMs": 48.7
+          }
+        },
+        "pageChange": {
+          "metric": "processingMs",
+          "samples": [
+            6,
+            6.4,
+            5.5,
+            6.4,
+            6.4
+          ],
+          "medianMs": 6.4,
+          "maximumMs": 6.4,
+          "presentation": {
+            "samples": [
+              26.8,
+              27.3,
+              27.9,
+              27.7,
+              25.9
+            ],
+            "medianMs": 27.3,
+            "maximumMs": 27.9
+          },
+          "endToEnd": {
+            "samples": [
+              32.8,
+              33.7,
+              33.4,
+              34.1,
+              32.3
+            ],
+            "medianMs": 33.4,
+            "maximumMs": 34.1
+          }
+        },
+        "search": {
+          "metric": "processingMs",
+          "samples": [
+            2.1,
+            1.7,
+            1.3,
+            1.5,
+            1.3
+          ],
+          "medianMs": 1.5,
+          "maximumMs": 2.1,
+          "presentation": {
+            "samples": [
+              31.3,
+              34.6,
+              28.7,
+              31.7,
+              32
+            ],
+            "medianMs": 31.7,
+            "maximumMs": 34.6
+          },
+          "endToEnd": {
+            "samples": [
+              33.4,
+              36.3,
+              30,
+              33.2,
+              33.3
+            ],
+            "medianMs": 33.3,
+            "maximumMs": 36.3
+          }
+        },
+        "pickerSearch": {
+          "metric": "processingMs",
+          "samples": [
+            1.4,
+            0.5,
+            0.6,
+            0.7,
+            0.7
+          ],
+          "medianMs": 0.7,
+          "maximumMs": 1.4,
+          "presentation": {
+            "samples": [
+              25,
+              31.7,
+              33.7,
+              32,
+              32.6
+            ],
+            "medianMs": 32,
+            "maximumMs": 33.7
+          },
+          "endToEnd": {
+            "samples": [
+              26.4,
+              32.2,
+              34.3,
+              32.7,
+              33.3
+            ],
+            "medianMs": 32.7,
+            "maximumMs": 34.3
+          }
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    },
+    {
+      "count": 120,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 421,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 946,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 30,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 120,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 420,
+      "interactions": {
+        "viewChange": {
+          "metric": "processingMs",
+          "samples": [
+            2,
+            3.4,
+            7.3,
+            4.7,
+            2.9
+          ],
+          "medianMs": 3.4,
+          "maximumMs": 7.3,
+          "presentation": {
+            "samples": [
+              31,
+              50.5,
+              40.9,
+              43,
+              30.9
+            ],
+            "medianMs": 40.9,
+            "maximumMs": 50.5
+          },
+          "endToEnd": {
+            "samples": [
+              33,
+              53.9,
+              48.2,
+              47.7,
+              33.8
+            ],
+            "medianMs": 47.7,
+            "maximumMs": 53.9
+          }
+        },
+        "pageChange": {
+          "metric": "processingMs",
+          "samples": [
+            7.8,
+            11.6,
+            5,
+            10.3,
+            6.4
+          ],
+          "medianMs": 7.8,
+          "maximumMs": 11.6,
+          "presentation": {
+            "samples": [
+              25.7,
+              23.4,
+              25.9,
+              23.1,
+              26.8
+            ],
+            "medianMs": 25.7,
+            "maximumMs": 26.8
+          },
+          "endToEnd": {
+            "samples": [
+              33.5,
+              35,
+              30.9,
+              33.4,
+              33.2
+            ],
+            "medianMs": 33.4,
+            "maximumMs": 35
+          }
+        },
+        "search": {
+          "metric": "processingMs",
+          "samples": [
+            1.7,
+            2.2,
+            1.3,
+            2.5,
+            1.7
+          ],
+          "medianMs": 1.7,
+          "maximumMs": 2.5,
+          "presentation": {
+            "samples": [
+              31.3,
+              31.1,
+              32.2,
+              33,
+              28.9
+            ],
+            "medianMs": 31.3,
+            "maximumMs": 33
+          },
+          "endToEnd": {
+            "samples": [
+              33,
+              33.3,
+              33.5,
+              35.5,
+              30.6
+            ],
+            "medianMs": 33.3,
+            "maximumMs": 35.5
+          }
+        },
+        "pickerSearch": {
+          "metric": "processingMs",
+          "samples": [
+            1.4,
+            1.9,
+            0.6,
+            0.9,
+            0.9
+          ],
+          "medianMs": 0.9,
+          "maximumMs": 1.9,
+          "presentation": {
+            "samples": [
+              30.6,
+              25.7,
+              33.1,
+              32.5,
+              32.4
+            ],
+            "medianMs": 32.4,
+            "maximumMs": 33.1
+          },
+          "endToEnd": {
+            "samples": [
+              32,
+              27.6,
+              33.7,
+              33.4,
+              33.3
+            ],
+            "medianMs": 33.3,
+            "maximumMs": 33.7
+          }
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    }
+  ],
+  "accessibilityIssues": [],
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "split-core-1440.png",
+    "core-mobile-320.png",
+    "core-desktop-1440.png",
+    "synthetic-120-grid.png"
+  ],
+  "issues": [],
+  "protocolBrowser": "Chrome/151.0.7922.173",
+  "summary": {
+    "coreGalleryModes": 3,
+    "responsiveWidths": 4,
+    "syntheticCounts": [
+      60,
+      120
+    ],
+    "screenshots": 4,
+    "diagnosticCount": 0,
+    "accessibilityIssueCount": 0,
+    "issueCount": 0,
+    "passed": true
+  }
+}

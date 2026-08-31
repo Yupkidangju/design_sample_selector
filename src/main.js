@@ -8,11 +8,10 @@ import { canvasVisualEngine } from './wasm/visualEngine.js';
 import { renderHeader } from './components/header.js';
 import { renderMainView } from './components/mainView.js';
 import { renderAudioWidget } from './components/audioWidget.js';
-import { renderSelectionDock } from './components/selectionDock.js';
-import { renderPeekPreview } from './components/peekPreview.js';
 import { bindDiscoveryUrlState } from './state/discoveryUrlState.js';
 import { renderDiscoveryControls } from './components/discoveryControls.js';
 import { loadDetailViewModule } from './components/lazyPreviewLoader.js';
+import { recordRecoveryDiagnostic } from './utils/recoveryDiagnostics.js';
 
 function renderFatalBootstrapError(appContainer) {
   const detailContainer = appContainer?.querySelector('#detail-root')
@@ -67,6 +66,8 @@ async function initApp() {
   try {
     console.log('[DesignSpectrum] Initializing Web Showcase Application...');
 
+    const interactiveComponentsPromise = import('./components/interactiveEntry.js');
+
     bindDiscoveryUrlState(appState);
 
     // Target DOM Containers
@@ -88,12 +89,17 @@ async function initApp() {
     if (headerContainer) renderHeader(headerContainer);
     if (discoveryContainer) renderDiscoveryControls(discoveryContainer);
     if (mainContainer) renderMainView(mainContainer);
-    if (dockContainer) renderSelectionDock(dockContainer);
-    if (peekContainer) renderPeekPreview(peekContainer);
+    if (dockContainer || peekContainer) {
+      const { renderSelectionDock, renderPeekPreview } = await interactiveComponentsPromise;
+      if (dockContainer) renderSelectionDock(dockContainer);
+      if (peekContainer) renderPeekPreview(peekContainer);
+    }
     if (audioContainer) renderAudioWidget(audioContainer);
 
     if (detailContainer) {
       let detailMounted = false;
+      let detailDispose = null;
+      let detailFailureCount = 0;
       let detailRequestId = 0;
       let lazyFocusCleanup = null;
       let lazyOpener = null;
@@ -171,9 +177,11 @@ async function initApp() {
           ?.addEventListener('click', closeLazyDetail);
         detailContainer.querySelector('[data-lazy-detail-retry]')
           ?.addEventListener('click', retry);
+        detailContainer.querySelector('[data-lazy-detail-reload]')
+          ?.addEventListener('click', () => window.location.reload());
       };
 
-      const renderLazyDetailState = (status, retry = () => {}) => {
+      const renderLazyDetailState = (status, retry = () => {}, terminal = false) => {
         const failed = status === 'error';
         detailContainer.style.display = 'block';
         detailContainer.innerHTML = `
@@ -183,10 +191,16 @@ async function initApp() {
             <p class="lazy-preview-kicker">ON-DEMAND PREVIEW</p>
             <h2 id="lazy-preview-title">${failed ? '상세 시안을 불러오지 못했습니다' : '상세 시안을 준비하고 있습니다'}</h2>
             <p>${failed
-              ? '프리뷰 모듈을 다시 요청하거나 메인 갤러리로 돌아갈 수 있습니다.'
+              ? (terminal
+                ? '복구 시도가 끝났습니다. 페이지를 새로고침하거나 메인 갤러리로 돌아가 주세요.'
+                : '프리뷰 모듈을 다시 요청하거나 메인 갤러리로 돌아갈 수 있습니다.')
               : '선택한 스타일의 인터랙티브 구성 요소를 불러오는 중입니다.'}</p>
             <div class="lazy-preview-actions">
-              ${failed ? '<button type="button" data-lazy-detail-retry>다시 시도</button>' : ''}
+              ${failed
+                ? (terminal
+                  ? '<button type="button" data-lazy-detail-reload>페이지 새로고침</button>'
+                  : '<button type="button" data-lazy-detail-retry>다시 시도</button>')
+                : ''}
               <button type="button" data-lazy-detail-cancel>메인으로 돌아가기</button>
             </div>
           </div>
@@ -210,12 +224,24 @@ async function initApp() {
           ) return;
           // 실제 Detail이 동일 opener를 캡처하도록 loading dialog의 포커스를 먼저 돌려준다.
           releaseLazyFocus(true);
-          detailModule.renderDetailView(detailContainer);
+          detailDispose = detailModule.renderDetailView(detailContainer);
           detailMounted = true;
+          detailFailureCount = 0;
           lazyOpener = null;
-        } catch {
+        } catch (error) {
           if (requestId !== detailRequestId || !isDetailState(appState.getState())) return;
-          renderLazyDetailState('error', ensureDetailView);
+          detailFailureCount += 1;
+          const terminal = Boolean(error?.terminal) || detailFailureCount >= 2;
+          if (error?.code !== 'RECOVERY_IMPORT_FAILED') {
+            recordRecoveryDiagnostic({
+              code: 'RECOVERY_MOUNT_FAILED',
+              phase: 'mount',
+              attempt: detailFailureCount,
+              resourceClass: 'detail-view',
+              terminal
+            });
+          }
+          renderLazyDetailState('error', ensureDetailView, terminal);
         }
       };
 
@@ -230,6 +256,11 @@ async function initApp() {
           detailContainer.innerHTML = '';
         }
       });
+
+      window.addEventListener('pagehide', () => {
+        detailDispose?.();
+        detailDispose = null;
+      }, { once: true });
     }
 
     // 숨겨진 상태에서도 초기 레이아웃과 웹 폰트 교체를 끝낸 뒤 한 번에 노출한다.

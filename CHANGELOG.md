@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- **Audit 10 Pages artifact 계약:** `/design_sample_selector/` Vite base, recursive lazy closure/release manifest, GitHub Actions `dist` directory deploy와 Pages-like Chrome gate를 추가해 source-root publish를 배포 전에 차단.
+- **Bounded recovery와 안전 진단:** Preview/Detail import를 primary + retry 한 번으로 제한하고 terminal reload/cancel 상태, phase/attempt/resource class in-memory diagnostic과 mount rollback 계약을 추가.
 - **Audit 9 stateful 재감사 게이트:** 스타일 A→B 전환, Peek/확정 테마, direct/cart checkout, Blog 읽기 모드·375/768/1024px 진행률, lazy focus, Game 키보드, Dashboard 상태 이관과 실패 경계를 Node 집중 회귀 및 actual-120 Chrome 시나리오에 추가. 1,920 device 상태·Web 480탭·diagnostics 0과 CDP 왕복을 제외한 browser-local interaction 직렬 3회를 통과했다.
 - **Actual 120 디자인 카탈로그:** 기존 Core 36의 ID·순서·저장·출력 지문을 보존하면서 7개 expansion pack × 12종, 21개 시각 문법의 신규 ready 84종을 추가해 8개 카테고리를 각각 15종으로 확장.
 - **신규 84종 독립 프리뷰:** 스타일별 고유 renderer·inline thumbnail·motion 참조와 Web 4탭, Desktop/Mobile 단일열 전환, reduced-motion을 제공하고 공개 inventory를 renderer/thumbnail/motion/asset `120/120/120/0`으로 확장.
@@ -33,6 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **모션 hydration 회귀 게이트:** component root class, effect layer, reduced-motion, observer cleanup, unknown motion과 잘못된 renderer HTML 출력의 구조화 실패를 Node fixture에서 검증.
 
 ### Changed
+- **Audit 10 상호작용·신뢰·상태 경계:** Peek에 native 상세 button과 실제 double click을 연결하고 Detail mount disposer/초기 subscriber rollback, executable renderer sink 거부, localStorage key 16,384자·bookmark 120·recents 6개 상한을 적용.
+- **Project-site QA 경로:** 기존 네 Chrome 게이트와 초기 bundle analyzer를 `/design_sample_selector/` production base에 맞추고 Pages 정상 경로 및 outer/shared/3 CSS/Detail/render/hydrate fault matrix를 CI deploy 전 필수 게이트로 연결.
 - **FIN-F006 측정 계약 및 재검증:** interaction hard gate는 실제 상태 변화가 있는 operation만 페이지 안에서 input dispatch→요구 state/DOM 정착의 제품 처리시간을 측정하고, no-op·CDP 왕복·외부 polling·artifact I/O와 정착 후 scheduler 대기를 제외한다. 정착 뒤 2 animation frames와 Long Task는 별도 presentation 진단치로 보존한다. 최종 격리 Chrome 직렬 3회가 각각 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max)로 통과했다.
 - **상태 보존형 renderer 전환 계약:** 같은 아키타입의 스타일 전환을 literal inner-DOM 보존에서 바깥 viewport identity 보존 + 새 스타일 renderer 재생성 + 승인된 runtime snapshot 이관으로 변경. 이전 스타일의 HTML·카피·class·motion은 이관하지 않고 cart/game/chat/filter 등 사용자 상태만 복원하도록 `spec.md`·`designs.md`·Decision 019를 먼저 동기화.
 - **Audit 9 수명주기·오류 계약:** Peek/확정은 선택 테마를 쓰는 non-modal region, checkout은 focus-trapped modal, malformed app state는 거부, bootstrap은 visible retry boundary, Clipboard·Audio는 실제 성공 여부를 반환하도록 경계를 명시.
@@ -52,6 +56,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
 
 ### Fixed
+- **Pages Preview/Detail 장애와 Peek affordance:** source CSS module graph가 live에서 실패하던 배포 경계를 production artifact로 전환하고, Peek native `상세 보기`/double click, 실패한 Detail listener·handler cleanup, corrupt/oversize storage 복구와 executable renderer output 차단을 구현.
 - **독립 재감사 공통 Detail/Audio/Zoom 회귀:** 120종 Detail 공통 사이드바의 누락 selector를 lazy CSS로 복구하고 flex 카드 축소로 제목·설명이 가려지지 않게 했으며, AudioContext 생성 전 volume을 최초 master gain에 반영하고 스타일·아키타입 renderer 재생성 뒤 선택 Zoom을 다시 적용한다.
 - **스타일·테마 정합성과 상호작용 복구:** 스타일 전환 뒤 남던 이전 renderer/텍스트와 Dashboard 행 markup을 제거하고 Inspector·motion을 선택 ID와 동기화. Peek/확정 `data-theme`, Game Enter/Space, form focus 중 Detail Escape, lazy loading/error focus trap·복원을 수정.
 - **Checkout·Blog 계약 구현:** 빈 장바구니 checkout을 비활성화하면서 direct/cart 주문을 구분하는 summary·confirm·cancel·Escape·focus-return dialog를 추가하고, Blog light reading mode의 실제 색상/ARIA와 반응형 scroll owner 기반 0–100 진행률을 연결.

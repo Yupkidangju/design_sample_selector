@@ -69,3 +69,20 @@ test('초기 bundle 분석은 JS 또는 CSS 예산 초과와 누락 asset을 실
   assert.equal(report.css.withinBudget, true);
   assert.match(report.issues.join('\n'), /missing\.css/u);
 });
+
+test('초기 bundle 분석은 Pages project base를 release manifest 기준으로 제거한다', t => {
+  const root = createFixture();
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  writeFileSync(join(root, 'release-manifest.json'), JSON.stringify({ base: '/design_sample_selector/' }));
+  writeFileSync(
+    join(root, 'index.html'),
+    '<script type="module" src="/design_sample_selector/assets/entry.js"></script>'
+      + '<link rel="stylesheet" href="/design_sample_selector/assets/styles.css">'
+  );
+  const report = analyzeInitialBundle({
+    distDirectory: root,
+    budgets: { initialJavaScriptGzipBytes: 100_000, initialCssGzipBytes: 100_000 }
+  });
+  assert.equal(report.passed, true, report.issues.join('\n'));
+  assert.deepEqual(report.assets.map(asset => asset.path).sort(), ['assets/entry.js', 'assets/styles.css']);
+});

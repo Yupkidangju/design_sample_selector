@@ -346,3 +346,23 @@
   - runtime state의 직렬화/복원 계약과 브라우저 stateful transition 회귀 검사가 새 유지보수 표면이 된다.
   - Decision 007의 “shared template + state preservation” 목표는 유지하지만 구현 수단인 literal zero-rebuild만 이 결정이 대체한다.
   - 기존 Chrome interaction 수치는 driver 왕복이 섞인 wall-clock 표본이라 FIN-F006 종결 근거에서 제외한다. 독립 재감사 `250.1/133.7/96.4ms` 관측과 네 회귀 결함, 후속 sidebar flex 축소를 해소한 뒤 no-op을 제외한 browser-local hard metric 직렬 3회가 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max), diagnostics/issue 0으로 통과했다. 현재 Node는 180/180, build는 76 modules, 초기 JS/CSS는 `88.60/32.86kB` gzip이다.
+
+---
+
+## 20. Decision 020: Built Pages Artifact and Bounded Preview Recovery
+
+- **Status:** Accepted; live deployment verification pending (2026-08-31)
+- **Context:** Audit 10에서 live GitHub Pages가 Vite `dist`가 아니라 source root를 게시해 `componentEntry.js`의 CSS imports가 native ESM MIME 오류로 실패하는 것이 확인됐다. primary/retry facade가 같은 shared graph를 사용하고 마지막 importer를 무제한 반복했으며, Peek affordance와 mount rollback·운영 진단도 계약과 달랐다.
+- **Decision:**
+  - Vite base는 `/design_sample_selector/`이고 GitHub Actions만 `dist` directory artifact를 게시한다. recursive closure/release manifest가 누락·source entry·base 오류를 배포 전에 차단한다.
+  - Peek/확정 component graph와 Detail/Split 전체 graph는 서로 다른 두 복구 경계다. 각각 primary + retry 한 번만 허용하고 두 번째 실패 뒤 terminal reload/cancel 상태로 끝낸다.
+  - mount subscription은 초기 callback 성공 후에만 commit하며 render/hydrate throw는 DOM·handler·runtime을 rollback한다. 안전한 recovery diagnostic은 bounded memory에 phase/attempt/resource class만 보존한다.
+  - Peek는 native Detail button과 실제 double click을 제공한다. renderer output의 executable sink와 oversized/corrupt localStorage를 경계에서 거부한다.
+- **Alternatives Considered:**
+  - source root를 계속 게시하면서 CSS import를 `<link>`로 바꾸는 방식은 Vite chunk graph, hashed assets와 atomic release를 우회해 같은 종류의 운영 차이를 남긴다.
+  - shared graph까지 duplicate bundle로 복제하면 작은 bundle 예산을 소모하고 근본적인 module-map failure를 숨긴다. bounded terminal과 reload가 더 정직하다.
+  - Detail 안에 두 번째 component loader를 추가하면 같은 graph에 중복 recovery owner가 생기므로 Detail module import 하나를 유일 경계로 유지한다.
+- **Consequences:**
+  - repository/build/Pages-like 검증과 actual deployment 검증이 분리된다. workflow를 push하고 Pages Source를 GitHub Actions로 선택하기 전 live HOLD는 해제할 수 없다.
+  - GitHub Pages의 고정 cache header와 이전 hash grace retention 부재는 플랫폼 잔여 위험이다. directory artifact와 release manifest로 partial publish를 차단하고 live smoke에서 stale/fresh context를 함께 확인한다.
+  - arbitrary deep pathname은 지원하지 않으며 root + query/hash만 제품 계약이다.

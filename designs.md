@@ -235,7 +235,7 @@ flowchart LR
 
 - **영역 역할:** `src/scalability/renderWindow.js`가 DOM과 state를 모르는 gallery window와 bounded picker를 제공한다. `mainView.js`는 한 canonical 결과를 36개씩 세 보기로 투영하고, `stylePickerMarkup.js`는 Detail 24개·Split 슬롯당 12개의 고비용 thumbnail 상한과 선택 고정을 공유한다.
 - **구현 제약:** Gallery page는 URL이 아닌 local 표현 상태이며 query/filter/sort/view 결과가 바뀌면 1페이지로 돌아간다. actual 120은 기본 네 페이지이고 Split native select는 전체 120 option을 유지해 visual window 밖 스타일도 접근 가능하다.
-- **지연 코드:** 초기 경로는 thumbnail·motion만 정적으로 사용한다. `lazyPreviewLoader.js`가 Detail/Split과 Peek/확정 component renderer를 최초 요청 때 불러오고 Promise를 공유한다. 실패 시 같은 URL을 재요청하지 않고 primary/retry facade를 순서대로 사용해 브라우저 module-map 실패 캐시를 피한다.
+- **지연 코드:** 초기 경로는 thumbnail·motion만 정적으로 사용한다. Peek/확정은 component loader를, Detail/Split은 component graph를 포함한 Detail module loader를 유일 복구 경계로 사용한다. 각 경계는 primary/retry facade를 최대 두 번만 사용하고 두 번째 실패 뒤에는 추가 요청 없는 terminal reload 상태가 된다.
 - **접근성·상태:** pager는 native button과 polite range status, picker는 label이 있는 search와 polite 결과 status를 제공한다. 현재 선택은 검색 결과에 없어도 한 번 고정한다. Detail loading/error는 modal opener capture, initial focus, Tab loop, Escape/cancel, focus restore를 제공하고 stale async 응답은 현재 state를 다시 확인한다. Peek와 Confirm Sheet는 배경을 막지 않는 non-modal `region`이며 각 preview viewport의 `data-theme`은 선택 ID와 일치한다.
 - **모션·수명:** thumbnail은 viewport 안에서만 실행하며 re-render/unmount 시 observer를 해제한다. reduced-motion에서는 observer·실행 animation이 0이고 페이지 교체 뒤 detached observed node도 0이다.
 - **초기 표시:** `body[data-app-pending]`의 UI를 `visibility:hidden`으로 정상 레이아웃 안에서 준비하고 웹 폰트 정착 뒤 노출한다. 이 방식은 공간을 제거하는 `display:none`과 달리 첫 화면 기하를 보존하며 Chrome 최종 CLS `0`을 달성했다.
@@ -261,6 +261,27 @@ flowchart LR
 - **반응형:** Desktop `.e120-stage`는 두 열, `.mockup-viewport.mobile`은 한 열과 축소된 아트 영역을 사용한다. Chrome actual 행렬은 신규 84종 모두에서 grid가 달라짐을 검증한다.
 - **접근성·상태:** 신규 84종은 `ready`, 출처·접근성 메모·텍스트 대비 진단 오류/경고 0이다. 조작 요소는 명시적 레이블과 44px 기준을 따르고 reduced-motion에서 반복 움직임을 억제한다.
 - **오류 처리:** ID/alias 충돌, 누락 renderer·thumbnail·motion, fallback, stale 생성 CSS 또는 initial bundle 예산 초과는 자동 게이트에서 실패한다. 신규 상세 CSS는 initial에 포함하지 않고 component entry 이후에만 요청한다.
+
+### 2.8 Pages Artifact and Recovery State Boundary
+
+```mermaid
+flowchart LR
+    S[main source] --> A[GitHub Actions\nnpm ci + build]
+    A --> C[recursive artifact closure]
+    C --> M[release manifest\nSHA-256 + MIME + release SHA]
+    M --> P[atomic dist artifact\n/design_sample_selector/]
+    U[Preview request] --> I[primary import]
+    I -->|fail| R[one retry facade]
+    R -->|fail| T[terminal reload/cancel]
+    I -->|success| H[render + hydrate]
+    H -->|throw| B[rollback DOM/listener/runtime]
+```
+
+- **배포 제약:** production entry는 hashed `dist/assets`만 허용하며 source `/src/main.js`와 source CSS module graph는 게시하지 않는다. 지원 URL은 project root와 query/hash이며 임의 deep path는 404가 정상이다.
+- **복구 상태:** loading → ready 또는 recoverable error → retrying → ready/terminal의 단방향 상태를 사용한다. terminal에서는 같은 importer를 반복하지 않고 reload와 닫기만 제공한다.
+- **Peek 상호작용:** region 안의 native `상세 보기` button이 키보드 activation을 소유하고, card double click은 mock action/button을 제외한 경우에만 같은 Detail 경로를 호출한다.
+- **진단·rollback:** 사용자 UI에는 일반 오류 문구만 보이며 안전한 phase/attempt/resource class는 최대 20개의 in-memory diagnostic으로 분리한다. 실패한 mount는 subscription, global key handler, mockup runtime과 부분 DOM을 전부 정리한다.
+- **신뢰·저장:** renderer는 정적 registry 소유 HTML이며 executable sink를 거부한다. localStorage는 key당 16,384자, bookmarks 120, recents 6 상한과 corrupt/oversize 폐기를 적용한다.
 
 ---
 

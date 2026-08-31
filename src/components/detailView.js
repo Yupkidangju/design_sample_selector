@@ -77,6 +77,8 @@ export function renderDetailView(container) {
   let splitPickerQueries = { A: '', B: '' };
   let { activeTab: activeInspectorTab, activeCssMode: activeCssSubMode } = createDefaultInspectorUiState();
   let rafInspectorUpdateId = null;
+  let unsubscribeState = null;
+  let cleaned = false;
 
   function resetInspectorUiState() {
     const defaultState = createDefaultInspectorUiState();
@@ -1491,5 +1493,36 @@ ${htmlContent}
     window.addEventListener('keydown', splitKeyHandler);
   }
 
-  appState.subscribe(() => update());
+  function cleanupDetailView() {
+    if (cleaned) return;
+    cleaned = true;
+    unsubscribeState?.();
+    unsubscribeState = null;
+    teardownHydratedViewports(container);
+    removeFocusTrap();
+    if (detailKeyHandler) {
+      window.removeEventListener('keydown', detailKeyHandler);
+      detailKeyHandler = null;
+    }
+    if (splitKeyHandler) {
+      window.removeEventListener('keydown', splitKeyHandler);
+      splitKeyHandler = null;
+    }
+    if (rafInspectorUpdateId) {
+      cancelAnimationFrame(rafInspectorUpdateId);
+      rafInspectorUpdateId = null;
+    }
+    canvasVisualEngine.resumeLoop();
+    container.style.display = 'none';
+    container.innerHTML = '';
+  }
+
+  try {
+    unsubscribeState = appState.subscribe(() => update());
+  } catch (error) {
+    cleanupDetailView();
+    throw error;
+  }
+
+  return cleanupDetailView;
 }

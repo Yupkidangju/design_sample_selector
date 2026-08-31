@@ -17,7 +17,7 @@ npm install
 npm run dev
 ```
 
-브라우저에서 `http://localhost:5173` 으로 접속합니다.
+브라우저에서 `http://localhost:5173/design_sample_selector/` 로 접속합니다.
 
 ### 2. 프로덕션 빌드 & 미리보기
 ```bash
@@ -30,6 +30,8 @@ npm run preview
 # 자동 회귀 테스트 + 프로덕션 빌드 게이트
 npm run check
 ```
+
+미리보기는 `http://localhost:4173/design_sample_selector/`(또는 Vite가 출력한 포트)에서 엽니다. source root를 그대로 제공하는 단순 정적 서버는 CSS import를 production asset으로 변환하지 못하므로 지원하지 않습니다.
 
 ### 3. 카탈로그 검증
 
@@ -131,6 +133,21 @@ npm run qa:catalog120:chrome
 ```
 
 Audit 9 독립 재감사에서 확인한 공통 Detail 사이드바, 최초 재생 전 볼륨, renderer 전환 후 Zoom 결함을 수정했습니다. 사이드바 카드가 flex 높이 안에서 축소돼 제목·설명이 가려지는 후속 회귀도 제거하고 실제 가시영역을 Chrome 게이트에 고정했습니다. 성능 hard gate는 실제 상태 변화가 있는 operation의 페이지 내부 input→요구 state/DOM 정착 처리시간만 측정하고 정착 후 2 animation frames와 Long Task는 별도 presentation 진단치로 기록합니다. 격리 Chrome 151 직렬 3회가 모두 통과해 현재 판정은 저장소·로컬 Crostini 범위 `PASS`이며, 초기 JS/CSS는 `88.60/32.86kB` gzip입니다. FIN-F016 운영 CSP·Google Fonts는 배포 증거가 없어 미확정입니다. 최종 증거는 `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/`와 `docs/multi_audit/9/re_audit_evidence_9.md`에 보존됩니다.
+
+### 8. GitHub Pages production artifact와 복구 검증
+
+GitHub Pages는 repository source를 직접 게시하지 않습니다. `vite.config.js`의 production base `/design_sample_selector/`와 `.github/workflows/deploy-pages.yml`이 `npm ci → npm run check → dist closure 검증 → dist artifact deploy`를 수행합니다. 지원 URL은 project root와 query/hash이며 임의 deep path는 지원하지 않습니다.
+
+```bash
+# Vite manifest, 모든 lazy JS/CSS/asset closure와 release SHA-256 manifest 확인
+npm run build
+npm run verify:pages-artifact
+
+# /design_sample_selector/ subpath에서 Preview/Retry/Detail/Split 실제 Chrome 검증
+npm run qa:pages:chrome
+```
+
+Preview retry는 primary 실패 뒤 한 번만 허용되고 두 번째 shared/import 실패는 terminal reload/cancel 상태로 끝납니다. Peek는 native `상세 보기` button과 실제 double click을 제공하며, 실패한 Detail mount는 listener·handler·부분 DOM을 rollback합니다. workflow가 push되어 실제 Pages가 새 artifact를 게시하기 전까지 live 배포 판정은 HOLD입니다.
 
 ---
 

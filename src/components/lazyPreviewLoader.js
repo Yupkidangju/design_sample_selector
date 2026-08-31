@@ -1,29 +1,82 @@
-export function createRetryableModuleLoader(importModule) {
+import { recordRecoveryDiagnostic } from '../utils/recoveryDiagnostics.js';
+
+export class RecoveryImportError extends Error {
+  constructor(cause, details) {
+    super('요청한 프리뷰 모듈을 불러오지 못했습니다.', { cause });
+    this.name = 'RecoveryImportError';
+    this.code = 'RECOVERY_IMPORT_FAILED';
+    this.phase = 'import';
+    this.attempt = details.attempt;
+    this.resourceClass = details.resourceClass;
+    this.terminal = details.terminal;
+  }
+}
+
+export function createRetryableModuleLoader(importModule, options = {}) {
   const importers = (Array.isArray(importModule) ? importModule : [importModule])
     .filter(importer => typeof importer === 'function');
   if (importers.length === 0) {
     throw new TypeError('module importer는 함수 또는 함수 배열이어야 합니다.');
   }
 
+  const maxAttempts = Math.max(1, options.maxAttempts ?? Math.max(2, importers.length));
+  const resourceClass = typeof options.resourceClass === 'string'
+    ? options.resourceClass
+    : 'module-graph';
   let pending = null;
-  let importerIndex = 0;
+  let resolved = null;
+  let attemptCount = 0;
+  let status = 'idle';
+  let lastError = null;
 
   return Object.freeze({
     load() {
       if (pending) return pending;
-      const importer = importers[Math.min(importerIndex, importers.length - 1)];
-      const attempt = Promise.resolve().then(() => importer());
-      pending = attempt;
-      attempt.catch(() => {
-        if (pending !== attempt) return;
-        pending = null;
-        importerIndex = Math.min(importerIndex + 1, importers.length - 1);
+      if (resolved) return resolved;
+      if (status === 'terminal') return Promise.reject(lastError);
+
+      const importer = importers[Math.min(attemptCount, importers.length - 1)];
+      const currentAttempt = attemptCount + 1;
+      attemptCount = currentAttempt;
+      status = 'loading';
+      const request = Promise.resolve()
+        .then(() => importer())
+        .then(module => {
+          status = 'ready';
+          pending = null;
+          resolved = Promise.resolve(module);
+          return module;
+        }, cause => {
+          const terminal = currentAttempt >= maxAttempts;
+          status = terminal ? 'terminal' : 'error';
+          pending = null;
+          lastError = new RecoveryImportError(cause, {
+            attempt: currentAttempt,
+            resourceClass,
+            terminal
+          });
+          recordRecoveryDiagnostic(lastError);
+          throw lastError;
+        });
+      pending = request;
+      return request;
+    },
+    getStatus() {
+      return Object.freeze({
+        status,
+        attempt: attemptCount,
+        maxAttempts,
+        canRetry: status === 'error' && attemptCount < maxAttempts,
+        terminal: status === 'terminal',
+        resourceClass
       });
-      return attempt;
     },
     reset() {
       pending = null;
-      importerIndex = 0;
+      resolved = null;
+      attemptCount = 0;
+      status = 'idle';
+      lastError = null;
     }
   });
 }
@@ -32,11 +85,11 @@ export function createRetryableModuleLoader(importModule) {
 const detailViewLoader = createRetryableModuleLoader([
   () => import('./detailView.js'),
   () => import('./detailView.js?retry=1')
-]);
+], { resourceClass: 'detail-graph', maxAttempts: 2 });
 const componentPreviewLoader = createRetryableModuleLoader([
   () => import('../preview/componentLazyEntry.js'),
   () => import('../preview/componentLazyRetryEntry.js')
-]);
+], { resourceClass: 'component-graph', maxAttempts: 2 });
 
 export function loadDetailViewModule() {
   return detailViewLoader.load();

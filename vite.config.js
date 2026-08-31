@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './', // Use relative paths for static hosting compatibility
+  base: '/design_sample_selector/',
   server: {
     port: 5173,
     open: false
@@ -9,6 +9,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
+    manifest: true
   }
 });

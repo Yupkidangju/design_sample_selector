@@ -41,9 +41,12 @@ function collectInitialReferences(html) {
   return references;
 }
 
-function localAssetPath(distDirectory, source) {
+function localAssetPath(distDirectory, source, basePath = '/') {
   if (/^(?:[a-z]+:)?\/\//iu.test(source) || source.startsWith('data:')) return null;
-  const pathname = decodeURIComponent(source.split(/[?#]/u, 1)[0]);
+  let pathname = decodeURIComponent(source.split(/[?#]/u, 1)[0]);
+  if (basePath !== '/' && pathname.startsWith(basePath)) {
+    pathname = pathname.slice(basePath.length);
+  }
   const assetPath = resolve(distDirectory, pathname.replace(/^\/+/, ''));
   const relativePath = relative(distDirectory, assetPath);
   if (relativePath === '..' || relativePath.startsWith(`..${sep}`)) return null;
@@ -84,9 +87,14 @@ export function analyzeInitialBundle(options = {}) {
   }
 
   const html = readFileSync(indexPath, 'utf8');
+  let artifactBase = options.basePath || '/';
+  try {
+    const releaseManifest = JSON.parse(readFileSync(resolve(distDirectory, 'release-manifest.json'), 'utf8'));
+    if (typeof releaseManifest.base === 'string') artifactBase = releaseManifest.base;
+  } catch { /* release manifest가 없는 fixture는 root base로 분석한다. */ }
   const seen = new Set();
   for (const reference of collectInitialReferences(html)) {
-    const assetPath = localAssetPath(distDirectory, reference.source);
+    const assetPath = localAssetPath(distDirectory, reference.source, artifactBase);
     if (!assetPath) {
       issues.push(`초기 asset은 dist 내부 파일이어야 합니다: ${reference.source}`);
       continue;

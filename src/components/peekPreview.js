@@ -6,7 +6,8 @@ import { appState } from '../state/appState.js';
 import { findSubById } from '../data/categories.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
-import { selectDraft, holdPeek, cancelPeek } from '../utils/selection.js';
+import { recordRecoveryDiagnostic } from '../utils/recoveryDiagnostics.js';
+import { selectDraft, holdPeek, cancelPeek, openDetailFor } from '../utils/selection.js';
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -17,6 +18,7 @@ export function renderPeekPreview(container) {
   if (!container) return;
   let lastId = null;
   let paintVersion = 0;
+  let previewFailureCount = 0;
 
   function isCurrentPeek(sub, requestId) {
     const state = appState.getState();
@@ -32,33 +34,55 @@ export function renderPeekPreview(container) {
     viewport.setAttribute('aria-busy', 'true');
     viewport.innerHTML = '<p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>';
 
+    let failurePhase = 'import';
     try {
       const { renderPreviewComponent } = await loadComponentPreviewModule();
       if (!isCurrentPeek(sub, requestId)) return;
       const currentViewport = container.querySelector('#peek-viewport');
       if (!currentViewport) return;
+      failurePhase = 'render';
       currentViewport.innerHTML = renderPreviewComponent({
         rendererId: sub.previewType,
         tab: 'hero',
         design: sub
       });
       currentViewport.removeAttribute('aria-busy');
+      failurePhase = 'hydrate';
       hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true });
-    } catch {
+      previewFailureCount = 0;
+    } catch (error) {
       if (!isCurrentPeek(sub, requestId)) return;
+      previewFailureCount += 1;
+      const terminal = Boolean(error?.terminal) || previewFailureCount >= 2;
+      if (error?.code !== 'RECOVERY_IMPORT_FAILED') {
+        recordRecoveryDiagnostic({
+          code: 'RECOVERY_RENDER_FAILED',
+          phase: failurePhase,
+          attempt: previewFailureCount,
+          resourceClass: 'peek-preview',
+          terminal
+        });
+      }
       const currentViewport = container.querySelector('#peek-viewport');
       if (!currentViewport) return;
       currentViewport.removeAttribute('aria-busy');
       currentViewport.innerHTML = `
         <div class="inline-preview-state" role="alert">
           <p>미리보기를 불러오지 못했습니다.</p>
-          <button type="button" data-peek-preview-retry>다시 시도</button>
+          ${terminal
+            ? '<button type="button" data-peek-preview-reload>페이지 새로고침</button>'
+            : '<button type="button" data-peek-preview-retry>다시 시도</button>'}
         </div>
       `;
       currentViewport.querySelector('[data-peek-preview-retry]')
         ?.addEventListener('click', event => {
           event.stopPropagation();
           loadPeekPreview(sub);
+        });
+      currentViewport.querySelector('[data-peek-preview-reload]')
+        ?.addEventListener('click', event => {
+          event.stopPropagation();
+          window.location.reload();
         });
     }
   }
@@ -85,6 +109,7 @@ export function renderPeekPreview(container) {
 
     container.style.display = 'block';
     if (lastId !== sub.id) {
+      previewFailureCount = 0;
       teardownMockup(container.querySelector('#peek-viewport'));
       container.innerHTML = `
         <div class="peek-card ${viewport === 'MOBILE' ? 'is-mobile' : ''}" role="region" aria-label="${escapeHtml(sub.name)} 미리보기">
@@ -96,7 +121,10 @@ export function renderPeekPreview(container) {
           <div class="peek-viewport" id="peek-viewport" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
             <p class="inline-preview-state" role="status">미리보기를 불러오는 중입니다…</p>
           </div>
-          <p class="peek-hint">클릭으로 담기 · 더블클릭으로 자세히 · Enter 열기 · Esc 닫기</p>
+          <div class="peek-footer">
+            <p class="peek-hint">클릭으로 담기 · 더블클릭 또는 상세 보기로 열기 · Esc 닫기</p>
+            <button class="peek-open-detail-btn" type="button" data-peek-open-detail>상세 보기</button>
+          </div>
         </div>
       `;
       loadPeekPreview(sub);
@@ -106,8 +134,16 @@ export function renderPeekPreview(container) {
       card?.addEventListener('mouseenter', () => holdPeek(sub.id));
       card?.addEventListener('mouseleave', () => cancelPeek());
       card?.addEventListener('click', (e) => {
-        if (e.target.closest('[data-mock-action]')) return;
+        if (e.target.closest('[data-mock-action], button, a, input, select, textarea')) return;
         selectDraft(sub.categoryId, sub.id);
+      });
+      card?.addEventListener('dblclick', (e) => {
+        if (e.target.closest('[data-mock-action], button, a, input, select, textarea')) return;
+        openDetailFor(sub.categoryId, sub.id);
+      });
+      card?.querySelector('[data-peek-open-detail]')?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openDetailFor(sub.categoryId, sub.id);
       });
       lastId = sub.id;
     } else {

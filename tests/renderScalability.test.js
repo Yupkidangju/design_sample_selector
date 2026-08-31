@@ -416,7 +416,11 @@ test('retryable module loader는 동시 요청을 공유하고 실패 뒤 다음
 
   const first = loader.load();
   assert.equal(loader.load(), first);
-  await assert.rejects(first, /첫 요청 실패/u);
+  await assert.rejects(first, error => (
+    error.code === 'RECOVERY_IMPORT_FAILED'
+    && error.phase === 'import'
+    && error.cause?.message === '첫 요청 실패'
+  ));
   assert.equal(attempts, 1);
 
   const recovered = await loader.load();
@@ -441,12 +445,18 @@ test('retryable module loader는 브라우저 module-map 실패를 피하도록 
     }
   ]);
 
-  await assert.rejects(loader.load(), /브라우저가 기억함/u);
+  await assert.rejects(loader.load(), error => (
+    error.code === 'RECOVERY_IMPORT_FAILED'
+    && error.cause?.message === '실패 URL은 브라우저가 기억함'
+  ));
   assert.deepEqual(await loader.load(), { recovered: true });
   assert.deepEqual(calls, ['primary', 'retry-1']);
 
   loader.reset();
-  await assert.rejects(loader.load(), /브라우저가 기억함/u);
+  await assert.rejects(loader.load(), error => (
+    error.code === 'RECOVERY_IMPORT_FAILED'
+    && error.cause?.message === '실패 URL은 브라우저가 기억함'
+  ));
   assert.deepEqual(calls, ['primary', 'retry-1', 'primary']);
 });
 

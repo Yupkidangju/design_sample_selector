@@ -127,7 +127,7 @@ The application is structured into zero-dependency, native ES modules that commu
 ### 2.2.2 Render window, bounded pickers and on-demand preview code
 - **순수 비용 경계:** `src/scalability/renderWindow.js`는 Gallery 36개, Detail 24개, Split 12개/slot, 초기 JS/CSS와 interaction 예산을 동결 상수로 제공한다. `createRenderWindow()`와 `createBoundedPicker()`는 DOM/app state를 import하지 않고 입력을 변경하지 않으며 전체 ID 순서와 selected pinning을 보존한다.
 - **UI 경계:** `mainView.js`는 canonical 결과를 36개 local page로 자르고 `galleryPagination.js`가 native 이전/다음과 polite 범위를 렌더한다. `stylePickerMarkup.js`는 Detail category 검색과 Split slot 검색의 제한 thumbnail markup을 공유하며 native Split select는 전체 정규 스타일을 유지한다.
-- **코드 전달 경계:** 초기 UI는 `thumbnailEntry.js`·`motionEntry.js`만 정적으로 소비한다. `lazyPreviewLoader.js`가 Detail/Split과 Peek/확정 component renderer를 literal dynamic import로 불러오고 Promise 공유, stale request 방지, loading/error/retry를 관리한다. 첫 URL 실패 후에는 별도 retry facade로 전환해 브라우저 module map 캐시를 피한다.
+- **코드 전달 경계:** 초기 UI는 `thumbnailEntry.js`·`motionEntry.js`만 정적으로 소비한다. `lazyPreviewLoader.js`는 Peek/확정 component graph와 Detail/Split 전체 graph를 별도 경계로 불러오며 각 경계는 primary + retry 한 번 뒤 terminal이 된다. Promise 공유, stale request 차단과 phase/attempt diagnostic을 제공하고 마지막 importer를 무제한 반복하지 않는다.
 - **표시·모션 수명:** 초기 UI는 normal flow의 hidden 상태에서 폰트와 레이아웃을 정착시킨 뒤 노출한다. gallery render cleanup이 shared `IntersectionObserver`를 해제하며 offscreen/reduced-motion animation을 중지한다.
 - **검증 상태:** 전체 180/180, actual 120 + synthetic 60/120 기능 행렬, 초기 JS/CSS `88.60/32.86kB` gzip을 통과했다. 독립 재감사의 공통 Detail CSS·pre-init volume·Zoom 회귀를 수정했고, CDP 왕복이 섞인 기존 interaction 표본은 무효화한 뒤 페이지 내부 처리시간 직렬 3회를 새로 기록했다.
 
@@ -147,7 +147,7 @@ The application is structured into zero-dependency, native ES modules that commu
 - **정규 책임:** legacy, Wave 1, expansion renderer/thumbnail/motion definition을 `registry.js`가 한 번 검증·조립한다. inventory는 definition에서 사전순·재귀 동결 값으로 파생되며 catalog pack은 구현 함수가 아니라 세 참조 ID만 소유한다.
 - **공개 경계:** `src/preview/index.js`는 `getPreviewReferenceInventory`, `hasPreviewReference`, renderer capability/motion 조회와 두 동기 render 함수를 제공한다. Gallery, Detail, Peek, Dock과 Web archetype은 이 경계를 직접 사용하고 내부 `Map`·render 함수는 노출하지 않는다.
 - **호환 경계:** `getMockupHTML(previewType, tab, subDesign)`은 `thumb` 요청을 `subDesign.thumbMotif`로, 나머지를 공개 component API로 전달하는 얇은 parity 진입점이다. 새 스타일별 분기나 fallback을 추가하지 않는다.
-- **오류·모션 경계:** 기능 조회의 unknown은 `false`/`null`, 실제 render/hydration 실패는 안정적인 `code`, `referenceKind`, `referenceId`, `tab`을 가진 `PreviewRegistryError`다. motion channel은 실제 effect/template/thumbnail/interaction 근거를 기술하며 `metadata-only` 항목을 구현된 시각 효과로 과장하지 않는다.
+- **오류·모션 경계:** 기능 조회의 unknown은 `false`/`null`, 실제 render/hydration 실패는 안정적인 `code`, `referenceKind`, `referenceId`, `tab`을 가진 `PreviewRegistryError`다. renderer output은 `.mockup-unit` root와 비실행 HTML 계약을 통과해야 하며 script/embedded context, inline event handler, `javascript:` URL은 거부한다. motion channel은 실제 effect/template/thumbnail/interaction 근거를 기술한다.
 - **현재 제약:** definition 조립과 공개 호환 API는 정적·동기식이고 runtime registration·remote HTML은 없다. 내부 UI는 종류별 entry와 승인된 dynamic import loader를 사용한다. 120종 초과는 별도 사양과 예산 검토가 필요하다.
 - **검증:** inventory `120/120/120/0`, 기존 24·36 승인 지문과 actual 120 fixture, Web 480탭, 120종 × 8 아키타입 960개 Node 출력과 Chrome 1,920개 device 상태가 통과했다. 신규 thumbnail은 interactive tag를 포함할 수 없고 미등록 참조는 fallback 없이 실패한다.
 
@@ -166,6 +166,13 @@ The application is structured into zero-dependency, native ES modules that commu
 - **Discovery evidence:** `.antigravity/archive/audit9/discovery-sidebar-final-verified/report.json` records 9 scenarios, 6 responsive widths, three gallery modes, 89/89 named inputs, 44px targets, reduced-motion and diagnostics/issue 0. Representative 320px and 1440px screenshots preserve the completed UI state.
 - **Scalability evidence:** `.antigravity/archive/audit9/scalability-sidebar-final-verified/report.json`은 actual 120과 synthetic 60/120의 bounded DOM·failure/retry·observer, 초기 `88.60/32.86kB` gzip, LCP `784ms`, CLS `0`, diagnostics/issue 0을 기록한다.
 - **Audit 9 actual evidence:** `.antigravity/archive/audit9/rework-sidebar-final-verified-{1,2,3}/report.json`은 매회 actual 1,920 device 상태, Web 480탭, 공통 Detail computed style와 제목·설명 가시영역, pre-init volume, Zoom, stateful transition, checkout, Blog, Dashboard·keyboard와 diagnostics/issue 0을 기록한다. hard metric은 no-op을 제외한 input→요구 state/DOM 정착의 제품 처리시간이며 세 회 median/max는 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`다. 정착 뒤 2-frame wall time과 Long Task는 별도 presentation diagnostic이다.
+
+### 2.9.1 GitHub Pages artifact and recovery gate
+
+- `vite.config.js`는 `/design_sample_selector/` base와 Vite manifest를 생성한다. `verifyPagesArtifact.js`는 production entry와 전체 lazy closure를 검증하고 release manifest를 만든다.
+- `.github/workflows/deploy-pages.yml`은 clean install, Node/빌드 게이트와 검증된 `dist` directory artifact를 한 deployment unit으로 게시한다. source root publish는 지원하지 않는다.
+- `qa:pages:chrome`은 project-site subpath에서 normal load, Peek native open/double click, Detail/Split, outer retry success, shared graph terminal, render/hydrate rollback과 safe diagnostic을 검사한다.
+- Audit 10 재감사에서 15-file closure, network fault 7종과 consumer fault 2종, actual 120의 1,920상태·Web 480탭, Wave 1 576상태, Discovery 9시나리오·6폭, Scalability actual+synthetic 60/120이 모두 diagnostics/issue 0으로 통과했다. 증거는 `.antigravity/archive/audit10-re-audit/`과 `docs/multi_audit/10/re_audit_evidence_10.md`에 있다. 실제 Pages는 아직 source entry를 제공하므로 workflow 게시 전 live 판정은 HOLD다.
 
 ### 2.10 `src/audio/synthAudio.js`
 - **Responsibility:** Generates 16 procedural ambient background synthesizer tracks and 14 dynamic UI sound effects with automated `onended` node disconnection. AudioContext 생성 전 volume도 app state에 저장해 최초 master gain에 적용한다. Initialization/resume and SFX synthesis failures resolve `false`, stop scheduler state and never report playback success; the widget visualizer owns rAF across view, visibility, reduced-motion and teardown transitions.

@@ -789,7 +789,7 @@ async function main() {
 
   const vitePort = await getFreePort();
   const chromePort = await getFreePort();
-  const pageUrl = `http://127.0.0.1:${vitePort}/`;
+  const pageUrl = `http://127.0.0.1:${vitePort}/design_sample_selector/`;
   viteProcess = spawn(
     process.execPath,
     ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', String(vitePort), '--strictPort'],

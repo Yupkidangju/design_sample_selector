@@ -122,7 +122,7 @@
 ```bash
 npm run dev
 ```
-Open browser at: `http://localhost:5173` (or port assigned by Vite)
+Open browser at: `http://localhost:5173/design_sample_selector/` (or port assigned by Vite)
 
 ### Option B: Node.js Preview Build
 ```bash
@@ -130,13 +130,11 @@ npm run build
 npm run preview
 ```
 
+Open browser at: `http://localhost:4173/design_sample_selector/` (or the port printed by Vite).
+
 `npm run build`는 `prebuild` 수명주기에서 `npm run validate:catalog`, `npm run check:themes`를 순서대로 실행합니다. 구조·관계·참조 오류가 있거나 생성 CSS가 정규 토큰보다 오래되면 Vite 번들을 만들지 않습니다. `prebuild`는 파일을 수정하지 않습니다.
 
-### Option C: Python HTTP Server
-```bash
-python3 -m http.server 8080
-```
-Open browser at: `http://localhost:8080`
+`python3 -m http.server`처럼 source root를 그대로 제공하는 서버는 지원하지 않습니다. CSS dynamic import를 Vite가 production asset으로 변환하지 못해 Preview/Detail graph가 실패할 수 있으므로 개발은 Vite dev, 배포 확인은 Vite preview 또는 `qa:pages:chrome`을 사용합니다.
 
 ---
 
@@ -221,6 +219,21 @@ npm run qa:catalog120:chrome
 ```
 
 `qa:scalability:chrome`은 production actual 120과 dev-only synthetic 60/120 fixture에서 bounded DOM·강제 실패/재시도·observer를 검사합니다. `qa:catalog120:chrome`은 세 보기 4페이지, 신규 thumbnail 84개, actual 120×8×2, Web 480탭, Detail·Split·Peek·Dock, 지연 CSS, reduced-motion, responsive, LCP/CLS와 diagnostics를 검사하고 `.antigravity/archive/catalog120-chrome-qa/`에 증거를 남깁니다.
+
+### GitHub Pages project-site build와 배포
+
+production base는 `/design_sample_selector/`이며 지원 URL은 이 root와 query/hash입니다. source root 또는 임의 deep pathname을 production entry로 사용하지 않습니다.
+
+```bash
+npm ci
+npm run check
+npm run verify:pages-artifact
+npm run qa:pages:chrome
+```
+
+`npm run build`는 Vite `.vite/manifest.json`의 entry/import/dynamicImport/CSS/asset closure를 재귀 확인하고 `dist/release-manifest.json`에 release SHA, 경로, 크기, SHA-256과 MIME을 기록합니다. `.github/workflows/deploy-pages.yml`은 검증이 끝난 `dist/` directory 하나만 `upload-pages-artifact`와 `deploy-pages`에 넘깁니다. repository Settings → Pages → Source는 **GitHub Actions**여야 합니다.
+
+Pages는 이전 hashed asset 보존이나 사용자 지정 cache header를 제공하지 않으므로, 배포 직후 fresh profile과 기존 cache context에서 Preview·Detail·Split을 smoke test합니다. 실제 배포는 workflow push와 Pages environment 승인이 필요한 별도 운영 단계입니다.
 
 1. **Canvas 2D Test:** Check browser console for `[Canvas VisualEngine] 2D renderer ready. Particles:` and confirm the header chip reads `CANVAS 2D`.
 2. **Audio Synth Test:** Click anywhere on the screen to initialize Web Audio API context. Click Play on the Audio Widget. Confirm BGM synth plays and track title changes.

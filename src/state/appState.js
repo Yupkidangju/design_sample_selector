@@ -5,14 +5,30 @@
 
 import { MAIN_CATEGORIES, canonicalizeSubId } from '../data/categories.js';
 
-function loadJSON(key, fallback) {
+export const STORAGE_VALUE_MAX_CHARS = 16_384;
+export const MAX_STORED_BOOKMARKS = MAIN_CATEGORIES.reduce(
+  (total, category) => total + category.subCategories.length,
+  0
+);
+
+export function readStoredJSON(storage, key, fallback, maxChars = STORAGE_VALUE_MAX_CHARS) {
   try {
-    if (typeof localStorage === 'undefined') return fallback;
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
+    const raw = storage?.getItem(key);
+    if (raw === null || raw === undefined || raw === '') return fallback;
+    if (typeof raw !== 'string' || raw.length > maxChars) {
+      storage?.removeItem(key);
+      return fallback;
+    }
+    return JSON.parse(raw);
   } catch {
+    try { storage?.removeItem(key); } catch { /* 저장소 정리 실패는 부팅을 막지 않는다. */ }
     return fallback;
   }
+}
+
+function loadJSON(key, fallback) {
+  if (typeof localStorage === 'undefined') return fallback;
+  return readStoredJSON(localStorage, key, fallback);
 }
 
 function saveJSON(key, value) {
@@ -48,7 +64,7 @@ function canonicalizeStoredList(ids, maxLen = Infinity) {
 
 function loadStoredBookmarks() {
   const parsed = loadJSON('dss_bookmarks_v2', []);
-  const next = canonicalizeStoredList(parsed);
+  const next = canonicalizeStoredList(parsed, MAX_STORED_BOOKMARKS);
   if (Array.isArray(parsed) && JSON.stringify(parsed) !== JSON.stringify(next)) {
     saveJSON('dss_bookmarks_v2', next);
   }
@@ -228,7 +244,7 @@ function sanitizeStatePatch(partialState) {
     }
 
     if (field === 'bookmarks' || field === 'recentlyViewed') {
-      const maxLen = field === 'recentlyViewed' ? 6 : Infinity;
+      const maxLen = field === 'recentlyViewed' ? 6 : MAX_STORED_BOOKMARKS;
       const canonicalIds = canonicalizeStoredList(value, maxLen);
       if (Array.isArray(value) && canonicalIds.length === value.length) patch[field] = canonicalIds;
       else reject('STATE_ID_INVALID', field);
@@ -259,7 +275,7 @@ function sanitizeStatePatch(partialState) {
 }
 
 
-class AppStateManager {
+export class AppStateManager {
   constructor() {
     this.state = { ...DEFAULT_STATE };
     this.listeners = new Set();
@@ -374,7 +390,12 @@ class AppStateManager {
 
   subscribe(listener) {
     this.listeners.add(listener);
-    listener(this.state, this.state);
+    try {
+      listener(this.state, this.state);
+    } catch (error) {
+      this.listeners.delete(listener);
+      throw error;
+    }
     return () => this.listeners.delete(listener);
   }
 

@@ -444,7 +444,7 @@ async function setViewport(width, height = 1_050) {
 
 async function setSearch(value, { record = true } = {}) {
   const measurement = await evaluate(`(async () => {
-    const { appState } = await import('/src/state/appState.js');
+    const { appState } = await import('./src/state/appState.js');
     const input = document.querySelector('#search-input');
     if (!input) throw new Error('검색 input 누락');
     const nextFrame = () => new Promise(requestAnimationFrame);
@@ -561,8 +561,8 @@ async function verifyInitialAndGallery() {
 
   const audioBeforeFirstPlay = await evaluate(`(async () => {
     const [{ synthAudio }, { appState }] = await Promise.all([
-      import('/src/audio/synthAudio.js'),
-      import('/src/state/appState.js')
+      import('./src/audio/synthAudio.js'),
+      import('./src/state/appState.js')
     ]);
     const input = document.querySelector('#input-audio-volume');
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
@@ -582,8 +582,8 @@ async function verifyInitialAndGallery() {
   );
   const audioAfterFirstPlay = await evaluate(`(async () => {
     const [{ synthAudio }, { appState }] = await Promise.all([
-      import('/src/audio/synthAudio.js'),
-      import('/src/state/appState.js')
+      import('./src/audio/synthAudio.js'),
+      import('./src/state/appState.js')
     ]);
     await new Promise(requestAnimationFrame);
     return {
@@ -599,7 +599,7 @@ async function verifyInitialAndGallery() {
     'BGM probe 정지'
   );
   const audioRestored = await evaluate(`(async () => {
-    const [{ appState }] = await Promise.all([import('/src/state/appState.js')]);
+    const [{ appState }] = await Promise.all([import('./src/state/appState.js')]);
     const input = document.querySelector('#input-audio-volume');
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
     setter.call(input, '0.5');
@@ -715,8 +715,8 @@ async function verifyInitialAndGallery() {
 
 async function runActualMatrixInPage(archetypeIds, webTabs, expansionIds) {
   const [dataModule, archetypeModule] = await Promise.all([
-    import('/src/data/categories.js'),
-    import('/src/components/archetypeTemplates.js')
+    import('./src/data/categories.js'),
+    import('./src/components/archetypeTemplates.js')
   ]);
   const styles = dataModule.getAllSubDesigns();
   const expansionIdSet = new Set(expansionIds);
@@ -1557,7 +1557,7 @@ async function main() {
 
   const vitePort = await getFreePort();
   const chromePort = await getFreePort();
-  const pageUrl = `http://127.0.0.1:${vitePort}/`;
+  const pageUrl = `http://127.0.0.1:${vitePort}/design_sample_selector/`;
   viteProcess = spawn(
     process.execPath,
     ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', String(vitePort), '--strictPort'],

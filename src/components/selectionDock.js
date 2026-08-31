@@ -9,6 +9,7 @@ import { findSubById } from '../data/categories.js';
 import { renderPreviewThumbnail } from '../preview/thumbnailEntry.js';
 import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
+import { recordRecoveryDiagnostic } from '../utils/recoveryDiagnostics.js';
 import { copyToClipboard } from '../utils/clipboard.js';
 import {
   openDetailFor,
@@ -25,6 +26,8 @@ function escapeHtml(str) {
 export function renderSelectionDock(container) {
   if (!container) return;
   let paintVersion = 0;
+  let confirmFailureCount = 0;
+  let confirmFailureSubId = null;
 
   function paint() {
     const renderVersion = ++paintVersion;
@@ -109,36 +112,59 @@ export function renderSelectionDock(container) {
   }
 
   async function loadConfirmPreview(sub, renderVersion) {
+    if (confirmFailureSubId !== sub.id) {
+      confirmFailureSubId = sub.id;
+      confirmFailureCount = 0;
+    }
     const preview = container.querySelector('#confirm-preview');
     if (!preview || !isCurrentConfirmPreview(sub, renderVersion)) return;
     preview.setAttribute('aria-busy', 'true');
     preview.innerHTML = '<p class="inline-preview-state" role="status">확정 시안을 불러오는 중입니다…</p>';
 
+    let failurePhase = 'import';
     try {
       const { renderPreviewComponent } = await loadComponentPreviewModule();
       if (!isCurrentConfirmPreview(sub, renderVersion)) return;
       const currentPreview = container.querySelector('#confirm-preview');
       if (!currentPreview) return;
+      failurePhase = 'render';
       currentPreview.innerHTML = renderPreviewComponent({
         rendererId: sub.previewType,
         tab: 'hero',
         design: sub
       });
       currentPreview.removeAttribute('aria-busy');
+      failurePhase = 'hydrate';
       hydrateMockup(currentPreview, sub, { tab: 'hero' });
-    } catch {
+      confirmFailureCount = 0;
+    } catch (error) {
       if (!isCurrentConfirmPreview(sub, renderVersion)) return;
+      confirmFailureCount += 1;
+      const terminal = Boolean(error?.terminal) || confirmFailureCount >= 2;
+      if (error?.code !== 'RECOVERY_IMPORT_FAILED') {
+        recordRecoveryDiagnostic({
+          code: 'RECOVERY_RENDER_FAILED',
+          phase: failurePhase,
+          attempt: confirmFailureCount,
+          resourceClass: 'confirm-preview',
+          terminal
+        });
+      }
       const currentPreview = container.querySelector('#confirm-preview');
       if (!currentPreview) return;
       currentPreview.removeAttribute('aria-busy');
       currentPreview.innerHTML = `
         <div class="inline-preview-state" role="alert">
           <p>확정 시안을 불러오지 못했습니다.</p>
-          <button class="dock-btn" type="button" data-confirm-preview-retry>다시 시도</button>
+          ${terminal
+            ? '<button class="dock-btn" type="button" data-confirm-preview-reload>페이지 새로고침</button>'
+            : '<button class="dock-btn" type="button" data-confirm-preview-retry>다시 시도</button>'}
         </div>
       `;
       currentPreview.querySelector('[data-confirm-preview-retry]')
         ?.addEventListener('click', () => loadConfirmPreview(sub, renderVersion));
+      currentPreview.querySelector('[data-confirm-preview-reload]')
+        ?.addEventListener('click', () => window.location.reload());
     }
   }
 

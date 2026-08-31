@@ -216,6 +216,20 @@ function assertRenderOutput(output, details) {
   return output;
 }
 
+function assertSafeRenderOutput(output, details) {
+  const hasExecutableElement = /<\s*(?:script|iframe|object|embed|link|meta)\b/iu.test(output);
+  const hasInlineHandler = /\son[a-z][\w:-]*\s*=/iu.test(output);
+  const hasScriptUrl = /\b(?:href|src|xlink:href)\s*=\s*(?:"|')?\s*javascript\s*:/iu.test(output);
+  if (hasExecutableElement || hasInlineHandler || hasScriptUrl) {
+    throw createPreviewRegistryError(
+      'PREVIEW_RENDER_OUTPUT_INVALID',
+      '프리뷰 HTML에는 실행 가능한 요소, 이벤트 속성 또는 스크립트 URL을 포함할 수 없습니다.',
+      details
+    );
+  }
+  return output;
+}
+
 function resolveMotionDefinition(motionById, design, tab) {
   const motionId = design?.preview?.motionId ?? design?.motionProfile;
   const definition = typeof motionId === 'string' ? motionById.get(motionId) : null;
@@ -318,7 +332,10 @@ export function createPreviewRegistry(definitionGroups) {
       tab
     };
     const motionDefinition = resolveMotionDefinition(motions.byId, options?.design, tab);
-    const output = assertRenderOutput(definition.render(tab, options?.design), details);
+    const output = assertSafeRenderOutput(
+      assertRenderOutput(definition.render(tab, options?.design), details),
+      details
+    );
     return applyMotionUnitClass(output, motionDefinition, details);
   }
 
@@ -332,10 +349,14 @@ export function createPreviewRegistry(definitionGroups) {
         { referenceKind: 'thumbnail', referenceId: thumbnailId }
       );
     }
-    return assertRenderOutput(definition.render(options?.design), {
+    const details = {
       referenceKind: 'thumbnail',
       referenceId: thumbnailId
-    });
+    };
+    return assertSafeRenderOutput(
+      assertRenderOutput(definition.render(options?.design), details),
+      details
+    );
   }
 
   return Object.freeze({

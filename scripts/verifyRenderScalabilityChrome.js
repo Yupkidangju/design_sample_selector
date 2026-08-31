@@ -835,11 +835,11 @@ async function verifyCoreResponsiveAndMotion() {
 
 async function runSyntheticLabInPage(count, budgets) {
   const [mainModule, legacyModule, catalogModule, pickerModule, thumbnailModule] = await Promise.all([
-    import('/src/components/mainView.js'),
-    import('/src/catalog/legacyAdapter.js'),
-    import('/src/catalog/index.js'),
-    import('/src/components/stylePickerMarkup.js'),
-    import('/src/preview/thumbnailEntry.js')
+    import('./src/components/mainView.js'),
+    import('./src/catalog/legacyAdapter.js'),
+    import('./src/catalog/index.js'),
+    import('./src/components/stylePickerMarkup.js'),
+    import('./src/preview/thumbnailEntry.js')
   ]);
   const baseStyles = legacyModule.getLegacyAllSubDesigns();
   const canonicalById = new Map(catalogModule.getAllStyles().map(style => [style.id, style]));
@@ -1216,7 +1216,7 @@ async function startViteServer(kind, port) {
     cwd: PROJECT_ROOT,
     stdio: ['ignore', 'ignore', 'ignore']
   });
-  const url = `http://127.0.0.1:${port}/`;
+  const url = `http://127.0.0.1:${port}/design_sample_selector/`;
   await waitForHttp(url, kind === 'preview' ? 'Vite preview' : 'Vite dev');
   return { processHandle, url };
 }

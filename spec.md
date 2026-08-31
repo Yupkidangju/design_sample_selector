@@ -236,8 +236,8 @@ export interface MainCategory {
 1. `src/scalability/renderWindow.js`의 순수·불변 window와 bounded picker가 시각 결과 상한을 결정한다. Gallery는 최대 36개, 현재 Detail category는 최대 24개, Split은 슬롯당 최대 12개의 thumbnail DOM만 만든다.
 2. Gallery 페이지는 URL에 저장하지 않는 local 표현 상태다. 검색·필터·정렬·보기 결과가 바뀌면 첫 페이지로 돌아가며 actual 120의 기본 결과는 `36/36/36/12` 네 페이지로 제공한다. 한 페이지 이하 결과에서는 페이지 제어를 만들지 않는다.
 3. Detail category가 24개를 넘으면 category 내부 검색을 제공한다. Split의 native select는 전체 스타일을 계속 제공하고 각 visual picker의 검색·선택 고정·polite status는 URL과 전역 검색 상태를 변경하지 않는다.
-4. Detail/Split view와 Peek/확정 component renderer는 중앙 retryable loader를 사용한다. 로딩은 `aria-busy`, 실패는 설명·취소·재시도 동작을 제공하며 stale 요청은 현재 state와 request token을 다시 확인한다. Detail의 loading/error dialog는 opener focus를 캡처하고 Tab/Shift+Tab을 내부에 가두며 Escape·취소 시 닫고 opener로 복원한다.
-5. 브라우저 module map은 같은 URL의 실패를 기억하므로 component loader는 동일 public renderer를 가리키는 primary/retry facade 두 개를 순서대로 사용한다. 성공한 Promise는 공유하고 reset은 첫 importer로 되돌린다.
+4. Peek/확정 component renderer는 중앙 component loader를 사용하고, Detail/Split은 component graph를 포함하는 Detail module dynamic import를 유일한 복구 경계로 사용한다. 두 경계 모두 로딩은 `aria-busy`, 실패는 설명·취소·재시도 또는 terminal reload 동작을 제공하며 stale 요청은 현재 state와 request token을 다시 확인한다. Detail의 loading/error dialog는 opener focus를 캡처하고 Tab/Shift+Tab을 내부에 가두며 Escape·취소 시 닫고 opener로 복원한다.
+5. 브라우저 module map은 같은 URL과 공유 dependency의 실패를 기억하므로 각 loader는 primary/retry facade를 최대 두 번만 사용한다. 첫 실패는 한 번의 명시적 retry를 허용하고 두 번째 실패는 추가 import를 만들지 않는 terminal 상태가 된다. 성공한 Promise는 공유하며 `reset()`은 새 navigation/test lifecycle에서만 첫 importer로 되돌린다.
 6. thumbnail motion observer는 render 교체와 unmount 때 정리한다. offscreen과 `prefers-reduced-motion: reduce`에서는 animation을 실행하지 않으며 detached observed node는 0이어야 한다.
 7. 초기 동기 번들 예산은 JS gzip 88.98kB 이하, CSS gzip 33.00kB 이하이고 local Chrome hard gate는 LCP 2,500ms 이하, CLS 0.1 이하, 최소 5개 **실제 상태 변화가 있는** named interaction의 제품 처리시간 중앙값 120ms 이하·최댓값 200ms 이하다. 이미 활성인 control 재선택처럼 결과 상태가 바뀌지 않는 no-op은 기능 검증에는 사용할 수 있지만 timing 집계에는 넣지 않는다. 제품 처리시간은 페이지의 같은 실행 컨텍스트 안에서 입력 dispatch 직전부터 operation별 요구 state/DOM predicate가 정착할 때까지 측정하며, CDP 명령 왕복·driver polling·artifact I/O와 정착 후 compositor/frame scheduler 대기는 포함하지 않는다. 정착 후 2개 animation frame까지의 wall time과 Long Task는 같은 표본에 별도 `presentation` 진단치로 기록해 누락된 paint·host throttling을 드러내되 제품 처리 hard gate와 혼합하지 않는다. 격리 Chrome에서 직렬 3회 모두 hard gate를 통과해야 재현 가능한 PASS로 판정하고 한 번이라도 초과하면 해당 operation breakdown을 조사할 때까지 `Inconclusive`로 유지한다.
 8. 첫 UI는 정상 레이아웃에서 숨겨 구성하고 `document.fonts.ready` 뒤 노출해 원격 웹 폰트 교체의 layout shift를 방지한다. 폰트 요청이 실패하면 시스템 폴백으로 계속 표시한다.
@@ -252,6 +252,17 @@ export interface MainCategory {
 6. 공개 app state mutation은 `currentView`, `viewMode`, archetype, component tab, device, viewport, sort, compare tuple과 canonical style ID를 검증한다. 잘못된 값은 다른 시안으로 대체하지 않고 현재 정상 값을 유지하거나 명시적 `null`/오류 상태로 처리한다.
 7. 초기 bootstrap 실패는 안전한 텍스트 기반 fatal error와 재시도 control을 표시한다. 성공하지 못한 Clipboard와 AudioContext resume은 성공 상태를 표시하지 않으며 재시도 가능해야 한다.
 8. Blog comment와 Chat message는 각각 UTF-16 기준 500자 상한, runtime별 동적 history 50개 상한을 갖는다. 초과 입력은 잘라 저장하지 않고 제출을 거부해 사용자가 수정할 수 있게 한다. transient timeout/rAF/popstate callback은 생성한 runtime 또는 adapter cleanup이 소유한다.
+
+### 5.9 GitHub Pages Delivery, Recovery Diagnostics, and Trust Boundaries
+
+1. production URL은 `https://yupkidangju.github.io/design_sample_selector/`의 root와 query/hash만 지원한다. 임의 deep pathname은 지원하지 않으며 Vite `base`는 `/design_sample_selector/`로 고정한다.
+2. GitHub Pages는 source root가 아니라 clean `npm ci`와 `npm run build`가 만든 `dist/` directory artifact를 GitHub Actions로 한 번에 게시한다. `dist/index.html`은 hashed `assets/index-*.js`를 가리켜야 하고 `/src/main.js`를 production entry로 사용할 수 없다.
+3. build는 Vite manifest의 entry/import/dynamicImport/CSS/asset closure를 재귀 검증하고 모든 파일의 경로·크기·SHA-256·MIME과 release SHA를 `dist/release-manifest.json`에 기록한다. 누락 파일, dist 밖 경로, source entry 또는 잘못된 base는 배포 전에 실패한다.
+4. recovery diagnostic은 사용자 메시지와 분리한 bounded in-memory record다. `code`, `phase(import|render|hydrate|mount)`, `attempt`, `resourceClass`, `terminal`만 기록하고 URL query, stack, 사용자 데이터나 자격정보는 저장하지 않는다.
+5. Detail mount는 성공 시에만 subscription/handler disposer를 commit한다. 초기 subscriber callback, render 또는 hydrate가 throw하면 listener·window handler·mockup runtime·부분 DOM을 baseline으로 rollback한 뒤 재시도 경계로 전달한다.
+6. Peek는 native `상세 보기` button을 제공하고 button의 Enter/Space 및 card의 실제 double click이 동일 `openDetailFor()` 경로를 사용한다. mock action이나 retry/reload control은 Detail open으로 전파되지 않는다.
+7. preview renderer는 정적 프로젝트 코드만 신뢰한다. registry는 비어 있지 않은 `.mockup-unit` root뿐 아니라 script/iframe/object/embed, inline event handler와 `javascript:` URL을 기계적으로 거부한다. runtime registration과 remote HTML은 계속 지원하지 않는다.
+8. localStorage 값은 key당 UTF-16 16,384자 이하, bookmark는 현재 actual catalog 수(120) 이하, recents는 6개 이하다. 초과·손상 JSON은 사용하지 않고 해당 key를 제거한 뒤 안전한 기본값으로 복구한다.
 
 ---
 
@@ -375,6 +386,8 @@ Runtime `data-theme` and gallery IDs are the 120 canonical IDs assembled from th
 Implementation follows the reviewed gates in `CAPABILITY_MAP.md`. 기반 모듈, Wave 1 24→36, discovery/scalability와 `SPEC-catalog-expansion-120.md`의 actual-120 확장은 모두 `COMPLETE`다. 현재 빌드는 카탈로그 오류를 차단하고 기존 24종의 56개 legacy 품질 경고를 공개하며 신규 ready 96종은 오류·경고 0이다. 정규 토큰 단일 원천, renderer·thumbnail·motion `120/120/120`과 asset 0, 독립 `thumbnailId`, 근거 기반 motion descriptor와 명시적 렌더 실패 경계가 고정됐다.
 
 Audit 9 독립 재감사에서 재현한 공통 Detail 사이드바 CSS, 최초 재생 전 볼륨, renderer 전환 후 Zoom 상태를 수정했다. FIN-F006은 no-op·CDP 왕복·frame scheduler 대기를 제품 처리시간에서 분리하는 위 계약으로 교체했고, Chrome 151 격리 직렬 3회가 1,920 device 상태·Web 480탭·diagnostics 0과 함께 각각 `16.95/111.4ms`, `18.05/131.9ms`, `22.0/108.6ms`(median/max)를 통과했다. 현재 판정은 저장소·로컬 Crostini 범위 `PASS`, FIN-F006은 `Resolved`다. 초기 JS/CSS는 `88.60/32.86kB` gzip으로 예산 안이며 FIN-F016 운영 CSP·Fonts만 실제 배포 증거가 없어 미확정이다. 다음 미구현 Wave 수치는 없으며 120종을 넘는 확장은 별도 사양으로 시작한다.
+
+Audit 10 수정 후 저장소와 Pages-like Crostini Chrome 범위는 `PASS`다. production base·15-file release closure, bounded import/render/hydrate terminal, Peek mouse/keyboard 진입, transactional Detail mount, safe diagnostic, renderer HTML·localStorage 경계가 자동 게이트에 고정됐다. 전체 Node `190/190`, Vite `78 modules`, 초기 JS/CSS `86.73/32.90kB` gzip, actual-120 `1,920`상태·Web `480`탭과 Pages fault 9종이 통과했다. 다만 2026-08-31 현재 실제 Pages는 여전히 source `index.html`/`src/main.js`를 제공하고 새 hashed entry는 404이므로 workflow 게시와 live smoke 전 운영 판정은 `HOLD`다.
 
 ### 9.3 Quality invariant
 

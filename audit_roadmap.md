@@ -1,7 +1,7 @@
 # Implementation Audit Roadmap (`audit_roadmap.md`)
 **Project Name:** Web Design Sample Selector (`design_sample_selector`)  
 **Version:** 2.3.0
-**Document Status:** Actual 120 / Audit 9 Remediation Re-audited / Remaining Program Audit Criteria
+**Document Status:** Actual 120 / Audit 10 Repository Re-audited / Live Pages Deployment HOLD
 
 살아 있는 계약은 `spec.md` v2.3.0이다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)와 v2.2 인스펙터 기준은 폐기한다.
 
@@ -24,6 +24,7 @@
 | **Phase 4G** | Render Scalability | Bounded DOM / Lazy Chunks / Chrome Budgets | Gallery 36·Detail 24·Split 12/slot, synthetic 60/120, 초기 JS/CSS·LCP·CLS·interaction·observer 예산 | **COMPLETE** |
 | **Phase 4H** | Actual 120 Catalog Expansion | 84 Ready Styles / Async Presentation / Real Chrome | 7팩·21문법, 120/120/120/0, actual 1,920 device·Web 480 상태, 반응형·진단·초기 번들 예산 | **COMPLETE** |
 | **Phase 4I** | Audit 9 Remediation | Stateful Transition / Resilience / Re-audit | 독립 재감사 4건 수정, FIN-F006 browser-local timing, FIN-F016 배포 위험 분리 | **COMPLETE** |
+| **Phase 4J** | Audit 10 Pages Recovery | Built Artifact / Bounded Retry / Transactional Mount | Pages dist workflow, closure manifest, retry terminal, Peek open, rollback와 Pages-like Chrome | **LOCAL COMPLETE / LIVE HOLD** |
 | **Phase 5** | Detail / Split / Inspector | Live Sandbox & Export Contract | 최신 테마 기준 4탭/3 CSS 모드/복사/다운로드, 8 아키타입 HTML-CSS 선택자 계약, DTCG 2025.10, 스플릿 ARIA 탭 | **READY** |
 | **Phase 6** | Quality Verification & Launch Gate | Automated + Browser Audit | `npm run check`, teardown 동일 루트, XSS `textContent`, 포커스 트랩, 복합 상태 전이 브라우저 검사 | **READY** |
 
@@ -199,9 +200,17 @@
 - 최종 Wave 1은 576상태, Discovery는 9시나리오·6폭·89/89 named input, Scalability는 actual + synthetic 60/120, LCP `784ms`, CLS `0`, 초기 bundle 예산을 통과했고 세 게이트 모두 diagnostics/issue 0이다. artifact는 각각 `.antigravity/archive/audit9/{wave1,discovery,scalability}-sidebar-final-verified/`에 있다.
 - 원본 source report 3개와 manifest/sidecar는 크기·SHA-256이 모두 일치한다. 상세 finding 판정, RED→GREEN 기록, 명령과 artifact 경로는 `docs/multi_audit/9/re_audit_evidence_9.md`에 보존한다.
 
+### Phase 4J Audit 10 Pages Recovery Verification Record (2026-08-31)
+
+- **판정:** 저장소·빌드·Pages-like Crostini 범위 `APPROVE / COMPLETE`, 실제 GitHub Pages는 `HOLD`다. 11개 finding을 문서와 코드에 대조했고 FIN-F001/F008의 live 단계 외에는 해결 또는 승인 계약으로 종결했다.
+- 전체 Node `190/190`, catalog 오류 0/legacy 경고 56, 두 theme CSS 최신, 78-module build, 15-file release closure, 초기 JS/CSS `86.73/32.90kB` gzip, offline production audit 취약점 0을 통과했다.
+- Chrome 151 Pages-like 행렬은 정상 Peek button Enter·dblclick·Main Enter·Dock/Confirm→Detail·Split과 component outer/shared, CSS 3개, Detail outer/shared, render/hydrate fault 9종을 검증했다. 한 번의 대체 entry로 복구할 수 없는 shared graph는 두 번째 실패 뒤 reload/cancel terminal로 끝났고 issue는 0이다.
+- actual-120은 1,920상태·Web 480탭, Wave 1은 576상태, Discovery는 9시나리오·6폭, Scalability는 actual+synthetic 60/120과 LCP 848ms·CLS 0을 재통과했다. 상세 finding ledger와 report SHA는 `docs/multi_audit/10/re_audit_evidence_10.md`에 있다.
+- live Pages는 최종 재검증에서도 source `index.html`/`src/main.js`를 제공하고 새 hashed entry를 404로 응답했다. workflow push, Pages Source=GitHub Actions, live fresh/cache smoke와 CSP·Fonts 응답 검증 전에는 운영 PASS로 승격하지 않는다.
+
 ### Next Recommended Gate and Remaining Risks
 
-- **현재 승인 게이트:** actual 120 확장과 Audit 9 저장소/로컬 런타임 재감사는 `APPROVE / COMPLETE`다. 다음 필수 게이트는 배포 후보가 생긴 뒤 FIN-F016의 CSP/security headers/Google Fonts response를 확인하는 것이다.
+- **현재 승인 게이트:** actual 120, Audit 9와 Audit 10의 저장소/로컬 런타임 재감사는 `APPROVE / COMPLETE`다. 다음 필수 게이트는 새 Pages workflow를 실제 게시한 뒤 hashed closure, fresh/cache smoke, CSP/security headers/Google Fonts response를 확인하는 것이다.
 - **남은 품질 부채:** 기존 24개 `legacy` 스타일의 출처·접근성·대비 경고 56개는 공개 기준선으로 남아 있다. 허위 메타데이터로 제거하지 않고 실제 조사·검토와 함께 해소해야 한다.
 - **남은 motion 품질 부채:** `sparkline`, `vhs-shift`, `ken-burns`, `tile-stagger` 4개는 의도적으로 `metadata-only`이며 ID 전용 시각 동작이 없다. `hard-punch`, `hard-press`, `inset-press` 3개는 초기 반복 모션이 아니라 상호작용 시에만 동작한다. 새 효과를 만들거나 motion 강도를 보정하는 작업은 호환 이전 범위에서 제외했으므로 style-pack 저작/시각 QA 사양에서 별도 승인한다.
 - **남은 확장 위험:** Audit 9 수정 후 초기 CSS 예산 여유는 144 bytes, JS 예산 여유는 384 bytes뿐이다. 120종 이후에는 현재 async CSS·bounded DOM 경계를 유지하고 새 예산을 승인해야 한다.
