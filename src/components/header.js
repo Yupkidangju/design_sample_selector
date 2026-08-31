@@ -70,7 +70,7 @@ export function renderHeader(container) {
           <!-- Utility & Action Controls -->
           <div class="header-actions">
             <label class="locale-picker">
-              <span class="sr-only">${escapeHtml(messages.language || '')}</span>
+              <span class="visually-hidden">${escapeHtml(messages.language || '')}</span>
               <select id="locale-select" aria-label="${escapeHtml(messages.language || '')}">
                 ${SUPPORTED_LOCALES.map(item => `<option value="${item}" ${item === locale ? 'selected' : ''}>${LOCALE_ENDONYMS[item]}</option>`).join('')}
               </select>

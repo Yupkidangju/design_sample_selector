@@ -132,7 +132,7 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    'f26ed85749a0a0dcf900de166713e47543f2afda0b44262f0e47f5db3cd2f1b8'
+    'd7ce69822e124d8fe67b6d65ed91414322bb02ee677ad79365a1360497cd9207'
   );
 });
 

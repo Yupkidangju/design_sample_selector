@@ -17,9 +17,17 @@ function action(label, message) {
   return `<button type="button" class="e120-action" data-mock-action="toast" data-mock-msg="${escapeHtml(message)}">${escapeHtml(label)}</button>`;
 }
 
-function artwork(blueprint) {
+function localizedPreview(blueprint, design) {
+  return {
+    name: design?.name || blueprint.name.ko,
+    summary: design?.shortDesc || blueprint.summary.ko,
+    motif: design?.characteristics?.at(-1) || blueprint.motif
+  };
+}
+
+function artwork(blueprint, motif) {
   const layout = EXPANSION_GRAMMARS[blueprint.grammarId].layout;
-  const motif = escapeHtml(blueprint.motif);
+  const motifLabel = escapeHtml(motif);
   const common = `<i></i><i></i><i></i><i></i>`;
   const content = {
     grid: `${common}<b>01</b><b>02</b>`,
@@ -45,15 +53,15 @@ function artwork(blueprint) {
     organic: `<i></i><i></i><i></i><b>HELLO!</b>`
   }[layout];
 
-  return `<div class="e120-art e120-art-${layout}" aria-hidden="true" title="${motif}">${content}</div>`;
+  return `<div class="e120-art e120-art-${layout}" aria-hidden="true" title="${motifLabel}">${content}</div>`;
 }
 
-function renderHero(blueprint) {
+function renderHero(blueprint, preview) {
   return `
     <section class="e120-copy e120-copy-hero">
       <p class="e120-kicker">${escapeHtml(blueprint.grammarId)} / ${String(blueprint.order / 10).padStart(3, '0')}</p>
-      <h2>${escapeHtml(blueprint.name.en)}</h2>
-      <p>${escapeHtml(blueprint.summary.ko)}</p>
+      <h2>${escapeHtml(preview.name)}</h2>
+      <p>${escapeHtml(preview.summary)}</p>
       <div class="e120-actions">${action('EXPLORE SYSTEM', `${blueprint.name.en} opened`)}<a href="#e120-note-${blueprint.id}">VIEW PRINCIPLE</a></div>
     </section>`;
 }
@@ -92,21 +100,22 @@ function renderPricing(blueprint) {
     </section>`;
 }
 
-function renderExpansionPreview(blueprint, tab) {
+function renderExpansionPreview(blueprint, tab, design) {
+  const preview = localizedPreview(blueprint, design);
   const body = tab === 'widget'
     ? renderWidget(blueprint)
     : tab === 'form'
       ? renderForm(blueprint)
       : tab === 'pricing'
         ? renderPricing(blueprint)
-        : renderHero(blueprint);
+        : renderHero(blueprint, preview);
 
   return `
     <div class="mockup-unit e120-unit e120-${blueprint.id}-unit" data-preview-tab="${tab}"
          data-expansion-style="${blueprint.id}" data-grammar="${blueprint.grammarId}" data-variant="${blueprint.variant}">
-      <header class="e120-unit-header"><span>${escapeHtml(blueprint.name.ko)}</span><b>${escapeHtml(EXPANSION_GRAMMARS[blueprint.grammarId].label)}</b></header>
-      <div class="e120-stage">${artwork(blueprint)}${body}</div>
-      <footer id="e120-note-${blueprint.id}"><span>${escapeHtml(blueprint.motif)}</span><b>${String(blueprint.variant + 1).padStart(2, '0')} / 04</b></footer>
+      <header class="e120-unit-header"><span>${escapeHtml(preview.name)}</span><b>${escapeHtml(EXPANSION_GRAMMARS[blueprint.grammarId].label)}</b></header>
+      <div class="e120-stage">${artwork(blueprint, preview.motif)}${body}</div>
+      <footer id="e120-note-${blueprint.id}"><span>${escapeHtml(preview.motif)}</span><b>${String(blueprint.variant + 1).padStart(2, '0')} / 04</b></footer>
     </div>`;
 }
 
@@ -116,8 +125,8 @@ export const EXPANSION_RENDERER_DEFINITIONS = Object.freeze(
     aliases: EMPTY_ASSET_PATHS,
     tabs: PREVIEW_COMPONENT_TABS,
     assetPaths: EMPTY_ASSET_PATHS,
-    render(tab) {
-      return renderExpansionPreview(blueprint, tab);
+    render(tab, design) {
+      return renderExpansionPreview(blueprint, tab, design);
     }
   }))
 );

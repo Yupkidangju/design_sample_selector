@@ -155,15 +155,15 @@ async function clickSelector(selector, clickCount = 1) {
   return true;
 }
 
-async function openDetail() {
-  const selector = '[data-result-id="swiss-grid"]';
+async function openDetail(styleId = 'swiss-grid') {
+  const selector = `[data-result-id="${styleId}"]`;
   const opened = await evaluate(`(() => {
     const element = document.querySelector(${JSON.stringify(selector)});
     if (!element) return false;
     element.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true, view: window }));
     return true;
   })()`);
-  check(opened, 'swiss-grid card missing');
+  check(opened, `${styleId} card missing`);
   await waitFor(`Boolean(document.querySelector('#mockup-viewport')) && Boolean(document.querySelector('#live-css-code')?.textContent)`, 'detail inspector');
 }
 
@@ -187,6 +187,61 @@ function bindDiagnostics() {
 }
 
 async function inspectLocale(pageUrl, locale) {
+  await navigate(`${pageUrl}?lang=${encodeURIComponent(locale)}`);
+  const localeSelector = await evaluate(`(() => {
+    const picker = document.querySelector('.locale-picker');
+    const select = document.querySelector('#locale-select');
+    const rect = select.getBoundingClientRect();
+    const pickerRect = picker.getBoundingClientRect();
+    const actionsRect = document.querySelector('.header-actions').getBoundingClientRect();
+    const brandRect = document.querySelector('.brand-container').getBoundingClientRect();
+    const style = getComputedStyle(select);
+    return {
+      pickerWidth: pickerRect.width,
+      layout: {
+        picker: { x: pickerRect.x, y: pickerRect.y, width: pickerRect.width, height: pickerRect.height },
+        actions: { x: actionsRect.x, y: actionsRect.y, width: actionsRect.width, height: actionsRect.height },
+        brand: { x: brandRect.x, y: brandRect.y, width: brandRect.width, height: brandRect.height }
+      },
+      rect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+      color: style.color,
+      backgroundColor: style.backgroundColor,
+      colorScheme: style.colorScheme
+    };
+  })()`);
+  check(localeSelector.backgroundColor === 'rgb(14, 20, 32)', `${locale}: locale selector background ${localeSelector.backgroundColor}`);
+  check(localeSelector.color === 'rgb(248, 250, 252)', `${locale}: locale selector color ${localeSelector.color}`);
+  check(localeSelector.colorScheme === 'dark', `${locale}: locale selector color scheme ${localeSelector.colorScheme}`);
+  check(Math.abs(localeSelector.rect.width - 104) <= 0.5 && Math.abs(localeSelector.rect.height - 34) <= 0.5, `${locale}: locale selector size ${JSON.stringify(localeSelector.rect)}`);
+  await capture(`locale-selector-${locale}`);
+
+  await evaluate(`(() => {
+    const input = document.querySelector('#search-input');
+    input.value = 'Ulm Rationalism';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  })()`);
+  await waitFor(`Boolean(document.querySelector('[data-result-id="ulm-rationalism"]'))`, `${locale}: expansion result`);
+  await openDetail('ulm-rationalism');
+  check(await clickSelector('.archetype-tab-btn[data-archetype="web"]'), `${locale}: web archetype missing`);
+  await waitFor(`document.querySelector('.e120-ulm-rationalism-unit .e120-copy-hero > p:nth-of-type(2)')?.textContent.length > 20`, `${locale}: localized expansion preview`);
+  const expansionPreview = await evaluate(`(() => {
+    const root = document.querySelector('.e120-ulm-rationalism-unit');
+    return {
+      name: root.querySelector('.e120-unit-header span').textContent.trim(),
+      summary: root.querySelector('.e120-copy-hero > p:nth-of-type(2)').textContent.trim(),
+      visibleText: root.innerText,
+      accessible: [...root.querySelectorAll('[aria-label], [title]')]
+        .flatMap(element => ['aria-label', 'title'].map(name => element.getAttribute(name)).filter(Boolean))
+        .join(String.fromCharCode(10))
+    };
+  })()`);
+  const expansionForbidden = locale === 'ko'
+    ? []
+    : [expansionPreview.visibleText, expansionPreview.accessible]
+      .flatMap(text => text.match(NON_KOREAN_FORBIDDEN) || []);
+  check(expansionForbidden.length === 0, `${locale}: expansion preview Korean ${expansionForbidden.join(', ')}`);
+  await capture(`expansion-preview-${locale}`);
+
   await navigate(`${pageUrl}?lang=${encodeURIComponent(locale)}`);
   await openDetail();
   check(await clickSelector('[data-action="game-boost"]'), `${locale}: runtime action missing`);
@@ -227,6 +282,8 @@ async function inspectLocale(pageUrl, locale) {
     locale,
     lang: dom.lang,
     selectedLocale: dom.selectedLocale,
+    localeSelector,
+    expansionPreview: { name: expansionPreview.name, summary: expansionPreview.summary },
     forbiddenKorean: forbidden,
     cssComment: panes.css.match(/^\/\*[^\n]+/m)?.[0] || '',
     htmlCopy: panes.html.match(/<p>([^<]+)<\/p>/)?.[1] || '',
@@ -289,6 +346,12 @@ function finalize() {
   for (const key of ['cssKeys', 'htmlMachine', 'dtcgTopKeys']) {
     const reference = JSON.stringify(report.locales[0]?.[key]);
     for (const locale of report.locales.slice(1)) check(JSON.stringify(locale[key]) === reference, `${locale.locale}:${key} changed`);
+  }
+  check(new Set(report.locales.map(item => item.expansionPreview.summary)).size === LOCALES.length, 'expansion preview summaries are not five-locale distinct');
+  const referenceRect = report.locales[0]?.localeSelector?.rect;
+  for (const locale of report.locales.slice(1)) {
+    const rect = locale.localeSelector?.rect;
+    check(Math.abs(rect.x - referenceRect.x) <= 0.5 && Math.abs(rect.y - referenceRect.y) <= 0.5, `${locale.locale}: locale selector position changed ${JSON.stringify(rect)}`);
   }
   for (const [kind, entries] of Object.entries(report.runtimeSignals)) check(entries.length === 0, `${kind}: ${entries.length}`);
   report.summary = { localeCount: report.locales.length, screenshotCount: report.screenshots.length, diagnostics: Object.values(report.runtimeSignals).flat().length, issues: report.issues.length };

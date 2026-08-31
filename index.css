@@ -125,8 +125,8 @@ body[data-app-pending] > :not(#bg-canvas) {
 }
 
 .brand-logo-symbol {
-  width: 52px;
-  height: 52px;
+  width: 55px;
+  height: 55px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(255, 0, 122, 0.25));
   border: 1px solid var(--bg-glass-border);
@@ -236,16 +236,20 @@ body[data-app-pending] > :not(#bg-canvas) {
 /* Header Action Controls */
 .header-actions {
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 12px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .locale-picker select {
-  padding: 0 8px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-dark-secondary);
+  width: 104px;
+  height: 34px;
+  display: block;
+  border: 1px solid #ffffff38;
+  background: var(--bg-dark-surface);
   color: var(--text-primary);
+  color-scheme: dark;
 }
 
 

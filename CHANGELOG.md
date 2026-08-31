@@ -61,6 +61,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
 
 ### Fixed
+- **언어 선택기와 확장 시안 locale 정합성:** 존재하지 않는 색 변수로 흰 배경·흰 글자가 되던 언어 선택기를 명시적 dark native control로 복구하고 5개 locale의 크기·좌표를 고정했다. 신규 84종 Web 시안의 제목·설명·motif가 한국어 blueprint를 직접 출력하던 경로를 활성 locale snapshot으로 전환하고 영어 분류어 누락도 보완했다.
 - **Audit 11 visible/ARIA·Inspector i18n:** Header·Discovery·Gallery·Detail·Split·recovery와 8개 archetype HTML을 같은 locale snapshot에 연결하고 CSS comment·Markdown prose·DTCG display metadata가 locale별로 바뀌도록 수정. 국제 고유 디자인명 fallback은 field/reason과 함께 보고하고 placeholder는 completeness에서 거부한다.
 - **Locale 전환 focus와 번역 가능 Dashboard gate:** Detail locale 재렌더 뒤 focus trap이 복원된 Inspector control을 첫 버튼으로 덮던 문제를 수정하고, actual-120 Dashboard filter가 고정 영문 표시값 대신 현재 locale의 성공 label을 사용하도록 변경.
 - **Audit 11 999px·URL·출력 경계:** 8개 expansion 시안의 pill 값이 tuner default와 전체 화면 geometry로 번지던 문제, prototype/oversize discovery URL crash, 번역 palette key 충돌, code pane raw HTML 및 CSS/Markdown/JSON 경계 불일치를 수정.

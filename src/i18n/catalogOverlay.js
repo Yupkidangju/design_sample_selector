@@ -63,7 +63,7 @@ function text(value, locale) {
 
 function translatedFacet(id, locale, canonicalLabel) {
   if (locale === 'ko') return text(canonicalLabel, 'ko');
-  if (locale === 'en') return text(canonicalLabel, 'en');
+  if (locale === 'en') return text(canonicalLabel, 'en') || id.split('-').join(' ');
   return FACET_TRANSLATIONS[locale]?.[id] || id.split('-').join(' ');
 }
 

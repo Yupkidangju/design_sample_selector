@@ -156,6 +156,11 @@ test('Audit 11 re-audit #1: Chrome locale gate covers five Detail and Inspector 
   assert.match(script, /sidebarScrollTop/);
   assert.match(script, /focus/);
   assert.match(script, /runtimeStatus/);
+  assert.match(script, /localeSelector/);
+  assert.match(script, /expansionPreview/);
+  assert.match(script, /ulm-rationalism/);
+  assert.match(script, /backgroundColor/);
+  assert.match(script, /locale selector position changed/);
 });
 
 test('Audit 11 re-audit #1: locale re-render restores focus before rearming the trap', async () => {
