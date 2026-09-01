@@ -1,7 +1,9 @@
 import { getLocaleCopy } from '../copy.js';
+import catalog from './catalog/zh-TW.js';
 
 export default {
   locale: 'zh-TW',
+  catalog,
   copy: getLocaleCopy('zh-TW'),
   messages: {
     language: '語言', search: '搜尋設計', all: '全部', saved: '已儲存',

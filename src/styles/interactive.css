@@ -577,9 +577,8 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
 }
 .modal-breadcrumbs { grid-area: crumbs; }
 .modal-top-actions { grid-area: actions; }
-.sub-nav-cycle { grid-area: subs; width: 100%; }
+.sub-nav-cycle { grid-area: subs; width: 100%; display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
 .sub-tabs-container { overflow-x: auto; max-width: 100%; border-radius: 14px; }
-.sub-nav-cycle { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
 .cycle-btn {
   width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--bg-glass-border);
   background: var(--bg-dark-surface); color: var(--text-primary); cursor: pointer;
@@ -1234,6 +1233,7 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   background: var(--theme-surface);
   border: var(--theme-border-width) solid var(--theme-border);
@@ -1289,7 +1289,6 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
 
 .game-cta-btn:hover {

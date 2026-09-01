@@ -9,13 +9,29 @@ import {
 /** 새 정규 레코드를 Wave 0 UI가 사용하는 평면 형태로 투영한다. */
 export function toLegacySubDesign(style, localized = null) {
   const localizedStyle = localized?.styles?.[style.id];
+  const localizedToneValues = localized?.facets?.tone?.values;
+  const localizedMotionValues = localized?.facets?.motion?.values;
+  const localizedEraValues = localized?.facets?.era?.values;
+  const eraId = style.classification.era.start < 1950
+    ? 'pre-1950'
+    : style.classification.era.start < 1980
+      ? '1950s-1970s'
+      : style.classification.era.start < 2000
+        ? '1980s-1990s'
+        : style.classification.era.start < 2010
+          ? '2000s'
+          : style.classification.era.start < 2020
+            ? '2010s'
+            : '2020s';
   return deepFreeze({
     id: style.id,
     name: localizedStyle?.name || style.name.ko,
     nameEn: style.name.en,
     shortDesc: localizedStyle?.summary || style.summary.ko,
     previewType: style.preview.rendererId,
-    moodTags: style.editorial.moodTags,
+    moodTags: localizedToneValues
+      ? style.classification.tone.map(id => localizedToneValues[id] || id)
+      : style.editorial.moodTags,
     defaultTweaks: style.defaultTweaks,
     characteristics: localizedStyle?.characteristics || style.editorial.characteristics,
     pros: localizedStyle?.pros || style.editorial.pros,
@@ -27,6 +43,10 @@ export function toLegacySubDesign(style, localized = null) {
       usage: localizedStyle?.palette?.find(item => item.id === color.id)?.usage || color.usage.ko
     })),
     motionProfile: style.preview.motionId,
+    ...(localized ? {
+      motionLabel: localizedMotionValues?.[style.classification.motion] || style.classification.motion,
+      eraLabel: localizedEraValues?.[eraId] || style.classification.era.label
+    } : {}),
     thumbMotif: style.preview.thumbnailId
   });
 }

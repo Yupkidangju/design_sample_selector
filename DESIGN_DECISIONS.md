@@ -391,3 +391,123 @@
   - locale 전환은 단순 text swap보다 복잡하지만 명시적 snapshot/epoch로 stale pane과 runtime 손실을 차단한다.
   - Re-audit #1 수정 후 Node `214/214`, Vite `89 modules`, 5-locale Detail/Inspector와 runtime live status, actual-120 `1,920`상태·Web `480`탭·diagnostics 0, Discovery 9시나리오·6폭과 Pages fault 9종이 통과했다.
   - 초기 JS `88,191/88,980B`, CSS `32,994/33,000B` gzip으로 hard budget을 유지했다. 다음 초기 경로 변경도 bundle gate를 통과해야 하며 locale copy는 초기 청크가 아닌 lazy 경계를 유지한다.
+
+---
+
+## 22. Decision 022: Explicit Five-Locale Content Ownership
+
+- **Status:** Accepted; Stage 1 complete, Stage 2 in progress (2026-09-01)
+- **Context:** 기존 lazy locale pack은 UI copy를 분리했지만 catalog overlay가 일본어·중국어 디자인명 360개를 영어로 일괄 대체하고, 설명·palette·특징·장단점을 locale 공통 template으로 생성했다. 형식상 `placeholder=0`이어도 각 locale이 실제 콘텐츠를 소유한다고 볼 수 없는 false-green이었다.
+- **Decision:**
+  - locale pack이 UI, category/facet, 120종 catalog와 preview 사람용 copy를 명시적으로 소유한다.
+  - provenance를 `translated`, `invariant-approved`, `placeholder`로 제한하고 implicit fallback과 unapproved invariant를 별도 실패 수치로 보고한다.
+  - canonical machine ID와 localized display value를 분리하며 비영어 디자인명은 locale별 통용 번역명 또는 음역명을 사용한다.
+  - 간체와 번체는 독립 pack·독립 glossary로 유지하고 자동 문자 변환을 콘텐츠 원천으로 사용하지 않는다.
+  - 구조적 completeness(Stage 1)를 먼저 통과한 후 자연스러움·오역·문체 감수(Stage 2)를 별도 수행한다.
+- **Alternatives Considered:**
+  - 모든 비한국어 locale에서 영어 디자인명을 유지하면 검색과 카드가 선택 언어로 보이지 않으며 사용자 요구를 충족하지 못한다.
+  - 공통 문장 template을 계속 사용하면 누락은 줄지만 style별 의미와 번역 출처를 검증할 수 없다.
+  - 번역 display name을 machine key로 사용하면 locale 변경마다 selector·저장 ID·artifact diff가 달라진다.
+- **Consequences:**
+  - locale chunk와 검수 대상은 커지지만 field parity와 누락 위치를 결정론적으로 보고할 수 있다.
+  - bundle budget을 지키기 위해 비한국어 pack은 계속 literal dynamic import 경계 뒤에 둔다.
+  - 사람용 문구 변경과 machine key 보존을 각각 독립 테스트한다.
+
+---
+
+## 23. Decision 023: Reviewable English Editorial Profiles
+
+- **Status:** Accepted; Task 23 repository/local Crostini verified (2026-09-01)
+- **Context:** Stage 1 영어 catalog는 120개 명시 record를 소유했지만 summary·palette 용도·특징·장점·주의점에 category 공통 생성 문장이 반복됐다. 5,365행 baseline에 장문 감수 결과를 직접 섞으면 구조·facet 변경과 편집 변경을 함께 검토해야 하고 파일 크기도 더 커진다.
+- **Decision:**
+  - 영어 승인 본문은 `src/i18n/locales/catalog/enEditorial.js`의 120개 style profile로 분리하고 기존 `en.js`가 export 전에 적용한다.
+  - profile은 summary·고유 시각 특징·적합 용도·주의점을 소유한다. category copy는 공통 재질 문법을 제공하되 style 이름을 포함해 완성 문장 중복을 허용하지 않는다.
+  - 적용기는 기존 characteristics·pros·cons 길이와 palette ID·이름·색상값을 보존하고 사람용 문장만 교체한다. 모든 출력은 기존 영어 literal dynamic import 경계 뒤에 남는다.
+  - category별 전체 배열 서명뿐 아니라 개별 문장 중복, 폐기된 boilerplate, 완결문 종결, locale 누출을 회귀 테스트로 차단한다.
+- **Alternatives Considered:**
+  - baseline 5,365행을 직접 대량 재작성하면 구조 계약과 편집 diff가 결합되어 review surface와 충돌 위험이 커진다.
+  - category 공통 template만 자연스럽게 고치면 문법은 개선되지만 15종의 실제 재질·용도·위험 차이를 검증할 수 없다.
+  - 외부 번역 또는 i18n 의존성을 추가하면 client-only·무의존성 원칙과 lazy chunk 예측 가능성을 약화한다.
+- **Consequences:**
+  - 영어 lazy chunk는 34.32kB gzip으로 증가했지만 한국어 45.10kB보다 작고 초기 JS/CSS는 88.34/33.00kB로 기존 hard budget을 유지한다.
+  - Node 256/256, Vite 96 modules, 5-locale Chrome locale당 120 cards·diagnostics 0, actual-120 1,920상태·Web 480탭·issues 0을 통과했다.
+  - 다음 locale은 같은 편집 품질 게이트를 따르되 해당 언어의 문법과 지역 용어에 맞는 독립 profile 또는 명시 record 전략을 선택한다.
+
+---
+
+## 24. Decision 024: Locale-owned Editorial Profiles with a Shared Structural Applier
+
+- **Status:** Accepted; Task 24 repository/local Crostini verified (2026-09-01)
+- **Context:** 일본어 Stage 1 catalog 120종은 명시 record였지만 모든 summary·특징·장단점이 공통 생성 문형을 반복하고 palette 표시명도 `配色1〜4`였다. 영어용 적용기를 복사하면 배열 길이와 ID 보존 로직이 locale마다 갈라지고, 영어 문장을 일본어의 runtime 원천으로 쓰면 독립 locale 소유권을 훼손한다.
+- **Decision:**
+  - 일본어 승인 본문은 `src/i18n/locales/catalog/jaEditorial.js`의 8개 category·120개 독립 profile로 관리한다.
+  - `applyEditorialReview.js`는 summary 투영, 기존 characteristics/pros/cons 길이 유지, palette 순회와 style 중복 방지만 공통 소유한다.
+  - 문장 조립, `です／ます`체, 전각 구두점, category별 palette 의미 역할명과 용도는 일본어 규칙이 소유한다. 승인된 디자인명, style/category/facet ID, palette ID·색상값은 변경하지 않는다.
+  - category별 배열 서명뿐 아니라 120종 전역 문장 중복, 폐기된 상투문, `配色1〜4`, 종결, machine-key/array-length 불변성을 회귀 검사한다.
+- **Alternatives Considered:**
+  - 5,365행 `ja.js`를 직접 대량 편집하면 Stage 1 구조와 Stage 2 문장 diff가 결합되어 검토 범위가 커진다.
+  - 영어 profile을 runtime에서 번역하거나 문장 순서를 공유하면 일본어의 조사·어순·표현을 독립적으로 검토할 수 없다.
+  - locale마다 적용기를 복제하면 향후 간체·번체에서 보존 규칙이 서로 달라질 위험이 있다.
+- **Consequences:**
+  - 일본어 lazy chunk는 36.33kB gzip으로 증가했지만 초기 JavaScript/CSS는 `88.36/33.00kB` gzip으로 hard budget을 유지한다.
+  - Node 264/264, Vite 98 modules, 5-locale Chrome locale당 120 cards·diagnostics 0, actual-120 1,920상태·Web 480탭·issues 0, Discovery 9시나리오·6폭, Pages fault 9종을 통과했다.
+  - 중국어 간체·번체는 같은 구조 보존 적용기를 재사용할 수 있지만, 문장과 palette 표시 규칙은 각 지역 locale이 독립적으로 소유해야 한다.
+
+---
+
+## 25. Decision 025: Independent Mainland Chinese Editorial Profiles
+
+- **Status:** Accepted; Task 25 repository/local Crostini verified (2026-09-01)
+- **Context:** 중국어 간체 Stage 1 catalog도 locale별 명시 record였지만 summary·특징·장단점에 공통 생성 문형이 반복됐고 palette 표시명은 `配色1〜4`였다. 번체와 공유하거나 단순 문자 변환을 적용하면 중국 본토와 대만의 UI 용어·어순·문체 경계가 무너진다.
+- **Decision:**
+  - 중국어 간체 승인 본문은 `src/i18n/locales/catalog/zhCNEditorial.js`의 8개 category 규칙과 120개 독립 style profile로 관리한다.
+  - 배열 길이, style/palette ID와 색상값 보존은 `applyEditorialReview.js`를 재사용하고, 실제 문장·전각 구두점·palette 역할명과 용도는 간체 locale이 독립 소유한다.
+  - `介面`, `資訊`, `使用者`, `資料`, `載入`, `網格`, `樣式`, `視覺`, `階層` 등 번체 UI 용어와 숫자형 palette 이름을 회귀 테스트에서 거부한다.
+- **Alternatives Considered:**
+  - 번체 profile을 간체자로 자동 변환하면 지역 어휘와 문장 리듬을 검증할 수 없다.
+  - 5,000행 이상의 locale record를 직접 대량 편집하면 Stage 1 데이터와 Stage 2 편집 diff가 결합되어 검토 범위가 커진다.
+- **Consequences:**
+  - 용어 lint가 `使用者` 1건을 검출해 본토 표기 `用户`로 교정했고, 120종 전역 문장 중복·상투문·번체 UI 용어·machine key 변경은 0이다.
+  - 중국어 간체 lazy chunk는 33.97kB gzip이며 초기 JavaScript/CSS는 `88.36/33.00kB` gzip으로 hard budget을 유지한다.
+  - Node 272/272, Vite 99 modules, 5-locale Chrome locale당 120 cards·diagnostics 0, actual-120 1,920상태·Web 480탭·issues 0, Discovery 9시나리오·6폭, Pages fault 9종을 통과했다.
+  - 중국어 번체는 같은 구조 보존 적용기를 재사용하되 대만권 문장과 palette 표시 규칙을 별도로 소유한다.
+
+---
+
+## 26. Decision 026: Independent Taiwan Traditional Chinese Editorial Profiles
+
+- **Status:** Accepted; Task 26 repository/local Crostini verified (2026-09-01)
+- **Context:** 중국어 번체 Stage 1 catalog는 locale별 record였지만 공통 생성 문형과 `配色1〜4`를 반복했다. 간체 문장을 문자만 변환하면 대만권 UI 어휘와 자연스러운 어순을 검증할 수 없고, 실제 카드 제목에도 본토 표기 `混凝土界面`가 남아 있었다.
+- **Decision:**
+  - 중국어 번체 승인 본문은 `src/i18n/locales/catalog/zhTWEditorial.js`의 8개 category 규칙과 120개 독립 style profile로 관리한다.
+  - 배열 길이, style/palette ID와 색상값 보존은 `applyEditorialReview.js`를 재사용하고, 실제 문장·전각 구두점·palette 역할명과 용도는 번체 locale이 독립 소유한다.
+  - `界面`, `信息`, `用户`, `数据`, `加载`, `网格`, `样式`, `视觉`, `层级`, `按钮` 등 본토 용어와 숫자형 palette 이름을 회귀 테스트에서 거부한다.
+- **Alternatives Considered:**
+  - 간체 profile을 번체자로 자동 변환하면 `介面`, `使用者`, `資料`, `載入`, `應用程式` 같은 대만권 어휘와 문장 리듬을 독립적으로 검토할 수 없다.
+  - 5,365행 locale record를 직접 대량 편집하면 Stage 1 데이터와 Stage 2 편집 diff가 결합되어 검토 범위가 커진다.
+- **Consequences:**
+  - `混凝土界面`를 `混凝土介面`로 교정했고, 120종 전역 문장 중복·상투문·본토 UI 용어·machine key 변경은 0이다.
+  - 중국어 번체 lazy chunk는 33.81kB gzip이며 초기 JavaScript/CSS는 `88.37/33.00kB` gzip으로 hard budget을 유지한다.
+  - Node 280/280, Vite 100 modules, 5-locale Chrome locale당 120 cards·diagnostics 0, actual-120 1,920상태·Web 480탭·issues 0, Discovery 9시나리오·6폭, Pages fault 9종을 통과했다.
+  - Tasks 21–26의 locale별 편집이 끝났으며, Task 27에서 5개 locale의 교차 의미·다중 폭·200% reflow를 재감사한다.
+
+---
+
+## 27. Decision 027: One Machine-Readable Cross-Locale Semantic and Reflow Gate
+
+- **Status:** Accepted; Task 27 repository/local Crostini verified (2026-09-01)
+- **Context:** locale별 편집 테스트는 각 언어의 문체와 용어를 검증했지만, 최종 cross-locale field parity와 다중 폭 결과가 서로 다른 실행 로그에 흩어져 있었다. 기존 1440px Inspector 게이트만으로는 320px Game CTA처럼 번역 길이와 고정 control 묶음이 만드는 잘림을 검출하지 못했다.
+- **Decision:**
+  - 기존 5-locale Chrome gate가 120종 field unit·machine signature·간체/번체 분리 요약과 30개 reflow 상태를 하나의 JSON에 기록한다.
+  - normal viewport는 320/375/768/1024/1440 CSS px, 200%는 선행 감사와 동일한 물리 1280px/CSS 640px/`deviceScaleFactor: 2`로 재현한다.
+  - document overflow와 viewport 밖 interactive control은 실패하되, category·archetype·Inspector처럼 `overflow-x: auto|scroll`을 명시한 내부 탐색 영역은 허용한다.
+  - 자동 검증은 의미 단위·machine identity·구조·레이아웃 회귀만 판정하며 사람 검토 전에는 원어민 수준을 선언하지 않는다.
+- **Alternatives Considered:**
+  - locale별 대표 화면만 수동 캡처하면 30상태 전체의 control 좌표와 diagnostic을 재현할 수 없다.
+  - 320px에서 모든 상단 tab을 강제로 축소하면 조작 대상과 가독성을 훼손하므로 명시적 내부 스크롤을 유지한다.
+  - 320px viewport에 200%를 다시 적용한 160 CSS px 조건은 선행 감사 계약과 다르고 제품 최소 폭 밖이므로 채택하지 않았다.
+- **Consequences:**
+  - 첫 실행에서 5개 locale 모두의 320px Game CTA 잘림을 검출했고, action bar의 내용 기반 줄바꿈으로 수정했다.
+  - 접근성 이름 판정에서 control value fallback을 제거한 뒤 tuner range 5개의 실제 label 누락을 검출했다. 고정 영문 병기를 제거하고 locale-owned `<label for>`를 연결했다.
+  - 최종 report는 5 locale, 120 styles, 9,620 human units, reflow 30상태, screenshot 30장, semantic/machine drift·overflow·clipped/unnamed control·diagnostics/issues 0을 기록한다.
+  - Node 284/284, Vite 100 modules, 초기 JS/CSS 88,365/32,997B gzip, actual-120·Discovery·Pages recovery가 통과했다. ED-011 사람 검토는 별도 open checkpoint로 남는다.

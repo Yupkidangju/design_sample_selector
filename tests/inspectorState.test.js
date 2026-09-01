@@ -75,6 +75,7 @@ test('all four tabs and three CSS modes derive from the latest selected theme', 
   assert.match(artifacts.css.tokens, /data-theme="corporate-minimal"/);
   assert.match(artifacts.css.component, /\.web-nav-header/);
   assert.match(artifacts.html, /data-theme="corporate-minimal"/);
-  assert.match(artifacts.markdown, /Corporate Minimalist/);
+  assert.match(artifacts.markdown, new RegExp(currentDesign.name));
+  assert.doesNotMatch(artifacts.markdown, new RegExp(currentDesign.nameEn));
   assert.equal(JSON.parse(artifacts.json).$extensions['com.design-sample-selector'].id, 'corporate-minimal');
 });

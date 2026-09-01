@@ -141,14 +141,13 @@ export function renderMainView(container, options = {}) {
 
           <div class="card-header-meta">
             <span class="category-index">0${idx + 1}</span>
-            <span class="category-badge-count">${cat.subCategories.length} Styles</span>
+            <span class="category-badge-count">${escapeHtml(t('discovery.styleCount', { count: cat.subCategories.length }))}</span>
           </div>
 
           <div class="card-title-group">
             <div class="category-icon-wrapper">${cat.icon}</div>
             <div>
               <h2 class="category-main-title">${escapeHtml(cat.title)}</h2>
-              <span class="category-en-title">${escapeHtml(cat.titleEn)}</span>
             </div>
           </div>
 
@@ -174,7 +173,6 @@ export function renderMainView(container, options = {}) {
                         ${renderPreviewThumbnail({ thumbnailId: sub.thumbMotif, design: sub })}
                       </div>
                       <span class="badge-name">${sub.name}</span>
-                      <span class="badge-en">${sub.nameEn}</span>
                     </button>
                     <button class="badge-bookmark-btn ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
@@ -230,7 +228,6 @@ export function renderMainView(container, options = {}) {
           </div>
           <div class="bento-content-body">
             <h3 class="bento-title">${sub.name}</h3>
-            <p class="bento-en-title">${sub.nameEn}</p>
             <p class="bento-desc">${sub.shortDesc}</p>
           </div>
           <div class="bento-palette-strip">
@@ -256,7 +253,7 @@ export function renderMainView(container, options = {}) {
     let html = `
       <div class="spectrum-stream-container">
         <div class="spectrum-timeline-axis" aria-label="${escapeHtml(t('gallery.eraOrder'))}">
-          <span class="spectrum-axis-label">ERA SPECTRUM</span>
+          <span class="spectrum-axis-label">${escapeHtml(t('gallery.eraOrder'))}</span>
           <div class="spectrum-axis-nodes">
             ${eraGroups.map(group => `<span class="axis-node">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</span>`).join('<span class="axis-line" aria-hidden="true"></span>')}
           </div>
@@ -271,7 +268,7 @@ export function renderMainView(container, options = {}) {
             <span class="group-icon">${String(groupIndex + 1).padStart(2, '0')}</span>
             <div class="group-titles">
               <h3 class="group-title" id="era-group-${group.id}">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</h3>
-              <span class="group-en">${group.label.en} · ${group.entries.length}</span>
+              <span class="group-en">${escapeHtml(t('discovery.styleCount', { count: group.entries.length }))}</span>
             </div>
           </div>
           <div class="spectrum-sub-grid">
@@ -290,7 +287,7 @@ export function renderMainView(container, options = {}) {
                   </div>
                   <div class="spec-card-context">
                     <span class="spec-category-context">${cat.icon} ${cat.title}</span>
-                    <span class="spec-era-context">${style.classification.era.label}</span>
+                    <span class="spec-era-context">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</span>
                   </div>
                   <div class="spec-card-head">
                     <h4 class="spec-title">${sub.name}</h4>

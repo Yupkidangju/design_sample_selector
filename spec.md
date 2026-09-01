@@ -279,12 +279,16 @@ export interface MainCategory {
 | locale | 동일 선택 유지 | 보존 | 보존 | 보존 |
 
 5. 지원 locale ID는 `ko`, `en`, `ja`, `zh-CN`, `zh-TW`다. 초기 선택은 유효한 URL `lang` → localStorage → browser preference → `ko` 순서이며, locale pack load/validation 실패 시 현재 last-known-good locale을 유지한다.
-6. UI message와 catalog display overlay는 locale별 pack으로 분리하고 한국어 외 pack은 초기 bundle 밖의 literal dynamic import로 전달한다. 각 pack은 120 styles, category/facet, palette display field와 UI key parity를 검증한다.
+6. UI message와 catalog display content는 locale별 pack으로 분리하고 한국어 외 pack은 초기 bundle 밖의 literal dynamic import로 전달한다. 각 pack은 120 styles, category/facet, palette display field, preview copy와 UI key parity를 검증한다. renderer와 catalog overlay는 선택 locale 밖의 사람용 문자열을 추측하거나 canonical 한국어·영어로 암묵 대체하지 않는다.
 7. locale 변경은 `document.documentElement.lang`, visible UI/ARIA, 검색·이름 정렬과 Inspector 네 pane을 하나의 immutable locale snapshot/epoch로 갱신한다.
 8. 번역 대상은 사람용 visible/ARIA text, CSS comment, Markdown prose, HTML visible copy, DTCG `$description`/display metadata다. CSS property/custom-property ID, selector, HTML ID/data attribute, DTCG structural key와 download filename은 locale-neutral이다.
 9. URL query는 전체 길이와 각 key/value 길이를 제한하고 category/facet/locale allowlist를 통과한 값만 사용한다. prototype inherited key, 중복·malformed·oversize 입력은 bootstrap/popstate를 중단하지 않고 무시한다.
-10. locale catalog completeness는 field별 provenance를 `translated`, `approved-fallback`, `placeholder`로 구분해 집계한다. 국제적으로 통용되는 고유 디자인명·브랜드명만 원문 영어를 `approved-fallback`으로 유지할 수 있으며, summary·category/facet 설명·palette usage·characteristics·pros·cons의 공통 placeholder는 completeness로 인정하지 않는다. 지원 locale snapshot은 `placeholder=0`이어야 하고 승인 fallback은 field와 사유를 기계적으로 보고해야 한다.
+10. locale catalog completeness는 field별 provenance를 `translated`, `invariant-approved`, `placeholder`로 구분해 집계한다. 브랜드·표준·약어처럼 locale 사이에서 동일해야 하는 값은 field path와 사유를 invariant allowlist에 명시한 경우에만 `invariant-approved`로 인정한다. 다른 locale의 암묵 fallback과 style별 의미를 소유하지 않는 공통 placeholder/template 결과는 completeness로 인정하지 않는다. 지원 locale snapshot은 `placeholder=0`, `implicitFallback=0`, `unapprovedInvariant=0`이어야 한다.
 11. Header, Discovery, Gallery, Detail, Split, lazy/fatal recovery와 Inspector preview의 사람용 visible text, `aria-label`, `title`, live status는 같은 locale snapshot에서 해석한다. Inspector CSS comment·HTML visible/ARIA copy·Markdown prose·DTCG `$description`/display metadata도 해당 snapshot을 사용하되 §5.10.8의 machine syntax와 structural key는 locale 간 동일해야 한다.
+12. locale pack은 UI, category/facet, 120종의 name/summary/palette name·usage/characteristics/pros/cons와 preview 사람용 copy를 명시적으로 소유한다. `ko`, `en`, `ja`, `zh-CN`, `zh-TW`는 독립 record이며 간체와 번체를 단순 문자 변환 관계로 취급하지 않는다.
+13. 디자인 display name은 영어 locale에서 국제 원명을 사용하고, 한국어·일본어·중국어 locale에서는 해당 언어권의 통용 번역명 또는 음역명을 사용한다. 국제 원명 유지가 필요한 항목은 style ID별 invariant allowlist로 승인하며 비영어 locale 전체에 대한 일괄 영어 fallback은 허용하지 않는다.
+14. 구조적 현지화 완료와 문구 품질 감수는 별도 게이트다. 모든 명시 콘텐츠와 런타임 표면이 Stage 1 completeness를 통과한 뒤에만 glossary·문체·오역·자연스러움을 검토하는 Stage 2를 시작한다.
+15. Stage 2 자동 재감사는 5개 locale의 120종 record를 field 단위로 대조해 ID·palette ID/값·배열 의미 단위 수를 보존하고, 간체/번체의 독립 지역어와 비동일 summary를 확인한다. 레이아웃은 320/375/768/1024/1440 CSS px와 물리 1280px/CSS 640px/`deviceScaleFactor: 2`의 200% 조건에서 Gallery·Detail의 document overflow, 화면 밖 control, 접근성 이름을 검사한다. 내부의 명시적 가로 스크롤 영역은 허용하지만 viewport 밖 잘림은 실패한다. 자동 통과만으로 원어민 수준을 선언하지 않는다.
 
 ---
 

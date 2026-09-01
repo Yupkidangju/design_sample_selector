@@ -287,7 +287,13 @@ flowchart LR
 
 ### 2.9 Locale Snapshot and Semantic Geometry Boundary
 
-`src/i18n/`은 locale ID·fallback·296-key copy inventory, catalog overlay와 lazy pack lifecycle을 소유한다. AppState에는 검증된 locale ID만 commit하며 pack import가 끝나기 전 visible state를 바꾸지 않는다. Header, Discovery, Gallery, Detail, Split, recovery, 8개 archetype, 상호작용 runtime과 Inspector는 각 update 시작 시 하나의 locale snapshot을 읽어 혼합 언어 frame을 만들지 않는다. Catalog coverage는 번역·승인 fallback·placeholder를 field 단위로 분리하며 placeholder가 하나라도 있으면 snapshot validation을 실패시킨다.
+`src/i18n/`은 locale ID·296-key UI copy inventory, locale별 catalog/preview content와 lazy pack lifecycle을 소유한다. AppState에는 검증된 locale ID만 commit하며 pack import가 끝나기 전 visible state를 바꾸지 않는다. Header, Discovery, Gallery, Detail, Split, recovery, 8개 archetype, 상호작용 runtime과 Inspector는 각 update 시작 시 하나의 locale snapshot을 읽어 혼합 언어 frame을 만들지 않는다. Catalog coverage는 `translated`·`invariant-approved`·`placeholder` provenance와 암묵 fallback을 field 단위로 집계하며 placeholder, 암묵 fallback 또는 미승인 동일 문자열이 하나라도 있으면 snapshot validation을 실패시킨다.
+
+locale pack은 `ui`, `catalog`, `preview` 세 사람용 콘텐츠 영역을 독립적으로 소유한다. catalog는 category/facet와 120개 style의 이름·요약·palette·특징·장단점을 명시 record로 제공하고, preview는 renderer가 표시하는 visible/ARIA/status copy를 제공한다. canonical style/category/facet ID와 CSS·HTML·DTCG machine key는 별도 contract에 남아 locale pack의 display value와 섞이지 않는다. 일본어·중국어 간체·중국어 번체에서 영문 정식명이 필요한 브랜드·약어는 좁은 invariant allowlist로만 허용한다.
+
+Stage 2의 장문 편집 결과는 locale별 `catalog/*Editorial.js`에 style profile로 분리한다. 공용 `applyEditorialReview.js`는 기존 배열 길이와 machine ID를 보존하는 투영만 담당하며, 문장 조립·구두점·palette 표시명과 용도는 각 locale 규칙이 소유한다. 따라서 한 locale의 자연스러운 문체를 위해 다른 locale 문장을 번역 원천이나 runtime fallback으로 재사용하지 않는다.
+
+최종 locale reflow 게이트는 5개 locale마다 320/375/768/1024/1440px와 물리 1280px/CSS 640px/DPR 2의 200% 상태를 분리한다. Gallery와 Detail에서 document overflow, 화면 밖 interactive control, 접근성 이름과 주요 영역 경계를 수집하되 category·archetype·Inspector처럼 의도된 내부 가로 스크롤은 허용한다. 320px Game HUD의 스킬과 CTA는 `.game-action-bar`가 내용 길이에 따라 줄바꿈해 locale별 버튼을 viewport 안에 유지한다. Detail의 다섯 tuner range는 고정 영문 병기 대신 같은 locale snapshot의 `<label for>`를 접근성 이름으로 사용한다.
 
 ```mermaid
 flowchart LR
@@ -298,6 +304,8 @@ flowchart LR
   S --> V[Gallery · Detail]
   S --> I[Inspector immutable snapshot]
   I --> A[CSS comment · HTML copy · Markdown prose · DTCG metadata]
+  R --> C[Explicit catalog records]
+  R --> P[Preview visible · ARIA · status copy]
 ```
 
 Inspector의 사람용 산출물만 locale별로 바뀐다. CSS custom property/selector, HTML ID·data attribute, DTCG structural key는 canonical ID와 stable palette ID를 사용해 같은 set을 유지한다. locale 재렌더는 기존 focus target을 복원한 뒤 focus trap만 다시 연결하며 첫 버튼으로 재초점하지 않는다.

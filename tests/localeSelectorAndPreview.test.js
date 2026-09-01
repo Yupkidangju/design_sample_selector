@@ -36,11 +36,11 @@ test('확장 시안 내부 제목과 설명은 선택한 비한국어 로케일�
   }
 });
 
-test('영어 시안 설명은 분류와 분위기 용어를 빈칸 없이 유지한다', async () => {
+test('영어 시안 설명은 승인된 스타일별 시각 문법을 유지한다', async () => {
   const snapshot = await loadLocaleSnapshot('en');
   const design = getLocalizedLegacyAllSubDesigns(snapshot).find(item => item.id === 'ulm-rationalism');
 
-  assert.match(design.shortDesc, /historical movement principles/);
-  assert.match(design.shortDesc, /rational tone/);
-  assert.doesNotMatch(design.shortDesc, /applies\s+principles|a\s+tone/);
+  assert.match(design.shortDesc, /Functional analysis tables/);
+  assert.match(design.shortDesc, /blue-red signals/);
+  assert.doesNotMatch(design.shortDesc, /applies .+ principles|rational tone/);
 });

@@ -44,8 +44,6 @@ const RESPONSIVE_WIDTHS = Object.freeze([375, 768, 1024, 1440]);
 const BLOG_PROGRESS_WIDTHS = Object.freeze([375, 768, 1024]);
 const REPRESENTATIVE_ID = 'spatial-glass-ui';
 const TRANSITION_ID = 'ai-native-gradient';
-const REPRESENTATIVE_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === REPRESENTATIVE_ID)?.name.en} System`;
-const TRANSITION_PROJECT_LABEL = `${ALL_STYLES.find(style => style.id === TRANSITION_ID)?.name.en} System`;
 const EXPECTED_STATE_COUNT = ALL_STYLES.length * ARCHETYPE_IDS.length * 2;
 const SKIP_AUDIO_PROBE = process.env.DSS_SKIP_AUDIO_PROBE === '1';
 
@@ -609,12 +607,18 @@ async function verifyInitialAndGallery() {
       `document.querySelector('#btn-audio-play')?.classList.contains('playing')`,
       '최초 volume 0 BGM 재생'
     );
+    await waitFor(
+      `(async () => {
+        const { synthAudio } = await import('./src/audio/synthAudio.js');
+        return synthAudio.masterGain?.gain?.value === 0;
+      })()`,
+      '최초 volume 0 master gain 정착'
+    );
     const audioAfterFirstPlay = await evaluate(`(async () => {
     const [{ synthAudio }, { appState }] = await Promise.all([
       import('./src/audio/synthAudio.js'),
       import('./src/state/appState.js')
     ]);
-    await new Promise(requestAnimationFrame);
     return {
       initialized: synthAudio.initialized,
       playing: synthAudio.isPlaying,
@@ -1076,6 +1080,7 @@ async function verifyRepresentativeFlows() {
     return {
       coin: viewport?.querySelector('#game-coin-count')?.textContent.trim() || null,
       motion: [...(renderer?.classList || [])].filter(name => name.startsWith('motion-')),
+      styleText: viewport?.querySelector('.hud-player-level')?.textContent.trim() || '',
       targetFocused: document.activeElement === target
     };
   })()`);
@@ -1089,11 +1094,11 @@ async function verifyRepresentativeFlows() {
   const transitionDuration = await measurePageInteraction(
     `.top-style-chip[data-sub-id="${TRANSITION_ID}"]`,
     `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
-      && (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브')`
+      && (document.querySelector('#live-json-code')?.textContent || '').includes('"id": "${TRANSITION_ID}"')`
   );
   await waitFor(
     `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
-      && (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브')`,
+      && (document.querySelector('#live-json-code')?.textContent || '').includes('"id": "${TRANSITION_ID}"')`,
     'stateful renderer 전환'
   );
   recordInteraction(
@@ -1110,7 +1115,7 @@ async function verifyRepresentativeFlows() {
       coin: viewport?.querySelector('#game-coin-count')?.textContent.trim() || null,
       motion: [...(renderer?.classList || [])].filter(name => name.startsWith('motion-')),
       styleText: viewport?.querySelector('.hud-player-level')?.textContent.trim() || '',
-      inspectorUpdated: (document.querySelector('#live-html-code')?.textContent || '').includes('AI 네이티브'),
+      inspectorUpdated: (document.querySelector('#live-json-code')?.textContent || '').includes('"id": "${TRANSITION_ID}"'),
       selectedChip: document.querySelector('.top-style-chip[aria-selected="true"]')?.dataset.subId || null
     };
   })()`);
@@ -1135,7 +1140,7 @@ async function verifyRepresentativeFlows() {
   check(transitioned.coin === gameAfterKeyboard && returnedCoin === gameAfterKeyboard, 'style 전환 Game state 소실');
   check(
     transitioned.inspectorUpdated
-      && transitioned.styleText.includes('AI 네이티브')
+      && transitioned.styleText !== gameBefore.styleText
       && JSON.stringify(transitioned.motion) !== JSON.stringify(gameBefore.motion),
     'style 전환 renderer text/motion/Inspector 동기화 실패'
   );
@@ -1360,7 +1365,7 @@ async function verifyRepresentativeFlows() {
           && item.scrollTop > 0
           && item.startProgress === 0
           && item.endProgress === 100
-          && item.ariaValueText === '100% 읽음'
+          && item.ariaValueText?.includes('100%')
       )),
     'Blog 375/768/1024px scroll owner/progress 0→100 실패'
   );
@@ -1384,6 +1389,11 @@ async function verifyRepresentativeFlows() {
       && document.querySelector('.dash-sort-btn[data-sort="project"]')?.dataset.dir === '1'`,
     'Dashboard filter/sort 설정'
   );
+  const dashboardProjectBefore = await evaluate(`(() => {
+    const row = [...document.querySelectorAll('#dash-table-body tr')]
+      .find(item => item.cells[0]?.textContent.trim() === '#TRX-8901');
+    return row?.cells[1]?.textContent.trim() || null;
+  })()`);
   await clickSelector(`.top-style-chip[data-sub-id="${TRANSITION_ID}"]`);
   await waitFor(
     `document.querySelector('#mockup-viewport')?.dataset.theme === '${TRANSITION_ID}'
@@ -1392,14 +1402,18 @@ async function verifyRepresentativeFlows() {
     'Dashboard state migration'
   );
   report.audit9.dashboard = await evaluate(`(() => {
-    const bodyText = document.querySelector('#dash-table-body')?.textContent || '';
     const sortButton = document.querySelector('.dash-sort-btn[data-sort="project"]');
+    const styleRow = [...document.querySelectorAll('#dash-table-body tr')]
+      .find(item => item.cells[0]?.textContent.trim() === '#TRX-8901');
+    const projectCell = styleRow?.cells[1]?.textContent.trim() || null;
     return {
       filterPreserved: document.querySelector('.table-filter-input')?.value === ${JSON.stringify(completedLabel)},
       sortPreserved: sortButton?.classList.contains('active') && sortButton?.dataset.dir === '1',
       filteredRows: document.querySelectorAll('#dash-table-body tr').length,
-      newStyleRows: bodyText.includes(${JSON.stringify(TRANSITION_PROJECT_LABEL)}),
-      staleStyleRows: bodyText.includes(${JSON.stringify(REPRESENTATIVE_PROJECT_LABEL)})
+      projectBefore: ${JSON.stringify(dashboardProjectBefore)},
+      projectAfter: projectCell,
+      newStyleRows: Boolean(projectCell) && projectCell !== ${JSON.stringify(dashboardProjectBefore)},
+      staleStyleRows: projectCell === ${JSON.stringify(dashboardProjectBefore)}
     };
   })()`);
   check(

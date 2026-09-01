@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-31T08:14:48.819Z",
+  "checkedAt": "2026-09-01T01:15:10.721Z",
   "chromeVersion": "Google Chrome 151.0.7922.173",
   "isolatedProfile": true,
   "catalog": {
@@ -64,7 +64,7 @@
     "grammarCount": 21,
     "minDesktopWidth": 712,
     "maxMobileWidth": 320,
-    "durationMs": 3462.6,
+    "durationMs": 3824.1,
     "failureCount": 0,
     "failures": []
   },
@@ -128,10 +128,10 @@
       "busy": "true",
       "activeCancel": true,
       "openerId": "spatial-glass-ui",
-      "loadingCaptureMs": 15.2,
+      "loadingCaptureMs": 20.5,
       "escapeClosed": true,
       "openerRestored": true,
-      "actualLoadMs": 71.9
+      "actualLoadMs": 101.6
     },
     "statefulTransition": {
       "from": "spatial-glass-ui",
@@ -141,6 +141,7 @@
         "motion": [
           "motion-spatial-glass-ui-motion"
         ],
+        "styleText": "LV. 42 공간형 글래스 UI",
         "targetFocused": true
       },
       "gameAfterKeyboard": "1,470",
@@ -152,7 +153,7 @@
         "motion": [
           "motion-ai-native-gradient-motion"
         ],
-        "styleText": "LV. 42 AI 네이티브 그라디언트",
+        "styleText": "LV. 42 AI 네이티브 그라데이션",
         "inspectorUpdated": true,
         "selectedChip": "ai-native-gradient"
       },
@@ -161,15 +162,15 @@
     "detailSidebar": {
       "cardDisplay": "grid",
       "cardBackground": "rgba(255, 255, 255, 0.024)",
-      "cardHeight": 53,
-      "swatchWidth": 35.4,
-      "swatchHeight": 35.4,
+      "cardHeight": 51.8,
+      "swatchWidth": 34.6,
+      "swatchHeight": 34.6,
       "swatchColor": "rgb(8, 16, 29)",
       "sliderAppearance": "none",
-      "sliderHeight": 19.6,
+      "sliderHeight": 19.2,
       "titleFontSize": 28,
-      "heroHeight": 151.4,
-      "heroScrollHeight": 152,
+      "heroHeight": 148.8,
+      "heroScrollHeight": 153,
       "titleVisible": true,
       "descriptionVisible": true,
       "blockBorderStyle": "solid",
@@ -227,24 +228,24 @@
       "responsiveProgress": [
         {
           "width": 375,
-          "maxScroll": 1775,
-          "scrollTop": 1775,
+          "maxScroll": 1759,
+          "scrollTop": 1759,
           "startProgress": 0,
           "endProgress": 100,
           "ariaValueText": "100% 읽음"
         },
         {
           "width": 768,
-          "maxScroll": 1344,
-          "scrollTop": 1344,
+          "maxScroll": 1345,
+          "scrollTop": 1345,
           "startProgress": 0,
           "endProgress": 100,
           "ariaValueText": "100% 읽음"
         },
         {
           "width": 1024,
-          "maxScroll": 1312,
-          "scrollTop": 1312,
+          "maxScroll": 1292,
+          "scrollTop": 1292,
           "startProgress": 0,
           "endProgress": 100,
           "ariaValueText": "100% 읽음"
@@ -255,6 +256,8 @@
       "filterPreserved": true,
       "sortPreserved": true,
       "filteredRows": 2,
+      "projectBefore": "공간형 글래스 UI",
+      "projectAfter": "AI 네이티브 그라데이션",
       "newStyleRows": true,
       "staleStyleRows": false
     },
@@ -295,14 +298,14 @@
     "runningAnimations": 0
   },
   "vitals": {
-    "lcpMs": 840,
+    "lcpMs": 908,
     "cls": 0
   },
   "lazyCss": {
     "initialRequests": [],
     "afterMatrixRequests": [
-      "http://127.0.0.1:45277/design_sample_selector/src/styles/themeTokensExpansion.css",
-      "http://127.0.0.1:45277/design_sample_selector/src/styles/expansion-preview.css"
+      "http://127.0.0.1:41307/design_sample_selector/src/styles/themeTokensExpansion.css",
+      "http://127.0.0.1:41307/design_sample_selector/src/styles/expansion-preview.css"
     ]
   },
   "interactions": {
@@ -320,146 +323,151 @@
       ]
     },
     "count": 14,
-    "averageMs": 29.21,
-    "medianMs": 19.7,
-    "maxMs": 113.2,
+    "averageMs": 38.69,
+    "medianMs": 23.7,
+    "maxMs": 177.2,
     "presentation": {
       "count": 14,
-      "averageMs": 42.21,
-      "medianMs": 23.95,
-      "maxMs": 204.1
+      "averageMs": 47.75,
+      "medianMs": 22.95,
+      "maxMs": 287
     },
     "endToEnd": {
       "count": 14,
-      "averageMs": 71.41,
-      "medianMs": 46.9,
-      "maxMs": 317.3
+      "averageMs": 86.44,
+      "medianMs": 50.15,
+      "maxMs": 464.2
     },
     "operationSamples": [
       {
         "operation": "gallery:GRID:page:1->2",
-        "processingMs": 33,
-        "endToEndMs": 54,
-        "handlerMs": 32.9,
+        "processingMs": 22.5,
+        "endToEndMs": 50.5,
+        "handlerMs": 22.4,
         "settleMs": 0.1,
-        "postSettleFramesMs": 21,
+        "postSettleFramesMs": 28,
         "longTasks": []
       },
       {
         "operation": "gallery:GRID:page:2->3",
-        "processingMs": 15.4,
+        "processingMs": 27,
         "endToEndMs": 49.9,
-        "handlerMs": 15.4,
+        "handlerMs": 27,
         "settleMs": 0,
-        "postSettleFramesMs": 34.5,
+        "postSettleFramesMs": 22.9,
         "longTasks": []
       },
       {
         "operation": "gallery:GRID:page:3->4",
-        "processingMs": 8.3,
-        "endToEndMs": 32.8,
-        "handlerMs": 8.3,
+        "processingMs": 11.1,
+        "endToEndMs": 31.9,
+        "handlerMs": 11.1,
         "settleMs": 0,
-        "postSettleFramesMs": 24.5,
+        "postSettleFramesMs": 20.8,
         "longTasks": []
       },
       {
         "operation": "gallery:view:BENTO",
-        "processingMs": 12.6,
-        "endToEndMs": 69.1,
-        "handlerMs": 12.6,
-        "settleMs": 0,
-        "postSettleFramesMs": 56.5,
+        "processingMs": 10.8,
+        "endToEndMs": 83.6,
+        "handlerMs": 10.7,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 72.8,
         "longTasks": []
       },
       {
         "operation": "gallery:BENTO:page:1->2",
-        "processingMs": 28.4,
-        "endToEndMs": 38.7,
-        "handlerMs": 28.4,
+        "processingMs": 27,
+        "endToEndMs": 49.6,
+        "handlerMs": 27,
         "settleMs": 0,
-        "postSettleFramesMs": 10.3,
+        "postSettleFramesMs": 22.6,
         "longTasks": []
       },
       {
         "operation": "gallery:BENTO:page:2->3",
-        "processingMs": 26.6,
-        "endToEndMs": 50.5,
-        "handlerMs": 26.6,
-        "settleMs": 0,
-        "postSettleFramesMs": 23.9,
+        "processingMs": 23.3,
+        "endToEndMs": 33.5,
+        "handlerMs": 23.2,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 10.2,
         "longTasks": []
       },
       {
         "operation": "gallery:BENTO:page:3->4",
-        "processingMs": 10.4,
-        "endToEndMs": 33.8,
-        "handlerMs": 10.4,
+        "processingMs": 10.3,
+        "endToEndMs": 33.3,
+        "handlerMs": 10.3,
         "settleMs": 0,
-        "postSettleFramesMs": 23.4,
+        "postSettleFramesMs": 23,
         "longTasks": []
       },
       {
         "operation": "gallery:view:SPECTRUM",
-        "processingMs": 14.4,
-        "endToEndMs": 54.8,
-        "handlerMs": 14.3,
+        "processingMs": 21.3,
+        "endToEndMs": 105.1,
+        "handlerMs": 21.2,
         "settleMs": 0.1,
-        "postSettleFramesMs": 40.4,
+        "postSettleFramesMs": 83.8,
         "longTasks": []
       },
       {
         "operation": "gallery:SPECTRUM:page:1->2",
-        "processingMs": 24.8,
-        "endToEndMs": 43.9,
-        "handlerMs": 24.8,
+        "processingMs": 39.3,
+        "endToEndMs": 67.1,
+        "handlerMs": 39.3,
         "settleMs": 0,
-        "postSettleFramesMs": 19.1,
+        "postSettleFramesMs": 27.8,
         "longTasks": []
       },
       {
         "operation": "gallery:SPECTRUM:page:2->3",
-        "processingMs": 18,
-        "endToEndMs": 33.6,
-        "handlerMs": 18,
+        "processingMs": 24.1,
+        "endToEndMs": 35.5,
+        "handlerMs": 24.1,
         "settleMs": 0,
-        "postSettleFramesMs": 15.6,
+        "postSettleFramesMs": 11.4,
         "longTasks": []
       },
       {
         "operation": "gallery:SPECTRUM:page:3->4",
-        "processingMs": 10.5,
-        "endToEndMs": 34.5,
-        "handlerMs": 10.5,
+        "processingMs": 10.1,
+        "endToEndMs": 34.2,
+        "handlerMs": 10.1,
         "settleMs": 0,
-        "postSettleFramesMs": 24,
+        "postSettleFramesMs": 24.1,
         "longTasks": []
       },
       {
         "operation": "search:spatial-glass-ui",
-        "processingMs": 21.4,
-        "endToEndMs": 30.2,
-        "handlerMs": 21.3,
-        "settleMs": 0.1,
-        "postSettleFramesMs": 8.8,
+        "processingMs": 36.1,
+        "endToEndMs": 50.4,
+        "handlerMs": 35.9,
+        "settleMs": 0.2,
+        "postSettleFramesMs": 14.3,
         "longTasks": []
       },
       {
         "operation": "detail:open",
-        "processingMs": 71.9,
-        "endToEndMs": 156.7,
-        "handlerMs": 1.7,
-        "settleMs": 70.2,
-        "postSettleFramesMs": 84.8,
-        "longTasks": []
+        "processingMs": 101.6,
+        "endToEndMs": 121.4,
+        "handlerMs": 2.6,
+        "settleMs": 99,
+        "postSettleFramesMs": 19.8,
+        "longTasks": [
+          {
+            "startTime": 7161.7,
+            "durationMs": 58
+          }
+        ]
       },
       {
         "operation": "detail:style:spatial-glass-ui->ai-native-gradient",
-        "processingMs": 113.2,
-        "endToEndMs": 317.3,
-        "handlerMs": 6.5,
-        "settleMs": 106.7,
-        "postSettleFramesMs": 204.1,
+        "processingMs": 177.2,
+        "endToEndMs": 464.2,
+        "handlerMs": 9.6,
+        "settleMs": 167.6,
+        "postSettleFramesMs": 287,
         "longTasks": []
       }
     ]
@@ -471,54 +479,54 @@
     "samples": [
       {
         "stage": "before-start",
-        "sampledAt": "2026-08-31T08:14:48.870Z",
+        "sampledAt": "2026-09-01T01:15:10.755Z",
         "loadAverage": [
-          0.25,
-          0.22,
-          0.21
+          0.98,
+          0.88,
+          0.93
         ],
         "loadAveragePerCpu": [
-          0.031,
-          0.028,
-          0.026
+          0.122,
+          0.11,
+          0.116
         ],
         "memoryTotalBytes": 6784000000,
-        "memoryFreeBytes": 1845030912,
-        "memoryUsedRatio": 0.728
+        "memoryFreeBytes": 1974288384,
+        "memoryUsedRatio": 0.709
       },
       {
         "stage": "after-matrix",
-        "sampledAt": "2026-08-31T08:14:54.651Z",
+        "sampledAt": "2026-09-01T01:15:17.328Z",
         "loadAverage": [
-          0.52,
-          0.27,
-          0.23
+          1.2,
+          0.93,
+          0.95
         ],
         "loadAveragePerCpu": [
-          0.065,
-          0.034,
-          0.029
+          0.15,
+          0.116,
+          0.119
         ],
         "memoryTotalBytes": 6784000000,
-        "memoryFreeBytes": 1421410304,
-        "memoryUsedRatio": 0.79
+        "memoryFreeBytes": 1500147712,
+        "memoryUsedRatio": 0.779
       },
       {
         "stage": "after-browser-qa",
-        "sampledAt": "2026-08-31T08:14:59.707Z",
+        "sampledAt": "2026-09-01T01:15:23.471Z",
         "loadAverage": [
-          0.56,
-          0.29,
-          0.24
+          1.43,
+          0.98,
+          0.97
         ],
         "loadAveragePerCpu": [
-          0.07,
-          0.036,
-          0.03
+          0.179,
+          0.122,
+          0.121
         ],
         "memoryTotalBytes": 6784000000,
-        "memoryFreeBytes": 1326379008,
-        "memoryUsedRatio": 0.804
+        "memoryFreeBytes": 1407598592,
+        "memoryUsedRatio": 0.793
       }
     ]
   },

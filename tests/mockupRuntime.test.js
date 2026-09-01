@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   hydrateMockup,
   observeThumbMotion,
+  resolveRuntimeMessage,
   teardownMockup
 } from '../src/components/mockupRuntime.js';
 import { PreviewRegistryError } from '../src/preview/index.js';
@@ -148,6 +149,21 @@ function assertMotionError(callback, referenceId) {
     return true;
   });
 }
+
+test('runtime toast keeps its machine payload stable and resolves visible copy from the locale snapshot', () => {
+  const machinePayload = 'Swiss Grid Action Triggered!';
+  const snapshot = {
+    locale: 'ko',
+    copy: { 'runtime.actionComplete': '{name} 인터랙션을 실행했습니다.' }
+  };
+
+  assert.equal(
+    resolveRuntimeMessage(machinePayload, { name: '스위스 그리드' }, snapshot),
+    '스위스 그리드 인터랙션을 실행했습니다.'
+  );
+  assert.equal(machinePayload, 'Swiss Grid Action Triggered!');
+  assert.equal(resolveRuntimeMessage(machinePayload, { name: 'Swiss Grid' }, null), machinePayload);
+});
 
 test('hydrateMockup uses registered motion classes and remains idempotent', () => {
   const restore = installFakeBrowser();

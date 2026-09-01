@@ -1,0 +1,1813 @@
+{
+  "checkedAt": "2026-08-31T12:35:53.045Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "base": "/design_sample_selector/",
+  "isolatedProfile": true,
+  "artifact": {
+    "releaseSha": "6139003f776c67b8d1876660cd585629c517c656",
+    "base": "/design_sample_selector/",
+    "entry": "assets/index-DzVgwLHv.js",
+    "referencedFiles": [
+      ".vite/manifest.json",
+      "assets/audit9-detail-CfpquNiV.css",
+      "assets/catalogOverlay-f8eJ6SgD.js",
+      "assets/clipboard-DqKUIcuj.js",
+      "assets/componentEntry-jDEweaVh.js",
+      "assets/componentLazyEntry-BJPssq60.js",
+      "assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "assets/copy-DLh0tNvK.js",
+      "assets/detailView-C0tRoCQ3.js",
+      "assets/detailView-DwgT-Zso.js",
+      "assets/en-IN7uK515.js",
+      "assets/expansion-preview-0Uhf-Ta2.css",
+      "assets/index-2-LrhW7G.css",
+      "assets/index-DzVgwLHv.js",
+      "assets/inspectorState-BISWOt_m.js",
+      "assets/interactiveEntry-C9tFvEvR.js",
+      "assets/ja-HR4dIlSz.js",
+      "assets/ko-BJlltfWv.js",
+      "assets/themeTokensExpansion-Ca8qqIb1.css",
+      "assets/zh-CN-D0DYVg6B.js",
+      "assets/zh-TW-DRb4dtmS.js",
+      "index.html"
+    ],
+    "files": [
+      {
+        "path": ".vite/manifest.json",
+        "size": 4603,
+        "sha256": "52af3a2451f6f7393f63c64d1e13c8178303a363085354d89e6c0575773ca721",
+        "mime": "application/json"
+      },
+      {
+        "path": "assets/audit9-detail-CfpquNiV.css",
+        "size": 6912,
+        "sha256": "d0c4c0dcfaa07303d3a36b9ad84a610f925e9c768eef95d6dc4e1ff1709be2ff",
+        "mime": "text/css"
+      },
+      {
+        "path": "assets/catalogOverlay-f8eJ6SgD.js",
+        "size": 2096,
+        "sha256": "e9bd0efce8957bf3f929ea515eb4859a2f5e9cdd490a1c9bb0ec9e31e422ac0a",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/clipboard-DqKUIcuj.js",
+        "size": 1590,
+        "sha256": "32709b79edaf0b6c0a02a60524bc62646667d9508e19ad7ab98948fd6dac3b6d",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/componentEntry-jDEweaVh.js",
+        "size": 82225,
+        "sha256": "de75be64e4d71571de42c69731aa5682a294a24c649b95c43cdf2b3121e0abe4",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/componentLazyEntry-BJPssq60.js",
+        "size": 245,
+        "sha256": "9477e99d44b37dee78b47369fba4e9088bf3cc91778adcb705ea4b7b06ead81b",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/componentLazyRetryEntry-DXlCMA1v.js",
+        "size": 245,
+        "sha256": "2854234f34d78e0ba0436012e1e96438ea9f7376f5feeea3255d48742a2f3a7c",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/copy-DLh0tNvK.js",
+        "size": 72590,
+        "sha256": "9d0848fb7dbebfc73406a263f5199119eaae177ebc8214945f8eb4cf3a4a9b07",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/detailView-C0tRoCQ3.js",
+        "size": 43309,
+        "sha256": "4855ce056dd9aef1077cad7600d1812df76a67838942881f62cba474ebf56599",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/detailView-DwgT-Zso.js",
+        "size": 43309,
+        "sha256": "4855ce056dd9aef1077cad7600d1812df76a67838942881f62cba474ebf56599",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/en-IN7uK515.js",
+        "size": 137886,
+        "sha256": "4c94892109653932ba239e84d83d55c1746d794f227d967a4b8b9ac4c8b08497",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/expansion-preview-0Uhf-Ta2.css",
+        "size": 18428,
+        "sha256": "7fa92813c57016549918a2b23fcbfe4e6d0d68a5d4a8104679299c03aa342a39",
+        "mime": "text/css"
+      },
+      {
+        "path": "assets/index-2-LrhW7G.css",
+        "size": 173761,
+        "sha256": "ed55577d954f656e7895901a93e8ba455c5b6e9dcfb2998a6cbb52165ff3f67d",
+        "mime": "text/css"
+      },
+      {
+        "path": "assets/index-DzVgwLHv.js",
+        "size": 278804,
+        "sha256": "dca0f715e8d695aa4cc0eddc4be08d0e8fec64b55fc1064af88cf218f985854b",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/inspectorState-BISWOt_m.js",
+        "size": 56044,
+        "sha256": "31a4f2371678a124d94ed3e2a1ccaf3f944efcb35ed64ebd4172f3f1f03988b0",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/interactiveEntry-C9tFvEvR.js",
+        "size": 12125,
+        "sha256": "0a727a85069ad9b650164bd48fbbee509a64ae14e0880e3168b30ec6afaac915",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/ja-HR4dIlSz.js",
+        "size": 185518,
+        "sha256": "8ddb46ada7cc7f8c047dfbc538226fe240967121263c1fb3f2abc1917e15551f",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/ko-BJlltfWv.js",
+        "size": 135730,
+        "sha256": "5708f78c6a584e0f469205d2a098e5d6f1bc846f2c6c2cae7d33ca08557e392b",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/themeTokensExpansion-Ca8qqIb1.css",
+        "size": 42103,
+        "sha256": "523286ff7e3ab7771fa11222b1e72ae34ef65ca38ac54c996762d669d01d5bef",
+        "mime": "text/css"
+      },
+      {
+        "path": "assets/zh-CN-D0DYVg6B.js",
+        "size": 131530,
+        "sha256": "60a806d8a0d4bbd4b38ce96cf1ac99852b1645d3efa6db988a22ecd391eca16b",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "assets/zh-TW-DRb4dtmS.js",
+        "size": 131972,
+        "sha256": "af124f8cb3e9ee18843ddbfe946afeac46b2192f523dc301b2c01efc2861d2a7",
+        "mime": "application/javascript"
+      },
+      {
+        "path": "index.html",
+        "size": 1946,
+        "sha256": "51f00f2ecf980288c5082121deb863771959c3ecc32bbf0d061349b43dfa443f",
+        "mime": "text/html"
+      }
+    ],
+    "issues": [],
+    "passed": true
+  },
+  "urlContract": {
+    "rootStatus": 200,
+    "deepPathStatus": 404
+  },
+  "normal": {
+    "nativeButton": true,
+    "busy": false,
+    "overflow": 0,
+    "peekButtonEnter": true,
+    "peekDoubleClick": true,
+    "mainEnter": true,
+    "dockConfirmDetail": true,
+    "split": true,
+    "sameOriginResponseCount": 59,
+    "badAssetResponses": []
+  },
+  "networkFaults": [
+    {
+      "outcome": "success",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "component-graph",
+          "terminal": false
+        }
+      ],
+      "name": "component-primary",
+      "file": "assets/componentLazyEntry-BJPssq60.js",
+      "intercepted": 1
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "component-graph",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 2,
+          "resourceClass": "component-graph",
+          "terminal": true
+        }
+      ],
+      "name": "component-shared",
+      "file": "assets/componentEntry-jDEweaVh.js",
+      "intercepted": 1
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "component-graph",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 2,
+          "resourceClass": "component-graph",
+          "terminal": true
+        }
+      ],
+      "name": "css-audit9-detail-CfpquNiV.css",
+      "file": "assets/audit9-detail-CfpquNiV.css",
+      "intercepted": 1
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "component-graph",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 2,
+          "resourceClass": "component-graph",
+          "terminal": true
+        }
+      ],
+      "name": "css-expansion-preview-0Uhf-Ta2.css",
+      "file": "assets/expansion-preview-0Uhf-Ta2.css",
+      "intercepted": 1
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "component-graph",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 2,
+          "resourceClass": "component-graph",
+          "terminal": true
+        }
+      ],
+      "name": "css-themeTokensExpansion-Ca8qqIb1.css",
+      "file": "assets/themeTokensExpansion-Ca8qqIb1.css",
+      "intercepted": 1
+    },
+    {
+      "outcome": "success",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "detail-graph",
+          "terminal": false
+        }
+      ],
+      "name": "detail-primary",
+      "file": "assets/detailView-C0tRoCQ3.js",
+      "intercepted": 1
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 1,
+          "resourceClass": "detail-graph",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_IMPORT_FAILED",
+          "phase": "import",
+          "attempt": 2,
+          "resourceClass": "detail-graph",
+          "terminal": true
+        }
+      ],
+      "name": "detail-shared",
+      "file": "assets/componentEntry-jDEweaVh.js",
+      "intercepted": 1
+    }
+  ],
+  "consumerFaults": [
+    {
+      "outcome": "success",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_RENDER_FAILED",
+          "phase": "render",
+          "attempt": 1,
+          "resourceClass": "peek-preview",
+          "terminal": false
+        }
+      ],
+      "name": "render-once"
+    },
+    {
+      "outcome": "terminal",
+      "diagnostics": [
+        {
+          "code": "RECOVERY_RENDER_FAILED",
+          "phase": "hydrate",
+          "attempt": 1,
+          "resourceClass": "peek-preview",
+          "terminal": false
+        },
+        {
+          "code": "RECOVERY_RENDER_FAILED",
+          "phase": "hydrate",
+          "attempt": 2,
+          "resourceClass": "peek-preview",
+          "terminal": true
+        }
+      ],
+      "name": "hydrate-twice"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=normal-1788179753339",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-C0tRoCQ3.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=peek-dblclick-1788179754140",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-C0tRoCQ3.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=main-enter-1788179754633",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-C0tRoCQ3.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=dock-1788179754978",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-C0tRoCQ3.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=component-primary-1788179755476",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=component-shared-1788179756016",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=css-audit9-detail-CfpquNiV.css-1788179756508",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=css-expansion-preview-0Uhf-Ta2.css-1788179757020",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=css-themeTokensExpansion-Ca8qqIb1.css-1788179757559",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyRetryEntry-DXlCMA1v.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=detail-primary-1788179758079",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-DwgT-Zso.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qa=detail-shared-1788179758427",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/inspectorState-BISWOt_m.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-C0tRoCQ3.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/detailView-DwgT-Zso.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qaFault=render-once&run=1788179758826",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/?qaFault=hydrate-twice&run=1788179759272",
+      "status": 200,
+      "mimeType": "text/html",
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-2-LrhW7G.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/index-DzVgwLHv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/catalogOverlay-f8eJ6SgD.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/copy-DLh0tNvK.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/ko-BJlltfWv.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/clipboard-DqKUIcuj.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/interactiveEntry-C9tFvEvR.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/firacode/v27/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "type": "Font"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentLazyEntry-BJPssq60.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/componentEntry-jDEweaVh.js",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "type": "Script"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/themeTokensExpansion-Ca8qqIb1.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/expansion-preview-0Uhf-Ta2.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:45765/design_sample_selector/assets/audit9-detail-CfpquNiV.css",
+      "status": 200,
+      "mimeType": "text/css",
+      "type": "Stylesheet"
+    }
+  ],
+  "issues": [],
+  "summary": {
+    "networkFaultCount": 7,
+    "consumerFaultCount": 2,
+    "issueCount": 0,
+    "passed": true
+  }
+}

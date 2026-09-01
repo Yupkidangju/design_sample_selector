@@ -76,7 +76,6 @@ export function renderSelectionDock(container) {
               <div class="dock-draft-meta">
                 <span class="dock-kicker">${escapeHtml(draft.categoryTitle)}</span>
                 <strong class="dock-title">${escapeHtml(draft.name)}</strong>
-                <span class="dock-en">${escapeHtml(draft.nameEn)}</span>
               </div>
             </div>
             <div class="dock-actions">
@@ -135,14 +134,16 @@ export function renderSelectionDock(container) {
       const currentPreview = container.querySelector('#confirm-preview');
       if (!currentPreview) return;
       failurePhase = 'render';
+      const snapshot = getActiveLocaleSnapshot();
       currentPreview.innerHTML = renderPreviewComponent({
         rendererId: sub.previewType,
         tab: 'hero',
-        design: sub
+        design: sub,
+        snapshot
       });
       currentPreview.removeAttribute('aria-busy');
       failurePhase = 'hydrate';
-      hydrateMockup(currentPreview, sub, { tab: 'hero', snapshot: getActiveLocaleSnapshot() });
+      hydrateMockup(currentPreview, sub, { tab: 'hero', snapshot });
       confirmFailureCount = 0;
     } catch (error) {
       if (!isCurrentConfirmPreview(sub, renderVersion)) return;

@@ -1,7 +1,9 @@
 import { getLocaleCopy } from '../copy.js';
+import catalog from './catalog/ja.js';
 
 export default {
   locale: 'ja',
+  catalog,
   copy: getLocaleCopy('ja'),
   messages: {
     language: '言語', search: 'デザインを検索', all: 'すべて', saved: '保存済み',

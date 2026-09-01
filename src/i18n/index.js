@@ -57,11 +57,18 @@ export function validateLocaleSnapshot(snapshot, canonical = {}) {
   const catalogCoverage = snapshot?.catalog?.coverage;
   if (!catalogCoverage) errors.push('catalog.coverage.missing');
   if (catalogCoverage?.placeholders?.length) errors.push('catalog.placeholder');
+  if (catalogCoverage?.implicitFallbacks?.length) errors.push('catalog.implicit-fallback');
+  if (catalogCoverage?.unapprovedInvariants?.length) errors.push('catalog.unapproved-invariant');
+  if ((catalogCoverage?.translated || 0) + (catalogCoverage?.invariantApproved || 0) !== catalogCoverage?.total) errors.push('catalog.coverage.accounting');
   return Object.freeze({
     errors: Object.freeze(errors),
     coverage: Object.freeze({
+      total: catalogCoverage?.total || 0,
       translated: catalogCoverage?.translated || 0,
+      invariantApproved: catalogCoverage?.invariantApproved || 0,
       placeholder: catalogCoverage?.placeholders?.length || 0,
+      implicitFallback: catalogCoverage?.implicitFallbacks?.length || 0,
+      unapprovedInvariant: catalogCoverage?.unapprovedInvariants?.length || 0,
       approvedFallbacks: catalogCoverage?.approvedFallbacks || Object.freeze([])
     })
   });

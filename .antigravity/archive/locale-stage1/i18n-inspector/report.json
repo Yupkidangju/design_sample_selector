@@ -1,0 +1,578 @@
+{
+  "checkedAt": "2026-08-31T12:38:29.393Z",
+  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "isolatedProfile": true,
+  "locales": [
+    {
+      "locale": "ko",
+      "lang": "ko",
+      "selectedLocale": "ko",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 432.96875,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "울름 합리주의",
+        "summary": "기능 분석표와 절제된 청적 신호로 화면의 목적을 먼저 드러내는 시스템 디자인"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 격자 중심 모더니즘 테마 토큰 및 실시간 조정 === */",
+      "htmlCopy": "몬스터를 클릭하여 공격하고 콤보와 코인을 획득하세요!",
+      "markdownHeading": "개요 및 미적 설명",
+      "dtcgDisplayName": "격자 중심 모더니즘",
+      "dtcgDescription": "격자 중심 모더니즘의 실시간 디자인 토큰",
+      "runtimeStatus": "🚀 콤보 배수가 증가했습니다!",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "en",
+      "lang": "en",
+      "selectedLocale": "en",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 36
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 470.453125,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "Ulm Rationalism",
+        "summary": "Ulm Rationalism applies historical movement principles and a rational tone within International Typographic Style."
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === Grid-Driven Modernism theme tokens and live tweaks === */",
+      "htmlCopy": "Select the monster to attack and earn combos and coins!",
+      "markdownHeading": "Overview and aesthetic description",
+      "dtcgDisplayName": "Grid-Driven Modernism",
+      "dtcgDescription": "Live design tokens for Grid-Driven Modernism",
+      "runtimeStatus": "🚀 Combo multiplier boosted!",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "ja",
+      "lang": "ja",
+      "selectedLocale": "ja",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 505.515625,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "ウルム合理主義",
+        "summary": "ウルム合理主義は、国際タイポグラフィで歴史的運動の原理と合理的な雰囲気を実用的なUIへ展開するデザインサンプルです。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === グリッドに焦点を当てたモダニズムのテーマトークンとライブ調整 === */",
+      "htmlCopy": "モンスターを選択して攻撃し、コンボとコインを獲得しましょう！",
+      "markdownHeading": "概要と美的説明",
+      "dtcgDisplayName": "グリッドに焦点を当てたモダニズム",
+      "dtcgDescription": "グリッドに焦点を当てたモダニズムのライブデザイントークン",
+      "runtimeStatus": "🚀 コンボ倍率が上がりました！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "zh-CN",
+      "lang": "zh-CN",
+      "selectedLocale": "zh-CN",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 376.8125,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "乌尔姆理性主义",
+        "summary": "乌尔姆理性主义是在国际字体风格中运用历史运动原则与理性氛围的实用界面设计方案。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 以网格为中心的现代主义主题令牌与实时调整 === */",
+      "htmlCopy": "选择怪物发起攻击，赢得连击与金币！",
+      "markdownHeading": "概述与美学说明",
+      "dtcgDisplayName": "以网格为中心的现代主义",
+      "dtcgDescription": "以网格为中心的现代主义的实时设计令牌",
+      "runtimeStatus": "🚀 连击倍率已提升！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "zh-TW",
+      "lang": "zh-TW",
+      "selectedLocale": "zh-TW",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 376.8125,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "烏爾姆理性主義",
+        "summary": "烏爾姆理性主義是在國際字體風格中運用歷史運動原則與理性氛圍的實用介面設計方案。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 以網格為中心的現代主義主題權杖與即時調整 === */",
+      "htmlCopy": "選擇怪物發動攻擊，贏得連擊與金幣！",
+      "markdownHeading": "概述與美學說明",
+      "dtcgDisplayName": "以網格為中心的現代主義",
+      "dtcgDescription": "以網格為中心的現代主義的即時設計權杖",
+      "runtimeStatus": "🚀 連擊倍率已提升！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    }
+  ],
+  "preservation": {
+    "before": {
+      "activeInspectorTab": "html",
+      "sidebarScrollTop": 884,
+      "focus": "btn-inspector-copy",
+      "theme": "swiss-grid",
+      "archetype": "game"
+    },
+    "after": {
+      "activeInspectorTab": "html",
+      "sidebarScrollTop": 870,
+      "focus": "btn-inspector-copy",
+      "theme": "swiss-grid",
+      "archetype": "game"
+    }
+  },
+  "runtimeSignals": {
+    "warnings": [],
+    "errors": [],
+    "exceptions": [],
+    "networkFailures": []
+  },
+  "screenshots": [
+    "locale-selector-ko.png",
+    "expansion-preview-ko.png",
+    "detail-inspector-ko.png",
+    "locale-selector-en.png",
+    "expansion-preview-en.png",
+    "detail-inspector-en.png",
+    "locale-selector-ja.png",
+    "expansion-preview-ja.png",
+    "detail-inspector-ja.png",
+    "locale-selector-zh-CN.png",
+    "expansion-preview-zh-CN.png",
+    "detail-inspector-zh-CN.png",
+    "locale-selector-zh-TW.png",
+    "expansion-preview-zh-TW.png",
+    "detail-inspector-zh-TW.png"
+  ],
+  "issues": [],
+  "summary": {
+    "localeCount": 5,
+    "screenshotCount": 15,
+    "diagnostics": 0,
+    "issues": 0
+  }
+}

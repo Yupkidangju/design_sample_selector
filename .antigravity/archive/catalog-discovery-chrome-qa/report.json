@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-08-31T08:15:15.368Z",
+  "checkedAt": "2026-09-01T01:15:30.109Z",
   "chromeVersion": "Google Chrome 151.0.7922.173",
   "isolatedProfile": true,
   "coreStyleCount": 120,
@@ -125,42 +125,42 @@
     {
       "name": "bento-name-sort",
       "ids": [
+        "seventies-groovy",
         "tech-optimism-2000",
-        "pixel-arcade",
+        "eighties-new-wave",
         "synthwave",
+        "pixel-arcade",
         "swiss-grid",
         "high-contrast-mono",
+        "data-dense-dashboard",
+        "spatial-glass-ui",
+        "inflatable-ui",
         "constructivist",
         "grunge-typography",
         "glitch-brutalism",
         "functional-wayfinding",
         "corporate-minimal",
+        "doodle-interface",
         "raw-brutalism",
-        "newspaper-broadsheet",
+        "dutch-total-design",
         "new-wave-typography",
         "dada-collage",
         "dark-minimal-glass",
-        "dutch-total-design",
+        "newspaper-broadsheet",
         "de-stijl",
-        "data-dense-dashboard",
-        "doodle-interface",
         "dreamcore-cloud",
         "disco-glam",
         "luxury-serif-minimal",
         "retro-computing",
         "low-poly-interface",
-        "luna-desktop",
         "risograph",
-        "real-time-monitor",
-        "liquid-glass",
-        "literary-journal",
         "mica-surface",
+        "cartoon-dashboard",
         "mcbling-gloss",
         "maximalist-chaos",
-        "material-design",
         "metro-interface",
         "memphis",
-        "monochrome-xerox"
+        "skeuomorphism"
       ]
     },
     {
@@ -212,12 +212,12 @@
     {
       "name": "url-reload",
       "ids": [
-        "liquid-glass",
         "mica-surface",
         "acrylic-ui",
         "chrome-metal-ui",
         "glassmorphism",
-        "holographic-foil"
+        "holographic-foil",
+        "liquid-glass"
       ],
       "search": "glass",
       "categoryActive": "true",
@@ -233,7 +233,7 @@
       "search": "bauhaus",
       "facetChecked": true,
       "view": "true",
-      "url": "http://127.0.0.1:46139/design_sample_selector/?q=bauhaus&f=era%3Apre-1950&view=spectrum"
+      "url": "http://127.0.0.1:43863/design_sample_selector/?q=bauhaus&f=era%3Apre-1950&view=spectrum"
     },
     {
       "name": "empty-reset",

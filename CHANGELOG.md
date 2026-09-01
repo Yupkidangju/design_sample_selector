@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
+- **Stage 2 교차 언어·reflow 최종 자동 감사:** 5 locale × 120종의 9,620개 사람용 field unit, machine ID·palette 값, 간체/번체 독립 지역어를 machine-readable report로 대조하고 320/375/768/1024/1440px와 200% 확대 30상태의 Gallery·Detail overflow·컨트롤 잘림·접근성 이름을 격리 Chrome에서 검증한다.
+- **5개 locale 전면 콘텐츠 pack:** `ko/en/ja/zh-CN/zh-TW`가 각각 actual 120의 디자인명·요약·palette·특징·장단점 1,924 field unit을 명시적으로 소유하고, 5×120 카드 Chrome 순회와 2,400 Web/4,800 archetype Node 행렬로 fallback·누락을 차단한다.
 - **Audit 11 Re-audit #1 i18n acceptance:** 296-key 5-locale copy parity, catalog field provenance/placeholder gate와 5-locale Detail 네 Inspector pane·machine-key·focus/scroll·runtime live status 보존을 검증하는 격리 Chrome gate를 추가.
 - **Audit 11 semantic tuner·5-locale runtime:** surface/control/pill geometry, 단일 `TUNER_LIMITS`, `ko/en/ja/zh-CN/zh-TW` lazy locale pack, native endonym 메뉴, URL→storage→browser→한국어 선택 순서와 immutable locale snapshot/epoch를 추가.
 - **Audit 11 회귀·시각 게이트:** 999 bounds, locale completeness·machine-key invariance·악성 문자열·prototype URL·선택 locale 정렬 테스트와 5 locale × 320/768/1280/1920 및 200% 대응 캡처를 추가.
@@ -38,6 +40,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **모션 hydration 회귀 게이트:** component root class, effect layer, reduced-motion, observer cleanup, unknown motion과 잘못된 renderer HTML 출력의 구조화 실패를 Node fixture에서 검증.
 
 ### Changed
+- **Preview·Inspector locale snapshot 단일화:** Core·Wave 1·Expansion의 가시 문자열·ARIA와 runtime toast를 선택 snapshot으로 투영하고, `data-*`·ID·CSS/DTCG key·표시 식별자·기술 측정값은 locale-invariant로 유지한다. 로컬라이저는 Detail 동적 entry에 두어 초기 bundle 예산을 보존한다.
+
 - **Locale-neutral catalog와 Inspector 경계:** 검색·이름 정렬·legacy projection·Detail·Inspector가 활성 locale overlay를 소비하고 palette display name 대신 stable ID로 CSS/DTCG 구조 키를 생성하도록 변경. locale 전환은 선택·tweak·mock runtime·Inspector tab·scroll·focus를 보존.
 - **Semantic radius projection:** theme geometry를 surface/control/pill로 분리하고 live radius는 명시적인 `[data-tweak-surface]`에만 적용. catalog validator·AppState·slider·artifact generator가 같은 범위를 사용.
 - **Audit 10 상호작용·신뢰·상태 경계:** Peek에 native 상세 button과 실제 double click을 연결하고 Detail mount disposer/초기 subscriber rollback, executable renderer sink 거부, localStorage key 16,384자·bookmark 120·recents 6개 상한을 적용.
@@ -61,6 +65,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **프리뷰 오류 의미 명시화:** 기능 조회는 미등록 값에 `false`/`null`, 실제 render·motion hydration은 진단 가능한 `PreviewRegistryError`로 실패하도록 통일해 Swiss·일반 썸네일·`none` 무음 대체를 제거.
 
 ### Fixed
+- **Detail 튜너 접근성 이름·locale 순도:** 다섯 range slider의 시각 라벨을 실제 `<label for>`로 연결하고 고정 영문 병기를 제거해 선택 locale의 이름만 접근성 트리에 제공한다.
+- **320px Game Detail CTA 잘림:** 좁은 Detail 샌드박스에서 네 스킬과 locale별 CTA가 한 줄 너비를 초과하던 액션 바를 필요 시 줄바꿈하도록 수정해 5개 locale 모두 화면 밖 컨트롤 0을 확인했다.
+- **중국어 번체 본문 편집 감수 120/120:** 8개 카테고리의 summary·palette 표시명/용도·특징·장점·주의점을 대만권 UI·디자인 용어와 전각 구두점으로 교정하고, `實用介面設計方案`·`譜系引導版面構成`·`配合目標使用者驗證`·`配色1〜4` 등 생성형 상투문과 본토 UI 용어를 제거했다. `混凝土界面`은 `混凝土介面`으로 바로잡고 machine ID·색상값·CSS/HTML/DTCG key는 보존했다.
+- **중국어 간체 본문 편집 감수 120/120:** 8개 카테고리의 summary·palette 표시명/용도·특징·장점·주의점을 중국 본토의 간결한 용어와 전각 구두점으로 교정하고, `实用界面设计方案`·`谱系指导版式构成`·`结合目标用户验证`·`配色1〜4` 등 생성형 상투문과 번체 UI 용어를 제거했다. machine ID·색상값·CSS/HTML/DTCG key는 보존했다.
+- **일본어 본문 편집 감수 120/120:** 8개 카테고리의 summary·palette 표시명/용도·특징·장점·주의점을 자연스러운 `です／ます`체와 전각 구두점으로 교정하고, `実用的なUIへ展開するデザインサンプル`·`原理を再解釈`·`対象ユーザーに合わせて検証`·`配色1〜4` 등 생성형 상투문을 제거했다. machine ID·색상값·CSS/HTML/DTCG key는 보존했다.
+- **영어 본문 편집 감수 120/120:** 8개 카테고리의 summary·palette 용도·특징·장점·주의점을 style별 시각 문법·적합 용도·실제 위험으로 교체하고 `applies … principles`·`defines a distinct … role`·`Works well for …` 등 생성형 boilerplate와 개별 문장 중복을 제거했다. machine ID·색상값·CSS/HTML/DTCG key는 보존했다.
+- **한국어 본문 편집 감수 Wave 8:** `soft3d` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 점토·종이·공기·블록·직물·유기형 재질과 놀이형 화면 문법별로 분리하고, 공통 번역 템플릿과 `Inset Shadow`·`드롭 섀도`·`호버`·`Transform rotate`·`CTA`·`모티프`·`마이크로카피` 등의 불필요한 혼합 표현을 제거해 한국어 120/120 감수를 완료했다.
+- **한국어 본문 편집 감수 Wave 7:** `hypertech` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 동적 활자·미래 장치·운영 자료·공간 도구별로 분리하고, 공통 번역 템플릿과 `Marquee`·`트랜스폼`·`서페이스`·`3D`·`모노스페이스`·`KPI`·`모티프` 등의 불필요한 혼합 표현을 제거했다.
+- **한국어 본문 편집 감수 Wave 6:** `y2k` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 2000년대 초·중반의 화면·매체 문법별로 분리하고, 공통 번역 템플릿과 `메탈릭`·`쉬머`·`HUD`·`CRT 브라운관 TV`·`게이미피케이션`·`CTA`·`VIP`·`글로시` 등의 불필요한 혼합 표현을 제거했다.
+- **한국어 본문 편집 감수 Wave 5:** `editorial` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 매체·재료·정보 위계별로 분리하고, 공통 번역 템플릿과 `Surface`·CSS 문법·`OLED`·`SaaS`·`blob`·`CTA` 등의 불필요한 혼합 표현을 제거했다.
+- **한국어 본문 편집 감수 Wave 4:** `retro` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 시대와 매체별 시각 문법으로 분리하고, 공통 번역 템플릿과 `노스탤지어`·`퍼스펙티브`·`로파이`·`CTA`·`OS` 등의 불필요한 혼합 표현을 제거했다.
+- **한국어 본문 편집 감수 Wave 3:** `depth` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 재질과 공간 표현별로 분리하고, 확장 시안에 반복되던 공통 문장과 `Surface`·`Inset`·`A11y`·`elevation`·`CTA` 등의 번역투를 제거했다.
+- **한국어 본문 편집 감수 Wave 2:** `brutalism` 카테고리 15종의 요약·palette 이름/용도·특징·장점·주의점을 실제 시각 문법에 맞게 분리하고, 반복 번역 템플릿과 불필요한 영문 표현을 제거했다.
+- **Crostini 오디오 재감사 안정성:** actual-120의 최초 volume probe가 Web Audio gain 정착을 한 프레임으로 가정하던 변동성을 bounded wait로 교체해 실제 `0` gain을 확인한 뒤 판정하도록 보강했다.
+- **한국어 본문 편집 감수 Wave 1:** `swiss` 카테고리 15종의 요약·특징·장점·주의점에서 불필요한 영문 병기와 명사형 번역투를 제거하고, 서로 다른 디자인에 반복되던 공통 문장을 style별 시각 문법과 실제 사용상 장단점으로 교체했다.
+- **5개 locale 디자인명 전수 감수:** 120종 제목을 `ko/en/ja/zh-CN/zh-TW` 순서로 검토해 93개 ID의 직역·혼합 영어·지역 표기·대소문자 문제를 교정하고, card·Detail·Inspector 반복 문맥을 같은 승인명으로 동기화했다. machine ID와 CSS/HTML/DTCG 구조 키는 보존했다.
+- **다국어 actual-120 감사 조건:** Chrome 게이트가 한국어 `AI 네이티브`·`100% 읽음`과 영어 project label에 의존하던 조건을 DTCG ID·행 식별자·상태 변화 기준으로 바꿔 모든 시작 locale에서 같은 기능을 검증한다.
 - **언어 선택기와 확장 시안 locale 정합성:** 존재하지 않는 색 변수로 흰 배경·흰 글자가 되던 언어 선택기를 명시적 dark native control로 복구하고 5개 locale의 크기·좌표를 고정했다. 신규 84종 Web 시안의 제목·설명·motif가 한국어 blueprint를 직접 출력하던 경로를 활성 locale snapshot으로 전환하고 영어 분류어 누락도 보완했다.
 - **Audit 11 visible/ARIA·Inspector i18n:** Header·Discovery·Gallery·Detail·Split·recovery와 8개 archetype HTML을 같은 locale snapshot에 연결하고 CSS comment·Markdown prose·DTCG display metadata가 locale별로 바뀌도록 수정. 국제 고유 디자인명 fallback은 field/reason과 함께 보고하고 placeholder는 completeness에서 거부한다.
 - **Locale 전환 focus와 번역 가능 Dashboard gate:** Detail locale 재렌더 뒤 focus trap이 복원된 Inspector control을 첫 버튼으로 덮던 문제를 수정하고, actual-120 Dashboard filter가 고정 영문 표시값 대신 현재 locale의 성공 label을 사용하도록 변경.

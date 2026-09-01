@@ -715,7 +715,7 @@ test('UI preview consumers use only explicit public preview render options', () 
     if (consumer.functions.includes('renderPreviewComponent')) {
       assert.match(
         source,
-        /renderPreviewComponent\(\{\s*rendererId:\s*\w+\.previewType,\s*tab:\s*'hero',\s*design:\s*\w+\s*\}\)/u,
+        /renderPreviewComponent\(\{\s*rendererId:\s*\w+\.previewType,\s*tab:\s*'hero',\s*design:\s*\w+,\s*snapshot\s*\}\)/u,
         consumer.file
       );
     }

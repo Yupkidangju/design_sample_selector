@@ -97,6 +97,7 @@ npm run qa:wave1:chrome -- --artifacts=.antigravity/archive/wave1-chrome-qa
 
 - 상단 언어 메뉴는 `한국어`, `English`, `日本語`, `简体中文`, `繁體中文`을 native endonym으로 제공하고 선택한 locale을 문서 언어, 검색·이름 정렬, 카탈로그 표시 정보와 Detail Inspector snapshot에 함께 적용합니다.
 - 최초 locale은 URL `lang` → 저장된 선택 → 브라우저 언어 → 한국어 순서로 결정합니다. URL에는 `ko`, `en`, `ja`, `zh-CN`, `zh-TW`만 허용하며 pack 로드나 검증이 실패하면 현재 정상 locale을 유지합니다.
+- 다섯 locale은 actual 120 전체의 카드 이름·요약·palette·특징·장단점을 각각 명시적으로 소유합니다. 카드·Detail·Split·Peek·Dock·Preview·Inspector의 사람용 문구는 같은 snapshot을 사용하고, style ID·`data-*`·CSS/DTCG machine key는 번역하지 않습니다.
 - 검색은 한국어·영어 이름, alias, category와 facet metadata를 함께 찾으며 최대 120자입니다.
 - 상위 category와 `Bookmarks`는 독립 조건이므로 동시에 선택할 수 있습니다. 그 아래의 10개 facet은 필요한 항목만 펼쳐 radio/checkbox로 좁힙니다.
 - 정렬은 카탈로그·이름·시대 오름차순·시대 내림차순을 제공합니다. Grid는 category별, Bento는 전역 정렬, Spectrum은 실제 스타일 시대별로 같은 결과 집합을 보여 줍니다.
@@ -134,7 +135,7 @@ npm run qa:scalability:chrome
 npm run qa:catalog120:chrome
 ```
 
-Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 120종 catalog coverage는 초기 bundle 밖에서 지연 로드되며 palette stable ID와 CSS/HTML/DTCG machine key는 언어와 무관하게 유지됩니다. Re-audit #1 수정 후 Node `214/214`, 5-locale Detail/Inspector Chrome, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 모두 issues 0을 통과했습니다. 초기 JS/CSS는 `88,191/88,980B`, `32,994/33,000B` gzip이므로 locale/UI 기능 추가 때마다 `analyze:bundle`을 다시 실행해야 합니다. 최신 근거는 `docs/multi_audit/11/re_audit_evidence_11_1.md`와 `.antigravity/archive/audit11-rework-reaudit1/`에 보존됩니다.
+Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 이어진 locale Stage 1에서 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 locale당 120종·1,924 field unit을 명시 pack으로 분리했습니다. Stage 2에서는 디자인명과 한국어·영어·일본어·중국어 간체·중국어 번체 본문을 각각 120/120 감수했으며, locale별 8개 category wave에서 summary·palette·특징·장단점의 공통 생성문과 숫자형 palette 이름을 제거했습니다. 최종 자동 재감사는 5 locale의 9,620개 사람용 field unit과 machine identity, 간체/번체 독립성을 대조하고 320/375/768/1024/1440px 및 물리 1280px/CSS 640px/DPR 2의 200% 상태 30개를 Chrome에서 검증합니다. 최신 Node `284/284`, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 issues 0을 통과했고 초기 JS/CSS는 `88.37/88.98kB`, `33.00/33.00kB` gzip입니다. 구조 완전성 근거는 `docs/multi_audit/11/locale_stage1_evidence.md`, 5개 locale 편집 근거는 `docs/multi_audit/11/locale_stage2_checkpoint_14_evidence.md`, 교차 언어·reflow 근거는 `docs/multi_audit/11/locale_stage2_task27_evidence.md`에 있습니다. 자동 검증과 별개로 원어민 수준의 자연스러움은 사용자 또는 해당 언어 화자의 검토 전까지 미확정입니다.
 
 ### 8. GitHub Pages production artifact와 복구 검증
 

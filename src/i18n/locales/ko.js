@@ -1,7 +1,9 @@
 import { getLocaleCopy } from '../copy.js';
+import catalog from './catalog/ko.js';
 
 export default {
   locale: 'ko',
+  catalog,
   copy: getLocaleCopy('ko'),
   messages: {
     language: '언어', search: '디자인 검색', all: '전체', saved: '저장됨',

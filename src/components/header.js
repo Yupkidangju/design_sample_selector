@@ -135,7 +135,7 @@ export function renderHeader(container) {
             </div>
             <div class="status-chip chip-audio" id="badge-audio-status">
               <span class="chip-dot audio-pulse"></span>
-              <span id="txt-audio-status">BGM: 16 TRACK SYNTH</span>
+              <span id="txt-audio-status">${escapeHtml(t('audio.paused'))}</span>
             </div>
           </div>
         </div>

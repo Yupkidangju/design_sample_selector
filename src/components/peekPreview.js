@@ -44,14 +44,16 @@ export function renderPeekPreview(container) {
       const currentViewport = container.querySelector('#peek-viewport');
       if (!currentViewport) return;
       failurePhase = 'render';
+      const snapshot = getActiveLocaleSnapshot();
       currentViewport.innerHTML = renderPreviewComponent({
         rendererId: sub.previewType,
         tab: 'hero',
-        design: sub
+        design: sub,
+        snapshot
       });
       currentViewport.removeAttribute('aria-busy');
       failurePhase = 'hydrate';
-      hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true, snapshot: getActiveLocaleSnapshot() });
+      hydrateMockup(currentViewport, sub, { tab: 'hero', compact: true, snapshot });
       previewFailureCount = 0;
     } catch (error) {
       if (!isCurrentPeek(sub, requestId)) return;
@@ -121,7 +123,6 @@ export function renderPeekPreview(container) {
           <div class="peek-meta">
             <span class="peek-cat">${escapeHtml(sub.icon)} ${escapeHtml(sub.categoryTitle)}</span>
             <strong>${escapeHtml(sub.name)}</strong>
-            <span class="peek-en">${escapeHtml(sub.nameEn)}</span>
           </div>
           <div class="peek-viewport" id="peek-viewport" data-theme="${escapeHtml(sub.id)}" aria-busy="true">
             <p class="inline-preview-state" role="status">${escapeHtml(t('peek.loading'))}</p>

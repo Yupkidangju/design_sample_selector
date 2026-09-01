@@ -450,10 +450,9 @@ export function renderDetailView(container) {
             <div class="style-hero-summary">
               <div class="style-badge-row">
                 <span class="style-category-badge">${escapeHtml(mainCat.title)}</span>
-                <span class="style-motion-badge">${escapeHtml(t('detail.motion', { value: subDesign.motionProfile || 'Normal' }))}</span>
+                <span class="style-motion-badge">${escapeHtml(t('detail.motion', { value: subDesign.motionLabel || subDesign.motionProfile }))}</span>
               </div>
               <h2 class="style-title" id="modal-style-title">${escapeHtml(subDesign.name)}</h2>
-              <span class="style-title-en">${escapeHtml(subDesign.nameEn)}</span>
               <p class="style-desc">${escapeHtml(subDesign.shortDesc)}</p>
             </div>
 
@@ -483,7 +482,7 @@ export function renderDetailView(container) {
               <div class="tweaks-controls-list">
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>${escapeHtml(t('detail.radius'))} (Border Radius)</span>
+                    <label for="slider-radius">${escapeHtml(t('detail.radius'))}</label>
                     <strong id="val-radius">${liveTweaks.borderRadius}px</strong>
                   </div>
                   <input type="range" min="${TUNER_LIMITS.borderRadius.min}" max="${TUNER_LIMITS.borderRadius.max}" step="${TUNER_LIMITS.borderRadius.step}" value="${liveTweaks.borderRadius}" class="tweak-slider" id="slider-radius" />
@@ -491,7 +490,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>${escapeHtml(t('detail.border'))} (Border Width)</span>
+                    <label for="slider-border">${escapeHtml(t('detail.border'))}</label>
                     <strong id="val-border">${liveTweaks.borderWidth}px</strong>
                   </div>
                   <input type="range" min="${TUNER_LIMITS.borderWidth.min}" max="${TUNER_LIMITS.borderWidth.max}" step="${TUNER_LIMITS.borderWidth.step}" value="${liveTweaks.borderWidth}" class="tweak-slider" id="slider-border" />
@@ -499,7 +498,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>${escapeHtml(t('detail.shadow'))} (Shadow Depth)</span>
+                    <label for="slider-shadow">${escapeHtml(t('detail.shadow'))}</label>
                     <strong id="val-shadow">${liveTweaks.shadowDepth}px</strong>
                   </div>
                   <input type="range" min="0" max="30" value="${liveTweaks.shadowDepth}" class="tweak-slider" id="slider-shadow" />
@@ -507,7 +506,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>${escapeHtml(t('detail.blur'))} (Backdrop Blur)</span>
+                    <label for="slider-blur">${escapeHtml(t('detail.blur'))}</label>
                     <strong id="val-blur">${liveTweaks.backdropBlur}px</strong>
                   </div>
                   <input type="range" min="0" max="32" value="${liveTweaks.backdropBlur}" class="tweak-slider" id="slider-blur" />
@@ -515,7 +514,7 @@ export function renderDetailView(container) {
 
                 <div class="tweak-row">
                   <div class="tweak-label-row">
-                    <span>${escapeHtml(t('detail.glow'))} (Glow Intensity)</span>
+                    <label for="slider-glow">${escapeHtml(t('detail.glow'))}</label>
                     <strong id="val-glow">${Number(liveTweaks.glowIntensity ?? 1).toFixed(1)}</strong>
                   </div>
                   <input type="range" min="0" max="2" step="0.1" value="${liveTweaks.glowIntensity ?? 1}" class="tweak-slider" id="slider-glow" />
@@ -741,16 +740,14 @@ export function renderDetailView(container) {
     const copy = getActiveLocaleSnapshot()?.copy;
     const t = (key, values) => formatLocaleCopy(copy, key, values);
     const title = root.querySelector('#modal-style-title');
-    const titleEn = root.querySelector('.style-title-en');
     const desc = root.querySelector('.style-desc');
     const catBadge = root.querySelector('.style-category-badge');
     const motionBadge = root.querySelector('.style-motion-badge');
 
     if (title) title.textContent = subDesign.name;
-    if (titleEn) titleEn.textContent = subDesign.nameEn;
     if (desc) desc.textContent = subDesign.shortDesc;
     if (catBadge) catBadge.textContent = mainCat.title;
-    if (motionBadge) motionBadge.textContent = t('detail.motion', { value: subDesign.motionProfile || 'Normal' });
+    if (motionBadge) motionBadge.textContent = t('detail.motion', { value: subDesign.motionLabel || subDesign.motionProfile });
 
     // Update Palette Swatches
     const paletteGrid = root.querySelector('#palette-swatches-grid');
@@ -1146,7 +1143,7 @@ export function renderDetailView(container) {
 
         const packageText = `/* ==========================================================================
    DESIGN SPECTRUM INTEGRATED TEXT SNAPSHOT v2.3.0
-   Design Style: ${currentSubDesign.name} (${currentSubDesign.nameEn}) [${currentSubDesign.id}]
+   Design Style: ${currentSubDesign.name} [${currentSubDesign.id}]
    Archetype: ${archetype.toUpperCase()} | Device: ${device}
    Generated: ${new Date().toISOString()}
    ========================================================================== */

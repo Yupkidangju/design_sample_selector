@@ -5,6 +5,7 @@ import { WAVE_1_MOTION_DEFINITIONS } from './motions-wave-1.js';
 import { WAVE_1_RENDERER_DEFINITIONS } from './renderers-wave-1.js';
 import { EXPANSION_MOTION_DEFINITIONS } from './motions-expansion.js';
 import { EXPANSION_RENDERER_DEFINITIONS } from './renderers-expansion.js';
+import { localizePreviewMarkup } from './localizeMarkup.js';
 
 // 브라우저 상세 경계에서만 신규 84종의 테마·문법 CSS를 요청한다.
 if (typeof document !== 'undefined') {
@@ -37,4 +38,10 @@ export const getPreviewRendererCapability =
   COMPONENT_REGISTRY.getPreviewRendererCapability;
 export const getPreviewMotionDefinition =
   COMPONENT_REGISTRY.getPreviewMotionDefinition;
-export const renderPreviewComponent = COMPONENT_REGISTRY.renderPreviewComponent;
+export function renderPreviewComponent(options = {}) {
+  return localizePreviewMarkup(COMPONENT_REGISTRY.renderPreviewComponent(options), {
+    locale: options?.snapshot?.locale,
+    copy: options?.snapshot?.copy,
+    design: options?.design
+  });
+}

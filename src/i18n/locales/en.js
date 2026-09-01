@@ -1,7 +1,9 @@
 import { getLocaleCopy } from '../copy.js';
+import catalog from './catalog/en.js';
 
 export default {
   locale: 'en',
+  catalog,
   copy: getLocaleCopy('en'),
   messages: {
     language: 'Language', search: 'Search designs', all: 'All', saved: 'Saved',

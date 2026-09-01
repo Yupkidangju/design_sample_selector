@@ -5,6 +5,7 @@
  */
 
 import { renderPreviewComponent } from '../preview/componentEntry.js';
+import { localizePreviewMarkup } from '../preview/localizeMarkup.js';
 import { formatLocaleCopy } from '../i18n/format.js';
 import { getLocaleCopy } from '../i18n/copy.js';
 
@@ -12,27 +13,41 @@ export function getArchetypeHTML(archetypeId, subDesign, options = {}) {
   const tab = options.tab || 'hero';
   const copy = options.snapshot?.copy || getLocaleCopy('ko');
   const t = (key, values) => formatLocaleCopy(copy, key, values);
+  let html;
 
   switch (archetypeId) {
     case 'game':
-      return renderGameArchetype(subDesign, t);
+      html = renderGameArchetype(subDesign, t);
+      break;
     case 'web':
-      return renderWebArchetype(subDesign, tab, t);
+      html = renderWebArchetype(subDesign, tab, t, options.snapshot);
+      break;
     case 'mobile':
-      return renderMobileArchetype(subDesign, t);
+      html = renderMobileArchetype(subDesign, t);
+      break;
     case 'ecommerce':
-      return renderEcommerceArchetype(subDesign, t);
+      html = renderEcommerceArchetype(subDesign, t);
+      break;
     case 'blog':
-      return renderBlogArchetype(subDesign, t);
+      html = renderBlogArchetype(subDesign, t);
+      break;
     case 'dashboard':
-      return renderDashboardArchetype(subDesign, t);
+      html = renderDashboardArchetype(subDesign, t);
+      break;
     case 'media':
-      return renderMediaArchetype(subDesign, t);
+      html = renderMediaArchetype(subDesign, t);
+      break;
     case 'chat':
-      return renderChatArchetype(subDesign, t);
+      html = renderChatArchetype(subDesign, t);
+      break;
     default:
       throw new RangeError('[PreviewState] Unknown archetype ID.');
   }
+  return localizePreviewMarkup(html, {
+    locale: options.snapshot?.locale,
+    copy,
+    design: subDesign
+  });
 }
 
 // 1. GAME HUD & ARENA ARCHETYPE
@@ -126,12 +141,13 @@ function renderGameArchetype(subDesign, t) {
 }
 
 // 2. WEB SAAS & LANDING ARCHETYPE (Integrates 4 Component Tabs)
-function renderWebArchetype(subDesign, activeTab = 'hero', t) {
+function renderWebArchetype(subDesign, activeTab = 'hero', t, snapshot) {
   const name = subDesign?.name || 'Web SaaS';
   const componentHTML = renderPreviewComponent({
     rendererId: subDesign.previewType,
     tab: activeTab,
-    design: subDesign
+    design: subDesign,
+    snapshot
   });
 
   return `
@@ -207,7 +223,7 @@ function renderMobileArchetype(subDesign, t) {
         <div class="mobile-feed-container">
           <div class="mobile-feature-card">
             <div class="feature-tag">${t('archetype.mobile.trending')}</div>
-            <h3>${subDesign.nameEn}</h3>
+            <h3>${name}</h3>
             <p>${subDesign.shortDesc}</p>
             <div class="feature-action-row">
               <button class="mobile-card-btn" data-action="mobile-explore">${t('archetype.mobile.explore')}</button>
@@ -279,7 +295,7 @@ function renderEcommerceArchetype(subDesign, t) {
           <div class="product-main-visual" id="product-visual">
             <div class="product-artwork-box">
               <span class="artwork-icon">✨</span>
-              <span class="artwork-label">${subDesign.nameEn}</span>
+              <span class="artwork-label">${name}</span>
             </div>
           </div>
         </div>
@@ -382,7 +398,7 @@ function renderBlogArchetype(subDesign, t) {
           <span class="blog-tag">${t('archetype.blog.archive')}</span>
           <span class="blog-read-time">⏱️ ${t('archetype.blog.readTime')}</span>
         </div>
-        <h1 class="blog-title">${subDesign.nameEn}: ${t('archetype.blog.titleSuffix')}</h1>
+        <h1 class="blog-title">${name}: ${t('archetype.blog.titleSuffix')}</h1>
         <p class="blog-lead">${subDesign.shortDesc}</p>
         
         <div class="blog-author-bar">
@@ -521,7 +537,7 @@ function renderDashboardArchetype(subDesign, t) {
           <tbody id="dash-table-body">
             <tr>
               <td>#TRX-8901</td>
-              <td>${subDesign.nameEn} System</td>
+              <td>${name}</td>
               <td><span class="status-badge success">${t('archetype.dashboard.completed')}</span></td>
               <td>₩1,250,000</td>
               <td>${t('archetype.dashboard.justNow')}</td>
@@ -597,7 +613,7 @@ function renderMediaArchetype(subDesign, t) {
         <!-- Playlist Queue -->
         <div class="media-queue-list">
           <button class="queue-item active" data-action="media-queue" data-track="0">
-            <span>01. ${subDesign.nameEn} Echo</span>
+            <span>01. ${name}</span>
             <span>03:40</span>
           </button>
           <button class="queue-item" data-action="media-queue" data-track="1">

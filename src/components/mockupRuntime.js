@@ -19,6 +19,13 @@ import { prefersReducedMotion } from '../utils/selection.js';
 export const MAX_RUNTIME_INPUT_LENGTH = 500;
 export const MAX_RUNTIME_HISTORY = 50;
 
+export function resolveRuntimeMessage(machineMessage, subDesign, snapshot) {
+  if (!machineMessage || !snapshot?.copy) return machineMessage;
+  return formatLocaleCopy(snapshot.copy, 'runtime.actionComplete', {
+    name: subDesign?.name || ''
+  });
+}
+
 const runtimeMap = new WeakMap();
 const unitCleanupMap = new WeakMap();
 const checkoutCleanupMap = new WeakMap();
@@ -193,7 +200,11 @@ export function hydrateMockup(rootEl, subDesign, options = {}) {
     }
 
     const action = trigger.getAttribute('data-action') || trigger.getAttribute('data-mock-action') || 'toast';
-    const msg = trigger.getAttribute('data-mock-msg') || '';
+    const msg = resolveRuntimeMessage(
+      trigger.getAttribute('data-mock-msg') || '',
+      subDesign,
+      options.snapshot
+    );
 
     routeArchetypeAction(unit, trigger, action, msg, stateStore, e);
   };

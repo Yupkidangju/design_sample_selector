@@ -180,12 +180,12 @@ test('Audit 11: locale URL serialization and selected-locale search stay determi
   const { loadLocaleSnapshot } = await import('../src/i18n/index.js');
   const snapshot = await loadLocaleSnapshot('ja');
   const results = queryCatalogStyles(getAllStyles(), {
-    query: 'デザイン',
+    query: '量子制御',
     localizedStyles: snapshot.catalog.styles,
     sort: 'name-asc'
   });
 
-  assert.equal(results.length, 120);
+  assert.deepEqual(results.map(style => style.id), ['quantum-control']);
   assert.match(serializeDiscoverySearch({ locale: 'ja' }), /(?:^|[?&])lang=ja(?:&|$)/);
   assert.equal(parseDiscoverySearch('?lang=zh-TW').locale, 'zh-TW');
 });
@@ -277,6 +277,10 @@ test('Audit 11: Crostini audio probe exclusion is explicit opt-in and remains vi
   assert.match(script, /sfxDisabledForRun: true/);
   assert.match(script, /headless Crostini audio device unavailable/);
   assert.match(script, /audioPreInit = \{\s*skipped: false,/);
+  assert.match(
+    script,
+    /await waitFor\([\s\S]*?masterGain\?\.gain\?\.value === 0[\s\S]*?'최초 volume 0 master gain 정착'/u
+  );
 });
 
 test('Audit 11: Discovery Chrome pagination waits for result state and audits focus separately', async () => {

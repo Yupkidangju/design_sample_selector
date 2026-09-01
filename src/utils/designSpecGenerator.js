@@ -464,7 +464,7 @@ export function generateLiveDesignSpecMarkdown(subDesign, tweaks = {}, archetype
 
   const currentDiagram = archetypeDiagrams[archetype] || archetypeDiagrams.game;
 
-  return `# Design Specification: ${markdownText(subDesign.name)} (\`${markdownText(subDesign.nameEn)}\`)
+  return `# Design Specification: ${markdownText(subDesign.name)}
 
 > **Version:** 2.3.0  
 > **Genre Category:** ${subDesign.categoryId || 'General'}  

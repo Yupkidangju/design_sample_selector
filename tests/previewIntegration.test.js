@@ -80,7 +80,7 @@ test('Web archetype uses the public component render API directly', () => {
   assert.match(source, /import \{ renderPreviewComponent \} from '\.\.\/preview\/componentEntry\.js';/u);
   assert.match(
     source,
-    /renderPreviewComponent\(\{\s*rendererId:\s*subDesign\.previewType,\s*tab:\s*activeTab,\s*design:\s*subDesign\s*\}\)/u
+    /renderPreviewComponent\(\{\s*rendererId:\s*subDesign\.previewType,\s*tab:\s*activeTab,\s*design:\s*subDesign,\s*snapshot\s*\}\)/u
   );
 });
 
@@ -124,15 +124,15 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   assert.equal(outputCount, 960);
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), legacyStyles),
-    '52f9fb0f8a62425dcde10889381f1a714408f4d7bd78cc2159dd9d5dae777767'
+    '2906cc1356925671960a0397b7be9976b65eb1503dc4e4886f40dac106c25550'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), coreStyles),
-    '94a2c53503d4c84a22d9f91f893e58bf8b57822dd8da5465411b51e76ec92308'
+    '79a55474fd4464db5d663802f1a97c0c351b9991a874f1803399b9fd166ab8f3'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    'd7ce69822e124d8fe67b6d65ed91414322bb02ee677ad79365a1360497cd9207'
+    '0b6e160b1537fd6a44c24f49dd6a5e828cc5b37ffaaf1e031a5a55c7441856d3'
   );
 });
 
@@ -181,15 +181,15 @@ test('non-Web archetypes remain byte-stable and ignore component-tab options', (
 
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, legacyStyles),
-    '041690a743b30c0fdaa90d8b672ff891d1028b348d53ab1be692249f7c5f48b9'
+    '965edac58a3d81bfb0ce7b1e54e22841cb5194db09778fef0b6ccd63af2b2919'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, coreStyles),
-    '9a930418ecd40750243cec4bbffce48a65b4c4ceab37c90874ee837882be986a'
+    'a95011123efbef5c0fda90c78296bf27fb32d38fae271450d00ad62d9a6ea169'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, styles),
-    '2a880e361606f3c55cf7be95303346f5e966a5362cdfacbeaf78a6ae1f73b33a'
+    '3cb98d1fdfaefc619b30dde66dc6caa7a83797541e386461c85528a8ca24fb82'
   );
 });
 

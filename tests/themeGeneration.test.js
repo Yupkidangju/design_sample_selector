@@ -415,7 +415,7 @@ test('기존 24종의 한국어 CSS·Markdown·DTCG 내보내기 행렬은 결�
         ])
       )))
     ),
-    '0c6c16e967639c98ccb926c1015942b163fd40a18cac6bfcb7b258170cf375f7'
+    '701df5da27223736595a51bdce6cbcc1eca43e1faef5aebd86790d4f9f072cfc'
   );
   assert.equal(
     hashOutputRows(
@@ -454,7 +454,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    '12f36802d4ef43cc0f0fe9bbee0de5e6f8405ae6938c4c71fe6921d35100c1be'
+    '6a9b6210ce1a5e847dcb1a012e5080bf97eefccf4a6acddbfdc128f319652cb1'
   );
   assert.equal(
     hashOutputRows(
@@ -487,7 +487,7 @@ test('Wave 1 전체 36종의 CSS·Markdown·DTCG 내보내기 행렬은 결정�
         ])
       )))
     ),
-    '52331ff442e58a62bd0993f6d02a46c930a0a62399a93753b02aba2b719a07e4'
+    'ef420c8cff4b7a5e4526ee83794f303256e5ed04dc76e219763bca8c2dff0d85'
   );
   assert.equal(
     hashOutputRows(

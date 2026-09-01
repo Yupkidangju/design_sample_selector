@@ -7,9 +7,20 @@ import { tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { getLocalizedLegacyAllSubDesigns } from '../src/catalog/legacyAdapter.js';
+import { loadLocaleSnapshot } from '../src/i18n/index.js';
+
 const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CHROME_PATH = process.env.DSS_CHROME_PATH || '/usr/bin/google-chrome';
 const LOCALES = Object.freeze(['ko', 'en', 'ja', 'zh-CN', 'zh-TW']);
+const REFLOW_VIEWPORTS = Object.freeze([320, 375, 768, 1024, 1440]);
+const ZOOM_200 = Object.freeze({
+  label: 'zoom-200',
+  physicalWidth: 1280,
+  cssWidth: 640,
+  cssHeight: 900,
+  deviceScaleFactor: 2
+});
 const NON_KOREAN_FORBIDDEN = /[가-힣]+/g;
 const artifactOption = process.argv.find(argument => argument.startsWith('--artifacts='));
 const artifactValue = artifactOption?.slice('--artifacts='.length);
@@ -23,6 +34,13 @@ const report = {
   isolatedProfile: true,
   locales: [],
   preservation: null,
+  reflow: {
+    contract: {
+      widths: REFLOW_VIEWPORTS,
+      zoom200: ZOOM_200
+    },
+    states: []
+  },
   runtimeSignals: { warnings: [], errors: [], exceptions: [], networkFailures: [] },
   screenshots: [],
   issues: []
@@ -141,6 +159,15 @@ async function navigate(url) {
   await waitFor(`document.readyState === 'complete' && document.body?.hasAttribute('data-app-pending') === false && Boolean(document.querySelector('#locale-select'))`, `load ${url}`);
 }
 
+async function setViewport({ cssWidth, cssHeight = 900, deviceScaleFactor = 1 }) {
+  await client.send('Emulation.setDeviceMetricsOverride', {
+    width: cssWidth,
+    height: cssHeight,
+    deviceScaleFactor,
+    mobile: false
+  });
+}
+
 async function clickSelector(selector, clickCount = 1) {
   const point = await evaluate(`(() => {
     const element = document.querySelector(${JSON.stringify(selector)});
@@ -165,6 +192,121 @@ async function openDetail(styleId = 'swiss-grid') {
   })()`);
   check(opened, `${styleId} card missing`);
   await waitFor(`Boolean(document.querySelector('#mockup-viewport')) && Boolean(document.querySelector('#live-css-code')?.textContent)`, 'detail inspector');
+}
+
+async function collectCatalogCards(locale) {
+  const snapshot = await loadLocaleSnapshot(locale);
+  const expectedById = new Map(
+    getLocalizedLegacyAllSubDesigns(snapshot).map(design => [design.id, design.name])
+  );
+  const cards = [];
+
+  while (true) {
+    const pageCards = await evaluate(`[
+      ...document.querySelectorAll('[data-result-id]')
+    ].map(element => ({
+      id: element.dataset.resultId,
+      name: element.querySelector('.badge-name, .bento-title, .spec-title')?.textContent.trim() || ''
+    }))`);
+    cards.push(...pageCards);
+    const canContinue = await evaluate(
+      `Boolean(document.querySelector('[data-gallery-page="next"]:not(:disabled)'))`
+    );
+    if (!canContinue) break;
+    const previousFirstId = pageCards[0]?.id || '';
+    check(await clickSelector('[data-gallery-page="next"]'), `${locale}: next page missing`);
+    await waitFor(
+      `document.querySelector('[data-result-id]')?.dataset.resultId !== ${JSON.stringify(previousFirstId)}`,
+      `${locale}: next page`
+    );
+  }
+
+  const mismatches = cards.flatMap(({ id, name }) => {
+    const expectedName = expectedById.get(id);
+    return expectedName === name ? [] : [{ id, expectedName: expectedName || null, actualName: name }];
+  });
+  const reachableCount = cards.length;
+  const uniqueCount = new Set(cards.map(card => card.id)).size;
+  check(reachableCount === 120, `${locale}: catalog card reachability ${reachableCount}/120`);
+  check(uniqueCount === 120, `${locale}: catalog card uniqueness ${uniqueCount}/120`);
+  check(expectedById.size === 120, `${locale}: expected catalog size ${expectedById.size}/120`);
+  check(mismatches.length === 0, `${locale}: localized card mismatch ${JSON.stringify(mismatches.slice(0, 5))}`);
+  return {
+    reachableCount,
+    uniqueCount,
+    expectedCount: expectedById.size,
+    mismatchCount: mismatches.length,
+    mismatches
+  };
+}
+
+async function verifySemanticAlignment() {
+  const snapshots = await Promise.all(LOCALES.map(loadLocaleSnapshot));
+  const ids = Object.keys(snapshots[0].catalog.styles).sort();
+  const idDrift = [];
+  const machineDrift = [];
+  const emptyHumanFields = [];
+  const machineSignature = record => JSON.stringify({
+    id: record.id,
+    palette: record.palette.map(color => ({ id: color.id, value: color.value })),
+    lengths: [record.characteristics.length, record.pros.length, record.cons.length]
+  });
+
+  let humanUnitCountPerLocale = 0;
+  for (const [snapshotIndex, snapshot] of snapshots.entries()) {
+    const localeIds = Object.keys(snapshot.catalog.styles).sort();
+    if (JSON.stringify(localeIds) !== JSON.stringify(ids)) idDrift.push(snapshot.locale);
+    for (const id of ids) {
+      const record = snapshot.catalog.styles[id];
+      if (!record) continue;
+      if (snapshotIndex === 0) {
+        humanUnitCountPerLocale += 2 + record.palette.length * 2
+          + record.characteristics.length + record.pros.length + record.cons.length;
+      }
+      if (machineSignature(record) !== machineSignature(snapshots[0].catalog.styles[id])) {
+        machineDrift.push(`${snapshot.locale}:${id}`);
+      }
+      const humanValues = [
+        record.name,
+        record.summary,
+        ...record.palette.flatMap(color => [color.name, color.usage]),
+        ...record.characteristics,
+        ...record.pros,
+        ...record.cons
+      ];
+      if (humanValues.some(value => !value?.trim())) emptyHumanFields.push(`${snapshot.locale}:${id}`);
+    }
+  }
+
+  const simplified = snapshots[LOCALES.indexOf('zh-CN')].catalog.styles;
+  const traditional = snapshots[LOCALES.indexOf('zh-TW')].catalog.styles;
+  const simplifiedText = JSON.stringify(simplified);
+  const traditionalText = JSON.stringify(traditional);
+  const countTerm = (text, term) => text.split(term).length - 1;
+  const identicalChineseSummaries = ids.filter(id => simplified[id].summary === traditional[id].summary);
+  const identicalChineseRecords = ids.filter(id => JSON.stringify(simplified[id]) === JSON.stringify(traditional[id]));
+
+  report.semantic = {
+    localeCount: snapshots.length,
+    styleCount: ids.length,
+    humanUnitCountPerLocale,
+    humanUnitCount: humanUnitCountPerLocale * snapshots.length,
+    idDrift,
+    machineDrift,
+    emptyHumanFields,
+    chineseRegionalSeparation: {
+      identicalSummaryCount: identicalChineseSummaries.length,
+      identicalRecordCount: identicalChineseRecords.length,
+      simplifiedTermHits: Object.fromEntries(['用户', '界面', '数据', '加载', '网格', '亚克力'].map(term => [term, countTerm(simplifiedText, term)])),
+      traditionalTermHits: Object.fromEntries(['使用者', '介面', '資料', '載入', '網格', '壓克力'].map(term => [term, countTerm(traditionalText, term)]))
+    }
+  };
+  check(ids.length === 120, `semantic: style count ${ids.length}/120`);
+  check(idDrift.length === 0, `semantic: locale ID drift ${JSON.stringify(idDrift)}`);
+  check(machineDrift.length === 0, `semantic: machine drift ${JSON.stringify(machineDrift.slice(0, 8))}`);
+  check(emptyHumanFields.length === 0, `semantic: empty human fields ${JSON.stringify(emptyHumanFields.slice(0, 8))}`);
+  check(identicalChineseSummaries.length === 0, `semantic: identical zh summaries ${JSON.stringify(identicalChineseSummaries.slice(0, 8))}`);
+  check(identicalChineseRecords.length === 0, `semantic: identical zh records ${JSON.stringify(identicalChineseRecords.slice(0, 8))}`);
 }
 
 async function capture(name) {
@@ -214,6 +356,7 @@ async function inspectLocale(pageUrl, locale) {
   check(localeSelector.colorScheme === 'dark', `${locale}: locale selector color scheme ${localeSelector.colorScheme}`);
   check(Math.abs(localeSelector.rect.width - 104) <= 0.5 && Math.abs(localeSelector.rect.height - 34) <= 0.5, `${locale}: locale selector size ${JSON.stringify(localeSelector.rect)}`);
   await capture(`locale-selector-${locale}`);
+  const catalogCards = await collectCatalogCards(locale);
 
   await evaluate(`(() => {
     const input = document.querySelector('#search-input');
@@ -283,6 +426,7 @@ async function inspectLocale(pageUrl, locale) {
     lang: dom.lang,
     selectedLocale: dom.selectedLocale,
     localeSelector,
+    catalogCards,
     expansionPreview: { name: expansionPreview.name, summary: expansionPreview.summary },
     forbiddenKorean: forbidden,
     cssComment: panes.css.match(/^\/\*[^\n]+/m)?.[0] || '',
@@ -340,6 +484,121 @@ async function verifyPreservation(pageUrl) {
   check(after.theme === before.theme && after.archetype === before.archetype, 'preview identity not preserved');
 }
 
+async function collectReflowMetrics() {
+  return evaluate(`(() => {
+    const isVisible = element => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
+    };
+    const hasHorizontalScroller = element => {
+      let ancestor = element.parentElement;
+      while (ancestor && ancestor !== document.documentElement) {
+        const style = getComputedStyle(ancestor);
+        if (/(auto|scroll)/.test(style.overflowX) && ancestor.scrollWidth > ancestor.clientWidth + 1) return true;
+        ancestor = ancestor.parentElement;
+      }
+      return false;
+    };
+    const accessibleName = element => {
+      const labelledBy = element.getAttribute('aria-labelledby');
+      const labelledText = labelledBy
+        ? labelledBy.split(/\\s+/).map(id => document.getElementById(id)?.textContent?.trim() || '').join(' ').trim()
+        : '';
+      const labelText = [...(element.labels || [])].map(label => label.textContent.trim()).join(' ').trim();
+      return (
+        element.getAttribute('aria-label') || labelledText || labelText || element.getAttribute('title') ||
+        element.textContent?.trim() || element.getAttribute('placeholder') || ''
+      ).trim();
+    };
+    const selectorFor = element => {
+      if (element.id) return '#' + element.id;
+      const className = [...element.classList].slice(0, 2).join('.');
+      return element.tagName.toLowerCase() + (className ? '.' + className : '');
+    };
+    const controls = [...document.querySelectorAll('button, input, select, textarea, a[href], [role="button"], [role="tab"]')]
+      .filter(isVisible);
+    const unnamedControls = controls.filter(element => !accessibleName(element)).map(selectorFor);
+    const clippedControls = controls.filter(element => {
+      const rect = element.getBoundingClientRect();
+      return (rect.left < -1 || rect.right > innerWidth + 1) && !hasHorizontalScroller(element);
+    }).map(element => {
+      const rect = element.getBoundingClientRect();
+      return { selector: selectorFor(element), left: rect.left, right: rect.right, width: rect.width };
+    });
+    const regionRect = selector => {
+      const element = document.querySelector(selector);
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height };
+    };
+    return {
+      viewport: { width: innerWidth, height: innerHeight, deviceScaleFactor: devicePixelRatio },
+      documentOverflowX: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+      controlCount: controls.length,
+      unnamedControls,
+      clippedControls,
+      renderedCardCount: document.querySelectorAll('[data-result-id]').length,
+      regions: {
+        header: regionRect('.app-header'),
+        localePicker: regionRect('.locale-picker'),
+        detail: regionRect('.detail-modal-container'),
+        sandbox: regionRect('.mockup-sandbox-section'),
+        sidebar: regionRect('.detail-sidebar-section')
+      }
+    };
+  })()`);
+}
+
+function verifyReflowMetrics(locale, label, phase, metrics) {
+  const prefix = `${locale}:${label}:${phase}`;
+  check(metrics.documentOverflowX <= 1, `${prefix}: document overflow ${metrics.documentOverflowX}`);
+  check(metrics.unnamedControls.length === 0, `${prefix}: unnamed controls ${JSON.stringify(metrics.unnamedControls.slice(0, 8))}`);
+  check(metrics.clippedControls.length === 0, `${prefix}: clipped controls ${JSON.stringify(metrics.clippedControls.slice(0, 8))}`);
+  check(metrics.controlCount > 0, `${prefix}: no visible controls`);
+  if (phase === 'gallery') {
+    check(metrics.renderedCardCount > 0, `${prefix}: no rendered cards`);
+    check(Boolean(metrics.regions.localePicker), `${prefix}: locale picker missing`);
+  } else {
+    check(Boolean(metrics.regions.detail), `${prefix}: detail missing`);
+    check(Boolean(metrics.regions.sandbox), `${prefix}: sandbox missing`);
+    check(Boolean(metrics.regions.sidebar), `${prefix}: sidebar missing`);
+    if (metrics.regions.detail) {
+      check(metrics.regions.detail.left >= -1 && metrics.regions.detail.right <= metrics.viewport.width + 1, `${prefix}: detail outside viewport ${JSON.stringify(metrics.regions.detail)}`);
+    }
+  }
+}
+
+async function inspectReflowState(pageUrl, locale, viewport) {
+  await setViewport(viewport);
+  await navigate(`${pageUrl}?lang=${encodeURIComponent(locale)}`);
+  const gallery = await collectReflowMetrics();
+  verifyReflowMetrics(locale, viewport.label, 'gallery', gallery);
+  await openDetail();
+  const detail = await collectReflowMetrics();
+  verifyReflowMetrics(locale, viewport.label, 'detail', detail);
+  report.reflow.states.push({ locale, viewport, gallery, detail });
+  if (viewport.cssWidth === 320 || viewport.cssWidth === 1440 || viewport.label === ZOOM_200.label) {
+    await capture(`reflow-${locale}-${viewport.label}`);
+  }
+}
+
+async function verifyReflowMatrix(pageUrl) {
+  const viewports = [
+    ...REFLOW_VIEWPORTS.map(cssWidth => ({
+      label: `width-${cssWidth}`,
+      physicalWidth: cssWidth,
+      cssWidth,
+      cssHeight: 900,
+      deviceScaleFactor: 1
+    })),
+    ZOOM_200
+  ];
+  for (const locale of LOCALES) {
+    for (const viewport of viewports) await inspectReflowState(pageUrl, locale, viewport);
+  }
+}
+
 function finalize() {
   const humanSets = ['cssComment', 'htmlCopy', 'markdownHeading', 'dtcgDescription', 'runtimeStatus'];
   for (const key of humanSets) check(new Set(report.locales.map(item => item[key])).size === LOCALES.length, `${key}: five locale values not distinct`);
@@ -354,7 +613,13 @@ function finalize() {
     check(Math.abs(rect.x - referenceRect.x) <= 0.5 && Math.abs(rect.y - referenceRect.y) <= 0.5, `${locale.locale}: locale selector position changed ${JSON.stringify(rect)}`);
   }
   for (const [kind, entries] of Object.entries(report.runtimeSignals)) check(entries.length === 0, `${kind}: ${entries.length}`);
-  report.summary = { localeCount: report.locales.length, screenshotCount: report.screenshots.length, diagnostics: Object.values(report.runtimeSignals).flat().length, issues: report.issues.length };
+  report.summary = {
+    localeCount: report.locales.length,
+    reflowStateCount: report.reflow.states.length,
+    screenshotCount: report.screenshots.length,
+    diagnostics: Object.values(report.runtimeSignals).flat().length,
+    issues: report.issues.length
+  };
 }
 
 async function main() {
@@ -362,6 +627,7 @@ async function main() {
   if (version.status !== 0) throw new Error(`Chrome not found: ${CHROME_PATH}`);
   report.chromeVersion = version.stdout.trim();
   mkdirSync(artifactDirectory, { recursive: true });
+  await verifySemanticAlignment();
   const vitePort = await getFreePort();
   const chromePort = await getFreePort();
   const pageUrl = `http://127.0.0.1:${vitePort}/design_sample_selector/`;
@@ -378,6 +644,7 @@ async function main() {
   await Promise.all([client.send('Page.enable'), client.send('Runtime.enable'), client.send('Network.enable')]);
   for (const locale of LOCALES) await inspectLocale(pageUrl, locale);
   await verifyPreservation(pageUrl);
+  await verifyReflowMatrix(pageUrl);
   finalize();
   writeFileSync(join(artifactDirectory, 'report.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

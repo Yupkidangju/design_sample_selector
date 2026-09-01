@@ -1,7 +1,9 @@
 import { getLocaleCopy } from '../copy.js';
+import catalog from './catalog/zh-CN.js';
 
 export default {
   locale: 'zh-CN',
+  catalog,
   copy: getLocaleCopy('zh-CN'),
   messages: {
     language: '语言', search: '搜索设计', all: '全部', saved: '已保存',

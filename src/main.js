@@ -49,7 +49,7 @@ function renderFatalBootstrapError(appContainer) {
 
   const kicker = document.createElement('p');
   kicker.className = 'lazy-preview-kicker';
-  kicker.textContent = 'APPLICATION RECOVERY';
+  kicker.textContent = localizedCopy('recovery.fatalTitle', {}, 'Application recovery');
   const title = document.createElement('h2');
   title.id = 'bootstrap-fatal-title';
   title.textContent = localizedCopy('recovery.fatalTitle', {}, 'The application could not start');
@@ -217,7 +217,7 @@ async function initApp() {
           <div class="detail-modal-backdrop"></div>
           <div class="lazy-preview-state" role="dialog" aria-modal="true"
                aria-labelledby="lazy-preview-title" tabindex="-1" ${failed ? '' : 'aria-busy="true"'}>
-            <p class="lazy-preview-kicker">ON-DEMAND PREVIEW</p>
+            <p class="lazy-preview-kicker">${failed ? t('recovery.errorTitle', 'Unable to load detail') : t('recovery.loadingTitle', 'Preparing detail')}</p>
             <h2 id="lazy-preview-title">${failed ? t('recovery.errorTitle', 'Unable to load detail') : t('recovery.loadingTitle', 'Preparing detail')}</h2>
             <p>${failed
               ? (terminal
