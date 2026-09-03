@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-09-03T16:40:00+09:00",
+  "scope": "local design_sample_selector_2",
+  "topLevelStateChanged": true,
+  "unchangedReferencesPreserved": {
+    "bookmarks": true,
+    "compareSubIds": true,
+    "activeFacets": true,
+    "audio": true,
+    "liveTweaks": true
+  },
+  "changedCollectionGetsNewReference": {
+    "bookmarks": true
+  },
+  "unrelatedReferenceStillPreserved": {
+    "compareSubIds": true
+  },
+  "subscriberContract": {
+    "currentIsManagerState": true,
+    "previousIsPriorState": true,
+    "currentFrozen": true,
+    "previousFrozen": true
+  },
+  "managerInstancesIsolated": true,
+  "passed": true
+}

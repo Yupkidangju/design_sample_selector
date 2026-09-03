@@ -1,9 +1,9 @@
 # Implementation Audit Roadmap (`audit_roadmap.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0
-**Document Status:** Actual 120 / Audit 10 Repository Re-audited / Live Pages Deployment HOLD
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Document Status:** Actual 120 / Local Refactoring Verified / Local Scope
 
-살아 있는 계약은 `spec.md` v2.3.0이다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)와 v2.2 인스펙터 기준은 폐기한다.
+살아 있는 계약은 `spec.md` v2.4.0이다. 구버전 숫자(5분류 / 15서브 / 10 BGM / 5 SFX / WASM 엔진)와 v2.2/v2.3 인스펙터 기준은 폐기한다.
 
 ---
 
@@ -11,7 +11,7 @@
 
 | Phase | Milestone | Audit Focus | Verification Criteria | Status |
 | --- | --- | --- | --- | --- |
-| **Phase 1** | Scaffolding & Standard Documentation | D3D & Standard Compliance | 핵심 문서와 사용자 버전 표시가 제품 버전 2.3.0과 동기 | **READY** |
+| **Phase 1** | Scaffolding & Standard Documentation | D3D & Standard Compliance | 핵심 문서와 사용자 버전 표시가 제품 버전 2.4.0과 동기 | **READY** |
 | **Phase 2** | Design Tokens & Global CSS | Responsive Layout & Token Integrity | actual 120 canonical + 21 alias 셀렉터, Core 36 initial/신규 84 async 테마, 슬라이더 0–64 / 0–12 / 0–30 / 0–32 / 0–2.0 | **READY** |
 | **Phase 3** | Audio Synth & Canvas 2D Visual Engine | Audio & Canvas Performance | 16 BGM 트랙, 14 SFX, Canvas 2D 파티클(`pauseLoop`/`resumeLoop`). `.wasm` 없음 | **READY** |
 | **Phase 4** | Taxonomy & Gallery | Search / Filter / Views | 8대분류 × 15 = actual 120, 실시간 검색(헤더 풀 리렌더 금지), 3 갤러리 모드·4페이지 | **READY** |
@@ -88,7 +88,7 @@
 - [x] `tests/styleContract.test.js` passes all canonical/legacy parity, ordering, publication, boundary, saved-ID restoration and immutability cases.
 - [x] Browser-safe theme modules contain no Node file-system imports; the Node CLI and its diagnostics are absent from production assets.
 - [x] Generated CSS is statically imported through `interactive.css`; runtime theme switching injects no `<style>` element and preserves approved state while rebuilding the selected inner renderer.
-- [x] `npm test` and `npm run build` pass through `npm run check` (180/180 current; 152/152 at actual-120 completion; 144/144 at scalability completion; 121/121 at discovery completion; 106/106 at Wave 1 completion).
+- [x] `npm test` and `npm run build` pass through `npm run check` (293/293 current; 290/290 at Audit 14; 286/286 at Audit 13 start; 285/285 at Audit 12; 180/180 at Audit 10; 152/152 at actual-120 completion; 144/144 at scalability completion; 121/121 at discovery completion; 106/106 at Wave 1 completion).
 
 ### Phase 4A Verification Record (2026-08-30)
 

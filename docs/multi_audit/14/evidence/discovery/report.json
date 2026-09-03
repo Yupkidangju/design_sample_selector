@@ -1,0 +1,358 @@
+{
+  "checkedAt": "2026-09-03T06:26:28.363Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
+  "isolatedProfile": true,
+  "coreStyleCount": 120,
+  "contracts": {
+    "resultCount": 36,
+    "uniqueCount": 36,
+    "totalCount": 120,
+    "pagination": true,
+    "facetGroups": 10,
+    "facetInputs": 89,
+    "unlabeledInputs": 0,
+    "liveRole": "status",
+    "livePoliteness": "polite",
+    "liveAtomic": "true",
+    "statusText": "전체 120종 중 120종 표시",
+    "searchType": "search",
+    "searchMaxLength": 120,
+    "searchLabel": "디자인 검색",
+    "overflow": 0
+  },
+  "galleryModes": [
+    {
+      "mode": "GRID",
+      "count": 36,
+      "unique": 36,
+      "eraGroups": [],
+      "overflow": 0,
+      "reachableCount": 120,
+      "reachableUnique": 120
+    },
+    {
+      "mode": "BENTO",
+      "count": 36,
+      "unique": 36,
+      "eraGroups": [],
+      "overflow": 0,
+      "reachableCount": 120,
+      "reachableUnique": 120
+    },
+    {
+      "mode": "SPECTRUM",
+      "count": 36,
+      "unique": 36,
+      "eraGroups": [
+        "pre-1950",
+        "1950s-1970s",
+        "1980s-1990s",
+        "2000s",
+        "2010s",
+        "2020s"
+      ],
+      "overflow": 0,
+      "reachableCount": 120,
+      "reachableUnique": 120
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "alias-search",
+      "ids": [
+        "dark-minimal-glass"
+      ],
+      "query": "darkmode-highcontrast",
+      "status": "전체 120종 중 1종 표시 · 활성 조건 1개"
+    },
+    {
+      "name": "category-bookmark-facet",
+      "ids": [
+        "glassmorphism",
+        "liquid-glass"
+      ],
+      "categoryActive": "true",
+      "bookmarkActive": "true",
+      "panelOpen": true,
+      "facetOpen": true,
+      "checked": true,
+      "focusedId": "facet-materiality-glass",
+      "params": [
+        [
+          "category",
+          "depth"
+        ],
+        [
+          "f",
+          "materiality:glass"
+        ],
+        [
+          "saved",
+          "1"
+        ]
+      ]
+    },
+    {
+      "name": "facet-or-and",
+      "ids": [
+        "glassmorphism",
+        "liquid-glass",
+        "acrylic-ui",
+        "mica-surface",
+        "holographic-foil",
+        "chrome-metal-ui",
+        "tech-optimism-2000",
+        "cyberpunk-tactical-hud",
+        "sci-fi-fui",
+        "terminal-matrix",
+        "biometric-interface",
+        "spatial-glass-ui",
+        "ai-native-gradient",
+        "quantum-control",
+        "solarpunk-eco"
+      ],
+      "selected": [
+        "materiality-glass",
+        "tone-playful",
+        "tone-futuristic"
+      ],
+      "facets": [
+        "materiality:glass",
+        "tone:playful",
+        "tone:futuristic"
+      ]
+    },
+    {
+      "name": "bento-name-sort",
+      "ids": [
+        "seventies-groovy",
+        "tech-optimism-2000",
+        "eighties-new-wave",
+        "synthwave",
+        "pixel-arcade",
+        "swiss-grid",
+        "high-contrast-mono",
+        "data-dense-dashboard",
+        "spatial-glass-ui",
+        "inflatable-ui",
+        "constructivist",
+        "grunge-typography",
+        "glitch-brutalism",
+        "functional-wayfinding",
+        "corporate-minimal",
+        "doodle-interface",
+        "raw-brutalism",
+        "dutch-total-design",
+        "new-wave-typography",
+        "dada-collage",
+        "dark-minimal-glass",
+        "newspaper-broadsheet",
+        "de-stijl",
+        "dreamcore-cloud",
+        "disco-glam",
+        "luxury-serif-minimal",
+        "retro-computing",
+        "low-poly-interface",
+        "risograph",
+        "mica-surface",
+        "cartoon-dashboard",
+        "mcbling-gloss",
+        "maximalist-chaos",
+        "metro-interface",
+        "memphis",
+        "skeuomorphism"
+      ]
+    },
+    {
+      "name": "spectrum-era-desc",
+      "ids": [
+        "liquid-glass",
+        "biometric-interface",
+        "spatial-glass-ui",
+        "ai-native-gradient",
+        "quantum-control",
+        "cyber-brutalism",
+        "bento-grid",
+        "claymorphism",
+        "kidcore-play",
+        "biomorphic-soft",
+        "pastel-gradient",
+        "cartoon-dashboard",
+        "neumorphism",
+        "neo-brutalism",
+        "acid-techno",
+        "iridescent-mesh",
+        "isometric-depth",
+        "low-poly-interface",
+        "soft-plastic",
+        "inflatable-ui",
+        "toy-block-ui",
+        "kawaii-pastel",
+        "sticker-book",
+        "acrylic-ui",
+        "mica-surface",
+        "holographic-foil",
+        "chrome-metal-ui",
+        "raw-brutalism",
+        "material-design",
+        "glassmorphism",
+        "flat-design",
+        "corporate-minimal",
+        "high-contrast-mono",
+        "vaporwave",
+        "fluid-organic",
+        "dark-minimal-glass"
+      ],
+      "groups": [
+        "2020s",
+        "2010s"
+      ],
+      "sort": "era-desc"
+    },
+    {
+      "name": "url-reload",
+      "ids": [
+        "mica-surface",
+        "acrylic-ui",
+        "chrome-metal-ui",
+        "glassmorphism",
+        "holographic-foil",
+        "liquid-glass"
+      ],
+      "search": "glass",
+      "categoryActive": "true",
+      "facetChecked": true,
+      "sort": "name-asc",
+      "view": "true"
+    },
+    {
+      "name": "popstate",
+      "ids": [
+        "bauhaus-geometry"
+      ],
+      "search": "bauhaus",
+      "facetChecked": true,
+      "view": "true",
+      "url": "http://127.0.0.1:41555/design_sample_selector_2/?q=bauhaus&f=era%3Apre-1950&view=spectrum"
+    },
+    {
+      "name": "empty-reset",
+      "title": "일치하는 디자인 스타일이 없습니다",
+      "overflow": 0,
+      "focusedId": "search-input"
+    },
+    {
+      "name": "keyboard-navigation",
+      "slashFocus": "search-input",
+      "slashInsertedText": "",
+      "arrowFrom": "swiss-grid",
+      "arrowTo": "corporate-minimal",
+      "spaceCompareThemes": [
+        "corporate-minimal",
+        "swiss-grid"
+      ],
+      "enterTheme": "corporate-minimal"
+    }
+  ],
+  "responsiveWidths": [
+    {
+      "width": 320,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 277,
+      "viewportWidth": 305
+    },
+    {
+      "width": 375,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 332,
+      "viewportWidth": 360
+    },
+    {
+      "width": 414,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 371,
+      "viewportWidth": 399
+    },
+    {
+      "width": 768,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 689,
+      "viewportWidth": 753
+    },
+    {
+      "width": 1024,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 945,
+      "viewportWidth": 1009
+    },
+    {
+      "width": 1440,
+      "resultCount": 36,
+      "facetGroups": 10,
+      "labeledInputs": 89,
+      "inputCount": 89,
+      "targetCount": 12,
+      "tooSmall": [],
+      "overflow": 0,
+      "discoveryWidth": 1361,
+      "viewportWidth": 1425
+    }
+  ],
+  "reducedMotion": {
+    "matches": true,
+    "transitionDuration": "1e-05s",
+    "animationDuration": "1e-05s",
+    "animationDurationSeconds": 0.00001
+  },
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "discovery-mobile-320.png",
+    "discovery-desktop-1440.png"
+  ],
+  "issues": [],
+  "protocolBrowser": "Chrome/152.0.7977.75",
+  "summary": {
+    "galleryModes": 3,
+    "scenarios": 9,
+    "responsiveWidths": 6,
+    "screenshots": 2,
+    "diagnosticCount": 0,
+    "issueCount": 0
+  }
+}

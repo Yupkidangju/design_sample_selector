@@ -1,7 +1,6 @@
-# Implementation Summary (`implementation_summary.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0  
-**Document Status:** Current System Blueprint / Audit 9 Repository & Local Crostini PASS
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Document Status:** Current System Blueprint / v2.4.0 Local Refactoring Verified
 
 ---
 
@@ -95,8 +94,8 @@ The application is structured into zero-dependency, native ES modules that commu
 │   ├── verifyRenderScalabilityChrome.js # Actual/synthetic capacity and recovery QA
 │   └── verifyCatalog120Chrome.js # 120×8×2 actual runtime/visual QA
 ├── tests/                      # Catalog, theme, preview registry/runtime, inspector, split tab, and responsive contracts
-├── spec.md                     # Master Technical Specification (v2.3.0)
-├── designs.md                  # UI/UX & Design Token Specification (v2.3.0)
+├── spec.md                     # Master Technical Specification (v2.4.0)
+├── designs.md                  # UI/UX & Design Token Specification (v2.4.0)
 ├── DESIGN_DECISIONS.md         # Architecture Decisions & Rationale
 ├── BUILD_GUIDE.md              # Scaffolding, execution & deployment guide
 ├── audit_roadmap.md            # Quality & Phase Verification Checklist
@@ -122,26 +121,26 @@ The application is structured into zero-dependency, native ES modules that commu
 - **상태 경계:** `discoveryUrl.js`는 `q/category/f/sort/view/saved`를 허용 목록과 120자 한계로 parse/serialize하고, `discoveryUrlState.js`는 initial URL·`popstate` 복원과 `history.replaceState` 갱신만 담당한다.
 - **UI 경계:** header는 검색/category/bookmark/view를, 독립 discovery root는 live status·10개 native facet·정렬·chip/reset을 담당한다. `galleryModel.js`는 한 canonical 결과 집합을 Grid category groups, Bento global order, Spectrum era groups로 투영한다.
 - **접근성·반응형:** 검색을 포함한 89개 native 입력 모두 이름을 가지며 compact facet disclosure, 포커스 복원, 44px target, 320~1440px overflow 0과 reduced-motion을 보장한다.
-- **검증:** 현재 전체 180/180 테스트·build가 통과한다. 격리 Chrome `151.0.7922.173`에서 9개 사용자 시나리오·6개 폭과 세 보기 각각 4페이지/120 ID 도달, console/network/application diagnostics/issue 0 증거를 보존한다.
+- **검증:** 현재 전체 290/290 테스트·build가 통과한다 (과거 Discovery 완료 당시 121/121). 격리 Chrome `152.0.7977.75`에서 9개 사용자 시나리오·6개 폭과 세 보기 각각 4페이지/120 ID 도달, console/network/application diagnostics/issue 0 증거를 보존한다.
 
 ### 2.2.2 Render window, bounded pickers and on-demand preview code
 - **순수 비용 경계:** `src/scalability/renderWindow.js`는 Gallery 36개, Detail 24개, Split 12개/slot, 초기 JS/CSS와 interaction 예산을 동결 상수로 제공한다. `createRenderWindow()`와 `createBoundedPicker()`는 DOM/app state를 import하지 않고 입력을 변경하지 않으며 전체 ID 순서와 selected pinning을 보존한다.
 - **UI 경계:** `mainView.js`는 canonical 결과를 36개 local page로 자르고 `galleryPagination.js`가 native 이전/다음과 polite 범위를 렌더한다. `stylePickerMarkup.js`는 Detail category 검색과 Split slot 검색의 제한 thumbnail markup을 공유하며 native Split select는 전체 정규 스타일을 유지한다.
 - **코드 전달 경계:** 초기 UI는 `thumbnailEntry.js`·`motionEntry.js`만 정적으로 소비한다. `lazyPreviewLoader.js`는 Peek/확정 component graph와 Detail/Split 전체 graph를 별도 경계로 불러오며 각 경계는 primary + retry 한 번 뒤 terminal이 된다. Promise 공유, stale request 차단과 phase/attempt diagnostic을 제공하고 마지막 importer를 무제한 반복하지 않는다.
 - **표시·모션 수명:** 초기 UI는 normal flow의 hidden 상태에서 폰트와 레이아웃을 정착시킨 뒤 노출한다. gallery render cleanup이 shared `IntersectionObserver`를 해제하며 offscreen/reduced-motion animation을 중지한다.
-- **검증 상태:** 전체 180/180, actual 120 + synthetic 60/120 기능 행렬, 초기 JS/CSS `88.60/32.86kB` gzip을 통과했다. 독립 재감사의 공통 Detail CSS·pre-init volume·Zoom 회귀를 수정했고, CDP 왕복이 섞인 기존 interaction 표본은 무효화한 뒤 페이지 내부 처리시간 직렬 3회를 새로 기록했다.
+- **검증 상태:** 전체 293/293 테스트 (과거 중간 단계 180/180), actual 120 + synthetic 60/120 기능 행렬, 초기 JS/CSS `88.92/32.94kB` gzip을 통과했다. 독립 재감사의 공통 Detail CSS·pre-init volume·Zoom 회귀를 수정했고, CDP 왕복이 섞인 기존 interaction 표본은 무효화한 뒤 페이지 내부 처리시간 직렬 3회를 새로 기록했다.
 
 ### 2.3 `src/catalog/validation/` & `scripts/validateCatalog.js`
 - **Responsibility:** Validates frozen catalog snapshots without mutation and reports structural, ID, alias, relationship, preview/asset, token, provenance, accessibility, and calculable contrast findings through stable code/severity/path fields.
 - **Build boundary:** `validate:catalog` supports compact, verbose, JSON, and strict modes with exit codes 0/1/2. `prebuild` runs the default mode before every Vite production build; no validation module is imported by the browser graph.
 - **Current baseline:** 8 categories, 120 styles, 10 facets, eight packs; 0 errors and 56 visible warnings, all from the legacy 24 (`ACCESSIBILITY_NOTES_REQUIRED` 24, `SOURCE_REQUIRED` 24, `CONTRAST_LOW` 5, `CONTRAST_UNCHECKED` 3). The ready 96 subset is 0 errors/0 warnings. Strict mode intentionally exits 1 because it includes legacy warnings.
-- **Verification:** The current 175-test gate, catalog baseline of 0 errors/56 warnings, two-file theme freshness check and production build pass. Chrome 151 evidence covers Wave 1, discovery, actual 120 and synthetic scalability matrices without application-origin failures.
+- **Verification:** The current 293-test gate, catalog baseline of 0 errors/56 warnings, two-file theme freshness check and production build pass. Chrome 152 evidence covers Wave 1, discovery, actual 120 and synthetic scalability matrices without application-origin failures.
 
 ### 2.4 `src/theme/`, `scripts/generateThemeStyles.js` & generated theme CSS
 - **Canonical responsibility:** Projects all publication states from the public catalog into recursively frozen `ThemeDefinition` records. The explicit 13-key mapping produces both CSS custom properties and the compatible `THEME_TOKENS_MAP`; optional `themeEffects.backdropBlur` remains separate from tweak defaults.
 - **Generated artifact boundary:** The browser-safe pure serializer owns root fallback, 120 canonical selectors, aliases and registered effects. The Node-only CLI writes Core 36 initial CSS and expansion 84 async CSS only through `generate:themes`; `check:themes` checks both read-only in `prebuild`.
 - **Export boundary:** Live CSS, Markdown and DTCG generators resolve the canonical theme definition. The former hand-written 24-style map is gone, its export name remains a derived compatibility view, and unknown IDs return the existing no-selection artifact instead of Swiss values.
-- **Verification:** Existing 24·36 map/runtime/export SHA-256 baselines remain exact while actual 120 fixtures pass. DTCG `box-shadow: none` is a transparent zero shadow. Vite builds 76 modules; statically referenced initial JavaScript/CSS is `88.60/32.86kB` gzip and expansion presentation remains async.
+- **Verification:** Existing 24·36 map/runtime/export SHA-256 baselines remain exact while actual 120 fixtures pass. DTCG `box-shadow: none` is a transparent zero shadow. Vite builds 100 modules; statically referenced initial JavaScript/CSS is `88.92/32.94kB` gzip and expansion presentation remains async.
 
 ### 2.5 `src/preview/` & `src/components/mockupTemplates.js`
 - **정규 책임:** legacy, Wave 1, expansion renderer/thumbnail/motion definition을 `registry.js`가 한 번 검증·조립한다. inventory는 definition에서 사전순·재귀 동결 값으로 파생되며 catalog pack은 구현 함수가 아니라 세 참조 ID만 소유한다.

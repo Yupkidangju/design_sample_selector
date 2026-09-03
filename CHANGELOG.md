@@ -4,7 +4,14 @@ All notable changes to the `design_sample_selector` project will be documented i
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [Unreleased]
+## [2.4.0] - 2026-09-03
+
+### Changed
+- **UI 용어 및 사조별 프리뷰·탐색 UX 리팩터링 (v2.4.0):**
+  - 5개 언어 핵심 UI 98개 문자열의 용어 정제 (Bento Grid, Timeline Spectrum, Design Tokens, Component CSS 등).
+  - 4개 주요 카테고리(Swiss, Y2K, Brutalism, Hypertech)의 Game, Media, Chat 아키타입 시각 요소 및 메인 갤러리 장르 뱃지 보강.
+  - 갤러리 카드 내 명시적인 `상세 보기` CTA 버튼(44px) 도입 및 Space/Enter 키보드 분리, 카드 클릭(선택 도크 담기)과 상세 보기 분리.
+  - Release manifest 변조 검증 및 Pages artifact 검증 정합성 확보.
 
 ### Added
 - **Stage 2 교차 언어·reflow 최종 자동 감사:** 5 locale × 120종의 9,620개 사람용 field unit, machine ID·palette 값, 간체/번체 독립 지역어를 machine-readable report로 대조하고 320/375/768/1024/1440px와 200% 확대 30상태의 Gallery·Detail overflow·컨트롤 잘림·접근성 이름을 격리 Chrome에서 검증한다.

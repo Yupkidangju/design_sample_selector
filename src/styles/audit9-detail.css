@@ -404,3 +404,117 @@
   background: #f7f3ea;
   color: #1f2933;
 }
+
+/* ==========================================================================
+   Category-Specific Archetype Differentiations & Aesthetics
+   ========================================================================== */
+.archetype-unit[data-category="swiss"] {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.archetype-unit[data-category="swiss"] .game-hud-header,
+.archetype-unit[data-category="swiss"] .media-player-card,
+.archetype-unit[data-category="swiss"] .chat-sidebar,
+.archetype-unit[data-category="swiss"] .chat-main-stream {
+  border: 1px solid var(--theme-border);
+}
+.archetype-unit[data-category="swiss"] .meter-fill.hp-fill {
+  background: #FF3300;
+}
+.archetype-unit[data-category="swiss"] .swiss-tuner-scale {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-family: monospace;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--theme-border);
+  color: var(--theme-text-muted);
+}
+.archetype-unit[data-category="swiss"] .vinyl-disc {
+  border: 2px solid #FF3300;
+  background: radial-gradient(circle, #fff 0%, #fff 20%, #000 21%, #000 70%, #FF3300 71%, #FF3300 100%);
+}
+
+.archetype-unit[data-category="y2k"] {
+  background-image: radial-gradient(circle at top right, rgba(0, 240, 255, 0.08), transparent 60%),
+                    radial-gradient(circle at bottom left, rgba(255, 0, 128, 0.08), transparent 60%);
+}
+.archetype-unit[data-category="y2k"] .media-player-card {
+  background: linear-gradient(135deg, #181b22, #262a35);
+  border: 2px solid #5a6478;
+}
+.archetype-unit[data-category="y2k"] .winamp-lcd-display {
+  background: #0d1f18;
+  border: 1px solid #1a4a35;
+  border-radius: var(--theme-control-radius, 4px);
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #00ffaa;
+  text-shadow: 0 0 6px #00ffaa;
+  letter-spacing: 1px;
+}
+.archetype-unit[data-category="y2k"] .media-btn {
+  background: linear-gradient(180deg, #e0e8f5, #9aa8c0);
+  border: 1px solid #ffffff;
+  color: #111;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), inset 0 1px 0 #fff;
+}
+.archetype-unit[data-category="y2k"] .chat-bubble-msg.user {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  border-radius: 18px 18px 2px 18px;
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+}
+.archetype-unit[data-category="y2k"] .chat-bubble-msg.peer {
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  color: #222;
+  border-radius: 18px 18px 18px 2px;
+}
+
+.archetype-unit[data-category="brutalism"] .game-hud-header,
+.archetype-unit[data-category="brutalism"] .media-player-card,
+.archetype-unit[data-category="brutalism"] .chat-sidebar,
+.archetype-unit[data-category="brutalism"] .chat-main-stream {
+  border: 3px solid #000;
+  box-shadow: 5px 5px 0 #000;
+}
+.archetype-unit[data-category="brutalism"] .brutalist-tape-tag {
+  background: #FFE600;
+  color: #000;
+  font-weight: 900;
+  font-size: 10px;
+  padding: 4px 8px;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.archetype-unit[data-category="brutalism"] .media-btn,
+.archetype-unit[data-category="brutalism"] .skill-btn,
+.archetype-unit[data-category="brutalism"] .game-cta-btn,
+.archetype-unit[data-category="brutalism"] .chat-send-btn {
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.archetype-unit[data-category="hypertech"] .game-hud-header,
+.archetype-unit[data-category="hypertech"] .media-player-card,
+.archetype-unit[data-category="hypertech"] .chat-main-stream {
+  border: 1px solid var(--theme-accent);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.05);
+}
+.archetype-unit[data-category="hypertech"] .hypertech-telemetry {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--theme-accent);
+  padding: 4px 6px;
+  border: 1px dashed var(--theme-accent);
+  margin-bottom: 8px;
+}

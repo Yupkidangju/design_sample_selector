@@ -147,9 +147,17 @@ export function renderPeekPreview(container) {
         if (e.target.closest('[data-mock-action], button, a, input, select, textarea')) return;
         openDetailFor(sub.categoryId, sub.id);
       });
-      card?.querySelector('[data-peek-open-detail]')?.addEventListener('click', (event) => {
+      const openDetailBtn = card?.querySelector('[data-peek-open-detail]');
+      const handleOpenDetail = (event) => {
         event.stopPropagation();
         openDetailFor(sub.categoryId, sub.id);
+      };
+      card?.querySelector('[data-peek-open-detail]')?.addEventListener('click', handleOpenDetail);
+      openDetailBtn?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+          event.preventDefault();
+          handleOpenDetail(event);
+        }
       });
       lastId = sub.id;
     } else {

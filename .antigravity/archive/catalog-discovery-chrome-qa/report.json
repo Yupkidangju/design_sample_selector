@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-09-01T01:15:30.109Z",
-  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "checkedAt": "2026-09-03T07:33:04.858Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
   "isolatedProfile": true,
   "coreStyleCount": 120,
   "contracts": {
@@ -233,7 +233,7 @@
       "search": "bauhaus",
       "facetChecked": true,
       "view": "true",
-      "url": "http://127.0.0.1:43863/design_sample_selector/?q=bauhaus&f=era%3Apre-1950&view=spectrum"
+      "url": "http://127.0.0.1:39243/design_sample_selector_2/?q=bauhaus&f=era%3Apre-1950&view=spectrum"
     },
     {
       "name": "empty-reset",
@@ -346,7 +346,7 @@
     "discovery-desktop-1440.png"
   ],
   "issues": [],
-  "protocolBrowser": "Chrome/151.0.7922.173",
+  "protocolBrowser": "Chrome/152.0.7977.75",
   "summary": {
     "galleryModes": 3,
     "scenarios": 9,

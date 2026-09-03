@@ -16,10 +16,10 @@ import { basename, extname, isAbsolute, join, normalize, resolve } from 'node:pa
 import { fileURLToPath } from 'node:url';
 
 import { verifyPagesArtifact } from './verifyPagesArtifact.js';
+import { PROJECT_BASE } from '../project.config.js';
 
 const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIRECTORY = join(PROJECT_ROOT, 'dist');
-const PROJECT_BASE = '/design_sample_selector/';
 const CHROME_PATH = process.env.DSS_CHROME_PATH || '/usr/bin/google-chrome';
 const artifactOption = process.argv.find(argument => argument.startsWith('--artifacts='));
 const artifactValue = artifactOption?.slice('--artifacts='.length);

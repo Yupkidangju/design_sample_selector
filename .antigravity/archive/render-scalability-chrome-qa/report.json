@@ -1,40 +1,45 @@
 {
-  "checkedAt": "2026-08-30T16:15:12.846Z",
-  "chromeVersion": "Google Chrome 151.0.7922.173",
+  "checkedAt": "2026-09-03T07:36:11.116Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
   "isolatedProfile": true,
+  "timingMethod": {
+    "metric": "processingMs",
+    "hardGateBoundary": "input dispatch -> required state/DOM predicate settlement",
+    "presentationBoundary": "settlement -> requested animation frames"
+  },
   "bundle": {
-    "checkedAt": "2026-08-30T16:15:12.857Z",
+    "checkedAt": "2026-09-03T07:36:11.130Z",
     "distDirectory": "dist",
     "indexPath": "dist/index.html",
     "assets": [
       {
         "type": "javascript",
         "relation": "module",
-        "source": "./assets/index-CUUvGGsm.js",
-        "path": "assets/index-CUUvGGsm.js",
-        "rawBytes": 263813,
-        "gzipBytes": 83460
+        "source": "/design_sample_selector_2/assets/index-Ch_es_hg.js",
+        "path": "assets/index-Ch_es_hg.js",
+        "rawBytes": 281816,
+        "gzipBytes": 88915
       },
       {
         "type": "css",
         "relation": "stylesheet",
-        "source": "./assets/index-C_FQ7CmV.css",
-        "path": "assets/index-C_FQ7CmV.css",
-        "rawBytes": 171447,
-        "gzipBytes": 32856
+        "source": "/design_sample_selector_2/assets/index-D5-ykIe1.css",
+        "path": "assets/index-D5-ykIe1.css",
+        "rawBytes": 172595,
+        "gzipBytes": 32936
       }
     ],
     "javascript": {
       "assetCount": 1,
-      "rawBytes": 263813,
-      "gzipBytes": 83460,
+      "rawBytes": 281816,
+      "gzipBytes": 88915,
       "budgetBytes": 88980,
       "withinBudget": true
     },
     "css": {
       "assetCount": 1,
-      "rawBytes": 171447,
-      "gzipBytes": 32856,
+      "rawBytes": 172595,
+      "gzipBytes": 32936,
       "budgetBytes": 33000,
       "withinBudget": true
     },
@@ -42,16 +47,21 @@
     "passed": true
   },
   "vitals": {
-    "domContentLoadedMs": 351.29999999701977,
-    "loadMs": 380.29999999701977,
-    "fcpMs": 380,
-    "lcpMs": 444,
+    "domContentLoadedMs": 362.70000000298023,
+    "loadMs": 363.1000000014901,
+    "fcpMs": 612,
+    "lcpMs": 768,
     "cls": 0,
     "layoutShifts": []
   },
   "initialRequests": [
-    "http://127.0.0.1:42761/assets/index-CUUvGGsm.js",
-    "http://127.0.0.1:42761/assets/index-C_FQ7CmV.css"
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/index-Ch_es_hg.js",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/index-D5-ykIe1.css",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/ko-Cje-RJDU.js",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/copy-DQ-HfkIO.js",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/catalogOverlay-CEdq_F3R.js",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/interactiveEntry-DBuJqiFL.js",
+    "http://127.0.0.1:38859/design_sample_selector_2/assets/clipboard-B9tI13lV.js"
   ],
   "core": {
     "galleryModes": [
@@ -88,47 +98,105 @@
     ],
     "interactions": {
       "viewChange": {
+        "metric": "processingMs",
         "samples": [
-          9.7,
-          6.3,
-          7.9,
-          9.6,
-          16.4
+          9.8,
+          15.4,
+          11.4,
+          10.3,
+          9.8
         ],
-        "medianMs": 9.6,
-        "maximumMs": 16.4
+        "medianMs": 10.3,
+        "maximumMs": 15.4,
+        "presentation": {
+          "samples": [
+            0.7,
+            1.4,
+            0.9,
+            1,
+            11.8
+          ],
+          "medianMs": 1,
+          "maximumMs": 11.8
+        },
+        "endToEnd": {
+          "samples": [
+            10.5,
+            16.8,
+            12.3,
+            11.3,
+            21.6
+          ],
+          "medianMs": 12.3,
+          "maximumMs": 21.6
+        }
       },
       "search": {
+        "metric": "processingMs",
         "samples": [
-          48.4,
-          30.8,
-          27.1,
-          27.6,
-          28.5
+          33.3,
+          10.8,
+          34.2,
+          24.1,
+          29.3
         ],
-        "medianMs": 28.5,
-        "maximumMs": 48.4
+        "medianMs": 29.3,
+        "maximumMs": 34.2,
+        "presentation": {
+          "samples": [
+            13.8,
+            45.5,
+            13.8,
+            21.7,
+            12.1
+          ],
+          "medianMs": 13.8,
+          "maximumMs": 45.5
+        },
+        "endToEnd": {
+          "samples": [
+            47.1,
+            56.3,
+            48,
+            45.8,
+            41.4
+          ],
+          "medianMs": 47.1,
+          "maximumMs": 56.3
+        }
       },
       "splitSearch": {
+        "metric": "processingMs",
         "samples": [
-          84.8,
-          8.2,
-          108.4,
-          109.6,
-          116.4
+          1.4,
+          0.7,
+          1,
+          0.8,
+          1.5
         ],
-        "medianMs": 108.4,
-        "maximumMs": 116.4,
-        "synchronous": {
+        "medianMs": 1,
+        "maximumMs": 1.5,
+        "presentation": {
           "samples": [
-            2,
-            0.8,
-            1,
-            0.7,
-            0.7
+            84.9,
+            11.3,
+            121.6,
+            100.8,
+            98.1
           ],
-          "medianMs": 0.8,
-          "maximumMs": 2
+          "medianMs": 98.1,
+          "maximumMs": 121.6
+        },
+        "endToEnd": {
+          "samples": [
+            86.3,
+            12,
+            122.6,
+            101.6,
+            99.6
+          ],
+          "medianMs": 99.6,
+          "maximumMs": 122.6
         }
       }
     },
@@ -143,8 +211,8 @@
       "interceptedComponentFailures": 1,
       "retrySucceeded": true,
       "resourcesAfterRetry": [
-        "http://127.0.0.1:42761/assets/componentLazyEntry-Bj0OJ3A5.js",
-        "http://127.0.0.1:42761/assets/componentEntry-CNdEzvMG.js"
+        "http://127.0.0.1:38859/design_sample_selector_2/assets/componentLazyEntry-DqJFj7-e.js",
+        "http://127.0.0.1:38859/design_sample_selector_2/assets/componentEntry-CEWqX7fe.js"
       ]
     },
     "detail": {
@@ -156,8 +224,9 @@
       "searchVisible": false,
       "theme": "swiss-grid",
       "deviceClass": "mockup-viewport desktop",
-      "zeroRebuild": {
+      "statefulSwap": {
         "sameViewport": true,
+        "rendererRebuilt": true,
         "selectedId": "corporate-minimal",
         "theme": "corporate-minimal"
       },
@@ -167,29 +236,57 @@
           "viewportClass": "mockup-viewport mobile",
           "active": true,
           "inactive": false,
-          "viewportWidth": 761,
-          "unitWidth": 365
+          "viewportWidth": 774,
+          "unitWidth": 371
         },
         {
           "device": "desktop",
           "viewportClass": "mockup-viewport desktop",
           "active": true,
           "inactive": false,
-          "viewportWidth": 761,
-          "unitWidth": 715
+          "viewportWidth": 774,
+          "unitWidth": 727
         }
       ],
-      "coldEntryMs": 59.4,
+      "coldEntryMs": 70.3,
+      "coldEntry": {
+        "processingMs": 70.3,
+        "postSettleFramesMs": 55.1,
+        "endToEndMs": 125.4
+      },
       "warmEntries": {
+        "metric": "processingMs",
         "samples": [
-          63.4,
-          64.3,
-          81.6,
-          19.4,
-          93.2
+          8.8,
+          15.7,
+          21.4,
+          18.9,
+          10.4
         ],
-        "medianMs": 64.3,
-        "maximumMs": 93.2
+        "medianMs": 15.7,
+        "maximumMs": 21.4,
+        "presentation": {
+          "samples": [
+            46.7,
+            69.1,
+            69,
+            48,
+            76.8
+          ],
+          "medianMs": 69,
+          "maximumMs": 76.8
+        },
+        "endToEnd": {
+          "samples": [
+            55.5,
+            84.8,
+            90.4,
+            66.9,
+            87.2
+          ],
+          "medianMs": 84.8,
+          "maximumMs": 90.4
+        }
       }
     },
     "split": {
@@ -211,7 +308,8 @@
       }
     },
     "selection": {
-      "dialog": "dialog",
+      "role": "region",
+      "theme": "swiss-grid",
       "busy": null,
       "previewCount": 1,
       "componentResources": 1
@@ -258,7 +356,7 @@
       "totalCount": 120,
       "thumbnails": 36,
       "pagination": true,
-      "nodes": 494,
+      "nodes": 538,
       "overflow": 0
     }
   },
@@ -272,7 +370,7 @@
             "resultCount": 36,
             "uniqueCount": 36,
             "thumbnails": 36,
-            "nodes": 421,
+            "nodes": 460,
             "page": "1–36 / 60 · 1 / 2 페이지"
           },
           "reachableCount": 60,
@@ -285,7 +383,7 @@
             "resultCount": 36,
             "uniqueCount": 36,
             "thumbnails": 36,
-            "nodes": 946,
+            "nodes": 910,
             "page": "1–36 / 60 · 1 / 2 페이지"
           },
           "reachableCount": 60,
@@ -310,7 +408,7 @@
         "resultCount": 1,
         "uniqueCount": 1,
         "thumbnails": 1,
-        "nodes": 30,
+        "nodes": 32,
         "page": null
       },
       "picker": {
@@ -336,51 +434,143 @@
         "detachedObserved": 0,
         "observedAfterCleanup": 0
       },
-      "galleryNodes": 420,
+      "galleryNodes": 459,
       "interactions": {
         "viewChange": {
+          "metric": "processingMs",
           "samples": [
-            51.5,
-            34.8,
-            65.1,
-            34.9,
-            35.5
+            6,
+            8.3,
+            5,
+            9.6,
+            3.5
           ],
-          "medianMs": 35.5,
-          "maximumMs": 65.1
+          "medianMs": 6,
+          "maximumMs": 9.6,
+          "presentation": {
+            "samples": [
+              51.6,
+              45.4,
+              32.2,
+              45.9,
+              30.3
+            ],
+            "medianMs": 45.4,
+            "maximumMs": 51.6
+          },
+          "endToEnd": {
+            "samples": [
+              57.6,
+              53.7,
+              37.2,
+              55.5,
+              33.8
+            ],
+            "medianMs": 53.7,
+            "maximumMs": 57.6
+          }
         },
         "pageChange": {
+          "metric": "processingMs",
           "samples": [
-            34.4,
-            32.7,
-            32.2,
-            33.8,
-            33.1
+            7.7,
+            17.1,
+            14.1,
+            25.1,
+            13.1
           ],
-          "medianMs": 33.1,
-          "maximumMs": 34.4
+          "medianMs": 14.1,
+          "maximumMs": 25.1,
+          "presentation": {
+            "samples": [
+              26.1,
+              34.7,
+              30.4,
+              34.6,
+              31.4
+            ],
+            "medianMs": 31.4,
+            "maximumMs": 34.7
+          },
+          "endToEnd": {
+            "samples": [
+              33.8,
+              51.8,
+              44.5,
+              59.7,
+              44.5
+            ],
+            "medianMs": 44.5,
+            "maximumMs": 59.7
+          }
         },
         "search": {
+          "metric": "processingMs",
           "samples": [
-            33.3,
-            37.5,
-            29.5,
-            37.2,
-            29
+            1.9,
+            3.3,
+            1.7,
+            3.2,
+            1.6
           ],
-          "medianMs": 33.3,
-          "maximumMs": 37.5
+          "medianMs": 1.9,
+          "maximumMs": 3.3,
+          "presentation": {
+            "samples": [
+              31.7,
+              28.8,
+              52,
+              28.2,
+              29.6
+            ],
+            "medianMs": 29.6,
+            "maximumMs": 52
+          },
+          "endToEnd": {
+            "samples": [
+              33.6,
+              32.1,
+              53.7,
+              31.4,
+              31.2
+            ],
+            "medianMs": 32.1,
+            "maximumMs": 53.7
+          }
         },
         "pickerSearch": {
+          "metric": "processingMs",
           "samples": [
-            48.3,
-            32.6,
-            33.8,
-            33.7,
-            33.1
+            1.4,
+            1.1,
+            0.9,
+            0.9,
+            0.9
           ],
-          "medianMs": 33.7,
-          "maximumMs": 48.3
+          "medianMs": 0.9,
+          "maximumMs": 1.4,
+          "presentation": {
+            "samples": [
+              57,
+              28.2,
+              33.3,
+              36.7,
+              27.1
+            ],
+            "medianMs": 33.3,
+            "maximumMs": 57
+          },
+          "endToEnd": {
+            "samples": [
+              58.4,
+              29.3,
+              34.2,
+              37.6,
+              28
+            ],
+            "medianMs": 34.2,
+            "maximumMs": 58.4
+          }
         }
       },
       "budgets": {
@@ -402,7 +592,7 @@
             "resultCount": 36,
             "uniqueCount": 36,
             "thumbnails": 36,
-            "nodes": 421,
+            "nodes": 460,
             "page": "1–36 / 120 · 1 / 4 페이지"
           },
           "reachableCount": 120,
@@ -415,7 +605,7 @@
             "resultCount": 36,
             "uniqueCount": 36,
             "thumbnails": 36,
-            "nodes": 946,
+            "nodes": 910,
             "page": "1–36 / 120 · 1 / 4 페이지"
           },
           "reachableCount": 120,
@@ -440,7 +630,7 @@
         "resultCount": 1,
         "uniqueCount": 1,
         "thumbnails": 1,
-        "nodes": 30,
+        "nodes": 32,
         "page": null
       },
       "picker": {
@@ -466,51 +656,143 @@
         "detachedObserved": 0,
         "observedAfterCleanup": 0
       },
-      "galleryNodes": 420,
+      "galleryNodes": 459,
       "interactions": {
         "viewChange": {
+          "metric": "processingMs",
           "samples": [
-            40.5,
-            61,
-            51.1,
-            33,
-            30.4
+            3.4,
+            5.2,
+            6.4,
+            9.2,
+            3
           ],
-          "medianMs": 40.5,
-          "maximumMs": 61
+          "medianMs": 5.2,
+          "maximumMs": 9.2,
+          "presentation": {
+            "samples": [
+              29.8,
+              84.3,
+              39.3,
+              53.6,
+              28.3
+            ],
+            "medianMs": 39.3,
+            "maximumMs": 84.3
+          },
+          "endToEnd": {
+            "samples": [
+              33.2,
+              89.5,
+              45.7,
+              62.8,
+              31.3
+            ],
+            "medianMs": 45.7,
+            "maximumMs": 89.5
+          }
         },
         "pageChange": {
+          "metric": "processingMs",
           "samples": [
-            36.8,
-            46.1,
-            33.4,
-            34.2,
-            32.1
+            16.1,
+            26.5,
+            11.6,
+            17,
+            14.7
           ],
-          "medianMs": 34.2,
-          "maximumMs": 46.1
+          "medianMs": 16.1,
+          "maximumMs": 26.5,
+          "presentation": {
+            "samples": [
+              21.8,
+              15.6,
+              41.4,
+              13.3,
+              19.6
+            ],
+            "medianMs": 19.6,
+            "maximumMs": 41.4
+          },
+          "endToEnd": {
+            "samples": [
+              37.9,
+              42.1,
+              53,
+              30.3,
+              34.3
+            ],
+            "medianMs": 37.9,
+            "maximumMs": 53
+          }
         },
         "search": {
+          "metric": "processingMs",
           "samples": [
-            33.8,
-            33.3,
-            32.9,
-            33.9,
-            34.2
+            1.4,
+            3.9,
+            1.4,
+            5,
+            4.6
           ],
-          "medianMs": 33.8,
-          "maximumMs": 34.2
+          "medianMs": 3.9,
+          "maximumMs": 5,
+          "presentation": {
+            "samples": [
+              36.6,
+              28,
+              27.7,
+              33.7,
+              26.5
+            ],
+            "medianMs": 28,
+            "maximumMs": 36.6
+          },
+          "endToEnd": {
+            "samples": [
+              38,
+              31.9,
+              29.1,
+              38.7,
+              31.1
+            ],
+            "medianMs": 31.9,
+            "maximumMs": 38.7
+          }
         },
         "pickerSearch": {
+          "metric": "processingMs",
           "samples": [
-            30.2,
-            32.2,
-            34,
-            33.6,
-            33.1
+            1.3,
+            2,
+            1.5,
+            1.6,
+            1.2
           ],
-          "medianMs": 33.1,
-          "maximumMs": 34
+          "medianMs": 1.5,
+          "maximumMs": 2,
+          "presentation": {
+            "samples": [
+              29.9,
+              28.6,
+              32.1,
+              32,
+              31.3
+            ],
+            "medianMs": 31.3,
+            "maximumMs": 32.1
+          },
+          "endToEnd": {
+            "samples": [
+              31.2,
+              30.6,
+              33.6,
+              33.6,
+              32.5
+            ],
+            "medianMs": 32.5,
+            "maximumMs": 33.6
+          }
         }
       },
       "budgets": {
@@ -539,7 +821,7 @@
     "synthetic-120-grid.png"
   ],
   "issues": [],
-  "protocolBrowser": "Chrome/151.0.7922.173",
+  "protocolBrowser": "Chrome/152.0.7977.75",
   "summary": {
     "coreGalleryModes": 3,
     "responsiveWidths": 4,

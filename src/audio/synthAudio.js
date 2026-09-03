@@ -293,18 +293,33 @@ export class SynthAudioEngine {
       this.analyser.connect(this.ctx.destination);
 
       this.initialized = true;
-      console.log('[AudioSynth] Polyphonic Lo-Fi Synth Audio Engine Ready! 🎵');
       return true;
-    } catch {
-      this.ctx = null;
-      this.masterGain = null;
-      this.bgmGain = null;
-      this.sfxGain = null;
-      this.analyser = null;
-      this.initialized = false;
-      console.error('[AudioSynth] Failed to initialize the audio engine.');
+    } catch (e) {
+      this.teardown();
+      console.error('[AudioSynth] Failed to initialize the audio engine.', e);
       return false;
     }
+  }
+
+  teardown() {
+    this.stopBgm();
+    if (this.ctx && typeof this.ctx.close === 'function') {
+      try {
+        const closePromise = this.ctx.close();
+        if (closePromise && typeof closePromise.catch === 'function') {
+          closePromise.catch(() => { /* ignore */ });
+        }
+      } catch { /* ignore */ }
+    }
+    this.ctx = null;
+    this.masterGain = null;
+    this.mainFilter = null;
+    this.bgmGain = null;
+    this.sfxGain = null;
+    this.delayNode = null;
+    this.delayGain = null;
+    this.analyser = null;
+    this.initialized = false;
   }
 
   async ensureAudioContext() {
@@ -348,7 +363,11 @@ export class SynthAudioEngine {
     appState.setState({ audio: { isPlaying: true } });
     this.stepIndex = 0;
     this.chordIndex = 0;
-    this.startScheduler();
+    const scheduled = this.startScheduler();
+    if (!scheduled) {
+      this.stopBgm();
+      return false;
+    }
     return true;
   }
 
@@ -394,18 +413,30 @@ export class SynthAudioEngine {
   }
 
   startScheduler() {
-    if (this.timerId) clearInterval(this.timerId);
+    try {
+      if (this.timerId) clearInterval(this.timerId);
 
-    const track = BGM_TRACKS[this.currentTrackIndex];
-    // 8th note duration in ms
-    const stepDurationMs = (60 / track.bpm) * 1000 / 2;
+      const track = BGM_TRACKS[this.currentTrackIndex];
+      // 8th note duration in ms
+      const stepDurationMs = (60 / track.bpm) * 1000 / 2;
 
-    this.tickStep();
-
-    this.timerId = setInterval(() => {
-      if (!this.isPlaying) return;
       this.tickStep();
-    }, stepDurationMs);
+
+      this.timerId = setInterval(() => {
+        if (!this.isPlaying) return;
+        try {
+          this.tickStep();
+        } catch (e) {
+          console.error('[AudioSynth] Scheduler tick failed, rolling back playback state.', e);
+          this.stopBgm();
+        }
+      }, stepDurationMs);
+      return true;
+    } catch (e) {
+      console.error('[AudioSynth] Scheduler start failed, rolling back playback state.', e);
+      this.stopBgm();
+      return false;
+    }
   }
 
   tickStep() {

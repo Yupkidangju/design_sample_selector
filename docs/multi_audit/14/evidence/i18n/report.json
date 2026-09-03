@@ -1,0 +1,3558 @@
+{
+  "checkedAt": "2026-09-03T06:26:29.492Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
+  "isolatedProfile": true,
+  "locales": [
+    {
+      "locale": "ko",
+      "lang": "ko",
+      "selectedLocale": "ko",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 432.96875,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "울름 합리주의",
+        "summary": "기능 분석표와 절제된 파랑·빨강 신호로 화면의 목적을 먼저 드러내는 시스템 디자인입니다."
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 격자 중심 모더니즘 테마 토큰 및 실시간 조정 === */",
+      "htmlCopy": "몬스터를 클릭하여 공격하고 콤보와 코인을 획득하세요!",
+      "markdownHeading": "개요 및 미적 설명",
+      "dtcgDisplayName": "격자 중심 모더니즘",
+      "dtcgDescription": "격자 중심 모더니즘의 실시간 디자인 토큰",
+      "runtimeStatus": "🚀 콤보 배수가 증가했습니다!",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-category=\"general\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "en",
+      "lang": "en",
+      "selectedLocale": "en",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 36
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 470.453125,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "Ulm Rationalism",
+        "summary": "Functional analysis tables and restrained blue-red signals make purpose visible before decoration."
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === Grid-Driven Modernism theme tokens and live tweaks === */",
+      "htmlCopy": "Select the monster to attack and earn combos and coins!",
+      "markdownHeading": "Overview and aesthetic description",
+      "dtcgDisplayName": "Grid-Driven Modernism",
+      "dtcgDescription": "Live design tokens for Grid-Driven Modernism",
+      "runtimeStatus": "🚀 Combo multiplier boosted!",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-category=\"general\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "ja",
+      "lang": "ja",
+      "selectedLocale": "ja",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 505.515625,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "ウルム合理主義",
+        "summary": "測定可能な格子と機能中心の記号で、ウルム造形大学の合理性を受け継ぐ画面です。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === グリッド中心のモダニズムのテーマトークンとライブ調整 === */",
+      "htmlCopy": "モンスターを選択して攻撃し、コンボとコインを獲得しましょう！",
+      "markdownHeading": "概要と美的説明",
+      "dtcgDisplayName": "グリッド中心のモダニズム",
+      "dtcgDescription": "グリッド中心のモダニズムのライブデザイントークン",
+      "runtimeStatus": "🚀 コンボ倍率が上がりました！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-category=\"general\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "zh-CN",
+      "lang": "zh-CN",
+      "selectedLocale": "zh-CN",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 426.171875,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "乌尔姆理性主义",
+        "summary": "可测量网格与功能符号延续乌尔姆设计学院的理性方法。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 以网格为核心的现代主义主题令牌与实时调整 === */",
+      "htmlCopy": "选择怪物发起攻击，赢得连击与金币！",
+      "markdownHeading": "概述与美学说明",
+      "dtcgDisplayName": "以网格为核心的现代主义",
+      "dtcgDescription": "以网格为核心的现代主义的实时设计令牌",
+      "runtimeStatus": "🚀 连击倍率已提升！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-category=\"general\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    },
+    {
+      "locale": "zh-TW",
+      "lang": "zh-TW",
+      "selectedLocale": "zh-TW",
+      "localeSelector": {
+        "pickerWidth": 104,
+        "layout": {
+          "picker": {
+            "x": 32,
+            "y": 99,
+            "width": 104,
+            "height": 34
+          },
+          "actions": {
+            "x": 32,
+            "y": 99,
+            "width": 1361,
+            "height": 39
+          },
+          "brand": {
+            "x": 32,
+            "y": 24,
+            "width": 426.171875,
+            "height": 55
+          }
+        },
+        "rect": {
+          "x": 32,
+          "y": 99,
+          "width": 104,
+          "height": 34
+        },
+        "color": "rgb(248, 250, 252)",
+        "backgroundColor": "rgb(14, 20, 32)",
+        "colorScheme": "dark"
+      },
+      "catalogCards": {
+        "reachableCount": 120,
+        "uniqueCount": 120,
+        "expectedCount": 120,
+        "mismatchCount": 0,
+        "mismatches": []
+      },
+      "expansionPreview": {
+        "name": "烏爾姆理性主義",
+        "summary": "可量測網格與功能符號延續烏爾姆設計學院的理性方法。"
+      },
+      "forbiddenKorean": [],
+      "cssComment": "/* === 以網格為核心的現代主義主題 Token 與即時調整 === */",
+      "htmlCopy": "選擇怪物發動攻擊，贏得連擊與金幣！",
+      "markdownHeading": "概述與美學說明",
+      "dtcgDisplayName": "以網格為核心的現代主義",
+      "dtcgDescription": "以網格為核心的現代主義的即時設計 Token",
+      "runtimeStatus": "🚀 連擊倍率已提升！",
+      "cssKeys": [
+        "--color-canvas-white",
+        "--color-deep-ink",
+        "--color-neutral-gray",
+        "--color-swiss-red",
+        "--theme-accent",
+        "--theme-accent-secondary",
+        "--theme-bg",
+        "--theme-border",
+        "--theme-border-width",
+        "--theme-font-family",
+        "--theme-glow",
+        "--theme-radius",
+        "--theme-shadow",
+        "--theme-surface",
+        "--theme-surface-subtle",
+        "--theme-text",
+        "--theme-text-muted",
+        "--tweak-backdrop-blur",
+        "--tweak-border-width",
+        "--tweak-glow-intensity",
+        "--tweak-shadow-depth",
+        "--tweak-surface-radius"
+      ],
+      "htmlMachine": [
+        "data-action=\"game-boost\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-skill\"",
+        "data-action=\"game-tap\"",
+        "data-archetype=\"game\"",
+        "data-category=\"general\"",
+        "data-mock-action=\"game-boost\"",
+        "data-mock-action=\"game-tap\"",
+        "data-skill=\"e\"",
+        "data-skill=\"q\"",
+        "data-skill=\"r\"",
+        "data-skill=\"w\"",
+        "id=\"arena-target-zone\"",
+        "id=\"game-coin-count\"",
+        "id=\"game-combo-mult\"",
+        "id=\"game-target\""
+      ],
+      "dtcgTopKeys": [
+        "color",
+        "dimension",
+        "effect",
+        "typography"
+      ],
+      "overflow": 0
+    }
+  ],
+  "preservation": {
+    "before": {
+      "activeInspectorTab": "html",
+      "sidebarScrollTop": 905,
+      "focus": "btn-inspector-copy",
+      "theme": "swiss-grid",
+      "archetype": "game"
+    },
+    "after": {
+      "activeInspectorTab": "html",
+      "sidebarScrollTop": 905,
+      "focus": "btn-inspector-copy",
+      "theme": "swiss-grid",
+      "archetype": "game"
+    }
+  },
+  "reflow": {
+    "contract": {
+      "widths": [
+        320,
+        375,
+        768,
+        1024,
+        1440
+      ],
+      "zoom200": {
+        "label": "zoom-200",
+        "physicalWidth": 1280,
+        "cssWidth": 640,
+        "cssHeight": 900,
+        "deviceScaleFactor": 2
+      }
+    },
+    "states": [
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "width-320",
+          "physicalWidth": 320,
+          "cssWidth": 320,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 859,
+              "width": 277,
+              "height": 843
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 859,
+              "width": 277,
+              "height": 843
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 5.037109375,
+              "right": 314.962890625,
+              "top": 14.166900634765625,
+              "bottom": 885.8331604003906,
+              "width": 309.92578125,
+              "height": 871.666259765625
+            },
+            "sandbox": {
+              "left": 6.005627632141113,
+              "right": 299.46659564971924,
+              "top": 239.83160400390625,
+              "bottom": 762.831298828125,
+              "width": 293.4609680175781,
+              "height": 522.9996948242188
+            },
+            "sidebar": {
+              "left": 6.005627632141113,
+              "right": 299.46659564971924,
+              "top": 762.831298828125,
+              "bottom": 884.8646240234375,
+              "width": 293.4609680175781,
+              "height": 122.0333251953125
+            }
+          }
+        }
+      },
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "width-375",
+          "physicalWidth": 375,
+          "cssWidth": 375,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 825,
+              "width": 332,
+              "height": 809
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 200,
+              "bottom": 234,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 825,
+              "width": 332,
+              "height": 809
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 200,
+              "bottom": 234,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 5.900787353515625,
+              "right": 369.0992126464844,
+              "top": 14.161865234375,
+              "bottom": 885.838134765625,
+              "width": 363.19842529296875,
+              "height": 871.67626953125
+            },
+            "sandbox": {
+              "left": 6.869316577911377,
+              "right": 353.6027455329895,
+              "top": 239.82916259765625,
+              "bottom": 762.8348999023438,
+              "width": 346.7334289550781,
+              "height": 523.0057373046875
+            },
+            "sidebar": {
+              "left": 6.869316577911377,
+              "right": 353.6027455329895,
+              "top": 762.8348999023438,
+              "bottom": 884.8695678710938,
+              "width": 346.7334289550781,
+              "height": 122.03466796875
+            }
+          }
+        }
+      },
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "width-768",
+          "physicalWidth": 768,
+          "cssWidth": 768,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 721,
+              "top": 24,
+              "bottom": 439,
+              "width": 689,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 736,
+              "top": 24,
+              "bottom": 439,
+              "width": 704,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 12.09503173828125,
+              "right": 755.9049682617188,
+              "top": 14.173858642578125,
+              "bottom": 885.8262023925781,
+              "width": 743.8099365234375,
+              "height": 871.65234375
+            },
+            "sandbox": {
+              "left": 13.063533782958984,
+              "right": 740.4089317321777,
+              "top": 226.27590942382812,
+              "bottom": 749.2672424316406,
+              "width": 727.3453979492188,
+              "height": 522.9913330078125
+            },
+            "sidebar": {
+              "left": 13.063533782958984,
+              "right": 740.4089317321777,
+              "top": 749.2672119140625,
+              "bottom": 884.857666015625,
+              "width": 727.3453979492188,
+              "height": 135.5904541015625
+            }
+          }
+        }
+      },
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "width-1024",
+          "physicalWidth": 1024,
+          "cssWidth": 1024,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 977,
+              "top": 24,
+              "bottom": 335,
+              "width": 945,
+              "height": 311
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 992,
+              "top": 24,
+              "bottom": 335,
+              "width": 960,
+              "height": 311
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 16.107879638671875,
+              "right": 1007.8920593261719,
+              "top": 14.157318115234375,
+              "bottom": 885.8426208496094,
+              "width": 991.7841796875,
+              "height": 871.685302734375
+            },
+            "sandbox": {
+              "left": 17.076419830322266,
+              "right": 992.3955116271973,
+              "top": 226.26742553710938,
+              "bottom": 749.2786560058594,
+              "width": 975.319091796875,
+              "height": 523.01123046875
+            },
+            "sidebar": {
+              "left": 17.076419830322266,
+              "right": 992.3955116271973,
+              "top": 749.2786865234375,
+              "bottom": 884.8741455078125,
+              "width": 975.319091796875,
+              "height": 135.595458984375
+            }
+          }
+        }
+      },
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "width-1440",
+          "physicalWidth": 1440,
+          "cssWidth": 1440,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1393,
+              "top": 24,
+              "bottom": 296,
+              "width": 1361,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1408,
+              "top": 24,
+              "bottom": 296,
+              "width": 1376,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 56.4447021484375,
+              "right": 1383.5396728515625,
+              "top": 35.279998779296875,
+              "bottom": 864.7199401855469,
+              "width": 1327.094970703125,
+              "height": 829.43994140625
+            },
+            "sandbox": {
+              "left": 57.404701232910156,
+              "right": 819.3746719360352,
+              "top": 245.51998901367188,
+              "bottom": 863.7599792480469,
+              "width": 761.969970703125,
+              "height": 618.239990234375
+            },
+            "sidebar": {
+              "left": 819.3746948242188,
+              "right": 1382.5797119140625,
+              "top": 245.51998901367188,
+              "bottom": 863.7599792480469,
+              "width": 563.2050170898438,
+              "height": 618.239990234375
+            }
+          }
+        }
+      },
+      {
+        "locale": "ko",
+        "viewport": {
+          "label": "zoom-200",
+          "physicalWidth": 1280,
+          "cssWidth": 640,
+          "cssHeight": 900,
+          "deviceScaleFactor": 2
+        },
+        "gallery": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 611,
+              "top": 16,
+              "bottom": 470,
+              "width": 597,
+              "height": 454
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 626,
+              "top": 16,
+              "bottom": 470,
+              "width": 612,
+              "height": 454
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 7.662872314453125,
+              "right": 632.3371887207031,
+              "top": 10.775909423828125,
+              "bottom": 889.2241516113281,
+              "width": 624.67431640625,
+              "height": 878.4482421875
+            },
+            "sandbox": {
+              "left": 8.638925552368164,
+              "right": 616.7203464508057,
+              "top": 224.53163146972656,
+              "bottom": 751.6006011962891,
+              "width": 608.0814208984375,
+              "height": 527.0689697265625
+            },
+            "sidebar": {
+              "left": 8.638925552368164,
+              "right": 616.7203464508057,
+              "top": 751.6005859375,
+              "bottom": 888.248046875,
+              "width": 608.0814208984375,
+              "height": 136.6474609375
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "width-320",
+          "physicalWidth": 320,
+          "cssWidth": 320,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 819,
+              "width": 277,
+              "height": 803
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 230,
+              "bottom": 264,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 819,
+              "width": 277,
+              "height": 803
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 230,
+              "bottom": 264,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 6.4000091552734375,
+              "right": 313.59996032714844,
+              "top": 18,
+              "bottom": 882,
+              "width": 307.199951171875,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 246.47999572753906,
+              "bottom": 764.8800201416016,
+              "width": 290.8799743652344,
+              "height": 518.4000244140625
+            },
+            "sidebar": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 764.8800048828125,
+              "bottom": 881.0399780273438,
+              "width": 290.8799743652344,
+              "height": 116.15997314453125
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "width-375",
+          "physicalWidth": 375,
+          "cssWidth": 375,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 785,
+              "width": 332,
+              "height": 769
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 196,
+              "bottom": 230,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 785,
+              "width": 332,
+              "height": 769
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 196,
+              "bottom": 230,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 4.491455078125,
+              "right": 370.508544921875,
+              "top": 10.77947998046875,
+              "bottom": 889.2205200195312,
+              "width": 366.01708984375,
+              "height": 878.4410400390625
+            },
+            "sandbox": {
+              "left": 5.467500686645508,
+              "right": 354.8918170928955,
+              "top": 243.07833862304688,
+              "bottom": 770.1429138183594,
+              "width": 349.42431640625,
+              "height": 527.0645751953125
+            },
+            "sidebar": {
+              "left": 5.467500686645508,
+              "right": 354.8918170928955,
+              "top": 770.1429443359375,
+              "bottom": 888.2445068359375,
+              "width": 349.42431640625,
+              "height": 118.1015625
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "width-768",
+          "physicalWidth": 768,
+          "cssWidth": 768,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 721,
+              "top": 24,
+              "bottom": 424,
+              "width": 689,
+              "height": 400
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 736,
+              "top": 24,
+              "bottom": 424,
+              "width": 704,
+              "height": 400
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 9.200897216796875,
+              "right": 758.7990417480469,
+              "top": 10.78228759765625,
+              "bottom": 889.2177124023438,
+              "width": 749.59814453125,
+              "height": 878.4354248046875
+            },
+            "sandbox": {
+              "left": 10.176936149597168,
+              "right": 743.1824903488159,
+              "top": 219.6547088623047,
+              "bottom": 746.7159271240234,
+              "width": 733.0055541992188,
+              "height": 527.0612182617188
+            },
+            "sidebar": {
+              "left": 10.176936149597168,
+              "right": 743.1824903488159,
+              "top": 746.7159423828125,
+              "bottom": 888.2416381835938,
+              "width": 733.0055541992188,
+              "height": 141.52569580078125
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "width-1024",
+          "physicalWidth": 1024,
+          "cssWidth": 1024,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 977,
+              "top": 24,
+              "bottom": 323,
+              "width": 945,
+              "height": 299
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 992,
+              "top": 24,
+              "bottom": 323,
+              "width": 960,
+              "height": 299
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 16.108856201171875,
+              "right": 1007.8910827636719,
+              "top": 14.158172607421875,
+              "bottom": 885.8417663574219,
+              "width": 991.7822265625,
+              "height": 871.68359375
+            },
+            "sandbox": {
+              "left": 17.077394485473633,
+              "right": 992.3945331573486,
+              "top": 221.4251708984375,
+              "bottom": 744.4354248046875,
+              "width": 975.317138671875,
+              "height": 523.01025390625
+            },
+            "sidebar": {
+              "left": 17.077394485473633,
+              "right": 992.3945331573486,
+              "top": 744.4354248046875,
+              "bottom": 884.873291015625,
+              "width": 975.317138671875,
+              "height": 140.4378662109375
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "width-1440",
+          "physicalWidth": 1440,
+          "cssWidth": 1440,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1393,
+              "top": 24,
+              "bottom": 287,
+              "width": 1361,
+              "height": 263
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1408,
+              "top": 24,
+              "bottom": 287,
+              "width": 1376,
+              "height": 263
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 56.4447021484375,
+              "right": 1383.5396728515625,
+              "top": 35.279998779296875,
+              "bottom": 864.7199401855469,
+              "width": 1327.094970703125,
+              "height": 829.43994140625
+            },
+            "sandbox": {
+              "left": 57.404701232910156,
+              "right": 819.3746719360352,
+              "top": 240.72000122070312,
+              "bottom": 863.7600402832031,
+              "width": 761.969970703125,
+              "height": 623.0400390625
+            },
+            "sidebar": {
+              "left": 819.3746948242188,
+              "right": 1382.5797119140625,
+              "top": 240.72000122070312,
+              "bottom": 863.7600402832031,
+              "width": 563.2050170898438,
+              "height": 623.0400390625
+            }
+          }
+        }
+      },
+      {
+        "locale": "en",
+        "viewport": {
+          "label": "zoom-200",
+          "physicalWidth": 1280,
+          "cssWidth": 640,
+          "cssHeight": 900,
+          "deviceScaleFactor": 2
+        },
+        "gallery": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 611,
+              "top": 16,
+              "bottom": 488,
+              "width": 597,
+              "height": 472
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 626,
+              "top": 16,
+              "bottom": 452,
+              "width": 612,
+              "height": 436
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 12.800018310546875,
+              "right": 627.1999206542969,
+              "top": 18,
+              "bottom": 882,
+              "width": 614.39990234375,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 13.760018348693848,
+              "right": 611.8399744033813,
+              "top": 223.44000244140625,
+              "bottom": 741.8399658203125,
+              "width": 598.0799560546875,
+              "height": 518.3999633789062
+            },
+            "sidebar": {
+              "left": 13.760018348693848,
+              "right": 611.8399744033813,
+              "top": 741.8399658203125,
+              "bottom": 881.0399780273438,
+              "width": 598.0799560546875,
+              "height": 139.20001220703125
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "width-320",
+          "physicalWidth": 320,
+          "cssWidth": 320,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 876,
+              "width": 277,
+              "height": 860
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 876,
+              "width": 277,
+              "height": 860
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 6.4000091552734375,
+              "right": 313.59996032714844,
+              "top": 18,
+              "bottom": 882,
+              "width": 307.199951171875,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 275.2799987792969,
+              "bottom": 793.6800231933594,
+              "width": 290.8799743652344,
+              "height": 518.4000244140625
+            },
+            "sidebar": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 793.6799926757812,
+              "bottom": 881.0399780273438,
+              "width": 290.8799743652344,
+              "height": 87.3599853515625
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "width-375",
+          "physicalWidth": 375,
+          "cssWidth": 375,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 786,
+              "width": 332,
+              "height": 770
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 200,
+              "bottom": 234,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 786,
+              "width": 332,
+              "height": 770
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 200,
+              "bottom": 234,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 7.5,
+              "right": 367.5,
+              "top": 18,
+              "bottom": 882,
+              "width": 360,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 8.460000038146973,
+              "right": 352.1399927139282,
+              "top": 258.9599914550781,
+              "bottom": 777.3600158691406,
+              "width": 343.67999267578125,
+              "height": 518.4000244140625
+            },
+            "sidebar": {
+              "left": 8.460000038146973,
+              "right": 352.1399927139282,
+              "top": 777.3599853515625,
+              "bottom": 881.0399780273438,
+              "width": 343.67999267578125,
+              "height": 103.67999267578125
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "width-768",
+          "physicalWidth": 768,
+          "cssWidth": 768,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 721,
+              "top": 24,
+              "bottom": 439,
+              "width": 689,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 736,
+              "top": 24,
+              "bottom": 439,
+              "width": 704,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 15.360015869140625,
+              "right": 752.6400451660156,
+              "top": 18,
+              "bottom": 882,
+              "width": 737.280029296875,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 16.32001495361328,
+              "right": 737.2800369262695,
+              "top": 228.239990234375,
+              "bottom": 746.6399536132812,
+              "width": 720.9600219726562,
+              "height": 518.3999633789062
+            },
+            "sidebar": {
+              "left": 16.32001495361328,
+              "right": 737.2800369262695,
+              "top": 746.6399536132812,
+              "bottom": 881.0399780273438,
+              "width": 720.9600219726562,
+              "height": 134.4000244140625
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "width-1024",
+          "physicalWidth": 1024,
+          "cssWidth": 1024,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 977,
+              "top": 24,
+              "bottom": 296,
+              "width": 945,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 992,
+              "top": 24,
+              "bottom": 296,
+              "width": 960,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 16.1182861328125,
+              "right": 1007.8817138671875,
+              "top": 14.166473388671875,
+              "bottom": 885.8334655761719,
+              "width": 991.763427734375,
+              "height": 871.6669921875
+            },
+            "sandbox": {
+              "left": 17.08680534362793,
+              "right": 992.3854503631592,
+              "top": 226.27212524414062,
+              "bottom": 749.2723693847656,
+              "width": 975.2986450195312,
+              "height": 523.000244140625
+            },
+            "sidebar": {
+              "left": 17.08680534362793,
+              "right": 992.3854503631592,
+              "top": 749.2723388671875,
+              "bottom": 884.864990234375,
+              "width": 975.2986450195312,
+              "height": 135.5926513671875
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "width-1440",
+          "physicalWidth": 1440,
+          "cssWidth": 1440,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1393,
+              "top": 24,
+              "bottom": 296,
+              "width": 1361,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1408,
+              "top": 24,
+              "bottom": 296,
+              "width": 1376,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 56.4447021484375,
+              "right": 1383.5396728515625,
+              "top": 35.279998779296875,
+              "bottom": 864.7199401855469,
+              "width": 1327.094970703125,
+              "height": 829.43994140625
+            },
+            "sandbox": {
+              "left": 57.404701232910156,
+              "right": 819.3746719360352,
+              "top": 235.9199981689453,
+              "bottom": 863.7600250244141,
+              "width": 761.969970703125,
+              "height": 627.8400268554688
+            },
+            "sidebar": {
+              "left": 819.3746948242188,
+              "right": 1382.5797119140625,
+              "top": 235.9199981689453,
+              "bottom": 863.7600250244141,
+              "width": 563.2050170898438,
+              "height": 627.8400268554688
+            }
+          }
+        }
+      },
+      {
+        "locale": "ja",
+        "viewport": {
+          "label": "zoom-200",
+          "physicalWidth": 1280,
+          "cssWidth": 640,
+          "cssHeight": 900,
+          "deviceScaleFactor": 2
+        },
+        "gallery": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 611,
+              "top": 16,
+              "bottom": 470,
+              "width": 597,
+              "height": 454
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 626,
+              "top": 16,
+              "bottom": 431,
+              "width": 612,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 5.6439208984375,
+              "right": 634.3560791015625,
+              "top": 7.936767578125,
+              "bottom": 892.063232421875,
+              "width": 628.712158203125,
+              "height": 884.12646484375
+            },
+            "sandbox": {
+              "left": 6.626283645629883,
+              "right": 618.6383075714111,
+              "top": 223.07420349121094,
+              "bottom": 753.5500946044922,
+              "width": 612.0120239257812,
+              "height": 530.4758911132812
+            },
+            "sidebar": {
+              "left": 6.626283645629883,
+              "right": 618.6383075714111,
+              "top": 753.5501098632812,
+              "bottom": 891.0808715820312,
+              "width": 612.0120239257812,
+              "height": 137.53076171875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "width-320",
+          "physicalWidth": 320,
+          "cssWidth": 320,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 820,
+              "width": 277,
+              "height": 804
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 820,
+              "width": 277,
+              "height": 804
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 6.4000091552734375,
+              "right": 313.59996032714844,
+              "top": 18,
+              "bottom": 882,
+              "width": 307.199951171875,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 258.9599914550781,
+              "bottom": 777.3600158691406,
+              "width": 290.8799743652344,
+              "height": 518.4000244140625
+            },
+            "sidebar": {
+              "left": 7.36000919342041,
+              "right": 298.2399835586548,
+              "top": 777.3599853515625,
+              "bottom": 881.0399780273438,
+              "width": 290.8799743652344,
+              "height": 103.67999267578125
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "width-375",
+          "physicalWidth": 375,
+          "cssWidth": 375,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 543,
+              "width": 332,
+              "height": 527
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 182,
+              "bottom": 216,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 361,
+              "top": 16,
+              "bottom": 558,
+              "width": 347,
+              "height": 542
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 182,
+              "bottom": 216,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 4.4927825927734375,
+              "right": 370.50718688964844,
+              "top": 10.78265380859375,
+              "bottom": 889.2173461914062,
+              "width": 366.014404296875,
+              "height": 878.4346923828125
+            },
+            "sandbox": {
+              "left": 5.468821048736572,
+              "right": 354.8906350135803,
+              "top": 224.53509521484375,
+              "bottom": 751.5958862304688,
+              "width": 349.42181396484375,
+              "height": 527.060791015625
+            },
+            "sidebar": {
+              "left": 5.468821048736572,
+              "right": 354.8906350135803,
+              "top": 751.5958862304688,
+              "bottom": 888.2412719726562,
+              "width": 349.42181396484375,
+              "height": 136.6453857421875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "width-768",
+          "physicalWidth": 768,
+          "cssWidth": 768,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 721,
+              "top": 24,
+              "bottom": 392,
+              "width": 689,
+              "height": 368
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 736,
+              "top": 24,
+              "bottom": 392,
+              "width": 704,
+              "height": 368
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 15.360015869140625,
+              "right": 752.6400451660156,
+              "top": 18,
+              "bottom": 882,
+              "width": 737.280029296875,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 16.32001495361328,
+              "right": 737.2800369262695,
+              "top": 228.239990234375,
+              "bottom": 746.6399536132812,
+              "width": 720.9600219726562,
+              "height": 518.3999633789062
+            },
+            "sidebar": {
+              "left": 16.32001495361328,
+              "right": 737.2800369262695,
+              "top": 746.6399536132812,
+              "bottom": 881.0399780273438,
+              "width": 720.9600219726562,
+              "height": 134.4000244140625
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "width-1024",
+          "physicalWidth": 1024,
+          "cssWidth": 1024,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 977,
+              "top": 24,
+              "bottom": 296,
+              "width": 945,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 992,
+              "top": 24,
+              "bottom": 296,
+              "width": 960,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 16.1031494140625,
+              "right": 1007.8968505859375,
+              "top": 14.153167724609375,
+              "bottom": 885.8467712402344,
+              "width": 991.793701171875,
+              "height": 871.693603515625
+            },
+            "sandbox": {
+              "left": 17.071697235107422,
+              "right": 992.4000663757324,
+              "top": 216.57981872558594,
+              "bottom": 739.5960540771484,
+              "width": 975.328369140625,
+              "height": 523.0162353515625
+            },
+            "sidebar": {
+              "left": 17.071697235107422,
+              "right": 992.4000663757324,
+              "top": 739.5960693359375,
+              "bottom": 884.8782958984375,
+              "width": 975.328369140625,
+              "height": 145.2822265625
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "width-1440",
+          "physicalWidth": 1440,
+          "cssWidth": 1440,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1393,
+              "top": 24,
+              "bottom": 296,
+              "width": 1361,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1408,
+              "top": 24,
+              "bottom": 257,
+              "width": 1376,
+              "height": 233
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 56.4447021484375,
+              "right": 1383.5396728515625,
+              "top": 35.279998779296875,
+              "bottom": 864.7199401855469,
+              "width": 1327.094970703125,
+              "height": 829.43994140625
+            },
+            "sandbox": {
+              "left": 57.404701232910156,
+              "right": 819.3746719360352,
+              "top": 203.27999877929688,
+              "bottom": 863.7599792480469,
+              "width": 761.969970703125,
+              "height": 660.47998046875
+            },
+            "sidebar": {
+              "left": 819.3746948242188,
+              "right": 1382.5797119140625,
+              "top": 203.27999877929688,
+              "bottom": 863.7599792480469,
+              "width": 563.2050170898438,
+              "height": 660.47998046875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-CN",
+        "viewport": {
+          "label": "zoom-200",
+          "physicalWidth": 1280,
+          "cssWidth": 640,
+          "cssHeight": 900,
+          "deviceScaleFactor": 2
+        },
+        "gallery": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 611,
+              "top": 16,
+              "bottom": 431,
+              "width": 597,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 626,
+              "top": 16,
+              "bottom": 431,
+              "width": 612,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 7.66046142578125,
+              "right": 632.3395385742188,
+              "top": 10.77252197265625,
+              "bottom": 889.2274780273438,
+              "width": 624.6790771484375,
+              "height": 878.4549560546875
+            },
+            "sandbox": {
+              "left": 8.63652229309082,
+              "right": 616.7225208282471,
+              "top": 224.52989196777344,
+              "bottom": 751.6028289794922,
+              "width": 608.0859985351562,
+              "height": 527.0729370117188
+            },
+            "sidebar": {
+              "left": 8.63652229309082,
+              "right": 616.7225208282471,
+              "top": 751.6028442382812,
+              "bottom": 888.2514038085938,
+              "width": 608.0859985351562,
+              "height": 136.6485595703125
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "width-320",
+          "physicalWidth": 320,
+          "cssWidth": 320,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 820,
+              "width": 277,
+              "height": 804
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 291,
+              "top": 16,
+              "bottom": 820,
+              "width": 277,
+              "height": 804
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 234,
+              "bottom": 268,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 5.0330047607421875,
+              "right": 314.9669647216797,
+              "top": 14.15533447265625,
+              "bottom": 885.8446655273438,
+              "width": 309.9339599609375,
+              "height": 871.6893310546875
+            },
+            "sandbox": {
+              "left": 6.0015482902526855,
+              "right": 299.47026777267456,
+              "top": 257.25982666015625,
+              "bottom": 780.2734375,
+              "width": 293.4687194824219,
+              "height": 523.0136108398438
+            },
+            "sidebar": {
+              "left": 6.0015482902526855,
+              "right": 299.47026777267456,
+              "top": 780.2734375,
+              "bottom": 884.8760986328125,
+              "width": 293.4687194824219,
+              "height": 104.6026611328125
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "width-375",
+          "physicalWidth": 375,
+          "cssWidth": 375,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 346,
+              "top": 16,
+              "bottom": 543,
+              "width": 332,
+              "height": 527
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 182,
+              "bottom": 216,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 375,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 361,
+              "top": 16,
+              "bottom": 558,
+              "width": 347,
+              "height": 542
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 182,
+              "bottom": 216,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 5.907135009765625,
+              "right": 369.0928649902344,
+              "top": 14.1771240234375,
+              "bottom": 885.8228759765625,
+              "width": 363.18572998046875,
+              "height": 871.645751953125
+            },
+            "sandbox": {
+              "left": 6.8756303787231445,
+              "right": 353.5969133377075,
+              "top": 226.277587890625,
+              "bottom": 749.2650146484375,
+              "width": 346.7212829589844,
+              "height": 522.9874267578125
+            },
+            "sidebar": {
+              "left": 6.8756303787231445,
+              "right": 353.5969133377075,
+              "top": 749.2650146484375,
+              "bottom": 884.8543701171875,
+              "width": 346.7212829589844,
+              "height": 135.58935546875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "width-768",
+          "physicalWidth": 768,
+          "cssWidth": 768,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 223,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 721,
+              "top": 24,
+              "bottom": 392,
+              "width": 689,
+              "height": 368
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 768,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 736,
+              "top": 24,
+              "bottom": 392,
+              "width": 704,
+              "height": 368
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 156,
+              "bottom": 190,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 12.088714599609375,
+              "right": 755.9112243652344,
+              "top": 14.166473388671875,
+              "bottom": 885.8334655761719,
+              "width": 743.822509765625,
+              "height": 871.6669921875
+            },
+            "sandbox": {
+              "left": 13.057233810424805,
+              "right": 740.4150218963623,
+              "top": 226.27212524414062,
+              "bottom": 749.2723693847656,
+              "width": 727.3577880859375,
+              "height": 523.000244140625
+            },
+            "sidebar": {
+              "left": 13.057233810424805,
+              "right": 740.4150218963623,
+              "top": 749.2723388671875,
+              "bottom": 884.864990234375,
+              "width": 727.3577880859375,
+              "height": 135.5926513671875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "width-1024",
+          "physicalWidth": 1024,
+          "cssWidth": 1024,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 977,
+              "top": 24,
+              "bottom": 296,
+              "width": 945,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1024,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 89,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 992,
+              "top": 24,
+              "bottom": 296,
+              "width": 960,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 20.480010986328125,
+              "right": 1003.5200500488281,
+              "top": 18,
+              "bottom": 882,
+              "width": 983.0400390625,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 21.44001007080078,
+              "right": 988.160041809082,
+              "top": 218.63999938964844,
+              "bottom": 737.0399627685547,
+              "width": 966.7200317382812,
+              "height": 518.3999633789062
+            },
+            "sidebar": {
+              "left": 21.44001007080078,
+              "right": 988.160041809082,
+              "top": 737.0399780273438,
+              "bottom": 881.0399780273438,
+              "width": 966.7200317382812,
+              "height": 144
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "width-1440",
+          "physicalWidth": 1440,
+          "cssWidth": 1440,
+          "cssHeight": 900,
+          "deviceScaleFactor": 1
+        },
+        "gallery": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1393,
+              "top": 24,
+              "bottom": 296,
+              "width": 1361,
+              "height": 272
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "deviceScaleFactor": 1
+          },
+          "documentOverflowX": 0,
+          "controlCount": 71,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 32,
+              "right": 1408,
+              "top": 24,
+              "bottom": 257,
+              "width": 1376,
+              "height": 233
+            },
+            "localePicker": {
+              "left": 32,
+              "right": 136,
+              "top": 99,
+              "bottom": 133,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 56.4447021484375,
+              "right": 1383.5396728515625,
+              "top": 35.279998779296875,
+              "bottom": 864.7199401855469,
+              "width": 1327.094970703125,
+              "height": 829.43994140625
+            },
+            "sandbox": {
+              "left": 57.404701232910156,
+              "right": 819.3746719360352,
+              "top": 203.27999877929688,
+              "bottom": 863.7599792480469,
+              "width": 761.969970703125,
+              "height": 660.47998046875
+            },
+            "sidebar": {
+              "left": 819.3746948242188,
+              "right": 1382.5797119140625,
+              "top": 203.27999877929688,
+              "bottom": 863.7599792480469,
+              "width": 563.2050170898438,
+              "height": 660.47998046875
+            }
+          }
+        }
+      },
+      {
+        "locale": "zh-TW",
+        "viewport": {
+          "label": "zoom-200",
+          "physicalWidth": 1280,
+          "cssWidth": 640,
+          "cssHeight": 900,
+          "deviceScaleFactor": 2
+        },
+        "gallery": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 97,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 611,
+              "top": 16,
+              "bottom": 431,
+              "width": 597,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": null,
+            "sandbox": null,
+            "sidebar": null
+          }
+        },
+        "detail": {
+          "viewport": {
+            "width": 640,
+            "height": 900,
+            "deviceScaleFactor": 2
+          },
+          "documentOverflowX": 0,
+          "controlCount": 71,
+          "unnamedControls": [],
+          "clippedControls": [],
+          "renderedCardCount": 36,
+          "regions": {
+            "header": {
+              "left": 14,
+              "right": 626,
+              "top": 16,
+              "bottom": 431,
+              "width": 612,
+              "height": 415
+            },
+            "localePicker": {
+              "left": 14,
+              "right": 118,
+              "top": 148,
+              "bottom": 182,
+              "width": 104,
+              "height": 34
+            },
+            "detail": {
+              "left": 12.800018310546875,
+              "right": 627.1999206542969,
+              "top": 18,
+              "bottom": 882,
+              "width": 614.39990234375,
+              "height": 864
+            },
+            "sandbox": {
+              "left": 13.760018348693848,
+              "right": 611.8399744033813,
+              "top": 228.239990234375,
+              "bottom": 746.6399536132812,
+              "width": 598.0799560546875,
+              "height": 518.3999633789062
+            },
+            "sidebar": {
+              "left": 13.760018348693848,
+              "right": 611.8399744033813,
+              "top": 746.6399536132812,
+              "bottom": 881.0399780273438,
+              "width": 598.0799560546875,
+              "height": 134.4000244140625
+            }
+          }
+        }
+      }
+    ]
+  },
+  "runtimeSignals": {
+    "warnings": [],
+    "errors": [],
+    "exceptions": [],
+    "networkFailures": []
+  },
+  "screenshots": [
+    "locale-selector-ko.png",
+    "expansion-preview-ko.png",
+    "detail-inspector-ko.png",
+    "locale-selector-en.png",
+    "expansion-preview-en.png",
+    "detail-inspector-en.png",
+    "locale-selector-ja.png",
+    "expansion-preview-ja.png",
+    "detail-inspector-ja.png",
+    "locale-selector-zh-CN.png",
+    "expansion-preview-zh-CN.png",
+    "detail-inspector-zh-CN.png",
+    "locale-selector-zh-TW.png",
+    "expansion-preview-zh-TW.png",
+    "detail-inspector-zh-TW.png",
+    "reflow-ko-width-320.png",
+    "reflow-ko-width-1440.png",
+    "reflow-ko-zoom-200.png",
+    "reflow-en-width-320.png",
+    "reflow-en-width-1440.png",
+    "reflow-en-zoom-200.png",
+    "reflow-ja-width-320.png",
+    "reflow-ja-width-1440.png",
+    "reflow-ja-zoom-200.png",
+    "reflow-zh-CN-width-320.png",
+    "reflow-zh-CN-width-1440.png",
+    "reflow-zh-CN-zoom-200.png",
+    "reflow-zh-TW-width-320.png",
+    "reflow-zh-TW-width-1440.png",
+    "reflow-zh-TW-zoom-200.png"
+  ],
+  "issues": [],
+  "semantic": {
+    "localeCount": 5,
+    "styleCount": 120,
+    "humanUnitCountPerLocale": 1924,
+    "humanUnitCount": 9620,
+    "idDrift": [],
+    "machineDrift": [],
+    "emptyHumanFields": [],
+    "chineseRegionalSeparation": {
+      "identicalSummaryCount": 0,
+      "identicalRecordCount": 0,
+      "simplifiedTermHits": {
+        "用户": 29,
+        "界面": 126,
+        "数据": 91,
+        "加载": 1,
+        "网格": 67,
+        "亚克力": 9
+      },
+      "traditionalTermHits": {
+        "使用者": 29,
+        "介面": 126,
+        "資料": 99,
+        "載入": 1,
+        "網格": 67,
+        "壓克力": 9
+      }
+    }
+  },
+  "summary": {
+    "localeCount": 5,
+    "reflowStateCount": 30,
+    "screenshotCount": 30,
+    "diagnostics": 0,
+    "issues": 0
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "checkedAt": "2026-09-03T06:33:02.028Z",
+  "chromeVersion": "Chrome/152.0.7977.75",
+  "isolatedProfile": true,
+  "cases": [
+    {
+      "mode": "grid",
+      "key": "Enter",
+      "selector": ".tile-detail-btn",
+      "before": {
+        "id": "swiss-grid",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "swiss-grid",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    },
+    {
+      "mode": "grid",
+      "key": "Space",
+      "selector": ".tile-detail-btn",
+      "before": {
+        "id": "swiss-grid",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "swiss-grid",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    },
+    {
+      "mode": "bento",
+      "key": "Enter",
+      "selector": ".bento-open-cta",
+      "before": {
+        "id": "swiss-grid",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "swiss-grid",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    },
+    {
+      "mode": "bento",
+      "key": "Space",
+      "selector": ".bento-open-cta",
+      "before": {
+        "id": "swiss-grid",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "swiss-grid",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    },
+    {
+      "mode": "spectrum",
+      "key": "Enter",
+      "selector": ".spec-cta",
+      "before": {
+        "id": "high-fashion",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "high-fashion",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    },
+    {
+      "mode": "spectrum",
+      "key": "Space",
+      "selector": ".spec-cta",
+      "before": {
+        "id": "high-fashion",
+        "tagName": "BUTTON",
+        "width": 69.0625,
+        "height": 44,
+        "focused": true
+      },
+      "after": {
+        "theme": "high-fashion",
+        "detailDisplay": "block",
+        "mainDisplay": "none"
+      },
+      "passed": true
+    }
+  ],
+  "issues": []
+}

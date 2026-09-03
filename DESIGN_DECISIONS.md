@@ -1,7 +1,7 @@
 # Design Decisions Record (`DESIGN_DECISIONS.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0
-**Document Status:** Architecture Rationale & Decision History  
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Document Status:** Architecture Rationale & Decision History (v2.4.0 Local Refactoring Verified)
 
 ---
 
@@ -345,7 +345,7 @@
   - 전환 비용은 단순 attribute swap보다 크지만 bounded Detail viewport 한 개만 다시 만들며 성능 hard gate로 제한한다.
   - runtime state의 직렬화/복원 계약과 브라우저 stateful transition 회귀 검사가 새 유지보수 표면이 된다.
   - Decision 007의 “shared template + state preservation” 목표는 유지하지만 구현 수단인 literal zero-rebuild만 이 결정이 대체한다.
-  - 기존 Chrome interaction 수치는 driver 왕복이 섞인 wall-clock 표본이라 FIN-F006 종결 근거에서 제외한다. 독립 재감사 `250.1/133.7/96.4ms` 관측과 네 회귀 결함, 후속 sidebar flex 축소를 해소한 뒤 no-op을 제외한 browser-local hard metric 직렬 3회가 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max), diagnostics/issue 0으로 통과했다. 현재 Node는 180/180, build는 76 modules, 초기 JS/CSS는 `88.60/32.86kB` gzip이다.
+  - 기존 Chrome interaction 수치는 driver 왕복이 섞인 wall-clock 표본이라 FIN-F006 종결 근거에서 제외한다. 독립 재감사 `250.1/133.7/96.4ms` 관측과 네 회귀 결함, 후속 sidebar flex 축소를 해소한 뒤 no-op을 제외한 browser-local hard metric 직렬 3회가 `20.95/51.6ms`, `20.4/121.1ms`, `21.45/131.9ms`(median/max), diagnostics/issue 0으로 통과했다. (당시 Phase 4I 측정치: Node 180/180, build 76 modules, 초기 JS/CSS `88.60/32.86kB` gzip; 현재 v2.4.0 기준선: Node 293/293, build 100 modules, 초기 JS/CSS `88.92/32.94kB` gzip).
 
 ---
 
@@ -354,7 +354,7 @@
 - **Status:** Accepted; live deployment verification pending (2026-08-31)
 - **Context:** Audit 10에서 live GitHub Pages가 Vite `dist`가 아니라 source root를 게시해 `componentEntry.js`의 CSS imports가 native ESM MIME 오류로 실패하는 것이 확인됐다. primary/retry facade가 같은 shared graph를 사용하고 마지막 importer를 무제한 반복했으며, Peek affordance와 mount rollback·운영 진단도 계약과 달랐다.
 - **Decision:**
-  - Vite base는 `/design_sample_selector/`이고 GitHub Actions만 `dist` directory artifact를 게시한다. recursive closure/release manifest가 누락·source entry·base 오류를 배포 전에 차단한다.
+  - Vite base는 `/design_sample_selector/`이고 (v2.3 원본 레포: `/design_sample_selector/`) GitHub Actions만 `dist` directory artifact를 게시한다. recursive closure/release manifest가 누락·source entry·base 오류를 배포 전에 차단한다.
   - Peek/확정 component graph와 Detail/Split 전체 graph는 서로 다른 두 복구 경계다. 각각 primary + retry 한 번만 허용하고 두 번째 실패 뒤 terminal reload/cancel 상태로 끝낸다.
   - mount subscription은 초기 callback 성공 후에만 commit하며 render/hydrate throw는 DOM·handler·runtime을 rollback한다. 안전한 recovery diagnostic은 bounded memory에 phase/attempt/resource class만 보존한다.
   - Peek는 native Detail button과 실제 double click을 제공한다. renderer output의 executable sink와 oversized/corrupt localStorage를 경계에서 거부한다.
@@ -510,4 +510,4 @@
   - 첫 실행에서 5개 locale 모두의 320px Game CTA 잘림을 검출했고, action bar의 내용 기반 줄바꿈으로 수정했다.
   - 접근성 이름 판정에서 control value fallback을 제거한 뒤 tuner range 5개의 실제 label 누락을 검출했다. 고정 영문 병기를 제거하고 locale-owned `<label for>`를 연결했다.
   - 최종 report는 5 locale, 120 styles, 9,620 human units, reflow 30상태, screenshot 30장, semantic/machine drift·overflow·clipped/unnamed control·diagnostics/issues 0을 기록한다.
-  - Node 284/284, Vite 100 modules, 초기 JS/CSS 88,365/32,997B gzip, actual-120·Discovery·Pages recovery가 통과했다. ED-011 사람 검토는 별도 open checkpoint로 남는다.
+  - (과거 Audit 측정치: Node 284/284, Vite 100 modules, 초기 JS/CSS 88,365/32,997B gzip; 현재 v2.4.0 기준선: Node 293/293, Vite 100 modules, 초기 JS/CSS 88.92/32.94kB gzip). actual-120·Discovery·Pages recovery가 통과했다. ED-011 사람 검토는 별도 open checkpoint로 남는다.

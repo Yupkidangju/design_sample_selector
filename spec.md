@@ -1,14 +1,14 @@
 # Master Specification (`spec.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0  
-**Environment:** Client-side Pure Web (HTML5 / CSS3 / JavaScript ES2022 / Canvas 2D / Web Audio API)  
-**Document Status:** Current v2.3.0 Runtime Contract / Unreleased Actual 120 Complete
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Environment:** Client-side Pure Web (HTML5 / CSS3 / JavaScript ES2022 / Canvas 2D / Web Audio API)
+**Document Status:** Current v2.4.0 Runtime Contract / Local Refactoring Verified
 
 ---
 
 ## 1. Document Control & Operating Rules
 
-1. This specification is the authoritative master contract for the `design_sample_selector` web application v2.3.0.
+1. This specification is the authoritative master contract for the `design_sample_selector` web application v2.4.0.
 2. All data types, audio parameters, category definitions, visual layout rules, and component state trees specified herein are frozen for implementation.
 3. No speculative or open-ended placeholder terms ("later", "optional", "as needed") are permitted; all interfaces and values are explicitly defined.
 4. Any architectural change requested by the user must update this specification first or within the same work unit.
@@ -25,7 +25,7 @@ The current unreleased baseline is 8 categories and exactly 120 styles: 24 compa
 
 `design_sample_selector` is an ultra-modern, high-performance web-native interactive gallery and design system playground. Built purely with standard HTML5, modern CSS3, ES2022 JavaScript, HTML5 Canvas 2D, and the Web Audio API, it serves as a comprehensive educational and inspirational hub for visual designers and web developers worldwide.
 
-In v2.3.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactive Inspector & Design Spec Generator (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens JSON]`)** with frame-coalesced `requestAnimationFrame` synchronization, 3-level CSS granularity toggles (Full Bundle / Tokens Only / Component Only), individual client-side file export (`.css`, `.html`, `.md`, `.json`), and an integrated text snapshot export.
+In v2.4.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactive Inspector & Design Spec Generator (`[Live CSS]`, `[Live HTML]`, `[Live designs.md]`, `[Design Tokens JSON]`)** with frame-coalesced `requestAnimationFrame` synchronization, 3-level CSS granularity toggles (Full Bundle / Tokens Only / Component Only), individual client-side file export (`.css`, `.html`, `.md`, `.json`), and an integrated text snapshot export.
 
 ---
 
@@ -255,7 +255,7 @@ export interface MainCategory {
 
 ### 5.9 GitHub Pages Delivery, Recovery Diagnostics, and Trust Boundaries
 
-1. production URL은 `https://yupkidangju.github.io/design_sample_selector/`의 root와 query/hash만 지원한다. 임의 deep pathname은 지원하지 않으며 Vite `base`는 `/design_sample_selector/`로 고정한다.
+1. production/preview URL은 `https://yupkidangju.github.io/design_sample_selector/` (remote 생성 전 미확정)의 root와 query/hash만 지원한다. 임의 deep pathname은 지원하지 않으며 Vite `base`는 `/design_sample_selector/`로 고정한다.
 2. GitHub Pages는 source root가 아니라 clean `npm ci`와 `npm run build`가 만든 `dist/` directory artifact를 GitHub Actions로 한 번에 게시한다. `dist/index.html`은 hashed `assets/index-*.js`를 가리켜야 하고 `/src/main.js`를 production entry로 사용할 수 없다.
 3. build는 Vite manifest의 entry/import/dynamicImport/CSS/asset closure를 재귀 검증하고 모든 파일의 경로·크기·SHA-256·MIME과 release SHA를 `dist/release-manifest.json`에 기록한다. 누락 파일, dist 밖 경로, source entry 또는 잘못된 base는 배포 전에 실패한다.
 4. recovery diagnostic은 사용자 메시지와 분리한 bounded in-memory record다. `code`, `phase(import|render|hydrate|mount)`, `attempt`, `resourceClass`, `terminal`만 기록하고 URL query, stack, 사용자 데이터나 자격정보는 저장하지 않는다.

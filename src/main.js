@@ -77,8 +77,6 @@ function renderFatalBootstrapError(appContainer) {
 async function initApp() {
   const appContainer = document.querySelector('.app-container');
   try {
-    console.log('[DesignSpectrum] Initializing Web Showcase Application...');
-
     let storedLocale = '';
     try { storedLocale = window.localStorage?.getItem(LOCALE_STORAGE_KEY) || ''; } catch { /* 저장소 접근 실패는 감지를 막지 않는다. */ }
     const initialLocale = resolveLocalePreference({
@@ -301,8 +299,6 @@ async function initApp() {
         // 폰트 요청 실패 시 시스템 폴백으로 계속 표시한다.
       }
     }
-
-    console.log('[DesignSpectrum] Application Ready! 🚀');
   } catch {
     console.error('[DesignSpectrum] Application bootstrap failed.');
     renderFatalBootstrapError(appContainer);

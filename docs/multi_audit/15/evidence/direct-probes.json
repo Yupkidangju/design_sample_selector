@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-09-03",
+  "scope": "current local design_sample_selector_2 only",
+  "appStateSubscriberMutation": {
+    "subscriberCalls": 1,
+    "firstInstanceBookmarks": ["swiss-grid"],
+    "newInstanceBookmarks": ["swiss-grid"],
+    "reproduced": true
+  },
+  "aestheticProfilePrototypeKeys": {
+    "categoryId": "__proto__",
+    "game": "TypeError",
+    "media": "ok",
+    "chat": "TypeError",
+    "reproduced": true
+  },
+  "audioContextCloseRejection": {
+    "unhandledRejection": "close rejected",
+    "engineContextAfterTeardown": null,
+    "engineInitializedAfterTeardown": false,
+    "reproduced": true
+  }
+}

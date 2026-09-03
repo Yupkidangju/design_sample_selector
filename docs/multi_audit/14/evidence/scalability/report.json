@@ -1,0 +1,842 @@
+{
+  "checkedAt": "2026-09-03T06:27:55.644Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
+  "isolatedProfile": true,
+  "timingMethod": {
+    "metric": "processingMs",
+    "hardGateBoundary": "input dispatch -> required state/DOM predicate settlement",
+    "presentationBoundary": "settlement -> requested animation frames"
+  },
+  "bundle": {
+    "checkedAt": "2026-09-03T06:27:55.655Z",
+    "distDirectory": "dist",
+    "indexPath": "dist/index.html",
+    "assets": [
+      {
+        "type": "javascript",
+        "relation": "module",
+        "source": "/design_sample_selector_2/assets/index-WrRS7NtG.js",
+        "path": "assets/index-WrRS7NtG.js",
+        "rawBytes": 281680,
+        "gzipBytes": 89005
+      },
+      {
+        "type": "css",
+        "relation": "stylesheet",
+        "source": "/design_sample_selector_2/assets/index-D5-ykIe1.css",
+        "path": "assets/index-D5-ykIe1.css",
+        "rawBytes": 172595,
+        "gzipBytes": 32936
+      }
+    ],
+    "javascript": {
+      "assetCount": 1,
+      "rawBytes": 281680,
+      "gzipBytes": 89005,
+      "budgetBytes": 88980,
+      "withinBudget": false
+    },
+    "css": {
+      "assetCount": 1,
+      "rawBytes": 172595,
+      "gzipBytes": 32936,
+      "budgetBytes": 33000,
+      "withinBudget": true
+    },
+    "issues": [
+      "초기 JavaScript gzip 89005B가 88980B 예산을 초과했습니다."
+    ],
+    "passed": false
+  },
+  "vitals": {
+    "domContentLoadedMs": 378.0999999977648,
+    "loadMs": 379,
+    "fcpMs": 532,
+    "lcpMs": 800,
+    "cls": 0,
+    "layoutShifts": []
+  },
+  "initialRequests": [
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/index-WrRS7NtG.js",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/index-D5-ykIe1.css",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/ko-Cje-RJDU.js",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/copy-DQ-HfkIO.js",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/catalogOverlay-6U1fKV-w.js",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/interactiveEntry-bOCH-ztm.js",
+    "http://127.0.0.1:39757/design_sample_selector_2/assets/clipboard-BYRRVfMR.js"
+  ],
+  "core": {
+    "galleryModes": [
+      {
+        "mode": "GRID",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "BENTO",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      },
+      {
+        "mode": "SPECTRUM",
+        "count": 36,
+        "unique": 36,
+        "thumbnails": 36,
+        "pagination": true,
+        "overflow": 0,
+        "reachableCount": 120,
+        "reachableUnique": 120
+      }
+    ],
+    "interactions": {
+      "viewChange": {
+        "metric": "processingMs",
+        "samples": [
+          14.7,
+          18,
+          10.4,
+          8.7,
+          13.2
+        ],
+        "medianMs": 13.2,
+        "maximumMs": 18,
+        "presentation": {
+          "samples": [
+            1.2,
+            1.1,
+            1,
+            1.4,
+            0.7
+          ],
+          "medianMs": 1.1,
+          "maximumMs": 1.4
+        },
+        "endToEnd": {
+          "samples": [
+            15.9,
+            19.1,
+            11.4,
+            10.1,
+            13.9
+          ],
+          "medianMs": 13.9,
+          "maximumMs": 19.1
+        }
+      },
+      "search": {
+        "metric": "processingMs",
+        "samples": [
+          29.6,
+          12.4,
+          26.6,
+          7,
+          29.3
+        ],
+        "medianMs": 26.6,
+        "maximumMs": 29.6,
+        "presentation": {
+          "samples": [
+            12.3,
+            32.5,
+            8.3,
+            18.4,
+            12
+          ],
+          "medianMs": 12.3,
+          "maximumMs": 32.5
+        },
+        "endToEnd": {
+          "samples": [
+            41.9,
+            44.9,
+            34.9,
+            25.4,
+            41.3
+          ],
+          "medianMs": 41.3,
+          "maximumMs": 44.9
+        }
+      },
+      "splitSearch": {
+        "metric": "processingMs",
+        "samples": [
+          2.1,
+          1,
+          1.9,
+          1.3,
+          1.5
+        ],
+        "medianMs": 1.5,
+        "maximumMs": 2.1,
+        "presentation": {
+          "samples": [
+            15.2,
+            9.3,
+            110.9,
+            113.3,
+            101.1
+          ],
+          "medianMs": 101.1,
+          "maximumMs": 113.3
+        },
+        "endToEnd": {
+          "samples": [
+            17.3,
+            10.3,
+            112.8,
+            114.6,
+            102.6
+          ],
+          "medianMs": 102.6,
+          "maximumMs": 114.6
+        }
+      }
+    },
+    "lazyLoading": {
+      "initialLazyRequests": [],
+      "loadingObserved": true,
+      "failureState": {
+        "busy": null,
+        "alert": "미리보기를 불러오지 못했습니다.\n          다시 시도",
+        "retryLabel": "다시 시도"
+      },
+      "interceptedComponentFailures": 1,
+      "retrySucceeded": true,
+      "resourcesAfterRetry": [
+        "http://127.0.0.1:39757/design_sample_selector_2/assets/componentLazyEntry-DFooqARB.js",
+        "http://127.0.0.1:39757/design_sample_selector_2/assets/componentEntry-Ccxseuzl.js"
+      ]
+    },
+    "detail": {
+      "categoryId": "swiss",
+      "chipCount": 15,
+      "thumbnailCount": 15,
+      "foreignCategoryCount": 0,
+      "selectedCount": 1,
+      "searchVisible": false,
+      "theme": "swiss-grid",
+      "deviceClass": "mockup-viewport desktop",
+      "statefulSwap": {
+        "sameViewport": true,
+        "rendererRebuilt": true,
+        "selectedId": "corporate-minimal",
+        "theme": "corporate-minimal"
+      },
+      "devices": [
+        {
+          "device": "mobile",
+          "viewportClass": "mockup-viewport mobile",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 786,
+          "unitWidth": 377
+        },
+        {
+          "device": "desktop",
+          "viewportClass": "mockup-viewport desktop",
+          "active": true,
+          "inactive": false,
+          "viewportWidth": 789,
+          "unitWidth": 741
+        }
+      ],
+      "coldEntryMs": 56.7,
+      "coldEntry": {
+        "processingMs": 56.7,
+        "postSettleFramesMs": 7.8,
+        "endToEndMs": 64.5
+      },
+      "warmEntries": {
+        "metric": "processingMs",
+        "samples": [
+          9,
+          12,
+          11.2,
+          23.4,
+          19
+        ],
+        "medianMs": 12,
+        "maximumMs": 23.4,
+        "presentation": {
+          "samples": [
+            33.2,
+            44.4,
+            21.6,
+            0.5,
+            0.6
+          ],
+          "medianMs": 21.6,
+          "maximumMs": 44.4
+        },
+        "endToEnd": {
+          "samples": [
+            42.2,
+            56.4,
+            32.8,
+            23.9,
+            19.6
+          ],
+          "medianMs": 32.8,
+          "maximumMs": 56.4
+        }
+      }
+    },
+    "split": {
+      "visualA": 12,
+      "visualB": 12,
+      "thumbnailsA": 12,
+      "thumbnailsB": 12,
+      "optionsA": 120,
+      "optionsB": 120,
+      "selectedA": "swiss-grid",
+      "selectedB": "neo-brutalism",
+      "overflow": 0,
+      "afterSearch": {
+        "visualA": 12,
+        "selectedCount": 1,
+        "focusId": "split-style-search-a",
+        "statusRole": "status",
+        "live": "polite"
+      }
+    },
+    "selection": {
+      "role": "region",
+      "theme": "swiss-grid",
+      "busy": null,
+      "previewCount": 1,
+      "componentResources": 1
+    },
+    "responsiveWidths": [
+      {
+        "width": 320,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 768,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1024,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      },
+      {
+        "width": 1440,
+        "resultCount": 36,
+        "thumbnails": 36,
+        "overflow": 0,
+        "unlabeledControls": 0
+      }
+    ],
+    "reducedMotion": {
+      "matches": true,
+      "thumbnails": 36,
+      "inView": 0,
+      "runningAnimations": 0
+    },
+    "initial": {
+      "resultCount": 36,
+      "uniqueCount": 36,
+      "totalCount": 120,
+      "thumbnails": 36,
+      "pagination": true,
+      "nodes": 538,
+      "overflow": 0
+    }
+  },
+  "synthetic": [
+    {
+      "count": 60,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 460,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 910,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 60 · 1 / 2 페이지"
+          },
+          "reachableCount": 60,
+          "reachableUnique": 60,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 32,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 60,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 459,
+      "interactions": {
+        "viewChange": {
+          "metric": "processingMs",
+          "samples": [
+            2.9,
+            3.8,
+            2.6,
+            5.9,
+            2.4
+          ],
+          "medianMs": 2.9,
+          "maximumMs": 5.9,
+          "presentation": {
+            "samples": [
+              30.4,
+              46,
+              31.8,
+              28.4,
+              29.3
+            ],
+            "medianMs": 30.4,
+            "maximumMs": 46
+          },
+          "endToEnd": {
+            "samples": [
+              33.3,
+              49.8,
+              34.4,
+              34.3,
+              31.7
+            ],
+            "medianMs": 34.3,
+            "maximumMs": 49.8
+          }
+        },
+        "pageChange": {
+          "metric": "processingMs",
+          "samples": [
+            6.9,
+            9.1,
+            7.6,
+            8.5,
+            7.1
+          ],
+          "medianMs": 7.6,
+          "maximumMs": 9.1,
+          "presentation": {
+            "samples": [
+              26,
+              24.3,
+              26.1,
+              24.2,
+              26.4
+            ],
+            "medianMs": 26,
+            "maximumMs": 26.4
+          },
+          "endToEnd": {
+            "samples": [
+              32.9,
+              33.4,
+              33.7,
+              32.7,
+              33.5
+            ],
+            "medianMs": 33.4,
+            "maximumMs": 33.7
+          }
+        },
+        "search": {
+          "metric": "processingMs",
+          "samples": [
+            1.9,
+            1.9,
+            1.7,
+            3.2,
+            1.1
+          ],
+          "medianMs": 1.9,
+          "maximumMs": 3.2,
+          "presentation": {
+            "samples": [
+              31.3,
+              31.8,
+              31.8,
+              30.2,
+              31.9
+            ],
+            "medianMs": 31.8,
+            "maximumMs": 31.9
+          },
+          "endToEnd": {
+            "samples": [
+              33.2,
+              33.7,
+              33.5,
+              33.4,
+              33
+            ],
+            "medianMs": 33.4,
+            "maximumMs": 33.7
+          }
+        },
+        "pickerSearch": {
+          "metric": "processingMs",
+          "samples": [
+            0.6,
+            0.5,
+            0.4,
+            0.7,
+            1
+          ],
+          "medianMs": 0.6,
+          "maximumMs": 1,
+          "presentation": {
+            "samples": [
+              35.1,
+              26.9,
+              33.2,
+              33.3,
+              32
+            ],
+            "medianMs": 33.2,
+            "maximumMs": 35.1
+          },
+          "endToEnd": {
+            "samples": [
+              35.7,
+              27.4,
+              33.6,
+              34,
+              33
+            ],
+            "medianMs": 33.6,
+            "maximumMs": 35.7
+          }
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    },
+    {
+      "count": 120,
+      "modes": [
+        {
+          "mode": "GRID",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 460,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "BENTO",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 910,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        },
+        {
+          "mode": "SPECTRUM",
+          "firstPage": {
+            "resultCount": 36,
+            "uniqueCount": 36,
+            "thumbnails": 36,
+            "nodes": 805,
+            "page": "1–36 / 120 · 1 / 4 페이지"
+          },
+          "reachableCount": 120,
+          "reachableUnique": 120,
+          "allReachable": true
+        }
+      ],
+      "searched": {
+        "resultCount": 1,
+        "uniqueCount": 1,
+        "thumbnails": 1,
+        "nodes": 32,
+        "page": null
+      },
+      "picker": {
+        "detailChips": 24,
+        "detailThumbnails": 24,
+        "detailSearch": true,
+        "splitA": 1,
+        "splitB": 12,
+        "nativeOptions": 120,
+        "pinnedCount": 1,
+        "selectedPinned": true,
+        "matchCount": 0
+      },
+      "pagination": {
+        "navLabel": "디자인 결과 페이지",
+        "live": "polite",
+        "previousLabel": "이전 디자인 결과 페이지",
+        "nextLabel": "다음 디자인 결과 페이지",
+        "pageFocus": true
+      },
+      "observer": {
+        "currentObserved": 36,
+        "detachedObserved": 0,
+        "observedAfterCleanup": 0
+      },
+      "galleryNodes": 459,
+      "interactions": {
+        "viewChange": {
+          "metric": "processingMs",
+          "samples": [
+            3,
+            6.4,
+            6.4,
+            4.7,
+            3
+          ],
+          "medianMs": 4.7,
+          "maximumMs": 6.4,
+          "presentation": {
+            "samples": [
+              30.7,
+              43.6,
+              44.7,
+              27.6,
+              29.4
+            ],
+            "medianMs": 30.7,
+            "maximumMs": 44.7
+          },
+          "endToEnd": {
+            "samples": [
+              33.7,
+              50,
+              51.1,
+              32.3,
+              32.4
+            ],
+            "medianMs": 33.7,
+            "maximumMs": 51.1
+          }
+        },
+        "pageChange": {
+          "metric": "processingMs",
+          "samples": [
+            9.9,
+            24,
+            7.8,
+            12.2,
+            4.9
+          ],
+          "medianMs": 9.9,
+          "maximumMs": 24,
+          "presentation": {
+            "samples": [
+              30.2,
+              21.5,
+              22.9,
+              21.2,
+              28.8
+            ],
+            "medianMs": 22.9,
+            "maximumMs": 30.2
+          },
+          "endToEnd": {
+            "samples": [
+              40.1,
+              45.5,
+              30.7,
+              33.4,
+              33.7
+            ],
+            "medianMs": 33.7,
+            "maximumMs": 45.5
+          }
+        },
+        "search": {
+          "metric": "processingMs",
+          "samples": [
+            1.6,
+            6,
+            2.4,
+            1.7,
+            1.4
+          ],
+          "medianMs": 1.7,
+          "maximumMs": 6,
+          "presentation": {
+            "samples": [
+              32,
+              33.6,
+              23.4,
+              32.5,
+              31.6
+            ],
+            "medianMs": 32,
+            "maximumMs": 33.6
+          },
+          "endToEnd": {
+            "samples": [
+              33.6,
+              39.6,
+              25.8,
+              34.2,
+              33
+            ],
+            "medianMs": 33.6,
+            "maximumMs": 39.6
+          }
+        },
+        "pickerSearch": {
+          "metric": "processingMs",
+          "samples": [
+            0.7,
+            1.2,
+            0.9,
+            1.2,
+            1.8
+          ],
+          "medianMs": 1.2,
+          "maximumMs": 1.8,
+          "presentation": {
+            "samples": [
+              28.3,
+              32.2,
+              32.9,
+              33.5,
+              32
+            ],
+            "medianMs": 32.2,
+            "maximumMs": 33.5
+          },
+          "endToEnd": {
+            "samples": [
+              29,
+              33.4,
+              33.8,
+              34.7,
+              33.8
+            ],
+            "medianMs": 33.8,
+            "maximumMs": 34.7
+          }
+        }
+      },
+      "budgets": {
+        "galleryPageSize": 36,
+        "detailPickerLimit": 24,
+        "splitPickerLimit": 12,
+        "initialJavaScriptGzipBytes": 88980,
+        "initialCssGzipBytes": 33000,
+        "interactionMedianMs": 120,
+        "interactionMaximumMs": 200
+      }
+    }
+  ],
+  "accessibilityIssues": [],
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "split-core-1440.png",
+    "core-mobile-320.png",
+    "core-desktop-1440.png",
+    "synthetic-120-grid.png"
+  ],
+  "issues": [
+    "초기 bundle gate 실패: 초기 JavaScript gzip 89005B가 88980B 예산을 초과했습니다."
+  ],
+  "protocolBrowser": "Chrome/152.0.7977.75",
+  "summary": {
+    "coreGalleryModes": 3,
+    "responsiveWidths": 4,
+    "syntheticCounts": [
+      60,
+      120
+    ],
+    "screenshots": 4,
+    "diagnosticCount": 0,
+    "accessibilityIssueCount": 0,
+    "issueCount": 1,
+    "passed": false
+  }
+}

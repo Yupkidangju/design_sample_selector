@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-09-03",
+  "scope": "local design_sample_selector_2 only",
+  "rendererBoundary": {
+    "probe": "hostile name, shortDesc, characteristics, palette and categoryId across 8 archetypes",
+    "rawElementLeaks": {
+      "game": [],
+      "web": [],
+      "mobile": ["<x-desc data-p=2>"],
+      "ecommerce": [],
+      "blog": [],
+      "dashboard": [],
+      "media": [],
+      "chat": []
+    },
+    "result": "FAIL"
+  },
+  "appStateSnapshot": {
+    "frozen": {
+      "root": true,
+      "audio": true,
+      "liveTweaks": true,
+      "activeFacets": true,
+      "activeFacetValues": true,
+      "bookmarks": false,
+      "compareSubIds": false
+    },
+    "internalMutationObserved": {
+      "bookmarks": true,
+      "compareSubIds": true,
+      "activeFacetValues": false
+    },
+    "result": "FAIL"
+  },
+  "audioRollback": {
+    "partialInitialization": {
+      "contextsCreated": 1,
+      "contextsClosed": 1,
+      "initializedAfterFailure": false,
+      "contextReferenceAfterFailure": null,
+      "result": "PASS"
+    },
+    "schedulerStartFailure": {
+      "playBgmReturnValue": true,
+      "engineIsPlayingAfterFailure": false,
+      "timerAfterFailure": null,
+      "result": "FAIL_RETURN_CONTRACT"
+    }
+  },
+  "artifactSymlink": {
+    "fixture": "valid minimal artifact plus unreferenced symlink to /etc/passwd",
+    "symlinkListed": false,
+    "verifierPassed": true,
+    "issues": [],
+    "result": "FAIL_CLOSED_NOT_ENFORCED"
+  },
+  "bundle": {
+    "javascriptGzipBytes": 89005,
+    "javascriptBudgetBytes": 88980,
+    "javascriptOverBudgetBytes": 25,
+    "cssGzipBytes": 32936,
+    "cssBudgetBytes": 33000,
+    "result": "FAIL"
+  }
+}

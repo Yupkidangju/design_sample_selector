@@ -6,6 +6,7 @@ import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PROJECT_BASE } from '../project.config.js';
 
 import { analyzeInitialBundle } from './analyzeInitialBundle.js';
 import { RENDER_SCALABILITY_BUDGETS } from '../src/scalability/renderWindow.js';
@@ -1216,7 +1217,7 @@ async function startViteServer(kind, port) {
     cwd: PROJECT_ROOT,
     stdio: ['ignore', 'ignore', 'ignore']
   });
-  const url = `http://127.0.0.1:${port}/design_sample_selector/`;
+  const url = `http://127.0.0.1:${port}${PROJECT_BASE}`;
   await waitForHttp(url, kind === 'preview' ? 'Vite preview' : 'Vite dev');
   return { processHandle, url };
 }

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "turn": 12,
+  "project_root": "/home/eunho1/Projects/web/design_sample_selector_2",
+  "directory": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12",
+  "source_reports": [
+    "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_01_contract_functionality.md",
+    "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_02_engineering_runtime.md",
+    "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_03_security_resilience.md"
+  ],
+  "final_report": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/final_audit_report_12.md",
+  "created_at_utc": "2026-09-03T02:49:11.367040+00:00"
+}

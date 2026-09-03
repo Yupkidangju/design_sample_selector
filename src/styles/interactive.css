@@ -152,9 +152,6 @@
   }
 }
 
-.main-category-card {
-  cursor: default;
-}
 
 .main-category-card .card-motif {
   position: absolute;
@@ -566,7 +563,6 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
 
 /* Detail cycle + split picker */
 .reveal-hint { display: none; }
-.reveal-title { white-space: nowrap; }
 .modal-top-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -693,7 +689,6 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
   background: radial-gradient(circle at 85% 10%, rgba(245,158,11,.45), transparent 28%);
 }
 
-.kinetic-marquee { overflow: hidden; }
 .kinetic-marquee .marquee-track {
   display: inline-block; white-space: nowrap;
   animation: marquee 8s linear infinite;
@@ -3008,4 +3003,79 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
 .inspector-action-btn.primary-export:hover {
   background: rgba(0, 230, 153, 0.25);
   box-shadow: 0 0 12px rgba(0, 230, 153, 0.3);
+}
+
+/* ==========================================================================
+   Gallery Card Action CTAs (Phase 3 UX Enhancement)
+   ========================================================================== */
+.bento-open-cta,
+.spec-cta,
+.tile-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  min-width: 44px;
+  box-sizing: border-box;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-cyan, #00f0ff);
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm, 4px);
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: color .15s, background-color .15s, box-shadow .15s, transform .15s;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.bento-open-cta:hover,
+.spec-cta:hover,
+.tile-detail-btn:hover {
+  background: var(--accent-cyan, #00f0ff);
+  color: #000;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.bento-open-cta:active,
+.spec-cta:active,
+.tile-detail-btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Main Standard Grid Genre Styling & Quick Action Chips (v2.4 Refactor)
+   ========================================================================== */
+.card-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-style-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm, 4px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-secondary, #cbd5e1);
+}
+
+.swiss-pill { background: #f30; color: #fff; border-radius: 0; }
+.y2k-pill { background: linear-gradient(90deg, #ec4899, #8b5cf6); color: #fff; border-radius: 999px; }
+.brutalism-pill { background: #ffe600; color: #000; border: 1px solid #000; border-radius: 0; }
+.hypertech-pill { background: #00f0ff2e; color: #00f0ff; border: 1px solid #00f0ff; }
+
+/* Sub-tile info & quick open button */
+.sub-tile-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
 }

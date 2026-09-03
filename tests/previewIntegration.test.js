@@ -124,15 +124,15 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   assert.equal(outputCount, 960);
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), legacyStyles),
-    '2906cc1356925671960a0397b7be9976b65eb1503dc4e4886f40dac106c25550'
+    'bd7789d191e69bfa723811a4b6492a75137149a435b2497a57ec01b206e80077'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), coreStyles),
-    '79a55474fd4464db5d663802f1a97c0c351b9991a874f1803399b9fd166ab8f3'
+    '984e55ebfef424739831a05faf60349f0684507fcc3a874a24eb97bde4dc6148'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    '0b6e160b1537fd6a44c24f49dd6a5e828cc5b37ffaaf1e031a5a55c7441856d3'
+    'd03583446877c5a6de30a61ce466d17d085aa6d57ed295b1e272bed48fa41ffb'
   );
 });
 
@@ -181,16 +181,69 @@ test('non-Web archetypes remain byte-stable and ignore component-tab options', (
 
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, legacyStyles),
-    '965edac58a3d81bfb0ce7b1e54e22841cb5194db09778fef0b6ccd63af2b2919'
+    '6e670a34fd6d7e3d4f49af94817212f5af2408f4eed34522dc94e683ac6eb3bf'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, coreStyles),
-    'a95011123efbef5c0fda90c78296bf27fb32d38fae271450d00ad62d9a6ea169'
+    '0cc89e42f021473c51263ac6e6ca523dcfb9d6cbe1e0f93dae2a7682484c8a44'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, styles),
-    '3cb98d1fdfaefc619b30dde66dc6caa7a83797541e386461c85528a8ca24fb82'
+    '3d75b745b4c03b6e1f7e58fc4e85a403fe7459f7c24da1c583308c63c187c5f6'
   );
+});
+
+test('Task 5: Aesthetic profiles render authentic markers for Swiss, Y2K, Brutalism, Hypertech and preserve generic fallback', () => {
+  const generic = { id: 'generic-sample', name: 'Generic Sample', categoryId: 'unknown-category' };
+  const swiss = { id: 'swiss-sample', name: 'Swiss Sample', categoryId: 'swiss' };
+  const y2k = { id: 'y2k-sample', name: 'Y2K Sample', categoryId: 'y2k' };
+  const brutal = { id: 'brutal-sample', name: 'Brutal Sample', categoryId: 'brutalism' };
+  const hyper = { id: 'hyper-sample', name: 'Hyper Sample', categoryId: 'hypertech' };
+
+  // 1. Generic fallback preserves standard game/media/chat
+  const genericGame = getArchetypeHTML('game', generic);
+  assert.match(genericGame, /PLAYER_01/u);
+  assert.match(genericGame, /ARENA BATTLE/u);
+  assert.equal(getArchetypeHTML('media', generic).includes('swiss-tuner-scale'), false);
+  assert.equal(getArchetypeHTML('media', generic).includes('winamp-lcd-display'), false);
+
+  // 2. Swiss markers
+  const swissGame = getArchetypeHTML('game', swiss);
+  assert.match(swissGame, /SYS_GRID_01/u);
+  assert.match(swissGame, /GRID SYSTEM 01/u);
+  assert.match(swissGame, /<span class="meter-label">ACC<\/span>/u);
+  assert.match(getArchetypeHTML('media', swiss), /class="swiss-tuner-scale"/u);
+  assert.match(getArchetypeHTML('chat', swiss), /# swiss-log/u);
+
+  // 3. Y2K markers
+  const y2kGame = getArchetypeHTML('game', y2k);
+  assert.match(y2kGame, /CYBER_HERO/u);
+  assert.match(y2kGame, /CYBER ARENA/u);
+  assert.match(getArchetypeHTML('media', y2k), /class="winamp-lcd-display"/u);
+  assert.match(getArchetypeHTML('chat', y2k), /# msn-cyber/u);
+
+  // 4. Brutalism markers
+  const brutalGame = getArchetypeHTML('game', brutal);
+  assert.match(brutalGame, /RAW_AGGRO/u);
+  assert.match(brutalGame, /RAW BATTLE/u);
+  assert.match(getArchetypeHTML('media', brutal), /class="brutalist-tape-tag"/u);
+  assert.match(getArchetypeHTML('chat', brutal), /# brutal-zine/u);
+
+  // 5. Hypertech markers
+  const hyperGame = getArchetypeHTML('game', hyper);
+  assert.match(hyperGame, /OPERATOR/u);
+  assert.match(hyperGame, /TACTICAL SYS/u);
+  assert.match(getArchetypeHTML('media', hyper), /class="hypertech-telemetry"/u);
+  assert.match(getArchetypeHTML('chat', hyper), /# secure-uplink/u);
+
+  // 6. Mobile, E-commerce, Blog, Dashboard don't branch unnecessarily on category
+  const sameNameSwiss = { id: 'sample-1', name: 'Sample', nameEn: 'Sample', categoryId: 'swiss', shortDesc: 'Desc', characteristics: ['C1'], palette: ['#000', '#fff'] };
+  const sameNameY2K = { id: 'sample-2', name: 'Sample', nameEn: 'Sample', categoryId: 'y2k', shortDesc: 'Desc', characteristics: ['C1'], palette: ['#000', '#fff'] };
+  for (const arch of ['mobile', 'ecommerce', 'blog', 'dashboard']) {
+    const swissHtml = getArchetypeHTML(arch, sameNameSwiss);
+    const y2kHtml = getArchetypeHTML(arch, sameNameY2K);
+    assert.equal(swissHtml, y2kHtml, `${arch} should not branch on category`);
+  }
 });
 
 test('Web archetype propagates unknown renderer errors instead of substituting Swiss', () => {
@@ -231,4 +284,40 @@ test('Detail rebuild synchronizes the active and ARIA state of Web component tab
   );
   assert.match(rebuildSource, /btn\.classList\.toggle\('active', match\)/u);
   assert.match(rebuildSource, /btn\.setAttribute\('aria-selected', String\(match\)\)/u);
+});
+
+test('Audit 14 (FIN-F005): 8 archetypes escape hostile name, shortDesc, characteristics, palette, and categoryId against raw element/attribute leaks', () => {
+  const base = getAllSubDesigns()[0];
+  const hostileStyle = {
+    ...base,
+    name: '<x-name id="hostile-name">Name</x-name>',
+    categoryId: 'general" onclick="alert(1)"',
+    shortDesc: '<x-desc data-p=2>Short Description</x-desc>',
+    characteristics: ['<x-char onmouseover="bad">Point</x-char>'],
+    palette: [{ hex: '#000" onfocus="evil', id: 'chip" data-injected="true', name: '<x-pal>Black</x-pal>' }]
+  };
+
+  for (const archetype of ARCHETYPES) {
+    const html = getArchetypeHTML(archetype.id, hostileStyle, { tab: 'hero' });
+    assert.equal(html.includes('<x-name'), false, `${archetype.id} leaked raw name element`);
+    assert.equal(html.includes('<x-desc'), false, `${archetype.id} leaked raw shortDesc element`);
+    assert.equal(html.includes('<x-char'), false, `${archetype.id} leaked raw characteristics element`);
+    assert.equal(html.includes('<x-pal'), false, `${archetype.id} leaked raw palette element`);
+    assert.equal(html.includes('onclick="alert(1)"'), false, `${archetype.id} leaked raw categoryId attribute injection`);
+    assert.equal(html.includes('onfocus="evil"'), false, `${archetype.id} leaked raw palette hex attribute injection`);
+    assert.equal(html.includes('data-injected="true"'), false, `${archetype.id} leaked raw palette id attribute injection`);
+  }
+});
+
+test('Audit 15 (A15-F002): Object prototype keys (__proto__, constructor, toString) safely fallback to generic profile', () => {
+  const base = getAllSubDesigns()[0];
+  for (const evilCat of ['__proto__', 'constructor', 'toString', 'valueOf', 'hasOwnProperty']) {
+    const protoStyle = { ...base, categoryId: evilCat };
+    for (const archetype of ARCHETYPES) {
+      assert.doesNotThrow(() => {
+        const html = getArchetypeHTML(archetype.id, protoStyle, { tab: 'hero' });
+        assert.ok(html.length > 0, `${archetype.id} produced empty html for ${evilCat}`);
+      }, `${archetype.id} threw error on categoryId="${evilCat}"`);
+    }
+  }
 });

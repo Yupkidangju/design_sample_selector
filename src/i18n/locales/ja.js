@@ -15,6 +15,6 @@ export default {
     liveTuner: 'ライブパラメータ調整', previewHint: 'プレビュー内の要素を操作できます。',
     designSummary: 'デザイン例と実用的な適用方針を示すサンプルです。',
     paletteUsage: 'このサンプルの主要な面とシグナルに使う色です。', subtitle: '8カテゴリー・120ライブサンプル・8アーキタイプ・動的サンドボックス',
-    noSelection: '未選択', compare: '分割比較'
+    noSelection: '未選択', compare: 'スプリット比較'
   }
 };

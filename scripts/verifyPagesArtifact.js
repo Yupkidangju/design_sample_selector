@@ -2,30 +2,67 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync, statSync, writeFileSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PROJECT_BASE } from '../project.config.js';
 
 const PROJECT_ROOT = fileURLToPath(new URL('..', import.meta.url));
-const PAGES_BASE = '/design_sample_selector/';
+const PAGES_BASE = PROJECT_BASE;
 const MIME_BY_EXTENSION = Object.freeze({
   '.css': 'text/css', '.html': 'text/html', '.js': 'application/javascript',
   '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml',
   '.txt': 'text/plain', '.woff2': 'font/woff2'
 });
 
-function safePath(root, path) {
+export function safePath(root, path) {
   if (typeof path !== 'string' || path.length === 0 || path.includes('\\')) return null;
-  const target = resolve(root, path);
-  const local = relative(root, target);
-  return local === '..' || local.startsWith(`..${sep}`) ? null : target;
+  if (path.startsWith('/') || path.startsWith('\\')) return null;
+  let resolvedRoot;
+  try { resolvedRoot = realpathSync(root); } catch { return null; }
+  const target = resolve(resolvedRoot, path);
+  const local = relative(resolvedRoot, target);
+  if (local === '..' || local.startsWith(`..${sep}`)) return null;
+  if (!existsSync(target)) return null;
+  try {
+    const lstat = lstatSync(target);
+    if (lstat.isSymbolicLink()) return null;
+    if (!lstat.isFile()) return null;
+    const realTarget = realpathSync(target);
+    const realLocal = relative(resolvedRoot, realTarget);
+    if (realLocal === '..' || realLocal.startsWith(`..${sep}`)) return null;
+    return realTarget;
+  } catch {
+    return null;
+  }
 }
 
-function listFiles(root, directory = root) {
+export function listFiles(root, directory = root, issues = null) {
+  let resolvedRoot;
+  try { resolvedRoot = realpathSync(root); } catch { return []; }
   return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
     const path = resolve(directory, entry.name);
-    if (entry.isDirectory()) return listFiles(root, path);
-    return [relative(root, path).split(sep).join('/')];
+    if (entry.isSymbolicLink()) {
+      if (issues) issues.push(`artifact tree에 허용되지 않은 symlink가 있습니다: ${relative(resolvedRoot, path)}`);
+      return [];
+    }
+    if (entry.isDirectory()) return listFiles(root, path, issues);
+    if (entry.isFile()) {
+      try {
+        const real = realpathSync(path);
+        const rel = relative(resolvedRoot, real);
+        if (rel === '..' || rel.startsWith(`..${sep}`)) {
+          if (issues) issues.push(`artifact root 외부를 가리키는 파일입니다: ${relative(resolvedRoot, path)}`);
+          return [];
+        }
+        return [rel.split(sep).join('/')];
+      } catch {
+        if (issues) issues.push(`확인할 수 없는 파일 경로입니다: ${relative(resolvedRoot, path)}`);
+        return [];
+      }
+    }
+    if (issues) issues.push(`artifact tree에 일반 파일이 아닌 항목이 있습니다: ${relative(resolvedRoot, path)}`);
+    return [];
   });
 }
 
@@ -88,16 +125,23 @@ export function verifyPagesArtifact(options = {}) {
   }
 
   const files = existsSync(distDirectory)
-    ? listFiles(distDirectory).filter(path => path !== 'release-manifest.json').sort()
+    ? listFiles(distDirectory, distDirectory, issues).filter(path => path !== 'release-manifest.json').sort()
     : [];
   const releaseFiles = files.map(path => {
-    const content = readFileSync(resolve(distDirectory, path));
+    const target = safePath(distDirectory, path);
+    if (!target) {
+      issues.push(`dist 밖이거나 안전하지 않은 파일 경로입니다: ${path}`);
+      return null;
+    }
+    const content = readFileSync(target);
     return Object.freeze({
       path,
       size: content.length,
       sha256: createHash('sha256').update(content).digest('hex'),
       mime: MIME_BY_EXTENSION[extname(path).toLowerCase()] || 'application/octet-stream'
     });
+  }).filter(Boolean);
+
   if (options.requireReleaseManifest) {
     const releaseManifestPath = resolve(distDirectory, 'release-manifest.json');
     try {
@@ -111,7 +155,7 @@ export function verifyPagesArtifact(options = {}) {
       issues.push('release-manifest.json이 없거나 손상되었습니다.');
     }
   }
-  });
+
   const report = {
     releaseSha,
     base: PAGES_BASE,

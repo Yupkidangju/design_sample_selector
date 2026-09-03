@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-09-03",
+  "scope": "current local design_sample_selector_2 only",
+  "appStateStructuralSharing": {
+    "operation": "set galleryFocusId only",
+    "focusChanged": true,
+    "unchangedReferenceEquality": {
+      "bookmarks": false,
+      "compareSubIds": false,
+      "activeFacets": false,
+      "audio": false,
+      "liveTweaks": false
+    },
+    "regressionReproduced": true
+  },
+  "aestheticProfilePrototypeKeys": [
+    { "key": "__proto__", "genericFallback": true },
+    { "key": "constructor", "genericFallback": true },
+    { "key": "toString", "genericFallback": true },
+    { "key": "valueOf", "genericFallback": true },
+    { "key": "hasOwnProperty", "genericFallback": true }
+  ],
+  "audioTeardown": {
+    "syncThrowHandled": true,
+    "asyncRejectionHandledUnderStrictUnhandledRejections": true,
+    "engineReferencesCleared": true
+  }
+}

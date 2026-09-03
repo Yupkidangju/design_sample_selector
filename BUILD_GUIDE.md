@@ -1,7 +1,7 @@
 # Build & Runtime Execution Guide (`BUILD_GUIDE.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0
-**Document Status:** Execution Protocol / Actual 120 Complete
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Document Status:** Execution Protocol / v2.4.0 Local Refactoring Complete
 
 ---
 
@@ -266,15 +266,15 @@ Pages는 이전 hashed asset 보존이나 사용자 지정 cache header를 제�
 
 Chrome에서만 재현되는 문제는 Vite를 로컬로 실행하고 기본 Chrome profile과 분리된 임시 `--user-data-dir`에서 확인합니다. 종료 후 Chrome/Vite 프로세스, 포트와 임시 profile을 정리합니다. Crostini의 GCM, SwiftShader, on-device model 메시지는 페이지 console·exception·same-origin 네트워크 결과와 분리해 판정합니다.
 
-## 6. 현재 검증 기준선 (2026-08-31)
+## 6. 현재 검증 기준선 (v2.4.0 / 2026-09-03)
 
-- `npm run check`: 152/152 Node 테스트, catalog 오류 0개·legacy 경고 56개, 두 생성 theme CSS 최신성 검사와 Vite 프로덕션 빌드 통과.
+- `npm run check`: 293/293 Node 테스트 (과거 Phase 4H: 152/152), catalog 오류 0개·legacy 경고 56개, 두 생성 theme CSS 최신성 검사와 Vite 프로덕션 빌드 통과.
 - Actual catalog: 120종, 8 category × 15, 8 pack, legacy 24 + ready 96. 신규 84종은 품질 오류·경고 0이다.
 - Preview inventory: renderer/thumbnail/motion/asset `120/120/120/0`; 기존 24·36 subset 승인 지문과 actual 120 전체 지문을 함께 고정한다.
 - Node 행렬: Web 120 × 4 = 480개, 아키타입 120 × 8 = 960개. Chrome device 행렬은 120 × 8 × 2 = 1,920개다.
-- Crostini Chrome `151.0.7922.173`: Grid/Bento/Spectrum 각 4페이지로 120 ID와 신규 thumbnail 84개에 도달하고 375/768/1024/1440px overflow·label 계약을 통과했다.
+- Crostini Chrome `152.0.7977.75`: Grid/Bento/Spectrum 각 4페이지로 120 ID와 신규 thumbnail 84개에 도달하고 375/768/1024/1440px overflow·label 계약을 통과했다.
 - 대표 `spatial-glass-ui`는 Desktop `665px` 2열, Mobile `338px` 1열이며 category selector 15종, Split native 120/visual 12 per slot, Peek·Dock·reduced-motion을 통과했다. 신규 84종 전체의 Desktop/Mobile grid가 구분된다.
-- Vite는 75개 모듈을 빌드한다. 정적 초기 JavaScript는 `263.81kB` raw / `83.46kB` gzip, CSS는 `171.45kB` raw / `32.86kB` gzip이다. expansion preview/theme CSS는 각각 `4.14/4.24kB` gzip async asset이다.
-- Actual Chrome Web Vitals는 LCP `732ms`, CLS `0`, interaction max `142.8ms`; console/network/application diagnostics와 issue는 0이다.
+- Vite는 100개 모듈을 빌드한다. 정적 초기 JavaScript는 `88.92kB` gzip (`88,915/88,980B`, 예산 내), CSS는 `32.94kB` gzip이다. expansion preview/theme CSS는 각각 `4.14/4.43kB` gzip async asset이다. (과거 75개 모듈 기준: `83.46/32.86kB` gzip).
+- Actual Chrome Web Vitals는 LCP `816ms`, CLS `0`, interaction max `103.5ms`; console/network/application diagnostics와 issue는 0이다.
 - 증거는 `.antigravity/archive/catalog120-chrome-qa/`, `.antigravity/archive/render-scalability-chrome-qa/`, `.antigravity/archive/catalog-discovery-chrome-qa/`에 보존한다.
-- 초기 예산 여유는 JS 약 `5.52kB`, CSS 144 bytes다. 120종 이후 확장은 current async CSS·bounded DOM 경계를 유지하고 새 사양과 예산을 승인해야 한다.
+- 초기 예산 여유는 JS 약 `0.065kB` (`65B`), CSS 약 `0.06kB` (`64B`)다. 120종 이후 확장은 current async CSS·bounded DOM 경계를 유지하고 새 사양과 예산을 승인해야 한다.

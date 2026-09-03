@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "run_directory": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12",
+  "reports": [
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_01_contract_functionality.md",
+      "sha256": "27c015399017071208e3105d3d7102f9a8c3ef9213e6f55c629b71546e108bdb",
+      "size": 10181,
+      "sealed_at_utc": "2026-09-03T03:28:12.596635+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_02_engineering_runtime.md",
+      "sha256": "ddaa090d64f300b65c94982ebf3ccee2398604939271c9e54f8f7966246c0d38",
+      "size": 20149,
+      "sealed_at_utc": "2026-09-03T03:04:35.739582+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_02_engineering_runtime_supplement_1.md",
+      "sha256": "7529e1c54cbe194efed039792976c38fac08052f3df50cc23e6ed04b4ae40780",
+      "size": 12991,
+      "sealed_at_utc": "2026-09-03T03:32:07.472275+00:00"
+    },
+    {
+      "path": "/home/eunho1/Projects/web/design_sample_selector_2/docs/multi_audit/12/sub_audit_03_security_resilience.md",
+      "sha256": "5b60701081d72d0994b0a1bf57a75e23d986457ae13d0946da5cecfa19d942dc",
+      "size": 47171,
+      "sealed_at_utc": "2026-09-03T03:15:00.757625+00:00"
+    }
+  ],
+  "missing_source_reports": [],
+  "finalized_at_utc": "2026-09-03T03:32:21.586543+00:00"
+}

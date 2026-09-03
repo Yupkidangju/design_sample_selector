@@ -735,7 +735,7 @@ details[open] > summary .disclosure-indicator::before {
   position: relative;
   overflow: hidden;
   transition: all var(--transition-normal);
-  cursor: pointer;
+  cursor: default;
   display: flex;
   flex-direction: column;
 }
@@ -847,49 +847,8 @@ details[open] > summary .disclosure-indicator::before {
   gap: 6px;
 }
 
-.subcategory-badge-btn {
-  flex: 1;
-  background: var(--bg-dark-surface);
-  border: 1px solid var(--bg-glass-border);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: left;
-  transition: all var(--transition-fast);
-}
-
-.subcategory-badge-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--category-accent, var(--accent-cyan));
-  transform: translateX(4px);
-}
-
-.badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--radius-full);
-  background-color: var(--category-accent, var(--accent-cyan));
-}
-
 .badge-name {
   flex: 1;
-}
-
-.badge-arrow {
-  color: var(--text-muted);
-  font-size: 12px;
-  transition: transform var(--transition-fast);
-}
-
-.subcategory-badge-btn:hover .badge-arrow {
-  color: var(--text-primary);
-  transform: translateX(2px);
 }
 
 .badge-bookmark-btn {
@@ -1529,89 +1488,6 @@ details[open] > summary .disclosure-indicator::before {
   border-radius: 28px !important;
 }
 
-/* Live Tuner Panel */
-.live-tuner-panel {
-  border-top: 1px solid var(--bg-glass-border);
-  background: var(--bg-dark-surface);
-  padding: 16px 20px;
-}
-
-.tuner-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.tuner-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.tuner-reset-btn {
-  background: transparent;
-  border: 1px solid var(--bg-glass-border);
-  color: var(--text-muted);
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.tuner-reset-btn:hover {
-  color: var(--text-primary);
-  border-color: var(--text-secondary);
-}
-
-.tuner-sliders-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-}
-
-.slider-control {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.slider-label-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.slider-val {
-  font-family: var(--font-mono);
-  color: var(--accent-cyan);
-  font-weight: 600;
-}
-
-.tuner-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.12);
-  outline: none;
-}
-
-.tuner-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: var(--radius-full);
-  background: var(--accent-cyan);
-  cursor: pointer;
-  box-shadow: 0 0 8px var(--accent-cyan);
-}
 
 /* Right Column: Style Specs */
 .style-specs-section {
@@ -2073,19 +1949,6 @@ details[open] > summary .disclosure-indicator::before {
   padding: 24px;
 }
 
-/* Dynamically propagate tweaks to inner cards, inputs, and buttons */
-.mockup-unit button:not(.device-btn):not(.sub-tab-btn),
-.mockup-unit input[type="text"],
-.mockup-unit select,
-.mockup-unit textarea,
-.mockup-unit [class*="-box"],
-.mockup-unit [class*="-card"],
-.mockup-unit [class*="-panel"],
-.mockup-unit [class*="-btn"]:not(.device-btn):not(.sub-tab-btn),
-.mockup-unit [class*="-cell"],
-.mockup-unit [class*="-frame"] {
-  border-radius: calc(var(--tweak-radius, 16px) * 0.65);
-}
 
 /* Universal Mockup Inputs & Controls */
 .mockup-unit input[type="text"],

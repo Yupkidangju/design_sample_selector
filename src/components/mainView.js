@@ -133,14 +133,29 @@ export function renderMainView(container, options = {}) {
   function renderStandardGridHTML(categories, bookmarks, flags, t) {
     let html = `<div class="category-nodes-grid">`;
 
+    const GENRE_PILLS = {
+      swiss: '■ SWISS',
+      y2k: '✦ Y2K',
+      brutalism: '⬛ BRUTAL',
+      hypertech: '💠 HYPER',
+      retro: '🕹️ RETRO',
+      depth: '💎 GLASS',
+      editorial: '📰 EDITORIAL',
+      soft3d: '🫧 3D'
+    };
+
     categories.forEach((cat, idx) => {
+      const genrePill = GENRE_PILLS[cat.id] || cat.id.toUpperCase();
       html += `
         <article class="main-category-card motif-${cat.id}" data-cat-id="${cat.id}" style="--category-accent: ${cat.accentColor}">
           <div class="card-motif" aria-hidden="true"></div>
           <div class="card-glow-overlay"></div>
 
           <div class="card-header-meta">
-            <span class="category-index">0${idx + 1}</span>
+            <div class="card-meta-left">
+              <span class="category-index">0${idx + 1}</span>
+              <span class="category-style-pill ${cat.id}-pill">${genrePill}</span>
+            </div>
             <span class="category-badge-count">${escapeHtml(t('discovery.styleCount', { count: cat.subCategories.length }))}</span>
           </div>
 
@@ -172,7 +187,17 @@ export function renderMainView(container, options = {}) {
                       <div class="style-thumb-frame">
                         ${renderPreviewThumbnail({ thumbnailId: sub.thumbMotif, design: sub })}
                       </div>
-                      <span class="badge-name">${sub.name}</span>
+                      <div class="sub-tile-meta">
+                        <span class="badge-name">${sub.name}</span>
+                      </div>
+                    </button>
+                    <button class="tile-detail-btn"
+                            data-cat-id="${cat.id}"
+                            data-sub-id="${sub.id}"
+                            type="button"
+                            aria-label="${escapeHtml(`${sub.name} ${t('gallery.detailView')}`)}"
+                            title="${escapeHtml(t('gallery.detailView'))}">
+                      ${escapeHtml(t('gallery.detailView'))}
                     </button>
                     <button class="badge-bookmark-btn ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
@@ -239,7 +264,13 @@ export function renderMainView(container, options = {}) {
             <div class="bento-tags-list">
               ${sub.moodTags.slice(0, 2).map((tag) => `<span class="bento-tag">#${tag}</span>`).join('')}
             </div>
-            <span class="bento-open-cta">${escapeHtml(t('gallery.pick'))}</span>
+            <button class="bento-open-cta"
+                    data-cat-id="${cat.id}"
+                    data-sub-id="${sub.id}"
+                    type="button"
+                    aria-label="${escapeHtml(`${sub.name} ${t('gallery.detailView')}`)}">
+              ${escapeHtml(t('gallery.detailView'))}
+            </button>
           </div>
         </div>
       `;
@@ -306,7 +337,13 @@ export function renderMainView(container, options = {}) {
                   </div>
                   <div class="spec-footer">
                     <span class="spec-tag">${sub.moodTags[0] || 'Design'}</span>
-                    <span class="spec-cta">${escapeHtml(t('gallery.pick'))}</span>
+                    <button class="spec-cta"
+                            data-cat-id="${cat.id}"
+                            data-sub-id="${sub.id}"
+                            type="button"
+                            aria-label="${escapeHtml(`${sub.name} ${t('gallery.detailView')}`)}">
+                      ${escapeHtml(t('gallery.detailView'))}
+                    </button>
                   </div>
                 </div>
               `;
@@ -341,24 +378,48 @@ export function renderMainView(container, options = {}) {
       });
 
       item.addEventListener('click', (e) => {
-        if (e.target.closest('.badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark')) return;
+        if (e.target.closest('.badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark, .tile-detail-btn, .bento-open-cta, .spec-cta')) return;
         selectDraft(catId, subId);
       });
 
       item.addEventListener('dblclick', (e) => {
-        if (e.target.closest('.badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark')) return;
+        if (e.target.closest('.badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark, .tile-detail-btn, .bento-open-cta, .spec-cta')) return;
         e.preventDefault();
         openDetailFor(catId, subId);
       });
     });
 
+    const detailBtns = root.querySelectorAll('.tile-detail-btn, .bento-open-cta, .spec-cta');
+    detailBtns.forEach((btn) => {
+      const open = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const catId = btn.getAttribute('data-cat-id');
+        const subId = btn.getAttribute('data-sub-id');
+        openDetailFor(catId, subId);
+      };
+      btn.addEventListener('click', open);
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          open(e);
+        }
+      });
+    });
+
     const bookmarkBtns = root.querySelectorAll('.badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark');
     bookmarkBtns.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      const toggle = (e) => {
+        e.preventDefault();
         e.stopPropagation();
         const subId = btn.getAttribute('data-sub-id');
         stateManager.toggleBookmark(subId);
         synthAudio.playSfx('BOOKMARK');
+      };
+      btn.addEventListener('click', toggle);
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          toggle(e);
+        }
       });
     });
 
@@ -380,8 +441,8 @@ export function renderMainView(container, options = {}) {
     const state = stateManager.getState();
     if (state.currentView !== 'MAIN') return;
 
-    const tag = document.activeElement?.tagName;
-    const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    const active = document.activeElement;
+    const typing = active?.tagName === 'INPUT' || active?.tagName === 'TEXTAREA' || active?.tagName === 'SELECT';
 
     if (e.key === '/' && !e.metaKey && !e.ctrlKey && !typing) {
       e.preventDefault();
@@ -391,6 +452,14 @@ export function renderMainView(container, options = {}) {
 
     if (typing) {
       if (e.key === 'Escape') document.activeElement.blur();
+      return;
+    }
+
+    // Do not intercept keyboard actions when focused on interactive controls (CTA, bookmark buttons, links, etc.)
+    if (active && (
+      active.closest?.('.tile-detail-btn, .bento-open-cta, .spec-cta, .badge-bookmark-btn, .bento-bookmark-toggle, .spec-bookmark') ||
+      (active.tagName === 'BUTTON' && !active.classList.contains('sub-tile'))
+    )) {
       return;
     }
 

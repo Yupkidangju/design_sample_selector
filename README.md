@@ -1,4 +1,4 @@
-# DESIGN SPECTRUM (Web Design Sample Selector) v2.3.0
+# DESIGN SPECTRUM (Web Design Sample Selector 2) v2.4.0
 
 > 120종 인터랙티브 웹 디자인 사조 아카이브, 8대 코어 화면 아키타입, Universal 상단 디자인 선택 바, 상태 보존형 renderer·테마 전환, 4대 탭 동적 인스펙터 & 실시간 designs.md/토큰 내보내기 엔진, 키네틱 시뮬레이터, 실시간 파라미터 튜너 및 Web Audio 절차적 사운드 신시사이저 플레이그라운드
 
@@ -17,7 +17,7 @@ npm install
 npm run dev
 ```
 
-브라우저에서 `http://localhost:5173/design_sample_selector/` 로 접속합니다.
+브라우저에서 `http://localhost:5173/design_sample_selector/` (또는 `http://localhost:5173/` 접속 시 자동 리다이렉트) 로 접속합니다.
 
 ### 2. 프로덕션 빌드 & 미리보기
 ```bash
@@ -135,7 +135,7 @@ npm run qa:scalability:chrome
 npm run qa:catalog120:chrome
 ```
 
-Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 이어진 locale Stage 1에서 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 locale당 120종·1,924 field unit을 명시 pack으로 분리했습니다. Stage 2에서는 디자인명과 한국어·영어·일본어·중국어 간체·중국어 번체 본문을 각각 120/120 감수했으며, locale별 8개 category wave에서 summary·palette·특징·장단점의 공통 생성문과 숫자형 palette 이름을 제거했습니다. 최종 자동 재감사는 5 locale의 9,620개 사람용 field unit과 machine identity, 간체/번체 독립성을 대조하고 320/375/768/1024/1440px 및 물리 1280px/CSS 640px/DPR 2의 200% 상태 30개를 Chrome에서 검증합니다. 최신 Node `284/284`, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 issues 0을 통과했고 초기 JS/CSS는 `88.37/88.98kB`, `33.00/33.00kB` gzip입니다. 구조 완전성 근거는 `docs/multi_audit/11/locale_stage1_evidence.md`, 5개 locale 편집 근거는 `docs/multi_audit/11/locale_stage2_checkpoint_14_evidence.md`, 교차 언어·reflow 근거는 `docs/multi_audit/11/locale_stage2_task27_evidence.md`에 있습니다. 자동 검증과 별개로 원어민 수준의 자연스러움은 사용자 또는 해당 언어 화자의 검토 전까지 미확정입니다.
+Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 이어진 locale Stage 1에서 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 locale당 120종·1,924 field unit을 명시 pack으로 분리했습니다. Stage 2에서는 디자인명과 한국어·영어·일본어·중국어 간체·중국어 번체 본문을 각각 120/120 감수했으며, locale별 8개 category wave에서 summary·palette·특징·장단점의 공통 생성문과 숫자형 palette 이름을 제거했습니다. 최종 자동 재감사는 5 locale의 9,620개 사람용 field unit과 machine identity, 간체/번체 독립성을 대조하고 320/375/768/1024/1440px 및 물리 1280px/CSS 640px/DPR 2의 200% 상태 30개를 Chrome에서 검증합니다. 최신 Node `293/293`, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 issues 0을 통과했고 초기 JS/CSS는 `88,915/88,980B` (`88.92kB`, 여유 `65B`), `32.94/33.00kB` gzip입니다. 구조 완전성 근거는 `docs/multi_audit/11/locale_stage1_evidence.md`, 5개 locale 편집 근거는 `docs/multi_audit/11/locale_stage2_checkpoint_14_evidence.md`, 교차 언어·reflow 근거는 `docs/multi_audit/11/locale_stage2_task27_evidence.md`에 있습니다. 자동 검증과 별개로 원어민 수준의 자연스러움은 사용자 또는 해당 언어 화자의 검토 전까지 미확정입니다.
 
 ### 8. GitHub Pages production artifact와 복구 검증
 
@@ -178,7 +178,7 @@ Preview retry는 primary 실패 뒤 한 번만 허용되고 두 번째 shared/im
    - 상세 모달 상단에서 8대 대분류 탭과 활성 category의 최대 24개 서브스타일 칩을 제공하고, 초과 category는 검색으로 모든 디자인에 도달
    - 상태 보존형 renderer 전환: 외부 viewport는 유지하고 스타일별 renderer·motion·`[data-theme]`을 함께 교체한 뒤 장바구니/게임 스코어/댓글/채팅 snapshot을 복원
    - 단축키: `[` / `]` (전체 120개 스타일 순환), `Shift + Left/Right` (8대 대분류 점프), `Esc` (닫기)
-4. **4대 탭 동적 인스펙터 & 실시간 디자인 사양서/토큰 내보내기 엔진 (v2.3.0)**
+4. **4대 탭 동적 인스펙터 & 실시간 디자인 사양서/토큰 내보내기 엔진 (v2.4.0)**
    - 💻 **Live CSS**: 테마 토큰, 실시간 슬라이더 트윅, 활성 아키타입 CSS 100% 실시간 연동 (서브모드: 전체 번들 / 토큰만 / 아키타입 CSS)
    - 📄 **Live HTML**: 현재 렌더링된 샌드박스 뷰포트의 실시간 DOM 마크업
    - 📋 **Live designs.md**: 메타데이터, 색상표, 슬라이더 수치, 폰트 스택, 아키타입 ASCII 구조도, 키네틱 가이드라인이 포함된 D3D 표준 마크다운 사양서 자동 빌드

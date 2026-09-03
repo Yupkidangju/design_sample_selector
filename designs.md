@@ -1,7 +1,7 @@
 # UI/UX Design Specification (`designs.md`)
-**Project Name:** Web Design Sample Selector (`design_sample_selector`)  
-**Version:** 2.3.0  
-**Document Status:** Current UX Architecture / Actual 120 Verified
+**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
+**Version:** 2.4.0
+**Document Status:** Current UX Architecture / v2.4.0 Refactoring Verified
 
 ---
 

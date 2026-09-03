@@ -53,8 +53,6 @@ class CanvasVisualEngine {
     }
     
     appState.setState({ canvasReady: true });
-    console.log(`[Canvas VisualEngine] 2D renderer ready. Particles: ${this.particleCount}`);
-
     this.startLoop();
   }
 

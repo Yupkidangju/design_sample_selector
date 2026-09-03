@@ -6,6 +6,7 @@ import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PROJECT_BASE } from '../project.config.js';
 
 import { getLocalizedLegacyAllSubDesigns } from '../src/catalog/legacyAdapter.js';
 import { loadLocaleSnapshot } from '../src/i18n/index.js';
@@ -630,7 +631,7 @@ async function main() {
   await verifySemanticAlignment();
   const vitePort = await getFreePort();
   const chromePort = await getFreePort();
-  const pageUrl = `http://127.0.0.1:${vitePort}/design_sample_selector/`;
+  const pageUrl = `http://127.0.0.1:${vitePort}${PROJECT_BASE}`;
   viteProcess = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', String(vitePort), '--strictPort'], { cwd: PROJECT_ROOT, stdio: ['ignore', 'ignore', 'ignore'] });
   await waitForHttp(pageUrl, 'Vite preview');
   profileDirectory = mkdtempSync(join(tmpdir(), 'dss-i18n-chrome-profile-'));

@@ -50,29 +50,167 @@ export function getArchetypeHTML(archetypeId, subDesign, options = {}) {
   });
 }
 
+// ==========================================================================
+// Immutable Aesthetic Profiles for Category Differentiation (Task 5 Refactor)
+// ==========================================================================
+const AESTHETIC_PROFILES = Object.freeze({
+  swiss: Object.freeze({
+    game: Object.freeze({
+      avatar: '✛',
+      playerName: 'SYS_GRID_01',
+      targetIcon: '🎯',
+      noticeBadge: 'GRID SYSTEM 01',
+      primaryMeter: 'ACC',
+      secondaryMeter: 'SYNC',
+      skills: Object.freeze(['✛', '■', '▲', '●'])
+    }),
+    mediaOverlay: 'swiss-tuner',
+    vinylCenter: '●',
+    chat: Object.freeze({ brandIcon: '📑', channel: 'swiss-log', peerAvatar: '✛', userAvatar: '■' })
+  }),
+  y2k: Object.freeze({
+    game: Object.freeze({
+      avatar: '👾',
+      playerName: 'CYBER_HERO',
+      targetIcon: '👾',
+      noticeBadge: 'CYBER ARENA',
+      primaryMeter: 'HP',
+      secondaryMeter: 'MP',
+      skills: Object.freeze(['★', '⚡', '💾', '🌈'])
+    }),
+    mediaOverlay: 'winamp-lcd',
+    vinylCenter: '💿',
+    chat: Object.freeze({ brandIcon: '📟', channel: 'msn-cyber', peerAvatar: '✨', userAvatar: '💖' })
+  }),
+  brutalism: Object.freeze({
+    game: Object.freeze({
+      avatar: '⬛',
+      playerName: 'RAW_AGGRO',
+      targetIcon: '💥',
+      noticeBadge: 'RAW BATTLE',
+      primaryMeter: 'HP',
+      secondaryMeter: 'POW',
+      skills: Object.freeze(['🥊', '🧱', '⚡', '💣'])
+    }),
+    mediaOverlay: 'brutalist-tag',
+    vinylCenter: '⬛',
+    chat: Object.freeze({ brandIcon: '📢', channel: 'brutal-zine', peerAvatar: '⬛', userAvatar: '🥊' })
+  }),
+  hypertech: Object.freeze({
+    game: Object.freeze({
+      avatar: '💠',
+      playerName: 'OPERATOR',
+      targetIcon: '👁️',
+      noticeBadge: 'TACTICAL SYS',
+      primaryMeter: 'SHD',
+      secondaryMeter: 'ENG',
+      skills: Object.freeze(['⚡', '🛡️', '🎯', '💫'])
+    }),
+    mediaOverlay: 'hypertech-telemetry',
+    vinylCenter: '🎵',
+    chat: Object.freeze({ brandIcon: '🔒', channel: 'secure-uplink', peerAvatar: '🎨', userAvatar: '🚀' })
+  })
+});
+
+const DEFAULT_AESTHETIC_PROFILE = Object.freeze({
+  game: Object.freeze({
+    avatar: '🎮',
+    playerName: 'PLAYER_01',
+    targetIcon: '👾',
+    noticeBadge: 'ARENA BATTLE',
+    primaryMeter: 'HP',
+    secondaryMeter: 'MP',
+    skills: Object.freeze(['🗡️', '🛡️', '🧪', '💥'])
+  }),
+  mediaOverlay: null,
+  vinylCenter: '🎵',
+  chat: Object.freeze({ brandIcon: '💬', channel: 'general-chat', peerAvatar: '🎨', userAvatar: '🚀' })
+});
+
+function getAestheticProfile(categoryId) {
+  if (typeof categoryId === 'string' && Object.hasOwn(AESTHETIC_PROFILES, categoryId)) {
+    return AESTHETIC_PROFILES[categoryId];
+  }
+  return DEFAULT_AESTHETIC_PROFILE;
+}
+
+function renderMediaGenreOverlay(overlayType) {
+  if (overlayType === 'swiss-tuner') {
+    return `
+      <div class="swiss-tuner-scale" aria-hidden="true">
+        <span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108 MHz</span>
+      </div>
+    `;
+  }
+  if (overlayType === 'winamp-lcd') {
+    return `
+      <div class="winamp-lcd-display" aria-hidden="true">
+        <span class="lcd-kbps">320 KBPS</span>
+        <span class="lcd-khz">44.1 KHZ</span>
+        <span class="lcd-stereo">STEREO</span>
+      </div>
+    `;
+  }
+  if (overlayType === 'brutalist-tag') {
+    return `
+      <div class="brutalist-tape-tag" aria-hidden="true">
+        <span>TAPE DECK A // 120µs EQ</span>
+      </div>
+    `;
+  }
+  if (overlayType === 'hypertech-telemetry') {
+    return `
+      <div class="hypertech-telemetry" aria-hidden="true">
+        <span>QUANTUM CH-01</span>
+        <span>96.4 kHz</span>
+        <span>LOSSLESS</span>
+      </div>
+    `;
+  }
+  return '';
+}
+
+function escapeText(val) {
+  return String(val ?? '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeAttr(val) {
+  return String(val ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 // 1. GAME HUD & ARENA ARCHETYPE
 function renderGameArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Style Arcade';
+  const name = escapeText(subDesign?.name || 'Style Arcade');
+  const rawCat = subDesign?.categoryId || 'general';
+  const category = escapeAttr(rawCat);
+  const profile = getAestheticProfile(rawCat);
+  const { avatar, playerName, targetIcon, noticeBadge, primaryMeter, secondaryMeter, skills } = profile.game;
+
   return `
-    <div class="archetype-unit archetype-game" data-archetype="game" data-tweak-surface>
+    <div class="archetype-unit archetype-game" data-archetype="game" data-category="${category}" data-tweak-surface>
       <!-- Game Top HUD -->
       <header class="game-hud-header">
         <div class="hud-player-info">
-          <div class="hud-avatar">🎮</div>
+          <div class="hud-avatar">${avatar}</div>
           <div class="hud-player-text">
-            <span class="hud-player-name">PLAYER_01</span>
+            <span class="hud-player-name">${playerName}</span>
             <span class="hud-player-level">LV. 42 ${name}</span>
           </div>
         </div>
 
         <div class="hud-meters">
           <div class="meter-bar hp-meter">
-            <span class="meter-label">HP</span>
+            <span class="meter-label">${primaryMeter}</span>
             <div class="meter-track"><div class="meter-fill hp-fill" style="width: 82%;"></div></div>
             <span class="meter-val hp-val">820 / 1000</span>
           </div>
           <div class="meter-bar mp-meter">
-            <span class="meter-label">MP</span>
+            <span class="meter-label">${secondaryMeter}</span>
             <div class="meter-track"><div class="meter-fill mp-fill" style="width: 65%;"></div></div>
             <span class="meter-val mp-val">650 / 1000</span>
           </div>
@@ -95,12 +233,12 @@ function renderGameArchetype(subDesign, t) {
         <div class="arena-target-zone" id="arena-target-zone">
           <div class="arena-target" id="game-target" data-action="game-tap" data-mock-action="game-tap" role="button" tabindex="0">
             <span class="target-glow"></span>
-            <span class="target-icon">👾</span>
+            <span class="target-icon">${targetIcon}</span>
             <span class="target-hp-bar"><span class="target-hp-fill" style="width: 100%;"></span></span>
           </div>
         </div>
         <div class="arena-notice">
-          <span class="notice-badge">ARENA BATTLE</span>
+          <span class="notice-badge">${noticeBadge}</span>
           <p>${t('archetype.game.instructions')}</p>
         </div>
       </main>
@@ -110,22 +248,22 @@ function renderGameArchetype(subDesign, t) {
         <div class="skill-slots">
           <button class="skill-btn" data-action="game-skill" data-skill="q" title="Strike (Q)">
             <span class="skill-key">Q</span>
-            <span class="skill-icon">🗡️</span>
+            <span class="skill-icon">${skills[0]}</span>
             <span class="skill-cooldown"></span>
           </button>
           <button class="skill-btn" data-action="game-skill" data-skill="w" title="Shield (W)">
             <span class="skill-key">W</span>
-            <span class="skill-icon">🛡️</span>
+            <span class="skill-icon">${skills[1]}</span>
             <span class="skill-cooldown"></span>
           </button>
           <button class="skill-btn" data-action="game-skill" data-skill="e" title="Heal (E)">
             <span class="skill-key">E</span>
-            <span class="skill-icon">🧪</span>
+            <span class="skill-icon">${skills[2]}</span>
             <span class="skill-cooldown"></span>
           </button>
           <button class="skill-btn skill-ultimate" data-action="game-skill" data-skill="r" title="Hyper Rush (R)">
             <span class="skill-key">R</span>
-            <span class="skill-icon">💥</span>
+            <span class="skill-icon">${skills[3]}</span>
             <span class="skill-cooldown"></span>
           </button>
         </div>
@@ -142,7 +280,7 @@ function renderGameArchetype(subDesign, t) {
 
 // 2. WEB SAAS & LANDING ARCHETYPE (Integrates 4 Component Tabs)
 function renderWebArchetype(subDesign, activeTab = 'hero', t, snapshot) {
-  const name = subDesign?.name || 'Web SaaS';
+  const name = escapeText(subDesign?.name || 'Web SaaS');
   const componentHTML = renderPreviewComponent({
     rendererId: subDesign.previewType,
     tab: activeTab,
@@ -180,7 +318,7 @@ function renderWebArchetype(subDesign, activeTab = 'hero', t, snapshot) {
 
 // 3. MOBILE APP ARCHETYPE
 function renderMobileArchetype(subDesign, t) {
-  const name = subDesign?.name || 'App Core';
+  const name = escapeText(subDesign?.name || 'App Core');
   return `
     <div class="archetype-unit archetype-mobile" data-archetype="mobile" data-tweak-surface>
       <div class="mobile-frame">
@@ -224,7 +362,7 @@ function renderMobileArchetype(subDesign, t) {
           <div class="mobile-feature-card">
             <div class="feature-tag">${t('archetype.mobile.trending')}</div>
             <h3>${name}</h3>
-            <p>${subDesign.shortDesc}</p>
+            <p>${escapeText(subDesign.shortDesc)}</p>
             <div class="feature-action-row">
               <button class="mobile-card-btn" data-action="mobile-explore">${t('archetype.mobile.explore')}</button>
               <button class="mobile-like-btn" data-action="mobile-like">
@@ -272,7 +410,7 @@ function renderMobileArchetype(subDesign, t) {
 
 // 4. E-COMMERCE STOREFRONT ARCHETYPE
 function renderEcommerceArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Design Product';
+  const name = escapeText(subDesign?.name || 'Design Product');
   return `
     <div class="archetype-unit archetype-ecommerce" data-archetype="ecommerce" data-tweak-surface>
       <!-- Store Header -->
@@ -302,7 +440,7 @@ function renderEcommerceArchetype(subDesign, t) {
 
         <div class="product-details">
           <span class="product-category">${t('archetype.shop.limited')}</span>
-          <h2 class="product-title">${t('archetype.shop.edition', { name: subDesign.name })}</h2>
+          <h2 class="product-title">${t('archetype.shop.edition', { name })}</h2>
           <div class="product-rating">
             <span class="stars">★★★★★</span>
             <span class="rating-val">4.9 (128 ${t('archetype.shop.reviews')})</span>
@@ -314,20 +452,20 @@ function renderEcommerceArchetype(subDesign, t) {
             <span class="price-badge">${t('archetype.shop.shipping')}</span>
           </div>
 
-          <p class="product-desc">${subDesign.shortDesc}</p>
+          <p class="product-desc">${escapeText(subDesign.shortDesc)}</p>
 
           <!-- Color Option Selector -->
           <div class="option-section">
             <label class="option-label">${t('archetype.shop.color')}</label>
             <div class="color-chips">
               ${subDesign.palette.map((c, i) => `
-                <button class="color-chip-btn ${i === 0 ? 'active' : ''}" 
-                        data-action="shop-color" 
-                        data-color="${c.hex}" 
-                        data-name="${c.id}"
-                        style="background: ${c.hex};" 
-                        aria-label="${c.name} (${c.hex})"
-                        title="${c.name} (${c.hex})">
+                <button class="color-chip-btn ${i === 0 ? 'active' : ''}"
+                        data-action="shop-color"
+                        data-color="${escapeAttr(c.hex)}"
+                        data-name="${escapeAttr(c.id)}"
+                        style="background: ${escapeAttr(c.hex)};"
+                        aria-label="${escapeAttr(c.name)} (${escapeAttr(c.hex)})"
+                        title="${escapeAttr(c.name)} (${escapeAttr(c.hex)})">
                 </button>
               `).join('')}
             </div>
@@ -384,7 +522,7 @@ function renderEcommerceArchetype(subDesign, t) {
 
 // 5. BLOG & MAGAZINE ARCHETYPE
 function renderBlogArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Design Review';
+  const name = escapeText(subDesign?.name || 'Design Review');
   return `
     <div class="archetype-unit archetype-blog" data-archetype="blog" data-tweak-surface>
       <!-- Reading Progress Indicator -->
@@ -399,7 +537,7 @@ function renderBlogArchetype(subDesign, t) {
           <span class="blog-read-time">⏱️ ${t('archetype.blog.readTime')}</span>
         </div>
         <h1 class="blog-title">${name}: ${t('archetype.blog.titleSuffix')}</h1>
-        <p class="blog-lead">${subDesign.shortDesc}</p>
+        <p class="blog-lead">${escapeText(subDesign.shortDesc)}</p>
         
         <div class="blog-author-bar">
           <div class="author-info">
@@ -435,7 +573,7 @@ function renderBlogArchetype(subDesign, t) {
         <div class="blog-callout" id="blog-sec-summary">
           <strong>${t('archetype.blog.summaryTitle')}</strong>
           <ul>
-            ${subDesign.characteristics.slice(0, 3).map(c => `<li>${c}</li>`).join('')}
+            ${subDesign.characteristics.slice(0, 3).map(c => `<li>${escapeText(c)}</li>`).join('')}
           </ul>
         </div>
 
@@ -458,7 +596,7 @@ function renderBlogArchetype(subDesign, t) {
           <div class="comments-list" id="blog-comments-list">
             <div class="comment-item">
               <strong>${t('archetype.blog.researcher')}</strong>
-              <p>${t('archetype.blog.comment1', { name: subDesign.name })}</p>
+              <p>${t('archetype.blog.comment1', { name })}</p>
             </div>
             <div class="comment-item">
               <strong>${t('archetype.blog.engineer')}</strong>
@@ -473,7 +611,7 @@ function renderBlogArchetype(subDesign, t) {
 
 // 6. ANALYTICS DASHBOARD ARCHETYPE
 function renderDashboardArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Analytics';
+  const name = escapeText(subDesign?.name || 'Analytics');
   return `
     <div class="archetype-unit archetype-dashboard" data-archetype="dashboard" data-tweak-surface>
       <!-- Dashboard Top Header -->
@@ -565,14 +703,20 @@ function renderDashboardArchetype(subDesign, t) {
 
 // 7. MEDIA PLAYER ARCHETYPE
 function renderMediaArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Soundscape';
+  const name = escapeText(subDesign?.name || 'Soundscape');
+  const rawCat = subDesign?.categoryId || 'general';
+  const category = escapeAttr(rawCat);
+  const profile = getAestheticProfile(rawCat);
+  const genreOverlay = renderMediaGenreOverlay(profile.mediaOverlay);
+
   return `
-    <div class="archetype-unit archetype-media" data-archetype="media" data-tweak-surface>
+    <div class="archetype-unit archetype-media" data-archetype="media" data-category="${category}" data-tweak-surface>
       <div class="media-player-card">
+        ${genreOverlay}
         <!-- Artwork Showcase -->
         <div class="media-artwork-zone">
           <div class="vinyl-disc" id="media-vinyl">
-            <div class="vinyl-center">🎵</div>
+            <div class="vinyl-center">${profile.vinylCenter}</div>
           </div>
         </div>
 
@@ -632,17 +776,22 @@ function renderMediaArchetype(subDesign, t) {
 
 // 8. CHAT & MESSENGER ARCHETYPE
 function renderChatArchetype(subDesign, t) {
-  const name = subDesign?.name || 'Design Channel';
+  const name = escapeText(subDesign?.name || 'Design Channel');
+  const rawCat = subDesign?.categoryId || 'general';
+  const category = escapeAttr(rawCat);
+  const profile = getAestheticProfile(rawCat);
+  const { brandIcon, channel: mainChannel, peerAvatar, userAvatar } = profile.chat;
+
   return `
-    <div class="archetype-unit archetype-chat" data-archetype="chat" data-tweak-surface>
+    <div class="archetype-unit archetype-chat" data-archetype="chat" data-category="${category}" data-tweak-surface>
       <!-- Channels Sidebar -->
       <aside class="chat-sidebar">
         <div class="chat-brand">
-          <span>💬</span>
+          <span>${brandIcon}</span>
           <strong>${name}</strong>
         </div>
         <div class="chat-channels">
-          <button class="channel-item active" data-action="chat-channel" data-channel="general-chat"># general-chat</button>
+          <button class="channel-item active" data-action="chat-channel" data-channel="${mainChannel}"># ${mainChannel}</button>
           <button class="channel-item" data-action="chat-channel" data-channel="design-feedback"># design-feedback</button>
           <button class="channel-item" data-action="chat-channel" data-channel="tech-spec"># tech-spec</button>
           <button class="channel-item" data-action="chat-channel" data-channel="audio-engine"># audio-engine</button>
@@ -652,16 +801,16 @@ function renderChatArchetype(subDesign, t) {
       <!-- Main Chat Stream -->
       <section class="chat-main-stream">
         <header class="chat-header">
-          <span class="chat-topic"># general-chat</span>
+          <span class="chat-topic"># ${mainChannel}</span>
           <span class="chat-members">👥 ${t('archetype.chat.members')}</span>
         </header>
 
         <div class="chat-messages-container" id="chat-messages-container">
           <div class="chat-bubble-msg peer">
-            <div class="msg-avatar">🎨</div>
+            <div class="msg-avatar">${peerAvatar || '🎨'}</div>
             <div class="msg-content">
               <span class="msg-sender">${t('archetype.chat.lead')}</span>
-              <p>${t('archetype.chat.message1', { name: subDesign.name })}</p>
+              <p>${t('archetype.chat.message1', { name })}</p>
               <div class="msg-reactions">
                 <button class="reaction-btn" data-action="chat-react">👍 8</button>
                 <button class="reaction-btn" data-action="chat-react">✨ 14</button>
@@ -670,7 +819,7 @@ function renderChatArchetype(subDesign, t) {
           </div>
 
           <div class="chat-bubble-msg user">
-            <div class="msg-avatar">🚀</div>
+            <div class="msg-avatar">${userAvatar || '🚀'}</div>
             <div class="msg-content">
               <span class="msg-sender">${t('archetype.chat.you')}</span>
               <p>${t('archetype.chat.message2')}</p>

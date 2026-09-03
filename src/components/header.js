@@ -45,8 +45,8 @@ export function renderHeader(container) {
             </div>
             <div class="brand-titles">
               <div class="brand-title-line">
-                <h1 class="brand-title">DESIGN SPECTRUM</h1>
-                <span class="brand-badge-v2">v2.3 LIVE</span>
+                <h1 class="brand-title">DESIGN SPECTRUM 2</h1>
+                <span class="brand-badge-v2">v2.4 PREVIEW</span>
               </div>
               <p class="brand-subtitle">${escapeHtml(messages.subtitle || '')}</p>
             </div>

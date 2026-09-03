@@ -11,6 +11,7 @@ import { createServer } from 'node:net';
 import { cpus, freemem, loadavg, tmpdir, totalmem } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PROJECT_BASE } from '../project.config.js';
 
 import {
   getAllStyles,
@@ -1603,7 +1604,7 @@ async function main() {
 
   const vitePort = await getFreePort();
   const chromePort = await getFreePort();
-  const pageUrl = `http://127.0.0.1:${vitePort}/design_sample_selector/`;
+  const pageUrl = `http://127.0.0.1:${vitePort}${PROJECT_BASE}`;
   viteProcess = spawn(
     process.execPath,
     ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', String(vitePort), '--strictPort'],

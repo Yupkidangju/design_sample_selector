@@ -1,0 +1,559 @@
+{
+  "checkedAt": "2026-09-03T07:10:07.031Z",
+  "chromeVersion": "Google Chrome 152.0.7977.75",
+  "isolatedProfile": true,
+  "catalog": {
+    "count": 120,
+    "expansionCount": 84,
+    "categoryCounts": {
+      "swiss": 15,
+      "brutalism": 15,
+      "depth": 15,
+      "retro": 15,
+      "editorial": 15,
+      "y2k": 15,
+      "hypertech": 15,
+      "soft3d": 15
+    },
+    "grammarCount": 21
+  },
+  "initial": {
+    "visible": 36,
+    "unique": 36,
+    "total": 120,
+    "thumbnails": 36,
+    "header120": true,
+    "filter120": true,
+    "pagination": true,
+    "overflow": 0
+  },
+  "galleryModes": [
+    {
+      "mode": "GRID",
+      "pageCount": 4,
+      "maxVisible": 36,
+      "reachableCount": 120,
+      "reachableUnique": 120,
+      "expansionThumbnailCount": 84
+    },
+    {
+      "mode": "BENTO",
+      "pageCount": 4,
+      "maxVisible": 36,
+      "reachableCount": 120,
+      "reachableUnique": 120,
+      "expansionThumbnailCount": 84
+    },
+    {
+      "mode": "SPECTRUM",
+      "pageCount": 4,
+      "maxVisible": 36,
+      "reachableCount": 120,
+      "reachableUnique": 120,
+      "expansionThumbnailCount": 84
+    }
+  ],
+  "matrix": {
+    "styleCount": 120,
+    "archetypeCount": 8,
+    "stateCount": 1920,
+    "devicePairCount": 960,
+    "webTabCount": 480,
+    "expansionWebStates": 168,
+    "expansionGridChanges": 84,
+    "grammarCount": 21,
+    "minDesktopWidth": 712,
+    "maxMobileWidth": 320,
+    "durationMs": 3280,
+    "failureCount": 0,
+    "failures": []
+  },
+  "responsiveWidths": [
+    {
+      "width": 375,
+      "visible": 36,
+      "total": 120,
+      "overflow": 0,
+      "unlabeled": 0
+    },
+    {
+      "width": 768,
+      "visible": 36,
+      "total": 120,
+      "overflow": 0,
+      "unlabeled": 0
+    },
+    {
+      "width": 1024,
+      "visible": 36,
+      "total": 120,
+      "overflow": 0,
+      "unlabeled": 0
+    },
+    {
+      "width": 1440,
+      "visible": 36,
+      "total": 120,
+      "overflow": 0,
+      "unlabeled": 0
+    }
+  ],
+  "representativeDetail": {
+    "id": "spatial-glass-ui",
+    "desktop": {
+      "device": "desktop",
+      "width": 831,
+      "grid": "220px 280px",
+      "active": true,
+      "clipped": 0,
+      "overflow": 0
+    },
+    "mobile": {
+      "device": "mobile",
+      "width": 338,
+      "grid": "248px",
+      "active": true,
+      "clipped": 0,
+      "overflow": 0
+    },
+    "selector": {
+      "chipCount": 15,
+      "selectedCount": 1,
+      "categoryId": "hypertech"
+    }
+  },
+  "audit9": {
+    "lazyDetail": {
+      "dialog": "dialog",
+      "busy": "true",
+      "activeCancel": true,
+      "openerId": "spatial-glass-ui",
+      "loadingCaptureMs": 19.5,
+      "escapeClosed": true,
+      "openerRestored": true,
+      "actualLoadMs": 53
+    },
+    "statefulTransition": {
+      "from": "spatial-glass-ui",
+      "to": "ai-native-gradient",
+      "gameBefore": {
+        "coin": "1,420",
+        "motion": [
+          "motion-spatial-glass-ui-motion"
+        ],
+        "styleText": "LV. 42 공간형 글래스 UI",
+        "targetFocused": true
+      },
+      "gameAfterKeyboard": "1,470",
+      "transitioned": {
+        "viewportIdentity": true,
+        "rendererRebuilt": true,
+        "theme": "ai-native-gradient",
+        "coin": "1,470",
+        "motion": [
+          "motion-ai-native-gradient-motion"
+        ],
+        "styleText": "LV. 42 AI 네이티브 그라데이션",
+        "inspectorUpdated": true,
+        "selectedChip": "ai-native-gradient"
+      },
+      "returnedCoin": "1,470"
+    },
+    "detailSidebar": {
+      "cardDisplay": "grid",
+      "cardBackground": "rgba(255, 255, 255, 0.024)",
+      "cardHeight": 51.8,
+      "swatchWidth": 34.6,
+      "swatchHeight": 34.6,
+      "swatchColor": "rgb(8, 16, 29)",
+      "sliderAppearance": "none",
+      "sliderHeight": 19.2,
+      "titleFontSize": 28,
+      "heroHeight": 148.8,
+      "heroScrollHeight": 153,
+      "titleVisible": true,
+      "descriptionVisible": true,
+      "blockBorderStyle": "solid",
+      "paletteColumns": "158.219px 158.219px 158.219px"
+    },
+    "audioPreInit": {
+      "skipped": false,
+      "beforeFirstPlay": {
+        "initializedBefore": false,
+        "stateBeforeInit": 0,
+        "sliderBeforeInit": 0
+      },
+      "afterFirstPlay": {
+        "initialized": true,
+        "playing": true,
+        "stateVolume": 0,
+        "gain": 0
+      },
+      "restored": {
+        "stateVolume": 0.5,
+        "sliderVolume": 0.5
+      }
+    },
+    "zoom": {
+      "activeScale": "1.2",
+      "afterArchetypeSwap": "scale(1.2)",
+      "afterStyleSwap": "scale(1.2)"
+    },
+    "checkout": {
+      "emptyCartDisabled": true,
+      "role": "dialog",
+      "modal": "true",
+      "activeCancel": true,
+      "directSummary": true,
+      "overflow": 0,
+      "openerRestored": true,
+      "cartSummary": true,
+      "cartPreservedAfterCancel": true,
+      "cartClearedAfterConfirm": true
+    },
+    "blog": {
+      "before": {
+        "background": "rgb(8, 16, 29)",
+        "color": "rgb(248, 250, 252)",
+        "maxlength": 500
+      },
+      "after": {
+        "background": "rgb(247, 243, 234)",
+        "color": "rgb(31, 41, 51)"
+      },
+      "pressed": "true",
+      "commentPreserved": true,
+      "dynamicComments": 1,
+      "overflow": 0,
+      "responsiveProgress": [
+        {
+          "width": 375,
+          "maxScroll": 1774,
+          "scrollTop": 1774,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        },
+        {
+          "width": 768,
+          "maxScroll": 1345,
+          "scrollTop": 1345,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        },
+        {
+          "width": 1024,
+          "maxScroll": 1292,
+          "scrollTop": 1292,
+          "startProgress": 0,
+          "endProgress": 100,
+          "ariaValueText": "100% 읽음"
+        }
+      ]
+    },
+    "dashboard": {
+      "filterPreserved": true,
+      "sortPreserved": true,
+      "filteredRows": 2,
+      "projectBefore": "공간형 글래스 UI",
+      "projectAfter": "AI 네이티브 그라데이션",
+      "newStyleRows": true,
+      "staleStyleRows": false
+    },
+    "keyboard": {
+      "detailClosed": true,
+      "openerRestored": true
+    }
+  },
+  "split": {
+    "optionA": 120,
+    "optionB": 120,
+    "visualA": 12,
+    "visualB": 12,
+    "roots": [
+      true,
+      true
+    ],
+    "themes": [
+      "spatial-glass-ui",
+      "swiss-grid"
+    ],
+    "overflow": 0
+  },
+  "peek": {
+    "role": "region",
+    "theme": "spatial-glass-ui",
+    "root": true,
+    "busy": null
+  },
+  "dock": {
+    "role": "region",
+    "theme": "spatial-glass-ui",
+    "root": true,
+    "busy": null
+  },
+  "reducedMotion": {
+    "matches": true,
+    "runningAnimations": 0
+  },
+  "vitals": {
+    "lcpMs": 928,
+    "cls": 0
+  },
+  "lazyCss": {
+    "initialRequests": [],
+    "afterMatrixRequests": [
+      "http://127.0.0.1:43797/design_sample_selector_2/src/styles/themeTokensExpansion.css",
+      "http://127.0.0.1:43797/design_sample_selector_2/src/styles/expansion-preview.css"
+    ]
+  },
+  "interactions": {
+    "measurementMethod": {
+      "metric": "processingMs",
+      "sampleSelection": "state-changing named operations; no-ops excluded",
+      "clock": "window.performance.now()",
+      "hardGateBoundary": "input dispatch -> required state/DOM predicate settlement",
+      "presentationBoundary": "settlement -> 2 animation frames",
+      "excludedFromHardGate": [
+        "CDP command round-trip",
+        "driver polling",
+        "artifact I/O",
+        "post-settlement frame scheduler wait"
+      ]
+    },
+    "count": 14,
+    "averageMs": 21.69,
+    "medianMs": 19.65,
+    "maxMs": 53,
+    "presentation": {
+      "count": 14,
+      "averageMs": 43.69,
+      "medianMs": 24.3,
+      "maxMs": 211.2
+    },
+    "endToEnd": {
+      "count": 14,
+      "averageMs": 65.39,
+      "medianMs": 48.9,
+      "maxMs": 226.6
+    },
+    "operationSamples": [
+      {
+        "operation": "gallery:GRID:page:1->2",
+        "processingMs": 28.3,
+        "endToEndMs": 50.1,
+        "handlerMs": 28.3,
+        "settleMs": 0,
+        "postSettleFramesMs": 21.8,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:GRID:page:2->3",
+        "processingMs": 19.3,
+        "endToEndMs": 49.2,
+        "handlerMs": 19.3,
+        "settleMs": 0,
+        "postSettleFramesMs": 29.9,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:GRID:page:3->4",
+        "processingMs": 10.5,
+        "endToEndMs": 33.9,
+        "handlerMs": 10.4,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 23.4,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:view:BENTO",
+        "processingMs": 14.3,
+        "endToEndMs": 86.6,
+        "handlerMs": 14.1,
+        "settleMs": 0.2,
+        "postSettleFramesMs": 72.3,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:1->2",
+        "processingMs": 26.2,
+        "endToEndMs": 43,
+        "handlerMs": 26.2,
+        "settleMs": 0,
+        "postSettleFramesMs": 16.8,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:2->3",
+        "processingMs": 27.7,
+        "endToEndMs": 52.9,
+        "handlerMs": 27.6,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 25.2,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:BENTO:page:3->4",
+        "processingMs": 10.6,
+        "endToEndMs": 33.7,
+        "handlerMs": 10.5,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 23.1,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:view:SPECTRUM",
+        "processingMs": 13.6,
+        "endToEndMs": 53.7,
+        "handlerMs": 13.5,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 40.1,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:1->2",
+        "processingMs": 20.9,
+        "endToEndMs": 37.2,
+        "handlerMs": 20.9,
+        "settleMs": 0,
+        "postSettleFramesMs": 16.3,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:2->3",
+        "processingMs": 20,
+        "endToEndMs": 48.6,
+        "handlerMs": 20,
+        "settleMs": 0,
+        "postSettleFramesMs": 28.6,
+        "longTasks": []
+      },
+      {
+        "operation": "gallery:SPECTRUM:page:3->4",
+        "processingMs": 10.1,
+        "endToEndMs": 32.9,
+        "handlerMs": 10.1,
+        "settleMs": 0,
+        "postSettleFramesMs": 22.8,
+        "longTasks": []
+      },
+      {
+        "operation": "search:spatial-glass-ui",
+        "processingMs": 33.8,
+        "endToEndMs": 42,
+        "handlerMs": 33.7,
+        "settleMs": 0.1,
+        "postSettleFramesMs": 8.2,
+        "longTasks": []
+      },
+      {
+        "operation": "detail:open",
+        "processingMs": 53,
+        "endToEndMs": 125,
+        "handlerMs": 3.1,
+        "settleMs": 49.9,
+        "postSettleFramesMs": 72,
+        "longTasks": []
+      },
+      {
+        "operation": "detail:style:spatial-glass-ui->ai-native-gradient",
+        "processingMs": 15.4,
+        "endToEndMs": 226.6,
+        "handlerMs": 8.1,
+        "settleMs": 7.3,
+        "postSettleFramesMs": 211.2,
+        "longTasks": []
+      }
+    ]
+  },
+  "hostLoad": {
+    "platform": "linux",
+    "architecture": "x64",
+    "logicalCpuCount": 8,
+    "samples": [
+      {
+        "stage": "before-start",
+        "sampledAt": "2026-09-03T07:10:07.067Z",
+        "loadAverage": [
+          0.83,
+          0.64,
+          0.78
+        ],
+        "loadAveragePerCpu": [
+          0.104,
+          0.08,
+          0.098
+        ],
+        "memoryTotalBytes": 6784008192,
+        "memoryFreeBytes": 2240069632,
+        "memoryUsedRatio": 0.67
+      },
+      {
+        "stage": "after-matrix",
+        "sampledAt": "2026-09-03T07:10:12.950Z",
+        "loadAverage": [
+          0.84,
+          0.65,
+          0.79
+        ],
+        "loadAveragePerCpu": [
+          0.105,
+          0.081,
+          0.099
+        ],
+        "memoryTotalBytes": 6784008192,
+        "memoryFreeBytes": 1813569536,
+        "memoryUsedRatio": 0.733
+      },
+      {
+        "stage": "after-browser-qa",
+        "sampledAt": "2026-09-03T07:10:18.330Z",
+        "loadAverage": [
+          0.85,
+          0.66,
+          0.79
+        ],
+        "loadAveragePerCpu": [
+          0.106,
+          0.083,
+          0.099
+        ],
+        "memoryTotalBytes": 6784008192,
+        "memoryFreeBytes": 1729052672,
+        "memoryUsedRatio": 0.745
+      }
+    ]
+  },
+  "runtimeSignals": {
+    "consoleWarnings": [],
+    "consoleErrors": [],
+    "exceptions": [],
+    "networkFailures": [],
+    "httpErrors": []
+  },
+  "screenshots": [
+    "spatial-glass-ui-desktop.png",
+    "spatial-glass-ui-mobile.png",
+    "catalog120-split.png"
+  ],
+  "issues": [],
+  "protocolBrowser": "Chrome/152.0.7977.75",
+  "summary": {
+    "actualStyles": 120,
+    "expansionStyles": 84,
+    "galleryReachability": [
+      "GRID:120",
+      "BENTO:120",
+      "SPECTRUM:120"
+    ],
+    "matrixStates": 1920,
+    "webTabs": 480,
+    "expansionDeviceChanges": 84,
+    "responsiveWidths": 4,
+    "screenshots": 3,
+    "diagnosticCount": 0,
+    "issueCount": 0,
+    "passed": true
+  }
+}

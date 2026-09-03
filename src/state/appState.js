@@ -4,6 +4,7 @@
  */
 
 import { MAIN_CATEGORIES, canonicalizeSubId } from '../data/categories.js';
+import { normalizeSearchQuery, normalizeFacetSelections } from '../catalog/discovery.js';
 import { isTweakPatchValid } from '../tuner/contract.js';
 import { LOCALE_STORAGE_KEY, SUPPORTED_LOCALES } from '../i18n/contract.js';
 
@@ -21,7 +22,16 @@ export function readStoredJSON(storage, key, fallback, maxChars = STORAGE_VALUE_
       storage?.removeItem(key);
       return fallback;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(fallback) && !Array.isArray(parsed)) {
+      storage?.removeItem(key);
+      return fallback;
+    }
+    if (fallback === null && parsed !== null && typeof parsed !== 'string') {
+      storage?.removeItem(key);
+      return fallback;
+    }
+    return parsed;
   } catch {
     try { storage?.removeItem(key); } catch { /* 저장소 정리 실패는 부팅을 막지 않는다. */ }
     return fallback;
@@ -226,16 +236,13 @@ function sanitizeStatePatch(partialState) {
     }
 
     if (field === 'searchQuery') {
-      if (typeof value === 'string') patch[field] = value;
+      if (typeof value === 'string') patch[field] = normalizeSearchQuery(value);
       else reject('STATE_TYPE_INVALID', field);
       continue;
     }
 
     if (field === 'activeFacets') {
-      const valid = isPlainRecord(value) && Object.values(value).every(items => (
-        Array.isArray(items) && items.every(item => typeof item === 'string')
-      ));
-      if (valid) patch[field] = value;
+      if (isPlainRecord(value)) patch[field] = normalizeFacetSelections(value);
       else reject('STATE_SHAPE_INVALID', field);
       continue;
     }
@@ -272,7 +279,15 @@ function sanitizeStatePatch(partialState) {
 
 export class AppStateManager {
   constructor() {
-    this.state = { ...DEFAULT_STATE };
+    this.state = Object.freeze({
+      ...DEFAULT_STATE,
+      activeFacets: Object.freeze({ ...DEFAULT_STATE.activeFacets }),
+      compareSubIds: Object.freeze([...DEFAULT_STATE.compareSubIds]),
+      bookmarks: Object.freeze([...DEFAULT_STATE.bookmarks]),
+      recentlyViewed: Object.freeze([...DEFAULT_STATE.recentlyViewed]),
+      liveTweaks: Object.freeze({ ...DEFAULT_STATE.liveTweaks }),
+      audio: Object.freeze({ ...DEFAULT_STATE.audio })
+    });
     this.listeners = new Set();
     if (typeof window !== 'undefined') {
       this.detectViewport();
@@ -299,27 +314,46 @@ export class AppStateManager {
   setState(partialState) {
     const { patch, issues } = sanitizeStatePatch(partialState);
     if (issues.length) {
-      const diagnostics = issues.map(({ code, field }) => `${code}:${field}`);
-      console.warn('[AppState] Rejected invalid state fields.', diagnostics);
+      console.warn('[AppState] Rejected invalid fields.', issues.map(i => `${i.code}:${i.field}`));
     }
     if (!Object.keys(patch).length) return false;
 
-    const prevState = { ...this.state };
+    const prevState = this.state;
 
     const nextAudio = patch.audio
-      ? { ...this.state.audio, ...patch.audio }
-      : this.state.audio;
+      ? Object.freeze({ ...prevState.audio, ...patch.audio })
+      : prevState.audio;
 
     const nextTweaks = patch.liveTweaks
-      ? { ...this.state.liveTweaks, ...patch.liveTweaks }
-      : this.state.liveTweaks;
+      ? Object.freeze({ ...prevState.liveTweaks, ...patch.liveTweaks })
+      : prevState.liveTweaks;
 
-    this.state = {
-      ...this.state,
+    const nextFacets = patch.activeFacets
+      ? Object.freeze({ ...patch.activeFacets })
+      : prevState.activeFacets;
+
+    const nextBookmarks = patch.bookmarks
+      ? Object.freeze([...patch.bookmarks])
+      : prevState.bookmarks;
+
+    const nextCompare = patch.compareSubIds
+      ? Object.freeze([...patch.compareSubIds])
+      : prevState.compareSubIds;
+
+    const nextRecent = patch.recentlyViewed
+      ? Object.freeze([...patch.recentlyViewed])
+      : prevState.recentlyViewed;
+
+    this.state = Object.freeze({
+      ...prevState,
       ...patch,
       audio: nextAudio,
-      liveTweaks: nextTweaks
-    };
+      liveTweaks: nextTweaks,
+      activeFacets: nextFacets,
+      bookmarks: nextBookmarks,
+      compareSubIds: nextCompare,
+      recentlyViewed: nextRecent
+    });
 
     if (patch.bookmarks) {
       saveJSON('dss_bookmarks_v2', this.state.bookmarks);

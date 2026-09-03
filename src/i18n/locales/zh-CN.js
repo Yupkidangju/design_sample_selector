@@ -15,6 +15,6 @@ export default {
     liveTuner: '实时参数调节', previewHint: '可与预览中的元素进行交互。',
     designSummary: '展示设计方案及实际应用原则的示例。',
     paletteUsage: '用于此方案主要表面与信号的颜色。', subtitle: '8大类别 · 120个实时方案 · 8种原型 · 动态沙盒',
-    noSelection: '未选择', compare: '分屏比较'
+    noSelection: '未选择', compare: '分屏对比'
   }
 };
