@@ -139,7 +139,7 @@ Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하
 
 ### 8. GitHub Pages production artifact와 복구 검증
 
-GitHub Pages는 repository source를 직접 게시하지 않습니다. `vite.config.js`의 production base `/design_sample_selector/`와 `.github/workflows/deploy-pages.yml`이 `npm ci → npm run check → dist closure 검증 → dist artifact deploy`를 수행합니다. 지원 URL은 project root와 query/hash이며 임의 deep path는 지원하지 않습니다.
+GitHub Pages는 repository source를 직접 게시하지 않습니다. 기본 브랜치 `gemini_ux_enhanced`에 push하면 `vite.config.js`의 production base `/design_sample_selector/`와 `.github/workflows/deploy-pages.yml`이 `npm ci → npm run check → dist closure 검증 → dist artifact deploy`를 수행합니다. `main` push는 자동 배포하지 않습니다. 지원 URL은 project root와 query/hash이며 임의 deep path는 지원하지 않습니다.
 
 ```bash
 # Vite manifest, 모든 lazy JS/CSS/asset closure와 release SHA-256 manifest 확인

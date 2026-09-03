@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [2.4.0] - 2026-09-03
 
 ### Changed
+- **Pages 배포 브랜치 전환:** GitHub Pages 자동 배포 트리거를 `main`에서 기본 브랜치 `gemini_ux_enhanced`로 전환해 개선판 push가 검증 후 바로 배포되도록 변경.
 - **UI 용어 및 사조별 프리뷰·탐색 UX 리팩터링 (v2.4.0):**
   - 5개 언어 핵심 UI 98개 문자열의 용어 정제 (Bento Grid, Timeline Spectrum, Design Tokens, Component CSS 등).
   - 4개 주요 카테고리(Swiss, Y2K, Brutalism, Hypertech)의 Game, Media, Chat 아키타입 시각 요소 및 메인 갤러리 장르 뱃지 보강.

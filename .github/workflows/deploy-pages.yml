@@ -2,7 +2,7 @@ name: Deploy verified Vite artifact to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [gemini_ux_enhanced]
   workflow_dispatch:
 
 permissions:

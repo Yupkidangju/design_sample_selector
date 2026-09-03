@@ -256,7 +256,7 @@ export interface MainCategory {
 ### 5.9 GitHub Pages Delivery, Recovery Diagnostics, and Trust Boundaries
 
 1. production/preview URL은 `https://yupkidangju.github.io/design_sample_selector/` (remote 생성 전 미확정)의 root와 query/hash만 지원한다. 임의 deep pathname은 지원하지 않으며 Vite `base`는 `/design_sample_selector/`로 고정한다.
-2. GitHub Pages는 source root가 아니라 clean `npm ci`와 `npm run build`가 만든 `dist/` directory artifact를 GitHub Actions로 한 번에 게시한다. `dist/index.html`은 hashed `assets/index-*.js`를 가리켜야 하고 `/src/main.js`를 production entry로 사용할 수 없다.
+2. GitHub Pages 자동 배포는 기본 브랜치 `gemini_ux_enhanced` push에서만 실행하며 `main` push는 배포 트리거가 아니다. source root가 아니라 clean `npm ci`와 `npm run build`가 만든 `dist/` directory artifact를 GitHub Actions로 한 번에 게시한다. `dist/index.html`은 hashed `assets/index-*.js`를 가리켜야 하고 `/src/main.js`를 production entry로 사용할 수 없다.
 3. build는 Vite manifest의 entry/import/dynamicImport/CSS/asset closure를 재귀 검증하고 모든 파일의 경로·크기·SHA-256·MIME과 release SHA를 `dist/release-manifest.json`에 기록한다. 누락 파일, dist 밖 경로, source entry 또는 잘못된 base는 배포 전에 실패한다.
 4. recovery diagnostic은 사용자 메시지와 분리한 bounded in-memory record다. `code`, `phase(import|render|hydrate|mount)`, `attempt`, `resourceClass`, `terminal`만 기록하고 URL query, stack, 사용자 데이터나 자격정보는 저장하지 않는다.
 5. Detail mount는 성공 시에만 subscription/handler disposer를 commit한다. 초기 subscriber callback, render 또는 hydrate가 throw하면 listener·window handler·mockup runtime·부분 DOM을 baseline으로 rollback한 뒤 재시도 경계로 전달한다.
