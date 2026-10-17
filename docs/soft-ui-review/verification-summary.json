@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-10-17T15:37:25.790505+00:00",
+  "basis": "현재 source, npm run check, Chrome runtime, Vite production artifact",
+  "nodeTests": {
+    "total": 293,
+    "passed": 293,
+    "failed": 0
+  },
+  "ui": {
+    "states": 26400,
+    "galleryStates": 75,
+    "issues": 0,
+    "runtimeErrors": 0,
+    "interactions": {
+      "unconfirmedDisabled": true,
+      "selection": true,
+      "bookmarkFocus": true,
+      "bookmarkState": true,
+      "dockAudio": true,
+      "modeFocus": true,
+      "dockLocaleAndRecents": true,
+      "modalAudio": true,
+      "detailLocaleAfterReturn": true,
+      "tuner": true,
+      "keyboardInDialog": true
+    }
+  },
+  "production": {
+    "actualStyles": 120,
+    "expansionStyles": 84,
+    "galleryReachability": [
+      "GRID:120",
+      "BENTO:120",
+      "SPECTRUM:120"
+    ],
+    "matrixStates": 1920,
+    "webTabs": 480,
+    "expansionDeviceChanges": 84,
+    "responsiveWidths": 4,
+    "screenshots": 3,
+    "diagnosticCount": 0,
+    "issueCount": 0,
+    "passed": true
+  },
+  "recovery": {
+    "networkFaultCount": 10,
+    "consumerFaultCount": 2,
+    "issueCount": 0,
+    "passed": true
+  },
+  "bundle": {
+    "javascript": {
+      "assetCount": 1,
+      "rawBytes": 281387,
+      "gzipBytes": 88681,
+      "budgetBytes": 88980,
+      "withinBudget": true
+    },
+    "css": {
+      "assetCount": 1,
+      "rawBytes": 150321,
+      "gzipBytes": 29333,
+      "budgetBytes": 33000,
+      "withinBudget": true
+    },
+    "passed": true
+  },
+  "contrastOnE9edf1": {
+    "263548": 10.59,
+    "526175": 5.37,
+    "59697c": 4.78,
+    "245eac": 5.46
+  }
+}

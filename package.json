@@ -25,7 +25,8 @@
     "build": "vite build && node scripts/verifyPagesArtifact.js --write-manifest",
     "preview": "vite preview",
     "test": "node --test",
-    "check": "npm test && npm run build"
+    "check": "npm test && npm run build",
+    "qa:visual:chrome": "node scripts/verifySoftUiChrome.js"
   },
   "devDependencies": {
     "vite": "^6.2.0"

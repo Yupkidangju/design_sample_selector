@@ -398,10 +398,20 @@ async function main() {
   const sharedComponent = Object.entries(manifest)
     .find(([key]) => key.startsWith('_componentEntry'))?.[1]?.file;
   const primaryDetail = manifest['src/components/detailView.js'].file;
-  const cssFiles = Object.entries(manifest)
-    .filter(([key]) => key.startsWith('src/styles/'))
-    .map(([, value]) => value.file);
-  if (!sharedComponent || cssFiles.length !== 3) throw new Error('lazy/shared CSS manifest graph를 해석하지 못함');
+  const requiredCssSources = [
+    'src/styles/themeTokensExpansion.css',
+    'src/styles/expansion-preview.css',
+    'src/styles/audit9-detail.css',
+    'src/styles/core-preview.css',
+    'src/styles/wave1-preview.css',
+    'src/styles/preview-refinements.css'
+  ];
+  const cssEntries = Object.entries(manifest).filter(([key]) => key.startsWith('src/styles/'));
+  if (!sharedComponent || cssEntries.length !== requiredCssSources.length
+      || requiredCssSources.some(key => !manifest[key]?.file?.endsWith('.css'))) {
+    throw new Error('lazy/shared CSS manifest graph를 해석하지 못함');
+  }
+  const cssFiles = requiredCssSources.map(key => manifest[key].file);
 
   const serverPort = await getFreePort();
   const chromePort = await getFreePort();

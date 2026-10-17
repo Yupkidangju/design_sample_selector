@@ -4,6 +4,7 @@
  */
 
 import { appState } from '../state/appState.js';
+import { findSubById } from '../data/categories.js';
 import { synthAudio } from '../audio/synthAudio.js';
 import { getLocalizedLegacyAllSubDesigns } from '../catalog/legacyAdapter.js';
 import { getActiveLocaleSnapshot } from '../i18n/index.js';
@@ -13,6 +14,7 @@ import { hydrateMockup, teardownMockup } from './mockupRuntime.js';
 import { loadComponentPreviewModule } from './lazyPreviewLoader.js';
 import { recordRecoveryDiagnostic } from '../utils/recoveryDiagnostics.js';
 import { copyToClipboard } from '../utils/clipboard.js';
+import { renderCompactAudioControls, bindCompactAudioControls } from './compactAudioControls.js';
 import {
   openDetailFor,
   confirmStyle,
@@ -63,12 +65,12 @@ export function renderSelectionDock(container) {
         ${confirmSheetOpen && confirmed ? renderConfirmSheet(confirmed, state, t) : ''}
 
         <div class="dock-bar">
-          <div class="dock-confirmed-chip ${confirmed ? 'has-value' : ''}" id="dock-open-confirmed" title="${escapeHtml(t('dock.confirmedTitle'))}">
+          <button type="button" class="dock-confirmed-chip ${confirmed ? 'has-value' : ''}" id="dock-open-confirmed" ${confirmed ? '' : 'disabled'} title="${escapeHtml(t('dock.confirmedTitle'))}">
             <span class="dock-chip-label">${escapeHtml(t('dock.selected'))}</span>
             ${confirmed
               ? `<span class="dock-chip-name">${escapeHtml(confirmed.name)}</span>`
               : `<span class="dock-chip-empty">${escapeHtml(t('dock.unconfirmed'))}</span>`}
-          </div>
+          </button>
 
           ${draft ? `
             <div class="dock-draft">
@@ -82,13 +84,14 @@ export function renderSelectionDock(container) {
               <button class="dock-btn primary" id="dock-open-detail">${escapeHtml(t('dock.details'))}</button>
               <button class="dock-btn" id="dock-confirm">${escapeHtml(t(confirmed?.id === draft.id ? 'dock.confirmed' : 'dock.confirm'))}</button>
               <button class="dock-btn" id="dock-compare">${escapeHtml(t(inCompare ? 'dock.inCompare' : 'dock.addCompare'))}</button>
-              <button class="dock-btn" id="dock-bookmark">${isBookmarked ? '★' : '☆'}</button>
+              <button class="dock-btn" id="dock-bookmark" aria-pressed="${isBookmarked}" aria-label="${escapeHtml(t('detail.bookmarkToggle'))}">${isBookmarked ? '★' : '☆'}</button>
               <button class="dock-btn ghost" id="dock-clear" aria-label="${escapeHtml(t('dock.clear'))}">✕</button>
             </div>
           ` : `
             <p class="dock-hint">${escapeHtml(t('dock.hint'))}</p>
           `}
 
+          ${renderCompactAudioControls(snapshot)}
           ${recents.length ? `
             <div class="dock-recents" aria-label="${escapeHtml(t('dock.recents'))}">
               ${recents.map((s) => `
@@ -103,6 +106,7 @@ export function renderSelectionDock(container) {
     `;
 
     bind(container, draft, confirmed);
+    bindCompactAudioControls(container);
     if (confirmSheetOpen && confirmed) {
       loadConfirmPreview(confirmed, renderVersion);
     }
@@ -270,6 +274,7 @@ backdrop-filter: blur(${tweaks.backdropBlur}px);
   appState.subscribe((state, prev) => {
     if (
       state.currentView !== prev?.currentView ||
+      state.locale !== prev?.locale ||
       state.draftSubId !== prev?.draftSubId ||
       state.confirmedStyleId !== prev?.confirmedStyleId ||
       state.confirmSheetOpen !== prev?.confirmSheetOpen ||

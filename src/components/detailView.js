@@ -36,6 +36,7 @@ import {
 } from '../utils/inspectorState.js';
 import { canvasVisualEngine } from '../wasm/visualEngine.js';
 import { downloadFile } from '../utils/designSpecGenerator.js';
+import { renderCompactAudioControls, bindCompactAudioControls } from './compactAudioControls.js';
 
 let MAIN_CATEGORIES = BASE_MAIN_CATEGORIES;
 let ALL_SUB_DESIGNS = getAllSubDesigns();
@@ -83,6 +84,7 @@ export function renderDetailView(container) {
   let currentRenderedTab = null;
   let currentRenderedDevice = null;
   let currentRenderedLocale = null;
+  let currentCatalogLocale = null;
   let currentRenderedCompareIds = [null, null];
   let splitPickerQueries = { A: '', B: '' };
   let { activeTab: activeInspectorTab, activeCssMode: activeCssSubMode } = createDefaultInspectorUiState();
@@ -99,11 +101,12 @@ export function renderDetailView(container) {
   function update() {
     const state = appState.getState();
     const localeChanged = currentRenderedLocale !== state.locale;
-    if (localeChanged) {
+    if (currentCatalogLocale !== state.locale) {
       const snapshot = getActiveLocaleSnapshot();
       if (snapshot?.locale === state.locale) {
         MAIN_CATEGORIES = getLocalizedLegacyMainCategories(snapshot);
         ALL_SUB_DESIGNS = getLocalizedLegacyAllSubDesigns(snapshot);
+        currentCatalogLocale = state.locale;
       }
     }
     const { 
@@ -197,7 +200,8 @@ export function renderDetailView(container) {
         initialState: snapshotMockupState(previousViewport),
         sidebarScrollTop: container.querySelector('.detail-sidebar-section')?.scrollTop || 0,
         bodyScrollTop: container.querySelector('.modal-body-grid')?.scrollTop || 0,
-        focusId: document.activeElement?.id || null
+        focusId: document.activeElement?.id || null,
+        focusAudio: document.activeElement?.dataset.compactAudio || null
       } : null;
       if (isNewOpen) resetInspectorUiState();
       // SPLIT→DETAIL 재진입은 스플릿 컨트롤로 opener를 덮어쓰지 않는다 (SEC-F003)
@@ -214,7 +218,7 @@ export function renderDetailView(container) {
       currentRenderedTab = activeComponentTab;
       currentRenderedDevice = sandboxDevice;
       currentRenderedLocale = state.locale;
-      setupFocusTrap(container, { focusInitial: !localeChanged });
+      setupFocusTrap(container, { focusInitial: isNewOpen || !localeChanged });
     } else if (needArchetypeRebuild) {
       // Archetype changed: rebuild viewport HTML
       rebuildArchetypeViewport(container, subDesign, activeArchetype, activeComponentTab, sandboxDevice);
@@ -306,7 +310,7 @@ export function renderDetailView(container) {
     root.innerHTML = `
       <div class="detail-modal-backdrop" id="modal-backdrop"></div>
       
-      <div class="detail-modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-style-title" style="--modal-accent: ${mainCat.accentColor}">
+      <div class="detail-modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-style-title">
         
         <!-- UNIVERSAL TOP DESIGN SELECTOR BAR -->
         <header class="universal-top-bar" id="universal-top-bar">
@@ -336,6 +340,7 @@ export function renderDetailView(container) {
             </nav>
 
             <div class="modal-top-actions">
+              ${renderCompactAudioControls(localeSnapshot)}
               <button class="modal-action-chip ${isBookmarked ? 'active' : ''}" id="btn-modal-bookmark" title="${escapeHtml(t('detail.bookmarkToggle'))}">
                 <span>${escapeHtml(t(isBookmarked ? 'detail.bookmarked' : 'detail.bookmark'))}</span>
               </button>
@@ -605,6 +610,7 @@ export function renderDetailView(container) {
     `;
 
     attachDetailEventListeners(root);
+    bindCompactAudioControls(root);
     const viewport = root.querySelector('#mockup-viewport');
     if (viewport) {
       hydrateMockup(viewport, subDesign, {
@@ -632,6 +638,9 @@ export function renderDetailView(container) {
     if (continuity?.focusId) {
       const focusTarget = document.getElementById(continuity.focusId);
       if (focusTarget && root.contains(focusTarget)) focusTarget.focus({ preventScroll: true });
+    }
+    if (continuity?.focusAudio) {
+      root.querySelector(`[data-compact-audio="${continuity.focusAudio}"]`)?.focus({ preventScroll: true });
     }
     refreshAllInspectorPanes(root);
   }
@@ -688,11 +697,6 @@ export function renderDetailView(container) {
       });
       applySelectedZoom(root);
       applyTweaksToDOM(root, state.liveTweaks, newSubDesign);
-    }
-
-    const modalContainer = root.querySelector('.detail-modal-container');
-    if (modalContainer) {
-      modalContainer.style.setProperty('--modal-accent', mainCat.accentColor);
     }
 
     // Update Top Breadcrumbs & Chips
@@ -1345,6 +1349,7 @@ ${htmlContent}
             `).join('')}
           </div>
 
+          ${renderCompactAudioControls(localeSnapshot)}
           <button class="modal-close-btn" id="btn-compare-close" aria-label="${escapeHtml(t('split.close'))}">
             <span>✕</span>
           </button>
@@ -1418,6 +1423,7 @@ ${htmlContent}
     `;
 
     attachSplitCompareListeners(root, compareIds);
+    bindCompactAudioControls(root);
     const viewA = root.querySelector('#split-viewport-a');
     const viewB = root.querySelector('#split-viewport-b');
     if (viewA) hydrateMockup(viewA, sub1, { archetype: activeArchetype, tab: currentTab, snapshot: localeSnapshot });

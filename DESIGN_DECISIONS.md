@@ -511,3 +511,12 @@
   - 접근성 이름 판정에서 control value fallback을 제거한 뒤 tuner range 5개의 실제 label 누락을 검출했다. 고정 영문 병기를 제거하고 locale-owned `<label for>`를 연결했다.
   - 최종 report는 5 locale, 120 styles, 9,620 human units, reflow 30상태, screenshot 30장, semantic/machine drift·overflow·clipped/unnamed control·diagnostics/issues 0을 기록한다.
   - (과거 Audit 측정치: Node 284/284, Vite 100 modules, 초기 JS/CSS 88,365/32,997B gzip; 현재 v2.4.0 기준선: Node 293/293, Vite 100 modules, 초기 JS/CSS 88.92/32.94kB gzip). actual-120·Discovery·Pages recovery가 통과했다. ED-011 사람 검토는 별도 open checkpoint로 남는다.
+
+## 소프트 UI 제어면과 고유 시안의 분리 (2026-10-18)
+
+- **근거:** 사용자 재설계 요청과 `ui-ux-pro-max` 검토. 메인에서 강한 네온·배경 모션과 좁은 카드 구도가 시안 비교를 방해했고, 공통 mockup 규칙의 `!important`가 시안의 모서리·그림자를 덮어쓰고 있었다.
+- **선택:** `soft-ui.css`는 앱 제어면을, `preview-refinements.css`는 실제 컨테이너 폭에 따른 시안의 재배치를 담당한다. thumbnail 전용 문법은 `.style-thumb[data-grammar]`로 제한해 같은 `data-grammar`를 쓰는 실제 시안에 새지 않게 한다. 시안 이름은 thumbnail 바깥에서 읽는다.
+- **대안:** 전체 시안을 소프트 UI로 통일하면 각 사조의 차이가 사라진다. 새 프레임워크나 이미지 에셋은 초기 예산과 편집 가능성에 불리하므로 도입하지 않았다.
+- **로딩:** `core-preview.css`와 `wave1-preview.css`는 기존 스타일을 이동한 상세 전용 CSS다. `componentEntry.js`에서 나머지 상세 CSS와 로드하고 보정 CSS를 마지막으로 불러온다. 썸네일·필수 앱 UI CSS는 초기 로드에 남겨 flash와 깨진 첫 화면을 막는다.
+- **계약:** 정규 120 ID·token 생성·내보내기 형식을 유지한다. 모바일 sound switch의 이름과 장식 트랙 ARIA만 의도적으로 추가했으며, 변경 전후 HTML을 정규화해 기존 6개 matrix hash가 같음을 확인한 후 새 승인 hash로 갱신했다.
+- **검증 경계:** locale별 실제 snapshot을 전달하고 좁은 desktop·split을 mobile과 별개로 검사한다. 단순 root scrollWidth만으로 완료를 판정하지 않고 텍스트 range의 잘림과 조작·튜너 상태도 검사한다.

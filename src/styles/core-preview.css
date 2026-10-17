@@ -1,0 +1,1335 @@
+/* 상세 진입 시 로드하는 Core 24종 고유 시안. */
+/* 01. Swiss Unit */
+.swiss-unit {
+  background-color: #F4F4F0;
+  color: #111111;
+  border-color: #111111;
+  font-family: var(--font-body);
+}
+
+.swiss-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 800;
+  border-bottom: 2px solid #111111;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.swiss-grid-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 16px;
+}
+
+.swiss-title {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+.swiss-para {
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  color: #333333;
+}
+
+.swiss-btn, .swiss-btn-submit, .swiss-plan-btn {
+  background: #FF3300;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 16px;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: var(--tweak-radius, 0px);
+}
+
+.swiss-box-red {
+  background: #FF3300;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 12px 6px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.swiss-box-lines .line {
+  height: 2px;
+  background: #111111;
+  margin-bottom: 6px;
+}
+
+.swiss-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.swiss-stat-cell {
+  border: 1px solid #111111;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.swiss-stat-cell.active {
+  background: #FF3300;
+  color: #FFFFFF;
+}
+
+.swiss-pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.swiss-plan-card {
+  border: 1px solid #111111;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swiss-plan-card.active-plan {
+  border: 2px solid #FF3300;
+}
+
+/* 02. Corporate Unit */
+.corp-unit {
+  background: #FFFFFF;
+  color: #0F172A;
+  border-color: #E2E8F0;
+}
+
+.corp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.corp-logo {
+  font-weight: 800;
+  color: #2563EB;
+}
+
+.corp-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.corp-cta-sm {
+  background: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  padding: 4px 10px;
+  border-radius: var(--tweak-radius, 6px);
+  cursor: pointer;
+}
+
+.corp-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #EFF6FF;
+  color: #2563EB;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.corp-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 8px 0;
+  color: #0F172A;
+}
+
+.corp-subtitle {
+  font-size: 12px;
+  color: #64748B;
+  margin-bottom: 16px;
+}
+
+.corp-btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.corp-btn-primary {
+  background: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--tweak-radius, 6px);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.corp-btn-secondary {
+  background: #F1F5F9;
+  color: #0F172A;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--tweak-radius, 6px);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.corp-stat-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.corp-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 12px;
+  border-radius: var(--tweak-radius, 8px);
+}
+
+/* 03. High-Contrast Mono Unit */
+.mono-unit {
+  background: #050505;
+  color: #FFFFFF;
+  border-color: #333333;
+  font-family: var(--font-mono);
+}
+
+.mono-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  border-bottom: 1px solid #333333;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.c-green { color: #00FF66; }
+.c-blue { color: #00F0FF; }
+
+.mono-line {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.mono-box {
+  margin-top: 14px;
+  background: #111111;
+  border: 1px dashed #444444;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mono-btn {
+  background: #00FF66;
+  color: #000000;
+  border: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 6px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* 04. Raw Brutalism */
+.raw-brutal-unit {
+  background: #FFFF00;
+  color: #000000;
+  border: 4px solid #000000;
+  border-radius: 0 !important;
+}
+
+.raw-top {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.raw-head {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.raw-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.raw-box {
+  border: 3px solid #000000;
+  padding: 10px;
+}
+
+.raw-box.yellow { background: #FFFFFF; }
+.raw-box.pink { background: #FF0055; color: #FFFFFF; }
+
+.raw-btn {
+  width: 100%;
+  background: #FF0055;
+  color: #FFFFFF;
+  border: 3px solid #000000;
+  padding: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+/* 05. Neo-Brutalism */
+.neo-unit {
+  background: #FEF08A;
+  color: #1E293B;
+  border: 3px solid #000000;
+  box-shadow: 5px 5px 0px #000000 !important;
+}
+
+.neo-badge {
+  font-size: 10px;
+  font-weight: 800;
+  border: 2px solid #000000;
+  padding: 2px 6px;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.neo-badge.yellow { background: #FEF08A; }
+.neo-badge.blue { background: #BFDBFE; }
+.neo-badge.coral { background: #F43F5E; color: #FFFFFF; }
+
+.neo-hero-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin: 12px 0;
+}
+
+.neo-hero-desc {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.neo-btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.neo-btn {
+  border: 3px solid #000000;
+  font-weight: 800;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000000;
+  transition: transform 0.1s;
+}
+
+.neo-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000000;
+}
+
+.neo-btn.yellow { background: #FEF08A; }
+.neo-btn.pink { background: #F43F5E; color: #FFFFFF; }
+.neo-btn.blue { background: #BFDBFE; }
+
+/* 06. Cyberpunk */
+.cyber-unit {
+  background: #0D0E15;
+  color: #00F0FF;
+  border-color: #00F0FF;
+  font-family: var(--font-mono);
+}
+
+.cyber-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.cyber-frame {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px dashed #00F0FF;
+  padding: 14px;
+}
+
+.cyber-code {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.cyber-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+}
+
+.cyber-bar-fill {
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, #00F0FF, #FF007A);
+}
+
+.cyber-btn {
+  background: #FF007A;
+  color: #FFFFFF;
+  border: 1px solid #00F0FF;
+  padding: 8px 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* 07. Glassmorphism */
+.glass-unit {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-bg-orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(40px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.orb-1 { width: 140px; height: 140px; background: rgba(0, 240, 255, 0.4); top: -20px; left: -20px; }
+.orb-2 { width: 160px; height: 160px; background: rgba(129, 140, 248, 0.4); bottom: -30px; right: -30px; }
+
+.glass-panel {
+  position: relative;
+  z-index: 2;
+}
+
+.glass-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.glass-text {
+  font-size: 13px;
+  color: #E0E7FF;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.glass-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  padding: 10px 18px;
+  border-radius: var(--tweak-radius, 12px);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 08. Neumorphism */
+.neu-unit {
+  background: #E0E5EC;
+  color: #334155;
+  border: none;
+  box-shadow: 10px 10px 20px #A3B1C6, -10px -10px 20px #FFFFFF !important;
+}
+
+.neu-title {
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.neu-dial-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.neu-dial-outer {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-full);
+  background: #E0E5EC;
+  box-shadow: 6px 6px 12px #A3B1C6, -6px -6px 12px #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neu-dial-inner {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  background: #E0E5EC;
+  box-shadow: inset 4px 4px 8px #A3B1C6, inset -4px -4px 8px #FFFFFF;
+  position: relative;
+}
+
+.neu-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: #4F46E5;
+  position: absolute;
+  top: 8px;
+  left: 22px;
+}
+
+.neu-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.neu-btn {
+  background: #E0E5EC;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--tweak-radius, 12px);
+  box-shadow: 5px 5px 10px #A3B1C6, -5px -5px 10px #FFFFFF;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+}
+
+.neu-btn.active {
+  box-shadow: inset 4px 4px 8px #A3B1C6, inset -4px -4px 8px #FFFFFF;
+  color: #4F46E5;
+}
+
+/* 09. Skeuomorphism */
+.skeuo-unit {
+  background: #1E1E24;
+  color: #F8FAFC;
+  border: 2px solid #33333E;
+}
+
+.skeuo-chassis {
+  background: linear-gradient(180deg, #2A2A33, #18181D);
+  border: 1px solid #444450;
+  border-radius: var(--tweak-radius, 10px);
+  padding: 16px;
+}
+
+.skeuo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.skeuo-led {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: #4CB944;
+  box-shadow: 0 0 8px #4CB944;
+}
+
+.skeuo-cluster {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.skeuo-knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.knob-cap {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, #444452 30%, #111115 100%);
+  border: 2px solid #555566;
+  position: relative;
+}
+
+.notch {
+  width: 2px;
+  height: 12px;
+  background: #FF9F1C;
+  position: absolute;
+  top: 4px;
+  left: 22px;
+}
+
+.skeuo-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.meter-face {
+  width: 70px;
+  height: 40px;
+  background: #FFF8E7;
+  border: 2px solid #222228;
+  position: relative;
+  overflow: hidden;
+}
+
+.needle {
+  width: 1px;
+  height: 30px;
+  background: #EF4444;
+  position: absolute;
+  bottom: 0;
+  left: 35px;
+  transform: rotate(20deg);
+  transform-origin: bottom center;
+}
+
+.skeuo-switch {
+  width: 100%;
+  background: linear-gradient(180deg, #3A3A48, #22222C);
+  color: #FF9F1C;
+  border: 1px solid #555566;
+  padding: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 10. Memphis Pop */
+.memphis-unit {
+  background: #FFD670;
+  color: #111111;
+  border: 3px solid #111111;
+  position: relative;
+  overflow: hidden;
+}
+
+.memphis-shape {
+  position: absolute;
+  pointer-events: none;
+}
+
+.shape-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background: #FF70A6;
+  top: -10px;
+  right: -10px;
+}
+
+.shape-triangle {
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 50px solid #70D6FF;
+  bottom: -10px;
+  left: -10px;
+}
+
+.memphis-card {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.memphis-title {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.memphis-desc {
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.memphis-btn {
+  background: #FF70A6;
+  color: #111111;
+  border: 3px solid #111111;
+  padding: 10px 24px;
+  font-weight: 900;
+  box-shadow: 4px 4px 0px #111111;
+  cursor: pointer;
+}
+
+/* 11. Retro Synthwave */
+.retro-unit {
+  background: #1A0B2E;
+  color: #FFFFFF;
+  border-color: #FF007F;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.retro-sun {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, #FFDD00 0%, #FF007F 100%);
+  margin: 0 auto 12px auto;
+  box-shadow: 0 0 20px #FF007F;
+}
+
+.retro-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  color: #00F5FF;
+  text-shadow: 0 0 10px #00F5FF;
+}
+
+.retro-subtitle {
+  font-size: 12px;
+  color: #FF70A6;
+  margin-bottom: 16px;
+}
+
+.retro-btn {
+  background: linear-gradient(90deg, #FF007F, #00F5FF);
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 14px #FF007F;
+}
+
+/* 12. Vaporwave */
+.vapor-unit {
+  background: linear-gradient(135deg, #845EC2, #D8B4F8);
+  color: #000000;
+  border: 2px solid #00C9A7;
+}
+
+.vapor-window {
+  background: #F4F4F0;
+  border: 2px solid #845EC2;
+  box-shadow: 4px 4px 0px #845EC2;
+}
+
+.vapor-titlebar {
+  background: #845EC2;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+
+.vapor-body {
+  padding: 16px;
+  text-align: center;
+}
+
+.vapor-heading {
+  font-size: 20px;
+  font-weight: 800;
+  color: #845EC2;
+  margin-bottom: 6px;
+}
+
+.vapor-text {
+  font-size: 12px;
+  color: #555555;
+  margin-bottom: 14px;
+}
+
+.vapor-btn {
+  background: #00C9A7;
+  color: #FFFFFF;
+  border: 1px solid #845EC2;
+  padding: 6px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 13. Editorial */
+.ed-unit {
+  background: #0A0A0A;
+  color: #F5F5F0;
+  border-color: #C5A880;
+  font-family: var(--font-serif);
+}
+
+.editorial-header {
+  border-bottom: 1px solid #C5A880;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.ed-tag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #C5A880;
+}
+
+.ed-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.ed-lead {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #D1D5DB;
+  margin-bottom: 16px;
+  font-family: var(--font-body);
+}
+
+.ed-btn {
+  background: transparent;
+  border: 1px solid #C5A880;
+  color: #C5A880;
+  padding: 8px 16px;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 14. Organic */
+.organic-unit {
+  background: #F7F4EF;
+  color: #2C3E35;
+  border-color: #81B29A;
+  border-radius: var(--tweak-radius, 32px) !important;
+}
+
+.organic-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2C3E35;
+  background: #E8E4DB;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.organic-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 10px 0;
+}
+
+.organic-desc {
+  font-size: 13px;
+  color: #4A5568;
+  margin-bottom: 16px;
+}
+
+.organic-btn {
+  background: #E07A5F;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 15. Darkmode Glass */
+.dm-unit {
+  background: #111827;
+  color: #F8FAFC;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.darkmode-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.darkmode-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dm-card {
+  background: #0B0F19;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  border-radius: var(--tweak-radius, 10px);
+  display: flex;
+  flex-direction: column;
+}
+
+.dm-card.glow {
+  border-color: #38BDF8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+.dm-btn {
+  width: 100%;
+  background: #38BDF8;
+  color: #0B0F19;
+  border: none;
+  padding: 10px;
+  border-radius: var(--tweak-radius, 8px);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 16. Y2K Chrome */
+.y2k-unit {
+  background: #0F172A;
+  color: #E2E8F0;
+  border: 2px solid #A855F7;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.4) !important;
+}
+
+.y2k-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #EC4899;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.y2k-title {
+  font-size: 20px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #FFFFFF, #EC4899, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.y2k-desc {
+  font-size: 12px;
+  color: #94A3B8;
+  margin-bottom: 16px;
+}
+
+.y2k-btn {
+  background: linear-gradient(90deg, #EC4899, #8B5CF6);
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+}
+
+/* 17. Frutiger Aero */
+.aero-unit {
+  background: linear-gradient(180deg, #38BDF8 0%, #4ADE80 100%);
+  color: #064E3B;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.aero-sky-banner {
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+}
+
+.aero-sphere {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle at 30% 30%, #FFFFFF, #0284C7);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin: 0 auto 12px auto;
+}
+
+.aero-head {
+  font-size: 22px;
+  font-weight: 900;
+  color: #FFFFFF;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 6px;
+}
+
+.aero-desc {
+  font-size: 12px;
+  color: #F0FDF4;
+  margin-bottom: 16px;
+}
+
+.aero-btn {
+  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3));
+  border: 1px solid #FFFFFF;
+  color: #0284C7;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 18. Pixel Arcade */
+.pixel-unit {
+  background: #2E0854;
+  color: #FBBF24;
+  border: 4px solid #FBBF24;
+  font-family: var(--font-mono);
+  border-radius: 0 !important;
+}
+
+.pixel-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+
+.pixel-title {
+  font-size: 18px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #22C55E;
+}
+
+.pixel-hp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.hp-bar {
+  flex: 1;
+  height: 12px;
+  background: #111111;
+  border: 2px solid #FBBF24;
+}
+
+.hp-fill {
+  width: 80%;
+  height: 100%;
+  background: #22C55E;
+}
+
+.pixel-btn {
+  width: 100%;
+  background: #EF4444;
+  color: #FFFFFF;
+  border: 3px solid #FFFFFF;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* 19. Kinetic Typography */
+.kinetic-unit {
+  background: #050505;
+  color: #CCFF00;
+  border: 2px solid #CCFF00;
+}
+
+.kinetic-marquee {
+  background: #CCFF00;
+  color: #050505;
+  padding: 4px 0;
+  font-weight: 900;
+  font-size: 11px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 14px;
+}
+
+.kinetic-title {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.kinetic-desc {
+  font-size: 12px;
+  color: #94A3B8;
+  margin-bottom: 16px;
+}
+
+.kinetic-btn {
+  background: #CCFF00;
+  color: #050505;
+  border: none;
+  padding: 10px 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* 20. Bento Grid UI 2.0 */
+.bento-ui-unit {
+  background: #161B26;
+  color: #F8FAFC;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bento-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.bento-box {
+  background: #0E131F;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--tweak-radius, 12px);
+  padding: 12px;
+}
+
+.bento-large {
+  grid-column: span 2;
+}
+
+.bento-chip {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6366F1;
+  background: rgba(99, 102, 241, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.bento-box-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 6px 0 2px 0;
+}
+
+.bento-box-desc {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-bottom: 10px;
+}
+
+.bento-bar-meter {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.bar-progress {
+  width: 65%;
+  height: 100%;
+  background: #6366F1;
+}
+
+.bento-stat {
+  font-size: 16px;
+  font-weight: 800;
+  display: block;
+  margin-top: 6px;
+}
+
+.bento-stat-lbl {
+  font-size: 10px;
+  color: #64748B;
+}
+
+/* 21. Acid Graphics */
+.acid-unit {
+  background: #000000;
+  color: #39FF14;
+  border: 3px solid #39FF14;
+  box-shadow: 0 0 18px rgba(57, 255, 20, 0.4) !important;
+}
+
+.acid-smile {
+  font-size: 32px;
+  color: #FFFF33;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.acid-title {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  color: #39FF14;
+  margin-bottom: 8px;
+}
+
+.acid-desc {
+  font-size: 12px;
+  color: #E2E8F0;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.acid-btn {
+  width: 100%;
+  background: #39FF14;
+  color: #000000;
+  border: none;
+  padding: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* 22. Claymorphism */
+.clay-unit {
+  background: #EDF6F9;
+  color: #2B2D42;
+  border: none;
+  border-radius: var(--tweak-radius, 32px) !important;
+  box-shadow: 12px 12px 24px #CAD2C5, -12px -12px 24px #FFFFFF, inset 4px 4px 8px #CAD2C5, inset -4px -4px 8px #FFFFFF !important;
+  text-align: center;
+}
+
+.clay-badge {
+  font-size: 11px;
+  font-weight: 800;
+  background: #83C5BE;
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.clay-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.clay-desc {
+  font-size: 13px;
+  color: #6C757D;
+  margin-bottom: 16px;
+}
+
+.clay-btn {
+  background: #FF6B4A;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 6px 6px 12px rgba(255, 107, 74, 0.4), inset -2px -2px 4px rgba(0,0,0,0.2);
+}
+
+/* 23. Handcrafted Indie */
+.indie-unit {
+  background: #F4ECD8;
+  color: #2D3748;
+  border: 2px dashed #A0AEC0;
+  position: relative;
+}
+
+.indie-tape {
+  width: 70px;
+  height: 20px;
+  background: rgba(255, 222, 89, 0.75);
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  transform: rotate(-5deg);
+}
+
+.indie-stamp {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  color: #B91C1C;
+  border: 2px solid #B91C1C;
+  padding: 2px 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+  transform: rotate(3deg);
+}
+
+.indie-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.indie-desc {
+  font-size: 12px;
+  color: #4A5568;
+  margin-bottom: 16px;
+}
+
+.indie-btn {
+  background: #2D3748;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 24. Solarpunk Eco */
+.solar-unit {
+  background: linear-gradient(135deg, #065F46, #047857);
+  color: #FEF3C7;
+  border: 2px solid #F59E0B;
+}
+
+.solar-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #F59E0B;
+  color: #065F46;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.solar-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin: 10px 0 6px 0;
+}
+
+.solar-desc {
+  font-size: 12px;
+  color: #D1FAE5;
+  margin-bottom: 16px;
+}
+
+.solar-btn {
+  background: #F59E0B;
+  color: #065F46;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}

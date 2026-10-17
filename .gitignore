@@ -14,3 +14,6 @@ dist/
 .antigravity/archive/audit10-pages-recovery/
 .antigravity/archive/audit11-i18n-inspector-chrome/
 .antigravity/archive/locale-stage2-checkpoint-*/
+
+# 소프트 UI Chrome 검수의 격리 프로필·중간 로그·전체 contact sheet
+.antigravity/soft-ui-*

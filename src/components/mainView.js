@@ -13,6 +13,7 @@ import { createGalleryModel, createGalleryWindow } from './galleryModel.js';
 import { renderGalleryPagination } from './galleryPagination.js';
 import { getActiveLocaleSnapshot } from '../i18n/index.js';
 import { formatLocaleCopy } from '../i18n/format.js';
+import { icon } from './icons.js';
 import {
   selectDraft,
   openDetailFor,
@@ -37,6 +38,12 @@ export function renderMainView(container, options = {}) {
 
   function updateView() {
     if (disposed) return;
+    const active = document.activeElement;
+    const focusClass = container.contains(active)
+      ? ['sub-tile', 'badge-bookmark-btn', 'bento-item-card', 'bento-bookmark-toggle', 'spectrum-card', 'spec-bookmark']
+        .find(name => active.classList.contains(name))
+      : null;
+    const focusId = focusClass ? active.dataset.subId : null;
     const state = stateManager.getState();
     const snapshot = getActiveLocaleSnapshot();
     const t = (key, values) => formatLocaleCopy(snapshot?.copy, key, values);
@@ -63,7 +70,7 @@ export function renderMainView(container, options = {}) {
     if (model.entries.length === 0) {
       container.innerHTML = `
         <div class="empty-results-box">
-          <div class="empty-icon">🔍</div>
+          <div class="empty-icon">${icon('search')}</div>
           <h2 class="empty-title">${escapeHtml(t('gallery.emptyTitle'))}</h2>
           <p class="empty-desc">${escapeHtml(t(searchQuery ? 'gallery.emptyQuery' : 'gallery.emptyConditions', { query: searchQuery }))}</p>
           <button class="empty-reset-btn" id="btn-empty-reset" type="button">${escapeHtml(t('gallery.resetAll'))}</button>
@@ -106,6 +113,10 @@ export function renderMainView(container, options = {}) {
     attachCardListeners(container);
     attachPaginationListeners(model.window);
     stopThumbObserver = observeThumbMotion(container);
+    if (focusClass && focusId) {
+      Array.from(container.querySelectorAll(`.${focusClass}`))
+        .find(element => element.dataset.subId === focusId)?.focus({ preventScroll: true });
+    }
   }
 
   function attachPaginationListeners(windowModel) {
@@ -134,14 +145,14 @@ export function renderMainView(container, options = {}) {
     let html = `<div class="category-nodes-grid">`;
 
     const GENRE_PILLS = {
-      swiss: '■ SWISS',
-      y2k: '✦ Y2K',
-      brutalism: '⬛ BRUTAL',
-      hypertech: '💠 HYPER',
-      retro: '🕹️ RETRO',
-      depth: '💎 GLASS',
-      editorial: '📰 EDITORIAL',
-      soft3d: '🫧 3D'
+      swiss: 'SWISS',
+      y2k: 'Y2K',
+      brutalism: 'BRUTAL',
+      hypertech: 'HYPERTECH',
+      retro: 'RETRO',
+      depth: 'DEPTH',
+      editorial: 'EDITORIAL',
+      soft3d: 'SOFT 3D'
     };
 
     categories.forEach((cat, idx) => {
@@ -160,7 +171,7 @@ export function renderMainView(container, options = {}) {
           </div>
 
           <div class="card-title-group">
-            <div class="category-icon-wrapper">${cat.icon}</div>
+            <div class="category-icon-wrapper">${icon(cat.id)}</div>
             <div>
               <h2 class="category-main-title">${escapeHtml(cat.title)}</h2>
             </div>
@@ -183,6 +194,7 @@ export function renderMainView(container, options = {}) {
                             data-cat-id="${cat.id}"
                             data-sub-id="${sub.id}"
                             data-result-id="${sub.id}"
+                            aria-pressed="${flags.draftSubId === sub.id}"
                             type="button">
                       <div class="style-thumb-frame">
                         ${renderPreviewThumbnail({ thumbnailId: sub.thumbMotif, design: sub })}
@@ -201,6 +213,7 @@ export function renderMainView(container, options = {}) {
                     </button>
                     <button class="badge-bookmark-btn ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
+                            aria-pressed="${isSaved}"
                             type="button"
                             aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}"
                             title="${escapeHtml(t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.favoriteSave'))}">
@@ -232,6 +245,8 @@ export function renderMainView(container, options = {}) {
              data-sub-id="${sub.id}"
              data-result-id="${sub.id}"
              tabindex="0"
+             role="group"
+             aria-current="${flags.draftSubId === sub.id}"
              aria-label="${escapeHtml(t('gallery.selectDesign', { name: sub.name }))}"
              style="--bento-accent: ${cat.accentColor}">
           <div class="bento-card-glow"></div>
@@ -240,11 +255,12 @@ export function renderMainView(container, options = {}) {
           </div>
           <div class="bento-top-row">
             <div class="bento-category-tag">
-              <span>${cat.icon}</span>
+              <span>${icon(cat.id)}</span>
               <span>${cat.title}</span>
             </div>
             <button class="bento-bookmark-toggle ${isSaved ? 'bookmarked' : ''}"
                     data-sub-id="${sub.id}"
+                    aria-pressed="${isSaved}"
                     type="button"
                     aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}"
                     title="${escapeHtml(t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.favoriteSave'))}">
@@ -311,19 +327,22 @@ export function renderMainView(container, options = {}) {
                      data-sub-id="${sub.id}"
                      data-result-id="${sub.id}"
                      tabindex="0"
+                     role="group"
+                     aria-current="${flags.draftSubId === sub.id}"
                      aria-label="${escapeHtml(t('gallery.selectDesign', { name: sub.name }))}"
                      style="--group-accent: ${cat.accentColor}">
                   <div class="spec-thumb-frame">
                     ${renderPreviewThumbnail({ thumbnailId: sub.thumbMotif, design: sub })}
                   </div>
                   <div class="spec-card-context">
-                    <span class="spec-category-context">${cat.icon} ${cat.title}</span>
+                    <span class="spec-category-context">${icon(cat.id)} ${cat.title}</span>
                     <span class="spec-era-context">${escapeHtml(snapshot?.catalog?.facets?.era?.values?.[group.id] || group.label.en)}</span>
                   </div>
                   <div class="spec-card-head">
                     <h4 class="spec-title">${sub.name}</h4>
                     <button class="spec-bookmark ${isSaved ? 'bookmarked' : ''}"
                             data-sub-id="${sub.id}"
+                            aria-pressed="${isSaved}"
                             type="button"
                             aria-label="${escapeHtml(`${sub.name} ${t(isSaved ? 'gallery.bookmarkRemove' : 'gallery.bookmarkSave')}`)}">
                       ${isSaved ? '★' : '☆'}
@@ -548,6 +567,8 @@ export function renderMainView(container, options = {}) {
           t.classList.toggle('is-draft', state.draftSubId === id);
           t.classList.toggle('is-focused', state.galleryFocusId === id);
           t.classList.toggle('is-confirmed', state.confirmedStyleId === id);
+          if (t.matches('button')) t.setAttribute('aria-pressed', String(state.draftSubId === id));
+          else t.setAttribute('aria-current', String(state.draftSubId === id));
         });
       }
     }

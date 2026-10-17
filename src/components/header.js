@@ -16,6 +16,7 @@ import {
   getActiveLocaleSnapshot
 } from '../i18n/index.js';
 import { formatLocaleCopy } from '../i18n/format.js';
+import { icon } from './icons.js';
 
 const STYLE_COUNT = getAllSubDesigns().length;
 
@@ -23,6 +24,10 @@ export function renderHeader(container) {
   if (!container) return;
 
   function update() {
+    const active = container.contains(document.activeElement) ? document.activeElement : null;
+    const focusId = active?.id;
+    const focusMode = active?.dataset.mode;
+    const focusFilter = active?.dataset.filter;
     const { activeFilter, searchQuery, viewMode, bookmarks, bookmarkFilterActive, confirmedStyleId, canvasReady, locale } = appState.getState();
     const localeSnapshot = getActiveLocaleSnapshot();
     const messages = localeSnapshot?.messages || {};
@@ -40,7 +45,7 @@ export function renderHeader(container) {
         <div class="header-main">
           <div class="brand-container" id="brand-home-btn" role="button" tabindex="0" title="${escapeHtml(t('header.homeTitle'))}">
             <div class="brand-logo-symbol">
-              <span class="logo-icon">🎨</span>
+              ${icon('spectrum', 'logo-icon')}
               <span class="logo-pulse"></span>
             </div>
             <div class="brand-titles">
@@ -55,7 +60,7 @@ export function renderHeader(container) {
           <!-- Central Search Bar -->
           <div class="header-search-wrapper">
             <div class="search-box">
-              <span class="search-icon">🔍</span>
+              ${icon('search', 'search-icon')}
               <input type="search"
                      id="search-input" 
                      aria-label="${escapeHtml(messages.search || '')}"
@@ -93,16 +98,16 @@ export function renderHeader(container) {
 
             <!-- Bookmarks Filter Toggle -->
             <button class="btn-util-chip ${bookmarkFilterActive ? 'active-bookmark-chip' : ''}" id="btn-toggle-bookmark-filter" type="button" aria-pressed="${bookmarkFilterActive}" title="${escapeHtml(t('header.bookmarksOnly'))}">
-              <span class="util-icon">⭐️</span>
+              ${icon('bookmark', 'util-icon')}
               <span>${messages.bookmark || ''} (${bookmarkCount})</span>
             </button>
 
-            <button class="btn-util-chip ${confirmed ? 'active-confirm-chip' : ''}" id="btn-open-confirmed" type="button" title="${escapeHtml(t('header.confirmedTitle'))}">
+            <button class="btn-util-chip ${confirmed ? 'active-confirm-chip' : ''}" id="btn-open-confirmed" type="button" ${confirmed ? '' : 'disabled'} title="${escapeHtml(t('header.confirmedTitle'))}">
               <span class="util-icon">✓</span>
               <span>${confirmed ? `${messages.saved || ''}: ${escapeHtml(confirmed.name)}` : (messages.noSelection || '')}</span>
             </button>
             <button class="btn-util-chip btn-compare-chip" id="btn-open-compare-modal" type="button" title="${escapeHtml(t('header.compareTitle'))}">
-              <span class="util-icon">⚖️</span>
+              ${icon('compare', 'util-icon')}
               <span>${escapeHtml(messages.compare || '')}</span>
             </button>
           </div>
@@ -121,7 +126,7 @@ export function renderHeader(container) {
                       type="button"
                       aria-pressed="${activeFilter === cat.id}"
                       style="--tag-accent: ${cat.accentColor}">
-                <span class="tag-icon">${cat.icon}</span>
+                ${icon(cat.id, 'tag-icon')}
                 <span>${escapeHtml(cat.title)} (${cat.subCategories.length})</span>
               </button>
             `).join('')}
@@ -233,6 +238,11 @@ export function renderHeader(container) {
         appState.setState({ activeFilter: filterVal });
       });
     });
+    const focusTarget = focusId ? container.querySelector(`#${focusId}`)
+      : Array.from(container.querySelectorAll('[data-mode], [data-filter]')).find(element => (
+        (focusMode && element.dataset.mode === focusMode) || (focusFilter && element.dataset.filter === focusFilter)
+      ));
+    focusTarget?.focus({ preventScroll: true });
   }
 
   function bindSearchControls() {

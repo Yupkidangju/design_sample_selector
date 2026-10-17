@@ -45,8 +45,8 @@ export function renderAudioWidget(container) {
         </button>
 
         <!-- SFX Toggle Button -->
-        <button class="audio-ctrl-btn btn-sfx active" id="btn-audio-sfx" title="${t('audio.sfxTitle')}" aria-label="${t('audio.sfxTitle')}">
-          <span id="icon-sfx-state">🔊</span>
+        <button class="audio-ctrl-btn btn-sfx ${currentAudio.sfxEnabled ? 'active' : ''}" id="btn-audio-sfx" title="${t('audio.sfxTitle')}" aria-label="${t('audio.sfxTitle')}" aria-pressed="${currentAudio.sfxEnabled}">
+          <span id="icon-sfx-state">${currentAudio.sfxEnabled ? '🔊' : '🔇'}</span>
         </button>
       </div>
 
@@ -183,9 +183,18 @@ export function renderAudioWidget(container) {
 
   // Subscribe to State Updates
   const unsubscribe = appState.subscribe((state) => {
+    document.querySelectorAll('[data-compact-audio]').forEach(button => {
+      const bgm = button.dataset.compactAudio === 'bgm';
+      button.setAttribute('aria-pressed', String(bgm ? state.audio.isPlaying : state.audio.sfxEnabled));
+      if (bgm) button.querySelector('[data-audio-glyph]').textContent = state.audio.isPlaying ? 'Ⅱ' : '▶';
+    });
     if (trackTxt && state.audio.trackTitle) trackTxt.textContent = state.audio.trackTitle;
     if (playIcon) playIcon.textContent = state.audio.isPlaying ? '⏸' : '▶';
     if (playBtn) playBtn.classList.toggle('playing', state.audio.isPlaying);
+    playBtn?.setAttribute('aria-pressed', String(state.audio.isPlaying));
+    sfxBtn?.setAttribute('aria-pressed', String(state.audio.sfxEnabled));
+    sfxBtn?.classList.toggle('active', state.audio.sfxEnabled);
+    if (sfxIcon) sfxIcon.textContent = state.audio.sfxEnabled ? '🔊' : '🔇';
     if (volInput && Number(volInput.value) !== state.audio.volume) {
       volInput.value = String(state.audio.volume);
     }

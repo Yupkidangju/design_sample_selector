@@ -11,7 +11,7 @@ The application is structured into zero-dependency, native ES modules that commu
 ```
 /home/eunho1/Projects/web/design_sample_selector/
 ├── index.html                  # Single page entry point with semantic HTML structure
-├── index.css                   # Core CSS design system, legacy preview styles, bento & modal layouts
+├── index.css                   # App CSS tokens, gallery and modal layouts
 ├── src/
 │   ├── main.js                 # Application bootstrap & lifecycle coordinator
 │   ├── state/
@@ -178,3 +178,12 @@ The application is structured into zero-dependency, native ES modules that commu
 
 ### 2.11 `src/wasm/visualEngine.js`
 - **Responsibility:** Runs Canvas 2D particle physics with audio-reactive spectrum pulsation, `prefers-reduced-motion` compliance, and modal pause/resume lifecycle controls. No WebAssembly module.
+
+## 소프트 UI 재점검 구조 (2026-10-18)
+
+- `src/styles/soft-ui.css`: 메인·필터·선택·상세·비교 제어면의 소프트 뉴모피즘과 반응형 레이아웃.
+- `src/styles/preview-thumbnails.css`: Expansion 84종의 21개 문법을 작은 도형 구도로 투영. 실제 preview와 selector를 분리.
+- `src/styles/core-preview.css`, `wave1-preview.css`: 초기 로딩에서 분리한 기존 24+12종 상세 시안 CSS. `componentEntry.js`에서 최초 사용 시 로드.
+- `src/styles/preview-refinements.css`: 120종의 container query·읽기 흐름·입력/표/채팅 재배치 및 튜너 효과 연결.
+- `src/components/compactAudioControls.js`: 도크·상세·비교 안에서 접근 가능한 BGM/SFX 조작. 기존 audioWidget subscriber가 동일한 상태를 동기화.
+- `scripts/verifySoftUiChrome.js`, `visualDesignAudit.js`, `visualContactSheets.js`: 격리 Chrome 전수 레이아웃, 실제 UI 조작 및 120종 육안 검수용 contact sheet 생성.

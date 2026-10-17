@@ -1,0 +1,564 @@
+{
+  "checkedAt": "2026-10-17T15:34:15.904Z",
+  "issues": [],
+  "runtimeErrors": [],
+  "shell": [
+    {
+      "locale": "ko",
+      "width": 320,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 320,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 320,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 375,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 375,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 375,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 768,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 768,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 768,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1024,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1024,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1024,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1440,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1440,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ko",
+      "width": 1440,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 375,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 375,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 375,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1024,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1024,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1024,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 320,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 320,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 320,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 375,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 375,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 375,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 768,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 768,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 768,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1024,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1024,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1024,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1440,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1440,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "ja",
+      "width": 1440,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 320,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 320,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 320,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 375,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 375,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 375,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 768,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 768,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 768,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1024,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1024,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1024,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1440,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1440,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-CN",
+      "width": 1440,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 320,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 320,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 320,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 375,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 375,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 375,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 768,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 768,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 768,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1024,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1024,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1024,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1440,
+      "mode": "GRID",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1440,
+      "mode": "BENTO",
+      "overflow": 0,
+      "clipped": []
+    },
+    {
+      "locale": "zh-TW",
+      "width": 1440,
+      "mode": "SPECTRUM",
+      "overflow": 0,
+      "clipped": []
+    }
+  ],
+  "previews": {
+    "states": 26400,
+    "styles": 120,
+    "locales": 5,
+    "devices": [
+      "760px desktop",
+      "320px mobile",
+      "320px desktop",
+      "320px split"
+    ],
+    "issues": []
+  },
+  "screenshots": [
+    "main-final.png",
+    "detail-final.png",
+    "split-final.png",
+    "mobile-final.png"
+  ],
+  "interactions": {
+    "unconfirmedDisabled": true,
+    "selection": true,
+    "bookmarkFocus": true,
+    "bookmarkState": true,
+    "dockAudio": true,
+    "modeFocus": true,
+    "dockLocaleAndRecents": true,
+    "modalAudio": true,
+    "detailLocaleAfterReturn": true,
+    "tuner": true,
+    "keyboardInDialog": true
+  },
+  "reducedMotion": true
+}

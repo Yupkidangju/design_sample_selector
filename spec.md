@@ -74,6 +74,10 @@ In v2.4.0, the application upgrades the inspector into a **Dynamic 4-Tab Reactiv
   - XSS-safe DOM node assembly (`textContent` & `document.createElement`).
   - WAI-ARIA modal focus trap, `role="tab"` / `aria-selected` attributes, ESC key handling.
 
+### 3.1.1 승인된 소프트 UI 재점검 (2026-10-18)
+
+최신 사용자 요청에 따라 앱의 메인·도크·상세·비교 제어면은 밝은 소프트 뉴모피즘으로 정리한다. 실제 시안의 고유 테마는 보존·보강한다. 전체 120종의 thumbnail·8개 아키타입·Web 4탭을 검토하고 5개 locale, 좁은 화면과 비교 컨테이너에서 글자·메뉴·조작 영역이 잘리지 않도록 재배치한다. 클릭 선택과 상세 진입을 구분하고 키보드 focus·선택 상태·오디오 접근성을 개선한다. 세부 기준은 `designs.md` §1.0과 `tasks/soft-ui-redesign.md`를 따른다. 검증 후 현재 추적 브랜치를 GitHub에 푸시한다.
+
 ### 3.2 Non-Goals
 - Server-side backend databases or user authentication (pure client-side static web application).
 - External video streaming or heavy MP3 asset downloads.

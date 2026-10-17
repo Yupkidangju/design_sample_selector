@@ -166,7 +166,7 @@ test('Audit 11 re-audit #1: Chrome locale gate covers five Detail and Inspector 
 test('Audit 11 re-audit #1: locale re-render restores focus before rearming the trap', async () => {
   const source = await readFile(new URL('../src/components/detailView.js', import.meta.url), 'utf8');
   assert.match(source, /focusTarget\.focus\(\{ preventScroll: true \}\)/);
-  assert.match(source, /setupFocusTrap\(container, \{ focusInitial: !localeChanged \}\)/);
+  assert.match(source, /setupFocusTrap\(container, \{ focusInitial: isNewOpen \|\| !localeChanged \}\)/);
 });
 
 test('Audit 11 re-audit #1: interactive preview statuses resolve through the locale snapshot', async () => {

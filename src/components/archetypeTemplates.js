@@ -378,8 +378,8 @@ function renderMobileArchetype(subDesign, t) {
               <span class="toggle-desc">${t('archetype.mobile.soundDescription')}</span>
             </div>
             <label class="mobile-switch">
-              <input type="checkbox" checked data-action="mobile-toggle">
-              <span class="slider"></span>
+              <input type="checkbox" checked data-action="mobile-toggle" aria-label="${t('archetype.mobile.soundTitle')}">
+              <span class="slider" aria-hidden="true"></span>
             </label>
           </div>
         </div>

@@ -645,7 +645,7 @@ body:has(.selection-dock.is-expanded) .audio-unlock-banner {
 /* Mockup runtime chrome */
 .mockup-unit { position: relative; overflow: hidden; }
 .fx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.mockup-unit > *:not(.fx-layer) { position: relative; z-index: 1; }
+.mockup-unit > :where(:not(.fx-layer)) { position: relative; z-index: 1; }
 
 .mock-live-toast {
   position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%) translateY(8px);

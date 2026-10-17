@@ -2,6 +2,9 @@
 
 > 120종 인터랙티브 웹 디자인 사조 아카이브, 8대 코어 화면 아키타입, Universal 상단 디자인 선택 바, 상태 보존형 renderer·테마 전환, 4대 탭 동적 인스펙터 & 실시간 designs.md/토큰 내보내기 엔진, 키네틱 시뮬레이터, 실시간 파라미터 튜너 및 Web Audio 절차적 사운드 신시사이저 플레이그라운드
 
+
+메인과 선택·상세·비교 도구는 밝은 소프트 뉴모피즘을 사용합니다. 120종 시안은 각 테마의 고유 색·활자·재질을 보여주며, 좁은 화면에서는 이름과 컨트롤을 재배치합니다. 선택과 즐겨찾기 상태를 명시하고 키보드 포커스를 보존하며, 도크·상세·비교에서도 음악·효과음을 조작할 수 있습니다.
+
 ---
 
 ## 🚀 빠른 시작 (Local Development)
@@ -135,7 +138,7 @@ npm run qa:scalability:chrome
 npm run qa:catalog120:chrome
 ```
 
-Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 이어진 locale Stage 1에서 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 locale당 120종·1,924 field unit을 명시 pack으로 분리했습니다. Stage 2에서는 디자인명과 한국어·영어·일본어·중국어 간체·중국어 번체 본문을 각각 120/120 감수했으며, locale별 8개 category wave에서 summary·palette·특징·장단점의 공통 생성문과 숫자형 palette 이름을 제거했습니다. 최종 자동 재감사는 5 locale의 9,620개 사람용 field unit과 machine identity, 간체/번체 독립성을 대조하고 320/375/768/1024/1440px 및 물리 1280px/CSS 640px/DPR 2의 200% 상태 30개를 Chrome에서 검증합니다. 최신 Node `293/293`, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 issues 0을 통과했고 초기 JS/CSS는 `88,915/88,980B` (`88.92kB`, 여유 `65B`), `32.94/33.00kB` gzip입니다. 구조 완전성 근거는 `docs/multi_audit/11/locale_stage1_evidence.md`, 5개 locale 편집 근거는 `docs/multi_audit/11/locale_stage2_checkpoint_14_evidence.md`, 교차 언어·reflow 근거는 `docs/multi_audit/11/locale_stage2_task27_evidence.md`에 있습니다. 자동 검증과 별개로 원어민 수준의 자연스러움은 사용자 또는 해당 언어 화자의 검토 전까지 미확정입니다.
+Audit 11에서는 장식용 `999px` pill과 `0..64px` surface tuner를 분리하고, broad radius override를 `[data-tweak-surface]` opt-in으로 교체했습니다. 이어진 locale Stage 1에서 5개 locale의 296-key visible/ARIA/artifact/runtime copy와 locale당 120종·1,924 field unit을 명시 pack으로 분리했습니다. Stage 2에서는 디자인명과 한국어·영어·일본어·중국어 간체·중국어 번체 본문을 각각 120/120 감수했으며, locale별 8개 category wave에서 summary·palette·특징·장단점의 공통 생성문과 숫자형 palette 이름을 제거했습니다. 최종 자동 재감사는 5 locale의 9,620개 사람용 field unit과 machine identity, 간체/번체 독립성을 대조하고 320/375/768/1024/1440px 및 물리 1280px/CSS 640px/DPR 2의 200% 상태 30개를 Chrome에서 검증합니다. 당시 Stage 2 기준 Node `293/293`, actual-120 `1,920`상태·Web `480`탭, Discovery 9시나리오·6폭, Pages fault 9종이 issues 0을 통과했고 초기 JS/CSS는 `88,915/88,980B` (`88.92kB`, 여유 `65B`), `32.94/33.00kB` gzip입니다. 구조 완전성 근거는 `docs/multi_audit/11/locale_stage1_evidence.md`, 5개 locale 편집 근거는 `docs/multi_audit/11/locale_stage2_checkpoint_14_evidence.md`, 교차 언어·reflow 근거는 `docs/multi_audit/11/locale_stage2_task27_evidence.md`에 있습니다. 자동 검증과 별개로 원어민 수준의 자연스러움은 사용자 또는 해당 언어 화자의 검토 전까지 미확정입니다.
 
 ### 8. GitHub Pages production artifact와 복구 검증
 
@@ -252,3 +255,11 @@ Preview retry는 primary 실패 뒤 한 번만 허용되고 두 번째 shared/im
 ├── BUILD_GUIDE.md              # 빌드 및 실행 가이드
 └── CHANGELOG.md                # 변경 이력
 ```
+
+### 소프트 UI 전수 레이아웃 검증
+
+```bash
+npm run qa:visual:chrome
+```
+
+설치된 Google Chrome과 프로젝트 Vite로 격리 세션을 생성합니다. 5개 locale × 120종 × 4개 컨테이너(760px desktop / 320px mobile / 320px desktop / 320px split) × 8개 아키타입·추가 Web 3탭, 총 26,400상태의 가로 넘침·글자 잘림과 75개 Gallery locale/화면폭/보기 상태를 검사합니다. 실제 클릭·키보드·튜너와 대표 화면도 확인하며, 보고서는 `.antigravity/soft-ui-evidence/`에 보관합니다. 배포 산출물은 별도로 `npm run qa:catalog120:chrome`으로 검증합니다.

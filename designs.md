@@ -7,32 +7,53 @@
 
 ## 1. Design System & Global Visual Tokens
 
+### 1.0 소프트 UI 재설계 (2026-10-18)
+
+근거: 사용자 요청, 실제 120종 카탈로그, `ui-ux-pro-max`의 **Soft UI Evolution / Neumorphism / Compact Label Overflow** 지침. 검색 도구의 마케팅 Hero·후기 구성은 카탈로그 제품과 맞지 않아 채택하지 않았으며, 기존 3개 보기와 탐색 구조를 유지한다.
+
+```text
+소프트 UI 제어면: Header → 검색·조건 → 3개 Gallery 보기 → 선택 Dock
+                                            ├→ Detail: 제어면 | 고유 테마 시안 | Inspector
+                                            └→ Split: 제어면 | 테마 A | 테마 B
+초기 CSS: index + interactive + wave1 thumbnails + soft-ui + preview-thumbnails
+상세 CSS: core-preview + wave1-preview + expansion + audit9 + preview-refinements
+```
+
+- **시각 언어:** 밝은 청회색 바탕, 진한 잉크, 양방향 부드러운 그림자, 음각 활성 상태. 카테고리는 도형 아이콘과 짧은 표식으로 구분한다. Canvas는 초기화·중지 계약을 유지하되 메인에서 장식 입자를 표시하지 않는다.
+- **카드:** 시안 선택 영역과 상세/즐겨찾기를 두 줄로 분리한다. 이름은 줄바꿈하며 높이 제한으로 자르지 않는다. 선택은 체크와 `aria-pressed`/`aria-current`로 함께 표현한다. 즐겨찾기·필터·보기 변경 시 해당 버튼의 키보드 포커스를 보존한다.
+- **120종:** Core 24·Wave 1 12종의 고유 구조를 유지·보정하고 Expansion 84종은 21개 문법별 구성·재질·활자 위계를 재조정한다. 작은 thumbnail에는 긴 시안명 대신 도형 4개와 고유 palette를 표시한다. 이름은 바깥 label이 소유한다.
+- **테마와 튜너:** 내부 mockup의 강제 cyan glow·둥근 모서리를 제거해 고유 테마를 드러낸다. radius/border는 기존 opt-in surface에 적용하고 그림자·blur·glow의 실시간 연결을 유지한다. 시안 폭은 container query로 판단한다. [CSS container queries 표준](https://www.w3.org/TR/css-conditional-5/)을 근거로 `cqi` 글자 크기를 사용한다.
+- **접근성:** 읽는 글자 대비 4.5:1 이상을 목표로 하고 키보드 focus-visible·44px 조작 영역·reduced-motion을 유지한다. 메뉴의 가로 스크롤은 보이는 scrollbar와 키보드 포커스로 전체 항목에 도달하게 한다. 도크·상세·비교에도 재생/일시정지·효과음 조작을 제공한다.
+- **반응형:** 320/375/768/1024/1440px와 좁은 desktop·split 컨테이너를 별도 검사한다. 정보는 재배치하고 dashboard 표만 자체 가로 스크롤을 허용한다. 닫힌 장바구니는 화면과 Tab 순서에서 제외한다.
+- **상태·오류:** 선택/확정/즐겨찾기와 locale·Inspector·runtime 복원 계약을 유지한다. 미선택 확정 버튼은 disabled로 표시한다. 초기·빈 결과·lazy preview 오류·재시도 흐름은 기존 복구 계층을 사용한다.
+- **성능:** 예산을 늘리지 않고 Core/Wave 1 상세 CSS를 지연 로드한다. 모양을 CSS로 구성해 초기 JavaScript에 SVG 경로 목록을 추가하지 않는다.
+
 ### 1.1 Color Tokens (CSS Custom Properties)
 
 ```css
 :root {
   /* Core Background & Surfaces */
-  --bg-dark-primary: #080B10;
-  --bg-dark-surface: #0E1420;
-  --bg-dark-card: rgba(18, 25, 38, 0.75);
-  --bg-glass-border: rgba(255, 255, 255, 0.10);
-  --bg-glass-hover: rgba(255, 255, 255, 0.18);
+  --bg-dark-primary: #e9edf1;
+  --bg-dark-surface: #edf1f5;
+  --bg-dark-card: #edf1f5;
+  --bg-glass-border: #cbd3dc;
+  --bg-glass-hover: #9aa9b9;
   
   /* Primary Category Accents */
   --accent-swiss-red: #FF3300;
   --accent-brutal-yellow: #FFFF00;
-  --accent-cyan: #00F0FF;
-  --accent-magenta: #FF007A;
-  --accent-emerald: #00E699;
+  --accent-cyan: #245eac;
+  --accent-magenta: #9c3762;
+  --accent-emerald: #236649;
   --accent-y2k-chrome: #A855F7;
   --accent-kinetic-lime: #CCFF00;
   --accent-clay-orange: #FF6B4A;
   
   /* Typography & Ink */
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-inverted: #080B10;
+  --text-primary: #263548;
+  --text-secondary: #526175;
+  --text-muted: #59697c;
+  --text-inverted: #ffffff;
   
   /* Dynamic Parameter Tweak Defaults */
   --tweak-radius: 16px;
@@ -316,7 +337,7 @@ Inspector의 사람용 산출물만 locale별로 바뀐다. CSS custom property/
 
 ### 3.1 Top Navigation & Search/Filter Controls
 - **Global Header:**
-  - Dynamic Animated Brand Logo + Version 2.3 LIVE badge. Canvas 2D status chip (not WASM).
+  - 정적 SVG 브랜드와 v2.4 PREVIEW 표식. Canvas와 BGM 구현 상태 칩은 메인 제어면에서 숨기며 오디오 조작은 플레이어·도크·모달에서 제공한다.
   - 한국어·영어·alias·분류 metadata를 찾는 최대 120자 실시간 검색과 clear button.
   - 실제 개수를 표시하는 8개 category tag와 독립 `Bookmarks (N)` 조건. 두 조건은 동시에 적용된다.
   - View Mode Toggle Switch (`Grid`, `Bento`, `Spectrum`).
@@ -328,7 +349,7 @@ Inspector의 사람용 산출물만 locale별로 바뀐다. CSS custom property/
 
 ### 3.2 View Modes
 1. **Grid Mode (`view-mode-grid`):**
-   - 8 Large Category Master Cards featuring expandable subcategory nodes, accent glow borders, and hover particle reaction.
+   - 8개 카테고리의 소프트 카드와 항상 보이는 시안 타일. 선택 체크, 두 줄의 상세/즐겨찾기 조작, 페이지 단위 36개 시각 창을 사용한다.
 2. **Bento Mode (`view-mode-bento`):**
    - Asymmetric Bento Grid highlighting featured styles, interactive live mini-widgets, and color chips directly on the main board.
 3. **Spectrum Mode (`view-mode-spectrum`):**

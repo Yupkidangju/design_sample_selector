@@ -110,6 +110,10 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
         `${style.id}:${archetype.id}:${archetype.selector}`
       );
 
+      if (archetype.id === 'mobile') {
+        assert.match(html, /<input[^>]*data-action="mobile-toggle"[^>]*aria-label="[^"]+"/u, style.id + ': named sound switch');
+        assert.match(html, /<span class="slider" aria-hidden="true">/u, style.id + ': decorative switch track');
+      }
       if (archetype.id === 'web') {
         const component = renderPreviewComponent({
           rendererId: style.previewType,
@@ -124,15 +128,15 @@ test('all 120 styles render the eight-archetype 960-output matrix with required 
   assert.equal(outputCount, 960);
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), legacyStyles),
-    'bd7789d191e69bfa723811a4b6492a75137149a435b2497a57ec01b206e80077'
+    'dd2bd99890305f84392a19de2de2b2e5a33f7f2229ae8653ed61f9a35820a63a'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), coreStyles),
-    '984e55ebfef424739831a05faf60349f0684507fcc3a874a24eb97bde4dc6148'
+    '011d9409a6b2a8bde9d1f281d1ce69dd7667e026857d6d5f94d75010186b528f'
   );
   assert.equal(
     hashArchetypeMatrix(ARCHETYPES.map(archetype => archetype.id), styles),
-    'd03583446877c5a6de30a61ce466d17d085aa6d57ed295b1e272bed48fa41ffb'
+    'e9443b118c45980835511c1d6e2bd44b2dd14fb17b5c83b80d275c1969fbc613'
   );
 });
 
@@ -181,15 +185,15 @@ test('non-Web archetypes remain byte-stable and ignore component-tab options', (
 
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, legacyStyles),
-    '6e670a34fd6d7e3d4f49af94817212f5af2408f4eed34522dc94e683ac6eb3bf'
+    'd3d8c899eee322275fedf136735bf7e5e0719e319a2af4c66d2d489c76e53582'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, coreStyles),
-    '0cc89e42f021473c51263ac6e6ca523dcfb9d6cbe1e0f93dae2a7682484c8a44'
+    '6882fb4a6158e2e86ab190ffd372211a4a9dbf3d64c2fbed41c8657a5701e622'
   );
   assert.equal(
     hashArchetypeMatrix(nonWebArchetypes, styles),
-    '3d75b745b4c03b6e1f7e58fc4e85a403fe7459f7c24da1c583308c63c187c5f6'
+    '36d4ed1bbaa24a25512d785ee2926a0b972def8b32f108bc76165fdcbf9f1b57'
   );
 });
 

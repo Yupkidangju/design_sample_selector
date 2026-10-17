@@ -5,7 +5,8 @@ import test from 'node:test';
 const stylesheet = [
   new URL('../index.css', import.meta.url),
   new URL('../src/styles/interactive.css', import.meta.url),
-  new URL('../src/styles/wave1-styles.css', import.meta.url)
+  new URL('../src/styles/wave1-styles.css', import.meta.url),
+  new URL('../src/styles/wave1-preview.css', import.meta.url)
 ]
   .map((file) => readFileSync(file, 'utf8'))
   .join('\n')

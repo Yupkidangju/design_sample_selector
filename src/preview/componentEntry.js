@@ -10,10 +10,13 @@ import { localizePreviewMarkup } from './localizeMarkup.js';
 // 브라우저 상세 경계에서만 신규 84종의 테마·문법 CSS를 요청한다.
 if (typeof document !== 'undefined') {
   await Promise.all([
+    import('../styles/core-preview.css'),
+    import('../styles/wave1-preview.css'),
     import('../styles/themeTokensExpansion.css'),
     import('../styles/expansion-preview.css'),
     import('../styles/audit9-detail.css')
   ]);
+  await import('../styles/preview-refinements.css');
 }
 
 const COMPONENT_REGISTRY = createPreviewRegistry({

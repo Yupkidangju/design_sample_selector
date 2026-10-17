@@ -4,6 +4,18 @@ All notable changes to the `design_sample_selector` project will be documented i
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [Unreleased]
+
+### Changed
+- 메인·필터·갤러리·선택 도크·상세·비교 제어면을 밝은 소프트 뉴모피즘으로 재구성.
+- 120종 시안을 재점검하고 Expansion 84종의 21개 시각 문법별 구성·재질·타이포그래피와 도형 thumbnail을 보강.
+- 카드명과 메뉴 재배치, 선택 상태 ARIA·체크 표시, 즐겨찾기·필터·보기 변경 후 키보드 포커스 유지, 도크·모달 내 오디오 조작 개선.
+- 시안의 공통 cyan glow와 강제 모서리 덮어쓰기를 제거하고 실제 컨테이너 폭을 기준으로 시안과 표·채팅·폼을 재배치.
+- Core/Wave 1 상세 CSS를 지연 로드해 기존 초기 bundle 예산을 유지.
+
+### Added
+- 5개 locale·120종·4개 컨테이너의 26,400상태, 75개 Gallery 상태와 조작·튜너를 검사하는 `qa:visual:chrome`.
+
 ## [2.4.0] - 2026-09-03
 
 ### Changed

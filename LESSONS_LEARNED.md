@@ -103,3 +103,11 @@
 - timer cleanup 배열에 이미 완료된 short timeout의 closure를 계속 쌓으면 teardown 시점에는 누수가 아니어도 장기 세션 메모리가 커진다. 완료 시 owner set에서 스스로 제거하고 동일 목적의 chat reply·checkout은 coalescing/WeakMap으로 한 개만 소유하게 하는 편이 명확하다.
 - Crostini frame settlement는 scheduler 변동을 포함한다. CDP round-trip뿐 아니라 DOM 정착 뒤 2-frame wall time도 제품 처리 hard metric과 분리하고 `processingMs`·`presentation`·`endToEndMs`·Long Task를 함께 기록해야 한다. 기준값을 낮추지 않은 동일 조건 직렬 3회로 판정한다.
 - 배포 플랫폼을 모르는 상태에서 meta CSP를 임의 추가하면 현재 inline style·dynamic CSS·Google Fonts 계약을 오히려 깨뜨릴 수 있다. 저장소 범위의 미확정을 솔직히 남기고 실제 response header가 있는 배포 후보에서 별도 종결하는 것이 안전하다.
+
+## 소프트 UI 재점검 (2026-10-18)
+
+- Thumbnail과 실제 preview가 같은 `data-grammar`를 사용하면 속성 selector만으로 시각 규칙을 작성하지 않는다. `.style-thumb`처럼 소유 root까지 한정해야 진행 막대와 도안 layer가 사라지는 충돌을 막는다.
+- Container query의 root는 자신의 크기를 질의할 수 없다. 좁은 desktop·split을 mobile class와 별개로 검증하고, flex 안의 size containment에는 명시적인 폭을 둔다.
+- 다국어 레이아웃 검사에는 copy snapshot과 localized style record를 함께 전달한다. 열린 모달의 마지막 locale과 내부 카탈로그 projection의 마지막 locale은 별개 상태로 추적해야 닫힌 상태의 A→B→A 전환에도 언어가 섞이지 않는다.
+- 지연 CSS를 분리하면 빌드 manifest와 실패 복구 검증의 기대 파일 목록도 함께 갱신한다. 단순 파일 수 조건을 느슨하게 만들지 않고 새 상세 파일 각각의 차단·재시도를 실제 Chrome에서 검사한다.
+- Root의 scrollWidth가 같아도 글자나 하위 구도가 잘릴 수 있다. 실제 텍스트 range·clipping ancestor, CJK 행간과 screenshot을 함께 확인한다.
