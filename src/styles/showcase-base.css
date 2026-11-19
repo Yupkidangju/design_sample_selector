@@ -1,0 +1,548 @@
+/**
+ * 독립 풀스크린 쇼케이스 베이스 + 플로팅 스튜디오 HUD + 네이티브 <dialog> 스펙 서랍
+ * .studio-* 네임스페이스는 어떤 디자인 사조 위에서도 선명한 가독성을 유지한다.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.showcase-stage {
+  min-height: 100dvh;
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  position: relative;
+  padding-bottom: 104px;
+}
+
+/* 하단 접이식 플로팅 스튜디오 바 */
+.studio-hud {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 9000;
+  max-width: calc(100vw - 24px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: rgba(12, 14, 20, 0.92);
+  color: #f3f5f8;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+  font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+}
+
+.studio-hud.is-collapsed {
+  left: auto;
+  right: 18px;
+  transform: none;
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.studio-hud-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-hud-domains {
+  padding: 3px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.studio-icon-btn,
+.studio-domain-btn,
+.studio-ghost-btn,
+.studio-primary-btn,
+.studio-lang-btn,
+.studio-pill-btn,
+.studio-mini-btn {
+  appearance: none;
+  font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.studio-icon-btn {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #d7deec;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.studio-select {
+  height: 34px;
+  max-width: 205px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #171b24;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.studio-domain-btn {
+  height: 28px;
+  padding: 0 11px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #a6b0c4;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.studio-domain-btn:hover {
+  color: #ffffff;
+}
+
+.studio-domain-btn.is-active {
+  background: #ffffff;
+  color: #0c0e14;
+}
+
+.studio-lang-toggle {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.studio-lang-btn {
+  height: 26px;
+  padding: 0 7px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9ba5ba;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.studio-lang-btn.is-active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.studio-primary-btn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: none;
+  background: #6ee7b7;
+  color: #062119;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.studio-primary-btn:hover {
+  background: #a7f3d0;
+}
+
+.studio-ghost-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.studio-ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.studio-pill-btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: none;
+  background: #171b24;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+}
+
+.studio-pill-btn strong {
+  color: #6ee7b7;
+}
+
+/* 네이티브 Top-Layer 스펙 서랍 */
+.studio-drawer {
+  margin: 0 0 0 auto;
+  padding: 0;
+  width: min(520px, 94vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  background: #0e1118;
+  color: #f3f5f8;
+  font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.65);
+}
+
+.studio-drawer::backdrop {
+  background: rgba(4, 6, 12, 0.68);
+  backdrop-filter: blur(6px);
+}
+
+.studio-drawer-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.studio-drawer-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.studio-drawer-kicker {
+  margin: 0 0 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #828ea6;
+}
+
+.studio-drawer-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.studio-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.studio-drawer-section h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e4e9f4;
+  letter-spacing: 0.01em;
+}
+
+.studio-drawer-section h3 small {
+  color: #7d889f;
+  font-weight: 500;
+}
+
+.studio-drawer-prose {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #b7c0d4;
+}
+
+.studio-trait-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.studio-trait-pills span {
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+}
+
+.studio-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 8px;
+}
+
+.studio-swatch-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.studio-swatch-btn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.studio-swatch-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.studio-swatch-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.studio-swatch-meta strong {
+  font-size: 12px;
+  color: #f3f5f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.studio-swatch-meta code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #8f9bb3;
+}
+
+.studio-font-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.studio-font-box > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12.5px;
+}
+
+.studio-font-box span {
+  color: #8792a9;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.studio-guardrails {
+  display: grid;
+  gap: 10px;
+}
+
+.studio-do-list,
+.studio-dont-list {
+  margin: 0;
+  padding: 12px 14px;
+  list-style: none;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.studio-do-list {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  color: #d1fae5;
+}
+
+.studio-do-list strong {
+  color: #34d399;
+  margin-right: 4px;
+}
+
+.studio-dont-list {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #fee2e2;
+}
+
+.studio-dont-list strong {
+  color: #f87171;
+  margin-right: 4px;
+}
+
+.studio-section-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.studio-section-bar h3 {
+  margin: 0;
+}
+
+.studio-inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.studio-mini-btn {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.studio-mini-btn:hover {
+  background: #ffffff;
+  color: #0c0e14;
+}
+
+.studio-code-block {
+  margin: 0;
+  padding: 12px 14px;
+  max-height: 250px;
+  overflow: auto;
+  border-radius: 10px;
+  background: #07090e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d6e0f5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.studio-code-block.is-compact {
+  max-height: 190px;
+}
+
+.studio-drawer-footer {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 10px;
+}
+
+.studio-drawer-footer > button {
+  flex: 1;
+}
+
+/* 토스트 알림 (Popover API Top Layer 호환 — <dialog open> 위 최상단 노출) */
+.studio-toast {
+  position: fixed;
+  inset: 18px auto auto 50%;
+  margin: 0;
+  transform: translate(-50%, -14px);
+  z-index: 9500;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(12, 14, 20, 0.96);
+  color: #ffffff;
+  border: 1px solid rgba(110, 231, 183, 0.55);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.studio-toast:popover-open {
+  display: block;
+}
+
+.studio-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 1024px) {
+  .showcase-stage {
+    padding-bottom: 184px;
+  }
+  .studio-hud {
+    flex-wrap: wrap;
+    bottom: 10px;
+    padding: 8px;
+    gap: 6px;
+  }
+  .studio-select {
+    max-width: 165px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

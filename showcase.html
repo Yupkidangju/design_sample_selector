@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DESIGN SPECTRUM 3.0 — 독립 풀스크린 쇼케이스</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0C10'/%3E%3Crect x='10' y='10' width='20' height='20' fill='%23E6321E'/%3E%3Ccircle cx='44' cy='20' r='10' fill='%235CE1FF'/%3E%3Crect x='10' y='36' width='44' height='18' rx='9' fill='%23CCFF00'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Cinzel:wght@500;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&family=Orbitron:wght@600;700;800&family=Outfit:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap">
+  <link rel="stylesheet" href="./src/styles/showcase-base.css">
+  <link rel="stylesheet" href="./src/styles/showcase-domains.css">
+  <link rel="stylesheet" href="./src/styles/styles-20.css">
+</head>
+<body class="showcase-body">
+  <!-- 100vw × 100vh 순수 디자인 쇼케이스 스테이지 -->
+  <main id="showcase-stage" class="showcase-stage"></main>
+
+  <!-- 하단 접이식 미니 플로팅 스튜디오 컨트롤 바 -->
+  <div id="studio-hud-root"></div>
+
+  <!-- 네이티브 Top-Layer 스펙 & AI 가이드 서랍 -->
+  <dialog id="studio-spec-drawer" class="studio-drawer" aria-label="디자인 스펙 및 AI 프롬프트 가이드"></dialog>
+
+  <script type="module" src="./src/showcase/showcaseApp.js"></script>
+</body>
+</html>

@@ -4,17 +4,22 @@ All notable changes to the `design_sample_selector` project will be documented i
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [Unreleased]
-
-### Changed
-- 메인·필터·갤러리·선택 도크·상세·비교 제어면을 밝은 소프트 뉴모피즘으로 재구성.
-- 120종 시안을 재점검하고 Expansion 84종의 21개 시각 문법별 구성·재질·타이포그래피와 도형 thumbnail을 보강.
-- 카드명과 메뉴 재배치, 선택 상태 ARIA·체크 표시, 즐겨찾기·필터·보기 변경 후 키보드 포커스 유지, 도크·모달 내 오디오 조작 개선.
-- 시안의 공통 cyan glow와 강제 모서리 덮어쓰기를 제거하고 실제 컨테이너 폭을 기준으로 시안과 표·채팅·폼을 재배치.
-- Core/Wave 1 상세 CSS를 지연 로드해 기존 초기 bundle 예산을 유지.
+## [3.0.0] - 2026-11-19
 
 ### Added
-- 5개 locale·120종·4개 컨테이너의 26,400상태, 75개 Gallery 상태와 조작·튜너를 검사하는 `qa:visual:chrome`.
+- **소수 정예 20종 마스터 카탈로그 (`src/data/styles20*.js`)**: 실무 모던 7종 · 그래픽/에디토리얼 6종 · 게임/레트로/3D 7종으로 중복 없는 20종 디자인 시스템과 스타일별 Google Fonts·5색 팔레트·DO/DON'T AI 가드레일 구축.
+- **독립 새 탭 풀스크린 쇼케이스 (`showcase.html`)**: 갤러리 CSS와 100% 격리된 멀티페이지 구조와 접이식 1줄 플로팅 스튜디오 바, 네이티브 `<dialog>` Top-Layer 스펙 서랍 추가.
+- **4대 실무급 도메인 렌더러 & 20종 커스텀 SVG 아트워크**: 웹 풀페이지 랜딩, 모바일 듀얼 스크린, 장르 맞춤형 인터랙티브 게임 HUD(실제 타격·스킬·콤보·웨이브), 기간 필터 연동 SVG 차트 대시보드 구현.
+- **원클릭 AI 바이브 코딩 프롬프트 생성기 (`src/prompt/vibePromptGenerator.js`)**: 한국어/영어 전환 AI 프롬프트, CSS 커스텀 프로퍼티 토큰, 실무형 `designs.md` 내보내기 제공.
+- **회귀 테스트 및 Chrome 시각 QA (`scripts/validateStyles.js`, `scripts/verifyVisualChrome.js`, `tests/*.test.js`)**: 20×4 쇼케이스 80개 상태, 반응형 360~1440px, 오디오 부재 회귀 검증.
+
+### Changed
+- 메인 갤러리(`index.html`)를 밝은 Soft UI 셸에서 **중립 다크 스튜디오 + 대형 라이브 표본(Specimen) 카드 + 1클릭 새 탭 오픈** 구조로 전면 재설계.
+- `spec.md`, `designs.md`, `README.md`, `DESIGN_DECISIONS.md`를 v3.0.0 아키텍처에 맞게 동기화.
+
+### Removed
+- 모든 음악·BGM·SFX 기능(`src/audio/synthAudio.js`, `audioWidget.js`, `compactAudioControls.js`, 스펙 문서 내 오디오 안내 문구) 완전 삭제.
+- 84종 양산형 확장 팩 및 120종 카탈로그, 프리뷰 텍스트 파괴 원인인 `localizeMarkup.js` 및 일/중 UI 번역, Soft UI 메인 테마, 하단 선택 독, 실시간 파라미터 슬라이더 튜너, 10축 패싯 필터, 모달 스플릿 비교, 전역 배경 Canvas 애니메이션, 나머지 4개 아키타입(쇼핑몰·블로그·미디어·채팅) 제거.
 
 ## [2.4.0] - 2026-09-03
 

@@ -1,11 +1,29 @@
 # Design Decisions Record (`DESIGN_DECISIONS.md`)
-**Project Name:** Web Design Sample Selector 2 (`design_sample_selector`)
-**Version:** 2.4.0
-**Document Status:** Architecture Rationale & Decision History (v2.4.0 Local Refactoring Verified)
+**Project Name:** DESIGN SPECTRUM 3.0 (`design_sample_selector`)
+**Version:** 3.0.0
+**Document Status:** v3.0.0 Curated 20-Style Standalone Showcase Architecture (이전 v2.x 이력 보존)
 
 ---
 
-## 1. Decision 001: Web Audio API Procedural Synthesis vs. MP3 Audio Assets
+## Decision v3.0 (2026-11-19): 120종 모달/오디오 구조 폐기 → 20종 정예 + 독립 새 탭 풀스크린 쇼케이스 전환
+
+- **Context:** v2.4.0의 120종 카탈로그 중 84종 양산 확장팩으로 인한 변별력 상실, `localizeMarkup.js` 정규식 치환 버그로 인한 한국어 프리뷰 텍스트 파괴, 웹폰트 부재, 좁은 모달 속 이모지 와이어프레임 아키타입, 그리고 참조 흐름을 방해하는 하단 음악/효과음 위젯에 대해 사용자가 전면 재설계를 확정함.
+- **Decision:**
+  1. **120종 → 20종 밸런스 큐레이션:** 모던·클린 7종, 그래픽·에디토리얼 6종, 게임·레트로·3D 7종으로 압축하고 모든 사조에 전용 Google Fonts + 커스텀 SVG 아트워크 + 고유 표면 물리(`styles-20.css`)를 부여.
+  2. **모달 → 독립 멀티페이지 새 탭 쇼케이스 (`showcase.html`):** 갤러리 CSS를 전혀 로드하지 않는 100vw × 100vh 단독 엔트리로 분리해 디자인 오염을 원천 차단하고 OS 탭/창 비교를 자연스럽게 지원.
+  3. **8개 얕은 아키타입 → 4대 실무급 도메인 집중:** 웹 랜딩 · 모바일 듀얼 스크린 · 장르 맞춤형 인터랙티브 게임 HUD · SVG 차트 대시보드로 압축해 완성도를 끌어올림.
+  4. **오디오 및 과잉 레거시 전면 제거:** `synthAudio`, `audioWidget`, `compactAudioControls`, `localizeMarkup.js`, Soft UI 셸, 하단 독, 슬라이더 튜너, 10축 필터, 배경 Canvas를 완전히 제거하고 회귀 테스트(`tests/noLegacyAudio.test.js`)로 재유입을 차단.
+  5. **AI 바이브 코딩 중심 출력:** 원클릭 `KO / EN` AI 프롬프트(시각 DNA + DO/DON'T 가드레일 + CSS 변수)와 네이티브 `<dialog>` Top-Layer 스펙 서랍 도입.
+- **Rejected Alternatives:**
+  - *120종 유지 + 필터 강화:* 양산형 84종이 남아 있는 한 갤러리 탐색 신뢰도가 회복되지 않음.
+  - *인앱 모달 유지:* 갤러리 셸과 스타일 CSS가 충돌하며 실제 제품 크기의 몰입 감상이 불가능함.
+  - *실시간 곡률/블러 슬라이더 유지:* 각 사조의 본질적 조형 규칙(예: 스위스 그리드 0px, 브루탈리즘 0px 블러)을 사용자가 의도치 않게 훼손한 채 AI에 전달할 위험이 큼.
+
+---
+
+## (역사적 기록) v2.x 이전 의사결정 이력
+
+## 1. Decision 001: Web Audio API Procedural Synthesis vs. MP3 Audio Assets (v3.0에서 폐기·삭제됨)
 
 - **Context:** The user required ambient background music tracks played procedurally, along with responsive hover/click UI sound effects.
 - **Decision:** Web Audio API Procedural Audio Synthesizer.

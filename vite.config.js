@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { PROJECT_BASE } from './project.config.js';
 
@@ -28,6 +29,12 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
     assetsDir: 'assets',
-    manifest: true
+    manifest: true,
+    rollupOptions: {
+      input: {
+        main: resolve(process.cwd(), 'index.html'),
+        showcase: resolve(process.cwd(), 'showcase.html')
+      }
+    }
   }
 });

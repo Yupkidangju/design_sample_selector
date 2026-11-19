@@ -3,44 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DESIGN SPECTRUM 2 | 120종 라이브 시안 · 8대 아키타입 · 동적 인스펙터</title>
-  <meta name="description" content="8대 대분류 120종 웹 디자인 사조를 라이브 미리보기, 선택 도크, 모션 샌드박스로 비교하는 클라이언트 전용 갤러리">
-  <meta name="keywords" content="웹디자인, 스위스스타일, 브루탈리즘, 글래스모피즘, 뉴모피즘, Y2K, FrutigerAero, BentoUI, 키네틱타이포, 클레이모피즘, 솔라펑크, Canvas2D, WebAudio">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23060A13'/%3E%3Cpath d='M14 16h22c10 0 16 6 16 16s-6 16-16 16H14V16zm12 10v12h9c4 0 6-2 6-6s-2-6-6-6h-9z' fill='%2300F0FF'/%3E%3C/svg%3E">
-  
-  <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="./index.css">
-  <link rel="stylesheet" href="./src/styles/interactive.css">
-  <link rel="stylesheet" href="./src/styles/wave1-styles.css">
-  <link rel="stylesheet" href="./src/styles/soft-ui.css">
-  <link rel="stylesheet" href="./src/styles/preview-thumbnails.css">
+  <title>DESIGN SPECTRUM 3.0 — AI 바이브 코딩 디자인 쇼케이스</title>
+  <meta name="description" content="서로 완전히 다른 20종의 대표 디자인 사조를 대형 표본 카드로 탐색하고, 독립 새 탭 풀스크린 쇼케이스(웹·모바일·게임·대시보드)와 1클릭 AI 바이브 코딩 프롬프트를 제공하는 디자인 스튜디오">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0C10'/%3E%3Crect x='10' y='10' width='20' height='20' fill='%23E6321E'/%3E%3Ccircle cx='44' cy='20' r='10' fill='%235CE1FF'/%3E%3Crect x='10' y='36' width='44' height='18' rx='9' fill='%23CCFF00'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Cinzel:wght@500;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700&family=Orbitron:wght@600;700;800&family=Outfit:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap">
+  <link rel="stylesheet" href="./src/styles/gallery.css">
+  <link rel="stylesheet" href="./src/styles/styles-20.css">
 </head>
-<body data-app-pending>
-  <!-- Canvas 2D Background Renderer -->
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+<body class="gallery-body">
+  <header class="studio-header">
+    <div class="studio-header-inner">
+      <div class="studio-title-row">
+        <div>
+          <p class="studio-eyebrow">DESIGN SPECTRUM 3.0 · CURATED SPECIMEN STUDIO</p>
+          <h1 class="studio-heading">AI 바이브 코딩 디자인 쇼케이스</h1>
+          <p class="studio-lead">
+            겹침 없는 20종의 대표 디자인 사조를 표본 카드로 비교하고, 클릭 한 번으로 <strong>독립 새 탭 풀스크린 쇼케이스(웹 · 모바일 · 게임 · 대시보드)</strong>와 AI 프롬프트를 확인하세요.
+          </p>
+        </div>
+        <div class="studio-header-meta">
+          <span class="studio-count-badge" id="gallery-result-count">엄선 20종 중 20종 표시</span>
+          <span class="studio-tip-note">카드 클릭 → 새 탭 풀스크린 오픈 ↗</span>
+        </div>
+      </div>
 
-  <!-- App Main Root Container -->
-  <div class="app-container">
-    <!-- Header Component Root -->
-    <div id="header-root"></div>
+      <div id="gallery-controls"></div>
+    </div>
+  </header>
 
-    <!-- Catalog Discovery Controls Root -->
-    <div id="discovery-root"></div>
+  <main class="gallery-main">
+    <div id="gallery-grid" class="specimen-grid" aria-live="polite"></div>
+  </main>
 
-    <!-- Main View Component Root (Category Nodes Grid) -->
-    <main id="main-root"></main>
+  <footer class="gallery-footer">
+    <span>DESIGN SPECTRUM 3.0 — 20 Curated Design Movements · Web / Mobile / Game / Dashboard</span>
+    <span>Audio-free · Isolated Full-Screen Showcase · 1-Click KO/EN AI Vibe Prompt</span>
+  </footer>
 
-    <!-- Detail Showcase Modal Component Root -->
-    <div id="detail-root"></div>
-  </div>
-
-  <div id="peek-root"></div>
-  <div id="selection-dock-root"></div>
-
-  <!-- Floating Audio Player & BGM Synthesizer Widget Root -->
-  <div id="audio-widget-root"></div>
-
-  <!-- ES Module Application Bootstrap Entry -->
-  <script type="module" src="./src/main.js"></script>
+  <script type="module" src="./src/gallery/galleryApp.js"></script>
 </body>
 </html>

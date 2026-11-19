@@ -17,3 +17,4 @@ dist/
 
 # 소프트 UI Chrome 검수의 격리 프로필·중간 로그·전체 contact sheet
 .antigravity/soft-ui-*
+.antigravity/v3-visual-evidence/

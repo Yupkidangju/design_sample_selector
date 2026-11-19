@@ -30,14 +30,10 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Run tests and build verified artifact
+      - name: Validate styles, run unit tests, build, and verify Pages artifact
         run: npm run check
-      - name: Check initial bundle budget
-        run: npm run analyze:bundle
-      - name: Verify complete Pages artifact closure
-        run: npm run verify:pages-artifact
-      - name: Exercise Pages subpath and recovery fault matrix in Chrome
-        run: npm run qa:pages:chrome
+      - name: Verify production preview in Headless Chrome (20 styles x 4 domains)
+        run: npm run qa:visual
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
       - name: Configure GitHub Pages

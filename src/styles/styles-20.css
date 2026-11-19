@@ -1,0 +1,428 @@
+/**
+ * 20종 디자인 사조 전용 시각 물리 & 표면 질감 스타일시트
+ * 단순 색 교체를 넘어 배경 텍스처, 보더 물리, 그림자 공식, 버튼 질감, 서체 스케일을 사조별로 완성한다.
+ */
+
+/* 01. 스위스 그리드 모더니즘 */
+[data-style='swiss-grid'] {
+  background-color: #f4f3ee;
+  background-image:
+    linear-gradient(to right, rgba(17, 17, 17, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(17, 17, 17, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+[data-style='swiss-grid'] .web-feature-card.is-accent-card,
+[data-style='swiss-grid'] .dash-kpi-card.is-primary-kpi {
+  background: #d12614;
+  color: #ffffff;
+  border-color: #111111;
+}
+[data-style='swiss-grid'] .web-feature-card.is-accent-card .web-feature-desc,
+[data-style='swiss-grid'] .dash-kpi-card.is-primary-kpi .dash-kpi-label {
+  color: rgba(255, 255, 255, 0.92);
+}
+[data-style='swiss-grid'] .dash-kpi-card.is-primary-kpi .dash-kpi-delta {
+  background: #111111;
+  color: #ffffff;
+}
+
+/* 02. 벤토 UI 2.0 */
+[data-style='bento-grid'] .web-feature-card.is-accent-card,
+[data-style='bento-grid'] .dash-kpi-card.is-primary-kpi {
+  background: #1d1d1f;
+  color: #ffffff;
+  border-color: #1d1d1f;
+}
+[data-style='bento-grid'] .web-feature-card.is-accent-card .web-feature-desc,
+[data-style='bento-grid'] .dash-kpi-card.is-primary-kpi .dash-kpi-label {
+  color: #a1a1a6;
+}
+[data-style='bento-grid'] .web-feature-card.is-accent-card .web-feature-num {
+  background: #0066ff;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* 03. 프로스테드 글래스모피즘 */
+[data-style='glassmorphism'] {
+  background-color: #0d132b;
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(92, 225, 255, 0.34), transparent 42%),
+    radial-gradient(circle at 86% 24%, rgba(167, 139, 250, 0.34), transparent 44%),
+    radial-gradient(circle at 52% 88%, rgba(56, 189, 248, 0.24), transparent 46%);
+}
+[data-style='glassmorphism'] .ds-card,
+[data-style='glassmorphism'] .web-nav,
+[data-style='glassmorphism'] .web-metric-cell {
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 04. 리니어 다크 테크 */
+[data-style='dark-minimal-glass'] {
+  background-color: #08090c;
+  background-image: radial-gradient(ellipse 65% 42% at 50% 0%, rgba(124, 140, 255, 0.16), transparent 72%);
+}
+[data-style='dark-minimal-glass'] .web-hero-title,
+[data-style='dark-minimal-glass'] .specimen-headline {
+  background: linear-gradient(180deg, #ffffff 15%, #9ca7c4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+[data-style='dark-minimal-glass'] .ds-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)), #111318;
+}
+
+/* 05. 소프트 뉴모피즘 */
+[data-style='neumorphism'] .ds-input,
+[data-style='neumorphism'] .game-bar-track,
+[data-style='neumorphism'] .phone-meter-track,
+[data-style='neumorphism'] .game-combat-log,
+[data-style='neumorphism'] .web-type-specimen {
+  background: #e4e9f2;
+  border-color: transparent;
+  box-shadow: inset 5px 5px 10px #c2cbd9, inset -5px -5px 10px #ffffff;
+}
+[data-style='neumorphism'] .ds-btn-secondary,
+[data-style='neumorphism'] .game-skill-btn {
+  background: #e4e9f2;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 6px 6px 12px #c2cbd9, -6px -6px 12px #ffffff;
+}
+[data-style='neumorphism'] .ds-btn-secondary:active,
+[data-style='neumorphism'] .game-skill-btn:active {
+  box-shadow: inset 4px 4px 8px #c2cbd9, inset -4px -4px 8px #ffffff;
+}
+
+/* 06. 터미널 모노스페이스 */
+[data-style='high-contrast-mono'] {
+  background-color: #050805;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(34, 255, 102, 0.04) 0px,
+    rgba(34, 255, 102, 0.04) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+[data-style='high-contrast-mono'] .ds-btn:hover,
+[data-style='high-contrast-mono'] .game-skill-btn:hover {
+  background: #22ff66;
+  color: #050805;
+  border-color: #22ff66;
+}
+
+/* 07. 모던 스큐어모피즘 */
+[data-style='skeuomorphism'] {
+  background-color: #1e2126;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.015) 0px,
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+[data-style='skeuomorphism'] .ds-card {
+  background: linear-gradient(180deg, #343942 0%, #272b32 100%);
+}
+[data-style='skeuomorphism'] .ds-input,
+[data-style='skeuomorphism'] .game-combat-log,
+[data-style='skeuomorphism'] .game-bar-track {
+  background: #111519;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.75);
+  color: #28e070;
+}
+[data-style='skeuomorphism'] .ds-btn-primary {
+  background: linear-gradient(180deg, #ff7338 0%, #e54909 100%);
+  color: #111317;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+}
+[data-style='skeuomorphism'] .ds-btn:active {
+  transform: translateY(1.5px);
+}
+
+/* 08. 네오 브루탈리즘 */
+[data-style='neo-brutalism'] {
+  background-color: #fff7e8;
+  background-image: radial-gradient(rgba(17, 17, 17, 0.16) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+[data-style='neo-brutalism'] .web-feature-card:nth-child(1) { background: #ffe14d; }
+[data-style='neo-brutalism'] .web-feature-card:nth-child(2) { background: #38e5b0; }
+[data-style='neo-brutalism'] .web-feature-card:nth-child(3) { background: #ffffff; }
+[data-style='neo-brutalism'] .dash-kpi-card:nth-child(1) { background: #ffe14d; }
+[data-style='neo-brutalism'] .dash-kpi-card:nth-child(2) { background: #38e5b0; }
+[data-style='neo-brutalism'] .dash-kpi-card:nth-child(3) { background: #ff99ac; }
+[data-style='neo-brutalism'] .ds-btn-primary:hover,
+[data-style='neo-brutalism'] .game-skill-btn:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 #111111;
+}
+
+/* 09. 하이패션 에디토리얼 */
+[data-style='high-fashion'] .web-hero-title,
+[data-style='high-fashion'] .specimen-headline {
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+[data-style='high-fashion'] .ds-card {
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-top: 1px solid rgba(26, 22, 20, 0.22);
+  border-bottom: 1px solid rgba(26, 22, 20, 0.22);
+}
+[data-style='high-fashion'] .web-nav-inner {
+  border-bottom: 1px solid rgba(26, 22, 20, 0.12);
+}
+
+/* 10. 바우하우스 기하학 */
+[data-style='bauhaus-geometry'] .web-feature-card:nth-child(1) {
+  background: #d92b2b;
+  color: #ffffff;
+}
+[data-style='bauhaus-geometry'] .web-feature-card:nth-child(1) .web-feature-desc {
+  color: rgba(255, 255, 255, 0.9);
+}
+[data-style='bauhaus-geometry'] .web-feature-card:nth-child(2) {
+  background: #f2be22;
+  color: #141414;
+}
+[data-style='bauhaus-geometry'] .web-feature-card:nth-child(3) {
+  background: #1b4fbf;
+  color: #ffffff;
+}
+[data-style='bauhaus-geometry'] .web-feature-card:nth-child(3) .web-feature-desc {
+  color: rgba(255, 255, 255, 0.9);
+}
+[data-style='bauhaus-geometry'] .web-brand-num,
+[data-style='bauhaus-geometry'] .game-player-emblem {
+  border-radius: 999px;
+}
+
+/* 11. 아르데코 골드 럭셔리 */
+[data-style='art-deco'] {
+  background-color: #091815;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.16), transparent 55%),
+    repeating-linear-gradient(135deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 1px, transparent 1px, transparent 22px);
+}
+[data-style='art-deco'] .web-hero-title,
+[data-style='art-deco'] .specimen-headline,
+[data-style='art-deco'] .dash-title,
+[data-style='art-deco'] .game-boss-name {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f3d678;
+}
+[data-style='art-deco'] .ds-btn-primary {
+  background: linear-gradient(135deg, #f3d678 0%, #c89f2c 100%);
+  color: #091815;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* 12. 리소그래프 인디 콜라주 */
+[data-style='risograph'] {
+  background-color: #f6f0e4;
+  background-image: radial-gradient(rgba(29, 66, 216, 0.14) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+[data-style='risograph'] .web-hero-title,
+[data-style='risograph'] .specimen-headline {
+  text-shadow: 2.5px 2.5px 0 rgba(255, 78, 122, 0.52);
+}
+[data-style='risograph'] .web-footer,
+[data-style='risograph'] .dash-side-note {
+  border-top-style: dashed;
+}
+
+/* 13. 키네틱 애시드 타이포 */
+[data-style='kinetic-type'] {
+  background-color: #09090b;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(204, 255, 0, 0.03) 0px,
+    rgba(204, 255, 0, 0.03) 2px,
+    transparent 2px,
+    transparent 18px
+  );
+}
+[data-style='kinetic-type'] .web-hero-title,
+[data-style='kinetic-type'] .specimen-headline {
+  text-transform: uppercase;
+  line-height: 0.96;
+}
+[data-style='kinetic-type'] .ds-btn-secondary:hover,
+[data-style='kinetic-type'] .game-skill-btn:hover {
+  background: #ccff00;
+  color: #09090b;
+  border-color: #ccff00;
+}
+
+/* 14. 8-Bit 픽셀 아케이드 */
+[data-style='pixel-arcade'] {
+  background-color: #141028;
+  background-image:
+    linear-gradient(rgba(255, 252, 232, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 252, 232, 0.035) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+[data-style='pixel-arcade'] .web-hero-title {
+  font-size: clamp(1.45rem, 2.7vw, 2.3rem);
+  line-height: 1.38;
+}
+[data-style='pixel-arcade'] .specimen-headline {
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+[data-style='pixel-arcade'] .ds-kicker,
+[data-style='pixel-arcade'] .game-genre-tag {
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+[data-style='pixel-arcade'] .game-boss-name {
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.4;
+}
+[data-style='pixel-arcade'] .game-bar-fill {
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0px,
+    currentColor 10px,
+    rgba(20, 16, 40, 0.45) 10px,
+    rgba(20, 16, 40, 0.45) 13px
+  );
+  color: #ffd43b;
+}
+[data-style='pixel-arcade'] .game-bar-fill.is-hp,
+[data-style='pixel-arcade'] .game-bar-fill.is-boss {
+  color: #ff3b5c;
+  background-color: #ff3b5c;
+}
+[data-style='pixel-arcade'] .ds-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #090614;
+}
+
+/* 15. 80s 신스웨이브 사이버펑크 */
+[data-style='synthwave'] {
+  background-color: #0c061c;
+  background-image:
+    radial-gradient(ellipse 75% 45% at 50% 0%, rgba(255, 42, 133, 0.24), transparent 65%),
+    linear-gradient(rgba(0, 240, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+}
+[data-style='synthwave'] .ds-btn-primary {
+  background: linear-gradient(135deg, #d4176a 0%, #7d1fd1 100%);
+  box-shadow: 0 0 22px rgba(212, 23, 106, 0.45);
+}
+[data-style='synthwave'] .game-bar-fill.is-hp,
+[data-style='synthwave'] .game-bar-fill.is-boss {
+  background: linear-gradient(90deg, #ffe45e, #ff2a85);
+}
+
+/* 16. Y2K 크롬 홀로그램 */
+[data-style='y2k-chrome'] {
+  background-color: #0f1322;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(99, 226, 255, 0.24), transparent 40%),
+    radial-gradient(circle at 82% 72%, rgba(255, 94, 219, 0.22), transparent 42%);
+}
+[data-style='y2k-chrome'] .ds-card {
+  background: linear-gradient(145deg, rgba(235, 242, 255, 0.2), rgba(145, 165, 215, 0.08)), #151c33;
+}
+[data-style='y2k-chrome'] .ds-btn-primary {
+  background: linear-gradient(180deg, #ffffff 0%, #cad6f2 46%, #889dc9 52%, #e8f1ff 100%);
+  color: #0d1226;
+  border-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(99, 226, 255, 0.3), inset 0 2px 1px #ffffff;
+}
+[data-style='y2k-chrome'] .web-hero-title,
+[data-style='y2k-chrome'] .specimen-headline {
+  background: linear-gradient(135deg, #ffffff 10%, #a5f3fc 48%, #e9d5ff 78%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 17. Frutiger Aero 아쿠아 */
+[data-style='frutiger-aero'] {
+  background: linear-gradient(170deg, #87deff 0%, #d8f5ff 48%, #e9fce6 100%);
+}
+[data-style='frutiger-aero'] .ds-card,
+[data-style='frutiger-aero'] .web-nav {
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.82);
+}
+[data-style='frutiger-aero'] .ds-btn-primary,
+[data-style='frutiger-aero'] .specimen-badge {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.56) 0%,
+    rgba(255, 255, 255, 0.14) 48%,
+    rgba(0, 74, 138, 0.12) 50%,
+    rgba(0, 62, 118, 0.34) 100%
+  ), #006bb3;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 34, 68, 0.65);
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+/* 18. 클레이모피즘 3D 버블 */
+[data-style='claymorphism'] {
+  background: radial-gradient(circle at 12% 16%, #ffe3ec 0%, transparent 38%),
+    radial-gradient(circle at 88% 82%, #d9faf5 0%, transparent 40%),
+    #f3eeff;
+}
+[data-style='claymorphism'] .ds-btn-primary {
+  background: #d12c65;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 12px 24px rgba(209, 44, 101, 0.32), inset 0 -6px 10px rgba(135, 22, 62, 0.3), inset 0 6px 8px rgba(255, 255, 255, 0.45);
+}
+[data-style='claymorphism'] .ds-btn:hover,
+[data-style='claymorphism'] .ds-card:hover {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[data-style='claymorphism'] .web-feature-card:nth-child(2) {
+  background: #e6fbf8;
+}
+[data-style='claymorphism'] .web-feature-card:nth-child(3) {
+  background: #fff6db;
+}
+
+/* 19. 솔라펑크 에코 오가닉 */
+[data-style='solarpunk-eco'] {
+  background: radial-gradient(circle at 82% 12%, rgba(217, 119, 54, 0.16), transparent 44%),
+    radial-gradient(circle at 12% 84%, rgba(43, 122, 75, 0.14), transparent 46%),
+    #f4f1e3;
+}
+[data-style='solarpunk-eco'] .web-visual-frame {
+  border-radius: 140px 140px 20px 20px;
+}
+
+/* 20. 멤피스 팝 아키텍처 */
+[data-style='memphis'] {
+  background-color: #fffdf7;
+  background-image:
+    radial-gradient(#00c9b7 1.6px, transparent 1.6px),
+    radial-gradient(#ff5fa2 1.6px, transparent 1.6px);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
+}
+[data-style='memphis'] .web-feature-card:nth-child(1) { box-shadow: 6px 6px 0 #ff5fa2; }
+[data-style='memphis'] .web-feature-card:nth-child(2) { box-shadow: 6px 6px 0 #ffd23f; }
+[data-style='memphis'] .web-feature-card:nth-child(3) { box-shadow: 6px 6px 0 #00c9b7; }
+[data-style='memphis'] .ds-btn-primary {
+  box-shadow: 5px 5px 0 #ffd23f;
+}
+[data-style='memphis'] .ds-btn-primary:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 #ffd23f;
+}

@@ -1,6 +1,6 @@
 {
-  "name": "design-sample-selector-2",
-  "version": "2.4.0",
+  "name": "design-sample-selector",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,25 +8,14 @@
   },
   "scripts": {
     "dev": "vite",
-    "validate:catalog": "node scripts/validateCatalog.js",
-    "generate:themes": "node scripts/generateThemeStyles.js",
-    "check:themes": "node scripts/generateThemeStyles.js --check",
-    "qa:wave1:chrome": "node scripts/verifyWave1Chrome.js",
-    "qa:discovery:chrome": "node scripts/verifyCatalogDiscoveryChrome.js",
-    "preqa:catalog120:chrome": "npm run build",
-    "qa:catalog120:chrome": "node scripts/verifyCatalog120Chrome.js",
-    "qa:pages:chrome": "node scripts/verifyPagesRecoveryChrome.js",
-    "qa:i18n:chrome": "node scripts/verifyI18nInspectorChrome.js",
-    "analyze:bundle": "node scripts/analyzeInitialBundle.js",
+    "validate:styles": "node scripts/validateStyles.js",
     "verify:pages-artifact": "node scripts/verifyPagesArtifact.js",
-    "preqa:scalability:chrome": "npm run build",
-    "qa:scalability:chrome": "node scripts/verifyRenderScalabilityChrome.js",
-    "prebuild": "npm run validate:catalog && npm run check:themes",
-    "build": "vite build && node scripts/verifyPagesArtifact.js --write-manifest",
+    "prebuild": "npm run validate:styles",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "node --test",
-    "check": "npm test && npm run build",
-    "qa:visual:chrome": "node scripts/verifySoftUiChrome.js"
+    "qa:visual": "node scripts/verifyVisualChrome.js",
+    "check": "npm run validate:styles && npm test && npm run build && npm run verify:pages-artifact"
   },
   "devDependencies": {
     "vite": "^6.2.0"

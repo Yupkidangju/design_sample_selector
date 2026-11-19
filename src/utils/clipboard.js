@@ -1,90 +1,137 @@
 /**
- * Clipboard & Toast Notification Utility
- * Handles click-to-copy of Hex palette codes and renders visual toast overlays with audio feedback.
+ * 클립보드 복사 & Top-Layer 안전 토스트 피드백 (오디오 없음)
+ * - Popover API(popover="manual")를 우선 사용해 <dialog> 모달 위에서도 토스트가 항상 최상단에 노출된다.
+ * - navigator.clipboard.writeText 실패(권한 거부 포함) 시 textarea + execCommand('copy') 폴백을 수행한다.
  */
 
-import { synthAudio } from '../audio/synthAudio.js';
+let toastHideTimer = null;
+let toastCloseTimer = null;
 
-export async function copyTextWithFallback(text, {
-  clipboard = typeof navigator !== 'undefined' ? navigator.clipboard : null,
-  documentRef = typeof document !== 'undefined' ? document : null
-} = {}) {
-  if (clipboard?.writeText) {
+function supportsPopover(element) {
+  return Boolean(element && typeof element.showPopover === 'function' && typeof element.hidePopover === 'function');
+}
+
+function getToastHost() {
+  return document.querySelector('dialog[open]') || document.body;
+}
+
+export function showToast(message) {
+  if (typeof document === 'undefined') return;
+  let toast = document.getElementById('studio-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'studio-toast';
+    toast.className = 'studio-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    if (supportsPopover(toast)) {
+      toast.setAttribute('popover', 'manual');
+    }
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  window.clearTimeout(toastHideTimer);
+  window.clearTimeout(toastCloseTimer);
+
+  if (supportsPopover(toast)) {
+    // 모달 <dialog>가 나중에 열렸더라도 토스트를 Top Layer 최상단으로 재승격한다.
     try {
-      await clipboard.writeText(String(text));
-      return true;
+      if (toast.matches(':popover-open')) toast.hidePopover();
+      toast.showPopover();
     } catch {
-      // 권한 거부 시 동기 폴백을 한 번 시도한다.
+      /* Popover 상태 경합 시 아래 폴백 경로로 안전하게 전환한다. */
+    }
+  } else {
+    const host = getToastHost();
+    if (toast.parentElement !== host) {
+      host.appendChild(toast);
     }
   }
 
-  if (!documentRef?.body || typeof documentRef.execCommand !== 'function') return false;
+  toast.classList.add('is-visible');
 
-  const activeElement = documentRef.activeElement;
-  const textArea = documentRef.createElement('textarea');
-  textArea.value = String(text);
-  textArea.style.position = 'fixed';
-  textArea.style.opacity = '0';
-  documentRef.body.appendChild(textArea);
+  toastHideTimer = window.setTimeout(() => {
+    toast.classList.remove('is-visible');
+    toastCloseTimer = window.setTimeout(() => {
+      if (supportsPopover(toast)) {
+        try {
+          if (toast.matches(':popover-open')) toast.hidePopover();
+        } catch {
+          /* 이미 닫힌 상태 무시 */
+        }
+      }
+    }, 220);
+  }, 2200);
+}
+
+function fallbackCopyWithTextarea(text) {
+  const host = getToastHost();
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '0';
+  textarea.style.left = '0';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+
+  const prevFocus = document.activeElement;
+  host.appendChild(textarea);
+  textarea.focus({ preventScroll: true });
+  textarea.select();
 
   let copied = false;
   try {
-    textArea.select();
-    textArea.setSelectionRange?.(0, textArea.value.length);
-    copied = documentRef.execCommand('copy') === true;
+    copied = Boolean(document.execCommand?.('copy'));
   } catch {
     copied = false;
   } finally {
-    if (textArea.isConnected) {
-      if (typeof textArea.remove === 'function') textArea.remove();
-      else documentRef.body.removeChild(textArea);
-    }
-    if (activeElement?.isConnected !== false && typeof activeElement?.focus === 'function') {
-      try { activeElement.focus(); } catch { /* 기존 포커스 복구 실패는 복사 결과를 바꾸지 않는다. */ }
+    textarea.remove();
+    if (prevFocus && typeof prevFocus.focus === 'function' && prevFocus.isConnected) {
+      try {
+        prevFocus.focus({ preventScroll: true });
+      } catch {
+        /* 포커스 복구 실패 무시 */
+      }
     }
   }
-
   return copied;
 }
 
-export async function copyToClipboard(text, label = '색상 코드') {
-  const copied = await copyTextWithFallback(text);
+export async function copyText(text, successMessage = '클립보드에 복사했습니다') {
+  let copied = false;
+
+  if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function' && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+
+  if (!copied) {
+    copied = fallbackCopyWithTextarea(text);
+  }
+
   if (copied) {
-    showToast(`Copied ${label} [ ${text} ] to Clipboard! 📋`);
-    synthAudio.playSfx('COPY');
-  } else {
-    showToast(`${label}을(를) 복사하지 못했습니다. 다시 시도해 주세요.`, 'error');
+    if (successMessage) showToast(successMessage);
+    return true;
   }
-  return copied;
+
+  showToast('자동 복사에 실패했습니다. 스펙 서랍에서 직접 복사해 주세요.');
+  return false;
 }
 
-export function showToast(message, tone = 'status') {
-  let toastContainer = document.getElementById('toast-container');
-  if (!toastContainer) {
-    toastContainer = document.createElement('div');
-    toastContainer.id = 'toast-container';
-    toastContainer.className = 'toast-container';
-    document.body.appendChild(toastContainer);
-  }
-
-  const toast = document.createElement('div');
-  toast.className = 'toast-message';
-  toast.setAttribute('role', tone === 'error' ? 'alert' : 'status');
-
-  const iconSpan = document.createElement('span');
-  iconSpan.textContent = '✨';
-  iconSpan.setAttribute('aria-hidden', 'true');
-
-  const textSpan = document.createElement('span');
-  textSpan.textContent = String(message);
-
-  toast.appendChild(iconSpan);
-  toast.appendChild(document.createTextNode(' '));
-  toast.appendChild(textSpan);
-  toastContainer.appendChild(toast);
-
-  setTimeout(() => {
-    toast.classList.add('toast-fade-out');
-    setTimeout(() => toast.remove(), 300);
-  }, 2200);
+export function downloadTextFile(filename, content, mimeType = 'text/markdown;charset=utf-8') {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
