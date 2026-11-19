@@ -4,6 +4,11 @@ All notable changes to the `design_sample_selector` project will be documented i
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [3.0.1] - 2026-11-19
+
+### Fixed
+- **독립 쇼케이스 하단 `KO | EN` 전환 즉시 반영:** 기존에는 하단 `KO/EN` 클릭 시 숨겨진 AI 프롬프트 언어만 바뀌고 화면 변화가 없어 미연결처럼 보이던 문제를 해소. 20종 전체 영문 쇼케이스 카피(`src/data/showcaseEn.js`)와 4대 도메인·HUD·서랍 영문 UI 사전(`src/data/uiCopy.js`)을 구축해 `EN` 클릭 시 쇼케이스 스테이지 전체, 전용 라틴 웹폰트 타이포그래피, HUD, 스펙 서랍, URL(`?lang=en`), 토스트가 즉시 전환되도록 연결.
+
 ## [3.0.0] - 2026-11-19
 
 ### Added

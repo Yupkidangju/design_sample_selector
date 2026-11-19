@@ -1,12 +1,17 @@
 /**
- * 도메인 1: 웹 랜딩 · 제품 서비스 풀페이지 쇼케이스 렌더러
+ * 도메인 1: 웹 랜딩 · 제품 서비스 풀페이지 쇼케이스 렌더러 (KO / EN 네이티브 전환 지원)
  */
 
+import { getLocalizedStyleView } from '../data/showcaseEn.js';
+import { UI_COPY } from '../data/uiCopy.js';
 import { escapeHtml } from '../utils/escape.js';
 import { renderStyleArtwork } from './domainArtwork.js';
 
-export function renderWebDomain(style) {
-  const web = style.showcase.web;
+export function renderWebDomain(style, lang = 'ko') {
+  const safeLang = lang === 'en' ? 'en' : 'ko';
+  const view = getLocalizedStyleView(style, safeLang);
+  const copy = UI_COPY[safeLang].web;
+  const web = view.showcase.web;
   const heroArt = renderStyleArtwork(style.id, 'hero');
 
   return `
@@ -18,7 +23,7 @@ export function renderWebDomain(style) {
             <span class="web-brand-num">${escapeHtml(style.number)}</span>
             <span class="web-brand-name">${escapeHtml(web.brand)}</span>
           </div>
-          <nav class="web-nav-links" aria-label="쇼케이스 샘플 내비게이션">
+          <nav class="web-nav-links" aria-label="${safeLang === 'en' ? 'Showcase navigation' : '쇼케이스 샘플 내비게이션'}">
             ${web.nav.map((label, index) => `
               <button type="button" class="web-nav-link ${index === 0 ? 'is-active' : ''}" data-demo-action="nav" data-demo-label="${escapeHtml(label)}">
                 ${escapeHtml(label)}
@@ -64,7 +69,7 @@ export function renderWebDomain(style) {
             </div>
             <div class="web-visual-caption">
               <span>${escapeHtml(style.nameEn)}</span>
-              <span class="web-visual-tags">${style.traits.map(t => escapeHtml(t)).join(' · ')}</span>
+              <span class="web-visual-tags">${view.traits.map(t => escapeHtml(t)).join(' · ')}</span>
             </div>
           </div>
         </div>
@@ -75,9 +80,9 @@ export function renderWebDomain(style) {
         <div class="web-section-head">
           <div>
             <p class="ds-kicker">DESIGN SYSTEM PRINCIPLES</p>
-            <h2 class="web-section-title">${escapeHtml(style.nameKo)} 핵심 조형 규칙</h2>
+            <h2 class="web-section-title">${escapeHtml(copy.principlesHeading(view.displayName))}</h2>
           </div>
-          <p class="web-section-desc">${escapeHtml(style.tagline)}</p>
+          <p class="web-section-desc">${escapeHtml(view.tagline)}</p>
         </div>
 
         <div class="web-features-grid">
@@ -97,39 +102,39 @@ export function renderWebDomain(style) {
           <div class="ds-card web-form-card">
             <div class="web-card-head">
               <p class="ds-kicker">INTERACTIVE FORM SPECIMEN</p>
-              <h3 class="web-card-title">실제 입력 & 액션 컴포넌트</h3>
+              <h3 class="web-card-title">${escapeHtml(copy.formTitle)}</h3>
             </div>
             <form class="web-demo-form" data-demo-form>
               <label class="ds-field">
-                <span>프로젝트 이름</span>
-                <input type="text" class="ds-input" name="projectName" value="${escapeHtml(web.brand)} 리뉴얼" />
+                <span>${escapeHtml(copy.projectLabel)}</span>
+                <input type="text" class="ds-input" name="projectName" value="${escapeHtml(`${web.brand} ${copy.projectSuffix}`)}" />
               </label>
               <div class="web-form-row">
                 <label class="ds-field">
-                  <span>타겟 플랫폼</span>
+                  <span>${escapeHtml(copy.platformLabel)}</span>
                   <select class="ds-input" name="platform">
-                    <option value="web">웹 애플리케이션</option>
-                    <option value="mobile">모바일 iOS / Android</option>
-                    <option value="game">게임 UI / HUD</option>
+                    <option value="web">${escapeHtml(copy.platforms[0])}</option>
+                    <option value="mobile">${escapeHtml(copy.platforms[1])}</option>
+                    <option value="game">${escapeHtml(copy.platforms[2])}</option>
                   </select>
                 </label>
                 <label class="ds-field">
-                  <span>밀도 프리셋</span>
+                  <span>${escapeHtml(copy.densityLabel)}</span>
                   <select class="ds-input" name="density">
-                    <option value="balanced">표준 균형</option>
-                    <option value="editorial">에디토리얼 여유</option>
-                    <option value="compact">프로페셔널 고밀도</option>
+                    <option value="balanced">${escapeHtml(copy.densities[0])}</option>
+                    <option value="editorial">${escapeHtml(copy.densities[1])}</option>
+                    <option value="compact">${escapeHtml(copy.densities[2])}</option>
                   </select>
                 </label>
               </div>
               <div class="web-toggle-row">
-                <button type="button" class="ds-chip is-active" data-demo-chip aria-pressed="true">${escapeHtml(style.traits[0])}</button>
-                <button type="button" class="ds-chip" data-demo-chip aria-pressed="false">${escapeHtml(style.traits[1])}</button>
-                <button type="button" class="ds-chip" data-demo-chip aria-pressed="false">${escapeHtml(style.traits[2])}</button>
+                <button type="button" class="ds-chip is-active" data-demo-chip aria-pressed="true">${escapeHtml(view.traits[0])}</button>
+                <button type="button" class="ds-chip" data-demo-chip aria-pressed="false">${escapeHtml(view.traits[1])}</button>
+                <button type="button" class="ds-chip" data-demo-chip aria-pressed="false">${escapeHtml(view.traits[2])}</button>
               </div>
               <div class="web-form-footer">
-                <button type="submit" class="ds-btn ds-btn-primary">설계 시안 적용 테스트</button>
-                <span class="web-form-status" data-form-status aria-live="polite">폼 입력과 칩 토글을 직접 클릭해 보세요.</span>
+                <button type="submit" class="ds-btn ds-btn-primary">${escapeHtml(copy.submitBtn)}</button>
+                <span class="web-form-status" data-form-status aria-live="polite">${escapeHtml(copy.formHint)}</span>
               </div>
             </form>
           </div>
@@ -137,10 +142,10 @@ export function renderWebDomain(style) {
           <div class="ds-card web-palette-card">
             <div class="web-card-head">
               <p class="ds-kicker">PALETTE & TYPOGRAPHY DNA</p>
-              <h3 class="web-card-title">컬러 위계 & 서체 표본</h3>
+              <h3 class="web-card-title">${escapeHtml(copy.paletteTitle)}</h3>
             </div>
             <div class="web-type-specimen">
-              <div class="web-type-aa">Aa 가나다</div>
+              <div class="web-type-aa">${escapeHtml(copy.typeSample)}</div>
               <div class="web-type-meta">
                 <strong>${escapeHtml(style.fonts.displayName)}</strong>
                 <span>Body: ${escapeHtml(style.fonts.bodyName)} · Polarity: ${style.polarity.toUpperCase()}</span>
@@ -148,9 +153,9 @@ export function renderWebDomain(style) {
             </div>
             <div class="web-swatch-list">
               ${style.palette.map(swatch => `
-                <button type="button" class="web-swatch-item" data-copy-hex="${escapeHtml(swatch.hex)}" title="클릭하여 ${escapeHtml(swatch.hex)} 복사">
+                <button type="button" class="web-swatch-item" data-copy-hex="${escapeHtml(swatch.hex)}" title="${escapeHtml(copy.clickHexTitle(swatch.hex))}">
                   <span class="web-swatch-dot" style="background:${escapeHtml(swatch.hex)}"></span>
-                  <span class="web-swatch-role">${escapeHtml(swatch.role)}</span>
+                  <span class="web-swatch-role">${escapeHtml(safeLang === 'en' ? (swatch.roleEn || swatch.role) : swatch.role)}</span>
                   <code class="web-swatch-hex">${escapeHtml(swatch.hex)}</code>
                 </button>
               `).join('')}
@@ -160,7 +165,7 @@ export function renderWebDomain(style) {
       </section>
 
       <footer class="web-footer">
-        <span>${escapeHtml(web.brand)} · ${escapeHtml(style.nameKo)} (${escapeHtml(style.nameEn)})</span>
+        <span>${escapeHtml(web.brand)} · ${escapeHtml(view.displayName)} (${escapeHtml(style.id)})</span>
         <span>DESIGN SPECTRUM 3.0 STANDALONE SHOWCASE</span>
       </footer>
     </div>

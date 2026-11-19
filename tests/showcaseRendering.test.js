@@ -18,16 +18,26 @@ describe('갤러리 표본 카드 및 20×4 독립 쇼케이스 렌더링', () =
     }
   });
 
-  it('20종 × 4대 도메인(80개 조합)이 깨진 치환 문자열 없이 정상 렌더링된다', () => {
+  it('20종 × 4대 도메인 × 2언어(KO/EN, 총 160조합)가 깨짐이나 언어 혼입 없이 정상 렌더링된다', () => {
     for (const style of STYLES_20) {
       for (const domainId of DOMAIN_IDS) {
-        const html = renderDomainMarkup(style, domainId);
-        assert.ok(html.includes(`domain-${domainId}`), `${style.id}/${domainId}`);
-        assert.doesNotMatch(html, /undefined|NaN|\[object Object\]/);
+        const htmlKo = renderDomainMarkup(style, domainId, 'ko');
+        const htmlEn = renderDomainMarkup(style, domainId, 'en');
+
+        assert.ok(htmlKo.includes(`domain-${domainId}`), `${style.id}/${domainId}/ko`);
+        assert.ok(htmlEn.includes(`domain-${domainId}`), `${style.id}/${domainId}/en`);
+        assert.doesNotMatch(htmlKo, /undefined|NaN|\[object Object\]/);
+        assert.doesNotMatch(htmlEn, /undefined|NaN|\[object Object\]/);
         // 구버전 localizeMarkup.js 파괴 회귀 방지
-        assert.doesNotMatch(html, />이 스타일 확정</);
+        assert.doesNotMatch(htmlKo, />이 스타일 확정</);
+
+        // EN 모드 가시 텍스트에 한글 혼입 0건 보장
+        const visibleEnText = htmlEn.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
+        assert.doesNotMatch(visibleEnText, /[가-힣]/, `${style.id}/${domainId} EN stage leaked Korean`);
+
         if (domainId === 'dashboard') {
-          assert.ok(html.includes('dash-donut-svg'), `${style.id} dashboard must include SVG donut chart`);
+          assert.ok(htmlKo.includes('dash-donut-svg'), `${style.id} dashboard must include SVG donut chart`);
+          assert.ok(htmlEn.includes('dash-donut-svg'), `${style.id} EN dashboard must include SVG donut chart`);
         }
       }
     }

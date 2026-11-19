@@ -1,24 +1,27 @@
 /**
- * 쇼케이스 4대 도메인 내부 실시간 인터랙션 바인딩
- * 모든 인터랙션은 순수 DOM 상태 전이와 시각 피드백으로 동작한다 (오디오 없음).
+ * 쇼케이스 4대 도메인 내부 실시간 인터랙션 바인딩 (KO / EN 지원, 오디오 없음)
  */
 
+import { getLocalizedStyleView } from '../data/showcaseEn.js';
+import { UI_COPY } from '../data/uiCopy.js';
 import { copyText, showToast } from '../utils/clipboard.js';
 import {
-  DASHBOARD_SERIES,
   renderBarChartSvg,
   renderDonutChartSvg,
   renderTrendChartSvg
 } from './domainDashboard.js';
 
-export function bindDomainInteractions(stageRoot, style) {
+export function bindDomainInteractions(stageRoot, style, lang = 'ko') {
   if (!stageRoot) return;
+  const safeLang = lang === 'en' ? 'en' : 'ko';
+  const copy = UI_COPY[safeLang];
+  const view = getLocalizedStyleView(style, safeLang);
 
   // 1. 공통 버튼 / 내비게이션 / 컬러 스와치 복사
   stageRoot.querySelectorAll('[data-copy-hex]').forEach(button => {
     button.addEventListener('click', () => {
       const hex = button.getAttribute('data-copy-hex');
-      if (hex) copyText(hex, `색상 코드 ${hex} 복사됨`);
+      if (hex) copyText(hex, copy.web.hexToast(hex));
     });
   });
 
@@ -26,13 +29,13 @@ export function bindDomainInteractions(stageRoot, style) {
     button.addEventListener('click', () => {
       stageRoot.querySelectorAll('[data-demo-action="nav"]').forEach(b => b.classList.remove('is-active'));
       button.classList.add('is-active');
-      showToast(`"${button.dataset.demoLabel}" 섹션 포커스`);
+      showToast(copy.web.navToast(button.dataset.demoLabel));
     });
   });
 
   stageRoot.querySelectorAll('[data-demo-action="cta"]').forEach(button => {
     button.addEventListener('click', () => {
-      showToast(`"${button.dataset.demoLabel}" 인터랙션 확인됨`);
+      showToast(copy.web.ctaToast(button.dataset.demoLabel));
     });
   });
 
@@ -49,12 +52,12 @@ export function bindDomainInteractions(stageRoot, style) {
     demoForm.addEventListener('submit', event => {
       event.preventDefault();
       const formData = new FormData(demoForm);
-      const name = String(formData.get('projectName') || '새 프로젝트').trim();
+      const name = String(formData.get('projectName') || (safeLang === 'en' ? 'New Project' : '새 프로젝트')).trim();
       const status = demoForm.querySelector('[data-form-status]');
       if (status) {
-        status.textContent = `"${name}" 시안 설정이 성공적으로 적용되었습니다.`;
+        status.textContent = copy.web.formDone(name);
       }
-      showToast(`"${name}" 폼 제출 테스트 완료`);
+      showToast(copy.web.formToast(name));
     });
   }
 
@@ -138,7 +141,7 @@ export function bindDomainInteractions(stageRoot, style) {
       if (bossText) bossText.textContent = `${bossHp} / ${bossMax}`;
       if (mpFill) mpFill.style.width = `${mp}%`;
       if (mpText) mpText.textContent = `${mp} / 100`;
-      if (scoreEl) scoreEl.textContent = score.toLocaleString('ko-KR');
+      if (scoreEl) scoreEl.textContent = score.toLocaleString(safeLang === 'en' ? 'en-US' : 'ko-KR');
       if (comboEl) comboEl.textContent = `x${combo}`;
       if (waveEl) waveEl.textContent = `WAVE ${String(wave).padStart(2, '0')}`;
       if (logEl && message) logEl.textContent = message;
@@ -146,7 +149,7 @@ export function bindDomainInteractions(stageRoot, style) {
 
     const triggerHit = (skillName, baseDmg, cost = 0) => {
       if (cost > mp) {
-        renderHud(`에너지가 부족합니다 (필요 ${cost}, 현재 ${mp}). 기본 타격이나 [Q]로 충전하세요!`);
+        renderHud(copy.game.lowMp(cost, mp));
         return;
       }
 
@@ -177,20 +180,20 @@ export function bindDomainInteractions(stageRoot, style) {
         bossHp = bossMax;
         mp = 100;
         score += 5000;
-        renderHud(`WAVE ${wave - 1} 격파! 보너스 +5,000점 — 강화된 WAVE ${String(wave).padStart(2, '0')} 개시!`);
+        renderHud(copy.game.waveClear(wave - 1, String(wave).padStart(2, '0')));
         return;
       }
 
-      renderHud(`${skillName} 적중! ${dmg} 데미지${isCrit ? ' (치명타!)' : ''} · ${combo}연속 콤보`);
+      renderHud(copy.game.hitLog(skillName, dmg, isCrit, combo));
     };
 
     targetBtn?.addEventListener('click', () => {
-      triggerHit('직접 타격', 110, 0);
+      triggerHit(copy.game.directHit, 110, 0);
     });
 
     gameRoot.querySelectorAll('[data-game-skill]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const name = btn.dataset.skillName || '스킬';
+        const name = btn.dataset.skillName || 'Skill';
         const dmg = Number(btn.dataset.skillDmg) || 140;
         const cost = Number(btn.dataset.skillCost) || 0;
         triggerHit(name, dmg, cost);
@@ -204,7 +207,7 @@ export function bindDomainInteractions(stageRoot, style) {
       mp = 100;
       combo = 1;
       score = 12400;
-      renderHud(style.showcase.game.logInit);
+      renderHud(view.showcase.game.logInit);
     });
   }
 
@@ -224,10 +227,10 @@ export function bindDomainInteractions(stageRoot, style) {
           el.classList.toggle('is-active', active);
           el.setAttribute('aria-selected', String(active));
         });
-        if (trendSlot) trendSlot.innerHTML = renderTrendChartSvg(range, style.id);
-        if (barSlot) barSlot.innerHTML = renderBarChartSvg(range);
-        if (donutSlot) donutSlot.innerHTML = renderDonutChartSvg(range);
-        if (rangeLabel) rangeLabel.textContent = `${DASHBOARD_SERIES[range]?.label || '최근 7일'} 기준`;
+        if (trendSlot) trendSlot.innerHTML = renderTrendChartSvg(range, style.id, safeLang);
+        if (barSlot) barSlot.innerHTML = renderBarChartSvg(range, safeLang);
+        if (donutSlot) donutSlot.innerHTML = renderDonutChartSvg(range, safeLang);
+        if (rangeLabel) rangeLabel.textContent = copy.dashboard.rangeLabel[range] || copy.dashboard.rangeLabel['7d'];
       });
     });
 

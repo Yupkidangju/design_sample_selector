@@ -145,12 +145,19 @@ for (const style of STYLES_20) {
   }
 
   for (const domainId of DOMAIN_IDS) {
-    const html = renderDomainMarkup(style, domainId);
-    if (!html || html.length < 300) {
-      errors.push(`Rendered markup too short for ${style.id}/${domainId}`);
+    const htmlKo = renderDomainMarkup(style, domainId, 'ko');
+    const htmlEn = renderDomainMarkup(style, domainId, 'en');
+    for (const [langTag, html] of [['ko', htmlKo], ['en', htmlEn]]) {
+      if (!html || html.length < 300) {
+        errors.push(`Rendered markup too short for ${style.id}/${domainId}/${langTag}`);
+      }
+      if (/undefined|NaN|\[object Object\]/.test(html)) {
+        errors.push(`Broken template token detected in ${style.id}/${domainId}/${langTag}`);
+      }
     }
-    if (/undefined|NaN|\[object Object\]/.test(html)) {
-      errors.push(`Broken template token detected in ${style.id}/${domainId}`);
+    const visibleEnText = htmlEn.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
+    if (/[가-힣]/.test(visibleEnText)) {
+      errors.push(`Korean leaked into EN showcase stage for ${style.id}/${domainId}`);
     }
   }
 

@@ -285,7 +285,52 @@ try {
     return { computedFill, notBlack: computedFill !== 'rgb(0, 0, 0)', hasDonut, rangeTabsValid };
   })()`);
 
-  // 4. 게임 캔버스 풀블리드 (좌우 필러박스 0) + 인터랙션 + 스펙 서랍 종합 검증 (C-02, C-03, R-03, R-07)
+  // 4-A. 하단 플로팅 바 KO → EN → KO 실시간 쇼케이스 전환 검증
+  await evaluate(`(() => {
+    const sel = document.querySelector('[data-hud-style-select]');
+    sel.value = 'high-fashion';
+    sel.dispatchEvent(new Event('change'));
+    document.querySelector('[data-hud-domain="web"]').click();
+  })()`);
+  await pause(120);
+
+  report.assertions.hudLangSwitch = await evaluate(`(() => {
+    const koTitle = document.querySelector('.web-hero-title')?.textContent?.trim() || '';
+    const enBtn = document.querySelector('[data-hud-lang="en"]');
+    enBtn.focus();
+    enBtn.click();
+
+    const enTitle = document.querySelector('.web-hero-title')?.textContent?.trim() || '';
+    const stageTextEn = document.querySelector('#showcase-stage')?.textContent || '';
+    const hudTextEn = document.querySelector('#studio-hud-root')?.textContent || '';
+    const focusKeptOnEn = document.activeElement?.dataset?.hudLang === 'en';
+    const urlHasEn = new URL(location.href).searchParams.get('lang') === 'en';
+    const htmlLangEn = document.documentElement.lang === 'en';
+    const enHasNoKorean = !/[가-힣]/.test(stageTextEn) && !/[가-힣]/.test(hudTextEn);
+
+    return {
+      koTitle,
+      enTitle,
+      titleChanged: koTitle !== enTitle && enTitle.length > 5,
+      focusKeptOnEn,
+      urlHasEn,
+      htmlLangEn,
+      enHasNoKorean
+    };
+  })()`);
+  await pause(150);
+  await snap('12-showcase-highfashion-en');
+
+  // 다시 KO 복귀 검증
+  const returnedToKo = await evaluate(`(() => {
+    const koBtn = document.querySelector('[data-hud-lang="ko"]');
+    koBtn.click();
+    return document.documentElement.lang === 'ko'
+      && /[가-힣]/.test(document.querySelector('.web-hero-title')?.textContent || '');
+  })()`);
+  report.assertions.hudLangSwitch.returnedToKo = returnedToKo;
+
+  // 4-B. 게임 캔버스 풀블리드 (좌우 필러박스 0) + 인터랙션 + 스펙 서랍 종합 검증 (C-02, C-03, R-03, R-07)
   await evaluate(`(() => {
     const sel = document.querySelector('[data-hud-style-select]');
     sel.value = 'pixel-arcade';
@@ -388,6 +433,7 @@ try {
 
   const g = report.assertions.gallery;
   const y = report.assertions.y2kDashboard;
+  const hl = report.assertions.hudLangSwitch;
   const gd = report.assertions.gameAndDrawer;
 
   const failedChecks = [];
@@ -400,6 +446,9 @@ try {
   }
   if (!y.notBlack || !y.hasDonut || !y.rangeTabsValid) {
     failedChecks.push('y2kDashboardAssertions');
+  }
+  if (!hl.titleChanged || !hl.focusKeptOnEn || !hl.urlHasEn || !hl.htmlLangEn || !hl.enHasNoKorean || !hl.returnedToKo) {
+    failedChecks.push('hudLangSwitchAssertions');
   }
   if (!gd.noPillarbox || !gd.hpChanged || !gd.drawerOpen || !gd.monoCorrect || !gd.toastVisible || !gd.scrollPreserved || !gd.focusPreserved || !gd.philosophyIsEnglish || !gd.langHasAriaPressed || !gd.blockedShortcuts) {
     failedChecks.push('gameAndDrawerAssertions');
